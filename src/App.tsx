@@ -20,6 +20,7 @@ import { checkAlerts, isTriggered, loadAlerts, saveAlerts, type PriceAlert } fro
 import { PriceContext, PriceSheet, type SheetPart } from "./upgrade/PriceSheet";
 import { AlertsView } from "./upgrade/AlertsView";
 import { SelectionView } from "./upgrade/SelectionView";
+import { AdviceNotice } from "./upgrade/PriceSheet";
 import { SelectionContext, loadSelection, saveSelection, slotOf, type Selection } from "./upgrade/selection";
 
 type View = "overview" | "goal" | "improve" | "upgrades" | "selection" | "alerts";
@@ -476,6 +477,7 @@ function FreeView({ recos, next }: { recos: Recommendation[]; next: ReactNode })
           ))}
         </ul>
       )}
+      {free.length > 0 && <AdviceNotice />}
       {next}
     </div>
   );

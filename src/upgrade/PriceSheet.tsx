@@ -182,8 +182,25 @@ export function PriceNotice({ extra }: { extra?: string }) {
         de livraison non compris, susceptibles d'avoir changé depuis. Le prix d'une pièce est la médiane des offres retenues. PCEvolu n'a aucun lien
         commercial avec les marchands cités.{extra ? ` ${extra}` : ""}
       </p>
+      <AdviceNotice />
       <PriceDisclosure />
     </footer>
+  );
+}
+
+/**
+ * Mention de prudence sur les conseils. Formulée comme une information (et non comme une exclusion de
+ * responsabilité, qui ne serait pas opposable à un consommateur) : l'utilisateur sait d'où viennent les
+ * données, qu'elles peuvent comporter des erreurs, et qu'il doit vérifier avant d'acheter.
+ */
+export function AdviceNotice() {
+  return (
+    <p className="advice-notice">
+      <b>Des conseils, pas une garantie.</b> Les compatibilités, performances et prix sont calculés à partir de ce que Windows lit sur ton PC, de tes
+      réponses et des fiches des fabricants. Malgré nos vérifications, une erreur reste possible : donnée incomplète ou mal lue, fiche modifiée depuis,
+      modèle différent de celui décrit. Avant d'acheter, vérifie la fiche du modèle exact et la compatibilité auprès du fabricant ou du vendeur : le choix
+      final t'appartient.
+    </p>
   );
 }
 

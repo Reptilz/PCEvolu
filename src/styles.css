@@ -942,3 +942,6 @@ span.picks-name { color: var(--text); cursor: default; }
   .sel-kind { grid-column: 1 / -1; }
 }
 .sel-actions { align-items: center; }
+
+.advice-notice { margin: 10px 0 6px; padding: 10px 12px; border-radius: 10px; background: var(--panel); color: var(--muted); }
+.advice-notice b { color: var(--text); }
