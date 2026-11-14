@@ -17,7 +17,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { BOARDS, CASES, COOLERS, CPUS, FAN_KITS, GPUS, PSUS, RAM_KITS, SSDS } from "../src/upgrade/catalog";
 import type { PricesFile, PriceEntry } from "../src/upgrade/prices";
-import { CATEGORY_EXCLUDE, GLOBAL_EXCLUDE, MERCHANT_EXCLUDE, QUERIES } from "./price-queries";
+import { CATEGORY_EXCLUDE, FOREIGN_EXCLUDE, GLOBAL_EXCLUDE, MERCHANT_EXCLUDE, QUERIES } from "./price-queries";
 import { recordHistory } from "./history";
 import { isTrustedMerchant } from "../src/upgrade/merchants";
 
@@ -163,7 +163,7 @@ export interface Offer {
 }
 
 /** Raison du rejet d'une offre, ou null si elle est retenue. */
-function rejectReason(t: Target, title: string, merchant: string, price: number | undefined): string | null {
+function rejectReason(t: Target, title: string, merchant: string, price: number | undefined, rawTitle = ""): string | null {
   const query = QUERIES[t.id];
   const catEx = CATEGORY_EXCLUDE[t.category];
   if (price == null) return "prix illisible";
@@ -173,6 +173,10 @@ function rejectReason(t: Target, title: string, merchant: string, price: number 
   if (excluded) return `variante ${excluded}`;
   if (GLOBAL_EXCLUDE.test(title)) return "occasion / lot";
   if (MERCHANT_EXCLUDE.test(merchant)) return "vendeur d'occasion";
+  if (FOREIGN_EXCLUDE.test(merchant)) return "vendeur étranger ou import";
+  // Titre en alphabet non latin (chinois, arabe, cyrillique…) : annonce destinée à un autre pays.
+  if (/[\u0400-\u04ff\u0590-\u06ff\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]/.test(rawTitle)) return "annonce étrangère";
+  if (!rawTitle.trim()) return "titre absent";
   if (catEx?.test(title)) return "hors catégorie";
   // Garde-fou bas : écarte les accessoires (stickers, câbles…) qui reprennent le nom du produit.
   // Pas de limite haute : les prix peuvent tripler en pénurie (RAM 2026) ; les PC complets sont
@@ -182,29 +186,47 @@ function rejectReason(t: Target, title: string, merchant: string, price: number 
 }
 
 export function selectOffers(t: Target, items: ShoppingItem[], explain = false): { kept: Offer[]; rejected: number } {
-  const byMerchant = new Map<string, Offer>();
   let rejected = 0;
+  let all: Offer[] = [];
 
   for (const it of items) {
     const title = normalize(it.title ?? "");
     const merchantName = normalize(it.source ?? "");
     const price = parsePrice(it.price);
-    const reason = rejectReason(t, title, merchantName, price);
+    const reason = rejectReason(t, title, merchantName, price, it.title ?? "");
     if (explain) console.log(`   ${reason ? "✗" : "✓"} ${String(price ?? "?").padStart(8)} € | ${(it.source ?? "?").slice(0, 18).padEnd(18)} | ${(it.title ?? "").slice(0, 80)}${reason ? `  ← ${reason}` : ""}`);
     if (reason) {
       rejected++;
       continue;
     }
-    const merchant = (it.source ?? "?").trim();
-    // Une offre par marchand ; pour une requête générique, une par marchand ET par produit.
-    const key = merchant.toLowerCase() + (QUERIES[t.id].generic ? `|${title}` : "");
-    const prev = byMerchant.get(key);
-    if (!prev || price! < prev.price) byMerchant.set(key, { merchant, price: price!, title: it.title ?? "", link: it.link });
+    all.push({ merchant: (it.source ?? "?").trim(), price: price!, title: it.title ?? "", link: it.link });
   }
 
+  // 1. Écart à la médiane, calculée sur TOUTES les offres valides (avant de garder une offre par marchand,
+  //    sinon une seule annonce aberrante d'un marchand masque ses offres correctes). Une offre à moins de 55 %
+  //    ou plus de 180 % de la médiane est presque toujours une erreur (mauvais modèle, lot, annonce trompeuse).
+  //    Requêtes génériques (plusieurs produits) : marge plus large. On répète jusqu'à stabilité.
+  const [lo, hi] = QUERIES[t.id].generic ? [0.45, 2.2] : [0.55, 1.8];
+  for (let pass = 0; pass < 3 && all.length >= 3; pass++) {
+    const m = median(all.map((o) => o.price));
+    const next = all.filter((o) => o.price >= m * lo && o.price <= m * hi);
+    if (explain) for (const o of all) if (!next.includes(o)) console.log(`   ✗ ${String(o.price).padStart(8)} € | ${o.merchant.slice(0, 18).padEnd(18)} | ${o.title.slice(0, 80)}  ← loin de la médiane (${Math.round(m)} €)`);
+    rejected += all.length - next.length;
+    if (next.length === all.length) break;
+    all = next;
+  }
+
+  // 2. Une offre par marchand (la moins chère) ; pour une requête générique, une par marchand ET par produit.
+  const byMerchant = new Map<string, Offer>();
+  for (const o of all) {
+    const key = o.merchant.toLowerCase() + (QUERIES[t.id].generic ? `|${normalize(o.title)}` : "");
+    const prev = byMerchant.get(key);
+    if (!prev || o.price < prev.price) byMerchant.set(key, o);
+  }
   let kept = [...byMerchant.values()];
-  // Valeurs aberrantes (méthode de Tukey) quand on a assez d'offres.
-  if (kept.length >= 5) {
+
+  // 3. Valeurs aberrantes (méthode de Tukey), seulement avec assez d'offres pour que les quartiles aient un sens.
+  if (kept.length >= 8) {
     const s = kept.map((o) => o.price).sort((a, b) => a - b);
     const q1 = quantile(s, 0.25);
     const q3 = quantile(s, 0.75);
@@ -214,6 +236,19 @@ export function selectOffers(t: Target, items: ShoppingItem[], explain = false):
     rejected += before - kept.length;
   }
   return { kept: kept.sort((a, b) => a.price - b.price), rejected };
+}
+
+/** Conserve un ancien prix (marqué « stale ») seulement si ses offres restent crédibles avec les filtres actuels. */
+function keepStale(items: Record<string, PriceEntry>, t: Target) {
+  const e = items[t.id];
+  if (!e) return;
+  const best = (e.best ?? []).filter(
+    (o) => !rejectReason(t, normalize(o.title ?? ""), normalize(o.merchant), o.price, o.title ?? "") && o.price >= e.price * 0.55 && o.price <= e.price * 1.8,
+  );
+  if (best.length < 2) {
+    delete items[t.id];
+    console.log(`  ${t.id} : ancien prix retiré (offres plus assez fiables)`);
+  } else items[t.id] = { ...e, best, min: Math.round(Math.min(...best.map((o) => o.price))), max: Math.max(e.price, Math.round(Math.max(...best.map((o) => o.price)))), offers: Math.min(e.offers, best.length + 1), stale: true };
 }
 
 // ---------------------------------------------------------------------------
@@ -258,9 +293,11 @@ async function main() {
       // Les cartes mères ont moins de vendeurs : 2 offres au titre exact suffisent.
       const minOffers = t.category === "board" ? 2 : MIN_OFFERS;
       if (kept.length < minOffers) {
-        // Pas assez d'offres fiables : on garde le dernier prix connu, marqué comme ancien.
-        if (items[t.id]) items[t.id] = { ...items[t.id], stale: true };
-        console.log(`· ${t.id.padEnd(18)} ${kept.length} offre(s) fiable(s) sur ${results.length} : prix précédent conservé`);
+        // Pas assez d'offres fiables : on garde le dernier prix connu, marqué comme ancien,
+        // à condition que ses offres passent encore les filtres actuels. Sinon on le retire :
+        // l'app affiche alors le prix indicatif du catalogue plutôt qu'un prix douteux.
+        keepStale(items, t);
+        console.log(`· ${t.id.padEnd(18)} ${kept.length} offre(s) fiable(s) sur ${results.length} : ${items[t.id] ? "prix précédent conservé" : "pas de prix (indicatif du catalogue)"}`);
         failed++;
         continue;
       }
@@ -281,7 +318,7 @@ async function main() {
       );
     } catch (e) {
       failed++;
-      if (items[t.id]) items[t.id] = { ...items[t.id], stale: true };
+      keepStale(items, t);
       console.error(`✗ ${t.id} : ${(e as Error).message}`);
     }
     if (!fixtures) await new Promise((r) => setTimeout(r, 250)); // on reste poli avec l'API

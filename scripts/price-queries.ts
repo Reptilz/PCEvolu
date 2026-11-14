@@ -17,10 +17,17 @@ export interface PriceQuery {
 
 /** Exclusions communes à toutes les catégories (occasion, reconditionné, lots « A + B »). */
 export const GLOBAL_EXCLUDE =
-  /reconditionn|occasion|seconde main|refurb|renewed|ricondizionat|remis a neuf|pieces detachees|\bvends\b|\s\+\s/;
+  /reconditionn|occasion|seconde main|refurb|renewed|ricondizionat|remis a neuf|pieces detachees|pour pieces|\bjunk\b|defectueu|en panne|\bvends\b|vente en gros|wholesale|\s\+\s/;
 
 /** Vendeurs d'occasion ou de reconditionné : leurs offres ne reflètent pas le prix du neuf. */
 export const MERCHANT_EXCLUDE = /leboncoin|beebs|back ?market|ebay|vinted|factorefurb|renewtech|label emmaus|easycash|cash converters|stockx/;
+
+/**
+ * Places de marché étrangères ou d'import : prix hors France (douane, port, garantie incertaine) ou annonces
+ * peu fiables. Leurs offres faussent le « meilleur prix » affiché.
+ */
+export const FOREIGN_EXCLUDE =
+  /alibaba|aliexpress|temu|\bwish\b|ubuy|microless|rightdeal|shoppydeals|yoho|golookshop|biteks|lambdatek|onbuy|banzaihobby|desertcart|fruugo|informaticabarata|it-market|showgiftprive|\.sk\b|\.ro\b|\.pl\b|\.hu\b|\.cz\b|\.co\.uk\b|\buk\b/;
 
 /** Exclusions par catégorie (PC complets, accessoires…). */
 export const CATEGORY_EXCLUDE: Record<string, RegExp> = {
@@ -28,7 +35,8 @@ export const CATEGORY_EXCLUDE: Record<string, RegExp> = {
   // Un titre de processeur qui parle de RAM, de SSD, de Go ou de Windows est un PC complet.
   cpu: /\bpc\b|ordinateur|laptop|portable|ventirad|refroidiss|cooler|carte mere|motherboard|\bkit\b|bundle|pack|\bram\b|\bssd\b|\bhdd\b|\d+ ?(go|gb|to|tb)\b|windows|\bwin ?1[01]\b|gaming|gamer|tour\b/,
   board: /\bpc\b|ordinateur|\bkit\b|bundle|pack|processeur inclus/,
-  ram: /so-?dimm|portable|laptop|notebook|\bpc gamer\b|serveur|server/,
+  // Mémoire de portable (SO-DIMM, réf. Crucial « SFD ») et de serveur (ECC, RDIMM, Kingston KSM, Micron MTA) : autres produits, autres prix.
+  ram: /so-?dimm|portable|laptop|notebook|\bpc gamer\b|serveur|server|\becc\b|rdimm|registered|\bksm\d|\bmta\d|g4sfd|g5sfd|1 ?x ?64|2rx4|4rx4/,
   ssd: /\bpc\b|ordinateur|laptop|portable|externe|boitier|enclosure|adaptateur/,
   psu: /\bpc\b|ordinateur|cable|rallonge|sleeve|boitier/,
   cooler: /\bpc\b|ordinateur|pate thermique|kit de fixation|bracket/,
@@ -107,18 +115,18 @@ export const QUERIES: Record<string, PriceQuery> = {
 
   // Cartes mères génériques par chipset et format. « B650 » sans suffixe = ATX ; « B650M » = micro-ATX.
   // (\b exclut d'office B650M / B650E / B650I, puisque la lettre colle au numéro.)
-  "mb-b760-ddr4-atx": { q: "carte mère B760 DDR4 ATX", must: [/\bb760\b/, /ddr4|\bd4\b/], not: [/itx|mini/], generic: true },
+  "mb-b760-ddr4-atx": { q: "carte mère B760 DDR4 ATX", must: [/\bb760\b/, /ddr4|\bd4\b/], not: [/itx|mini|micro|m-?atx|\bb760m/], generic: true },
   "mb-b760-ddr4-matx": { q: "carte mère B760M DDR4 micro ATX", must: [/\bb760m\b/, /ddr4|\bd4\b/], generic: true },
-  "mb-b760-ddr5-atx": { q: "carte mère B760 DDR5 ATX", must: [/\bb760\b/], not: [/ddr4|\bd4\b|itx|mini/], generic: true },
+  "mb-b760-ddr5-atx": { q: "carte mère B760 DDR5 ATX", must: [/\bb760\b/], not: [/ddr4|\bd4\b|itx|mini|micro|m-?atx|\bb760m/], generic: true },
   "mb-b760-ddr5-matx": { q: "carte mère B760M DDR5 micro ATX", must: [/\bb760m\b/], not: [/ddr4|\bd4\b/], generic: true },
-  "mb-b860-atx": { q: "carte mère B860 ATX LGA1851", must: [/\bb860\b/], not: [/itx|mini/], generic: true },
+  "mb-b860-atx": { q: "carte mère B860 ATX LGA1851", must: [/\bb860\b/], not: [/itx|mini|micro|m-?atx|\bb860m/], generic: true },
   "mb-b860-matx": { q: "carte mère B860M micro ATX LGA1851", must: [/\bb860m\b/], generic: true },
-  "mb-b550-atx": { q: "carte mère B550 ATX AM4", must: [/\bb550\b/], not: [/itx|mini/], generic: true },
+  "mb-b550-atx": { q: "carte mère B550 ATX AM4", must: [/\bb550\b/], not: [/itx|mini|micro|m-?atx|\bb550m/], generic: true },
   "mb-b550-matx": { q: "carte mère B550M micro ATX AM4", must: [/\bb550m\b/], generic: true },
   "mb-a620-matx": { q: "carte mère A620M micro ATX AM5", must: [/\ba620m?\b/], not: [/itx/], generic: true },
-  "mb-b650-atx": { q: "carte mère B650 ATX AM5", must: [/\bb650\b/], not: [/itx|mini/], generic: true },
+  "mb-b650-atx": { q: "carte mère B650 ATX AM5", must: [/\bb650\b/], not: [/itx|mini|micro|m-?atx|\bb650m/], generic: true },
   "mb-b650-matx": { q: "carte mère B650M micro ATX AM5", must: [/\bb650m\b/], generic: true },
-  "mb-b850-atx": { q: "carte mère B850 ATX AM5", must: [/\bb850\b/], not: [/itx|mini/], generic: true },
+  "mb-b850-atx": { q: "carte mère B850 ATX AM5", must: [/\bb850\b/], not: [/itx|mini|micro|m-?atx|\bb850m/], generic: true },
 
   // Mémoire vive
   // La vitesse (3200…) est souvent absente des titres et change peu le prix : on exige la capacité et le type.
@@ -127,10 +135,10 @@ export const QUERIES: Record<string, PriceQuery> = {
   "d4-1x16-3200": { q: "barrette mémoire 16 Go DDR4 3200 MHz", must: [/\b16 ?g[ob]\b/, /ddr4/], not: [/\d ?x ?\d|\bkit\b|32 ?g[ob]|\becc\b|rdimm|dell|lenovo|\bhp\b|asus/] },
   "d4-2x8-3200": { q: "kit mémoire 16 Go 2x8 Go DDR4 3200 CL16", must: [/2 ?x ?8/, /ddr4/] },
   "d4-2x16-3200": { q: "kit mémoire 32 Go 2x16 Go DDR4 3200 CL16", must: [/2 ?x ?16/, /ddr4/] },
-  "d4-2x32-3200": { q: "kit mémoire 64 Go 2x32 Go DDR4 3200", must: [/2 ?x ?32|\b64 ?g[ob]\b/, /ddr4/], not: [/128 ?g[ob]|\b4 ?x/] },
+  "d4-2x32-3200": { q: "kit mémoire 64 Go 2x32 Go DDR4 3200", must: [/2 ?x ?32|\b64 ?g[ob]\b/, /ddr4/], not: [/128 ?g[ob]|\b4 ?x|\b1 ?x ?32/] },
   // En DDR5, « 32 Go » désigne presque toujours un kit 2 × 16 Go (référence en « M2 » chez Corsair).
   "d5-2x16-6000": { q: "kit mémoire 32 Go 2x16 Go DDR5 6000 CL30", must: [/2 ?x ?16|\b32 ?g[ob]\b/, /ddr5/], not: [/64 ?g[ob]|1 ?x ?32|\b4 ?x/] },
-  "d5-2x32-6000": { q: "kit mémoire 64 Go 2x32 Go DDR5 6000 CL30", must: [/2 ?x ?32|\b64 ?g[ob]\b/, /ddr5/], not: [/128 ?g[ob]|\b4 ?x/] },
+  "d5-2x32-6000": { q: "kit mémoire 64 Go 2x32 Go DDR5 6000 CL30", must: [/2 ?x ?32|\b64 ?g[ob]\b/, /ddr5/], not: [/128 ?g[ob]|\b4 ?x|\b1 ?x ?32/] },
 
   // Stockage
   // Requêtes génériques par type et capacité (les SSD sont interchangeables).
@@ -154,6 +162,6 @@ export const QUERIES: Record<string, PriceQuery> = {
   "p12-5": { q: "ventilateurs Arctic P12 PWM PST Value Pack 5", must: [/p12/, /value ?pack|pack de 5|lot de 5|5 ?pcs|\b5 ?x\b|\(5\)/] },
 
   // Boîtiers
-  "lancool-216": { q: "boîtier Lian Li Lancool 216", must: [/lancool 216/] },
+  "lancool-216": { q: "boîtier Lian Li Lancool 216", must: [/lancool 216/], not: [/216 ?x\b/] },
   "pop-air": { q: "boîtier Fractal Design Pop Air", must: [/pop air/], not: [/\bmini\b|\bsilent\b|\bxl\b/] },
 };

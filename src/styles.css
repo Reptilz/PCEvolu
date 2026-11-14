@@ -666,3 +666,15 @@ dd { font-size: 14px; }
 .al-price { text-align: right; font-size: 13px; }
 .al-price .num { font-size: 15px; font-weight: 650; }
 .al-row.hit .al-price .num { color: var(--ok); }
+/* ---- Fiche prix : plus large, rien ne déborde ---- */
+.sheet { width: min(780px, 100%); padding: 26px 30px; overflow-x: hidden; }
+.sheet-kpis { gap: 12px; }
+.sheet-kpis > div { padding: 14px 16px; min-width: 0; }
+.offers { gap: 8px; }
+.offer { padding: 12px 14px; gap: 16px; min-width: 0; }
+.offer-price { font-weight: 650; white-space: nowrap; flex-shrink: 0; }
+.offer .btn { flex-shrink: 0; white-space: nowrap; }
+@media (max-width: 640px) {
+  .offer { flex-wrap: wrap; }
+  .offer-main { flex-basis: 100%; }
+}

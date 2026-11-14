@@ -49,7 +49,23 @@ const BASE = new Map<string, number | undefined>();
 let current: PricesFile | undefined;
 
 /** Remplace les prix du catalogue par ceux du relevé (sans toucher aux composants absents du relevé). */
-function apply(file: PricesFile) {
+/**
+ * Dernier garde-fou, côté app : une offre très loin de la médiane (moins de 50 % ou plus du double) est
+ * presque toujours une erreur d'annonce. On ne l'affiche jamais comme « meilleur prix », même si un ancien
+ * fichier de prix (cache, version embarquée) en contient encore.
+ */
+function sanitize(file: PricesFile): PricesFile {
+  const items: Record<string, PriceEntry> = {};
+  for (const [id, e] of Object.entries(file.items)) {
+    const best = (e.best ?? []).filter((o) => o.price >= e.price * 0.5 && o.price <= e.price * 2 && !!o.title);
+    const min = best.length ? Math.min(e.min >= e.price * 0.5 ? e.min : Infinity, ...best.map((o) => o.price)) : e.min >= e.price * 0.5 ? e.min : e.price;
+    items[id] = { ...e, best, min: Math.round(min) };
+  }
+  return { ...file, items };
+}
+
+function apply(raw: PricesFile) {
+  const file = sanitize(raw);
   current = file;
   for (const p of all()) {
     if (!BASE.has(p.id)) BASE.set(p.id, p.price);

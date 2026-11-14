@@ -92,9 +92,9 @@ export function PriceSheet({ part, onClose }: { part: SheetPart; onClose: () => 
               </div>
             </div>
             <p className="muted small">
-              {info.offers} marchands · relevé du {day(info.updatedAt)}
+              {info.offers} marchands, relevé du {day(info.updatedAt)}
               {info.stale ? " (le dernier relevé n'a pas trouvé assez d'offres)" : ""}
-              {trend.lowest != null && trend.points >= 2 ? ` · plus bas relevé : ${eur(trend.lowest)} (${day(trend.lowestDate!)})` : ""}
+              {trend.lowest != null && trend.points >= 2 ? `, plus bas relevé : ${eur(trend.lowest)} (${day(trend.lowestDate!)})` : ""}
             </p>
 
             <Sparkline points={hist} />
@@ -115,7 +115,7 @@ export function PriceSheet({ part, onClose }: { part: SheetPart; onClose: () => 
                         </span>
                         {o.title && <span className="muted small offer-title">{o.title}</span>}
                       </div>
-                      <span className="mono">{eur(o.price)}</span>
+                      <span className="num offer-price">{eur(o.price)}</span>
                       {link ? (
                         <button className={`btn small-btn ${link.direct ? "" : "ghost"}`} onClick={() => openUrl(link.url)} title={link.url}>
                           {link.label} ↗
