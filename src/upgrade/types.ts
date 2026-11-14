@@ -7,7 +7,7 @@ export type FormFactor = "ATX" | "mATX" | "ITX";
 /** Génération de processeur, utilisée pour savoir quel chipset le supporte. */
 export type CpuGen =
   | "intel-4" | "intel-6" | "intel-7" | "intel-8" | "intel-9" | "intel-10" | "intel-11" | "intel-12" | "intel-13" | "intel-14" | "intel-ultra2"
-  | "amd-zen1" | "amd-zen2" | "amd-zen3" | "amd-zen4" | "amd-zen5";
+  | "amd-zen1" | "amd-zen1plus" | "amd-zen2" | "amd-zen3" | "amd-zen4" | "amd-zen5";
 
 /** "new" = vendu neuf, "used" = surtout en occasion / fin de stock, null = pas proposé à l'achat. */
 export type Availability = "new" | "used" | null;
@@ -74,7 +74,7 @@ export interface BoardSpec {
   match?: RegExp;
 }
 
-export type GpuPower = "none" | "1x6" | "1x8" | "2x8" | "3x8" | "12V-2x6";
+export type GpuPower = "none" | "1x6" | "1x8" | "8+6" | "2x8" | "3x8" | "12V-2x6";
 
 export interface GpuSpec {
   kind: "gpu";
@@ -89,6 +89,12 @@ export interface GpuSpec {
   power: GpuPower;
   /** Longueur typique des modèles partenaires (mm). */
   lengthMm: number;
+  /** Longueur des modèles courants les plus longs (mm), relevée sur les fiches des fabricants de cartes. */
+  lengthMaxMm?: number;
+  /** Variantes de branchement selon le modèle partenaire (ex. 3 câbles 8 broches sur les modèles haut de gamme). */
+  powerNote?: string;
+  /** Fiche officielle des caractéristiques (consommation, alimentation conseillée, connecteur). */
+  specUrl?: string;
   pcieLanes: 4 | 8 | 16;
   /** Indice de performance en jeu 1440p (RTX 3060 Ti = 100). */
   perf: number;

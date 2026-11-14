@@ -208,14 +208,37 @@ function emptyMessage(tab: Category, p: Profile) {
 // ---------------------------------------------------------------------------
 
 
+/**
+ * D'où vient chaque point de compatibilité :
+ * - « scan » : ce que Windows a lu sur le PC (processeur, carte mère, RAM, disques…), comparé à la fiche du fabricant ;
+ * - « answers » : ce que Windows ne voit pas (alimentation, boîtier, refroidissement), donc tes réponses ou une hypothèse prudente ;
+ * - « estimate » : une estimation de performance de PCEvolu, pas une règle de compatibilité.
+ */
+const CHECK_SOURCE: Record<string, "scan" | "answers" | "estimate"> = {
+  "Carte mère": "scan", "Mémoire vive": "scan", "Type de mémoire": "scan", "Emplacement libre": "scan", "Emplacements libres": "scan",
+  "Capacité max": "scan", "Emplacement M.2": "scan", "Port PCIe": "scan", "Sortie vidéo": "scan", "Barrettes assorties": "scan",
+  "Stockage (migration)": "scan", "PC de marque": "scan", "PC portable": "scan", BIOS: "scan", Vitesse: "scan", "4 barrettes": "scan", Branchement: "scan",
+  Alimentation: "answers", "Connecteur 16 broches": "answers", "Connecteur carte graphique": "answers", "Câbles PCIe": "answers",
+  "Place dans le boîtier": "answers", "Ventilation du boîtier": "answers", "Hauteur du ventirad": "answers", "Encombrement du ventirad": "answers",
+  Ventirad: "answers", "Câble processeur": "answers", Format: "answers", "Épaisseur": "answers",
+  "Équilibre avec le processeur": "estimate", "Équilibre avec la carte graphique": "estimate", "Équilibre de la config": "estimate",
+};
+const SOURCE_TEXT = {
+  scan: "Source : analyse de ton PC et fiches des fabricants",
+  answers: "Source : tes réponses (sinon une hypothèse prudente) et fiches des fabricants",
+  estimate: "Estimation PCEvolu : un ordre de grandeur, pas une règle de compatibilité",
+};
+
 export function CheckRow({ c }: { c: Check }) {
   const icon = c.status === "ok" ? "check" : c.status === "warn" ? "alert" : c.status === "fixed" ? "refresh" : "cross";
+  const source = CHECK_SOURCE[c.label];
   return (
     <li className={`chk c-${c.status}`}>
       <Icon name={icon} />
       <div>
         <div className="chk-label">{c.label}</div>
         <div className="chk-detail"><T>{c.detail}</T></div>
+        {source && <div className="chk-source">{SOURCE_TEXT[source]}</div>}
       </div>
     </li>
   );

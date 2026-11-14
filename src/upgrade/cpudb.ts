@@ -34,7 +34,8 @@ function intelCores(gen: IntelGen, tier: IntelTier, sku: number, k: boolean): [n
   if (gen === 9) return tier === "i3" ? [4, 4] : tier === "i5" ? [6, 6] : tier === "i7" ? [8, 8] : [8, 16];
   if (gen === 10) return tier === "i3" ? [4, 8] : tier === "i5" ? [6, 12] : tier === "i7" ? [8, 16] : [10, 20];
   if (gen === 11) return tier === "i3" ? [4, 8] : tier === "i5" ? [6, 12] : [8, 16];
-  if (gen === 12) return tier === "i3" ? [4, 8] : tier === "i5" ? (k || sku >= 600 ? [10, 16] : [6, 12]) : tier === "i7" ? [12, 20] : [16, 24];
+  // i5 12e gén. : seuls les « K » ont des cœurs E (12600K = 10/16) ; i5-12400, 12500 et 12600 = 6/12 (Intel ARK).
+  if (gen === 12) return tier === "i3" ? [4, 8] : tier === "i5" ? (k ? [10, 16] : [6, 12]) : tier === "i7" ? [12, 20] : [16, 24];
   // 13e et 14e génération
   if (tier === "i3") return [4, 8];
   if (tier === "i5") return k || sku >= 500 ? [14, 20] : [10, 16];
@@ -170,14 +171,14 @@ function ryzen(tier: RyzenTier, digits: string, suffixRaw: string): CpuSpec {
 
   let arch: string;
   if (series === "1") arch = "zen1";
-  else if (series === "2") arch = "zen1+";
+  else if (series === "2") arch = apu ? "zen1" : "zen1+"; // Ryzen 2000G (Raven Ridge) = Zen 1 ; 2600/2700X = Zen+
   else if (series === "3") arch = apu ? "zen1+" : "zen2";
   else if (series === "4") arch = "zen2";
   else if (series === "5") arch = "zen3";
   else if (series === "7" || series === "8") arch = "zen4";
   else arch = "zen5";
 
-  const gen: CpuGen = arch === "zen1" || arch === "zen1+" ? "amd-zen1" : (`amd-${arch}` as CpuGen);
+  const gen: CpuGen = arch === "zen1" ? "amd-zen1" : arch === "zen1+" ? "amd-zen1plus" : (`amd-${arch}` as CpuGen);
   const am5 = arch === "zen4" || arch === "zen5";
 
   // Cœurs / threads
@@ -200,13 +201,14 @@ function ryzen(tier: RyzenTier, digits: string, suffixRaw: string): CpuSpec {
   if (mobile) gaming *= 0.78;
 
   // Consommation (PPT) selon le TDP habituel de chaque modèle
+  // PPT = 1,35 × TDP officiel AMD (65 W → 88, 95 W → 128, 105 W → 142, 120 W → 162, 170 W → 230), vérifié sur amd.com.
   let powerW = 88; // TDP 65 W
-  if (x && (arch === "zen1" || arch === "zen1+") && tier >= 5) powerW = 128;
-  if (x && arch === "zen3" && tier >= 7) powerW = 142;
-  if (x && arch === "zen2" && tier >= 7) powerW = 142;
+  if (x && (arch === "zen1" || arch === "zen1+") && tier >= 5) powerW = digits === "2700" ? 142 : 128; // 1600X/1700X/1800X/2600X : 95 W ; 2700X : 105 W
+  if (x && arch === "zen2") powerW = tier === 5 ? 128 : tier === 7 && sub === "70" ? 88 : 142; // 3600X 95 W ; 3700X 65 W ; 3800X/3900X/3950X 105 W
+  if (x && arch === "zen3") powerW = tier === 5 || (tier === 7 && sub === "70") ? 88 : 142; // 5600X/5700X 65 W ; 5800X/5900X/5950X 105 W
   if (x && arch === "zen4") powerW = tier >= 9 ? 230 : 142;
   if (x && arch === "zen5" && tier >= 9) powerW = sub.startsWith("95") ? 230 : 162;
-  if (x3d) powerW = arch === "zen3" ? 142 : 162;
+  if (x3d) powerW = arch === "zen3" ? 142 : arch === "zen5" && sub.startsWith("95") ? 230 : 162; // 9950X3D : 170 W
   if (mobile) powerW = 54;
 
   const ram: Partial<Record<RamType, number>> =

@@ -1,6 +1,6 @@
 {
- "version": 4,
- "generatedAt": "2026-11-14T20:42:30.669Z",
+ "version": 5,
+ "generatedAt": "2026-11-14T22:42:39.691Z",
  "chipsets": [
   {
    "chipset": "H81",
@@ -562,7 +562,7 @@
    "pcieGpu": 3,
    "cpuGens": [
     "amd-zen1",
-    "amd-zen2",
+    "amd-zen1plus",
     "amd-zen3"
    ],
    "ramOc": false,
@@ -579,11 +579,13 @@
    "pcieGpu": 3,
    "cpuGens": [
     "amd-zen1",
+    "amd-zen1plus",
     "amd-zen2",
     "amd-zen3"
    ],
    "ramOc": true,
    "biosUpdateFor": [
+    "amd-zen2",
     "amd-zen3"
    ]
   },
@@ -596,11 +598,13 @@
    "pcieGpu": 3,
    "cpuGens": [
     "amd-zen1",
+    "amd-zen1plus",
     "amd-zen2",
     "amd-zen3"
    ],
    "ramOc": true,
    "biosUpdateFor": [
+    "amd-zen2",
     "amd-zen3"
    ]
   },
@@ -613,6 +617,7 @@
    "pcieGpu": 3,
    "cpuGens": [
     "amd-zen1",
+    "amd-zen1plus",
     "amd-zen2",
     "amd-zen3"
    ],
@@ -630,6 +635,7 @@
    "pcieGpu": 3,
    "cpuGens": [
     "amd-zen1",
+    "amd-zen1plus",
     "amd-zen2",
     "amd-zen3"
    ],
@@ -672,7 +678,7 @@
    ],
    "pcieGpu": 4,
    "cpuGens": [
-    "amd-zen1",
+    "amd-zen1plus",
     "amd-zen2",
     "amd-zen3"
    ],
@@ -716,7 +722,7 @@
    "ramTypes": [
     "DDR5"
    ],
-   "pcieGpu": 5,
+   "pcieGpu": 4,
    "cpuGens": [
     "amd-zen4",
     "amd-zen5"
@@ -732,12 +738,12 @@
    "ramTypes": [
     "DDR5"
    ],
-   "pcieGpu": 3,
+   "pcieGpu": 4,
    "cpuGens": [
     "amd-zen4",
     "amd-zen5"
    ],
-   "ramOc": false
+   "ramOc": true
   },
   {
    "chipset": "B850",
@@ -745,7 +751,7 @@
    "ramTypes": [
     "DDR5"
    ],
-   "pcieGpu": 5,
+   "pcieGpu": 4,
    "cpuGens": [
     "amd-zen4",
     "amd-zen5"
@@ -1538,7 +1544,7 @@
    "gen": "amd-zen3",
    "cores": 8,
    "threads": 16,
-   "powerW": 142,
+   "powerW": 88,
    "gaming": 114,
    "multi": 144,
    "gpuCeiling": 177,
@@ -1788,7 +1794,7 @@
    "gen": "amd-zen5",
    "cores": 16,
    "threads": 32,
-   "powerW": 162,
+   "powerW": 230,
    "gaming": 212,
    "multi": 362,
    "gpuCeiling": 329,
@@ -2236,7 +2242,9 @@
     "re": "rtx 3070(?! ?ti)",
     "flags": ""
    },
-   "availability": null
+   "availability": null,
+   "specUrl": "https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3070-3070ti/",
+   "powerNote": "Selon le modèle : 1 ou 2 câbles PCIe 8 broches (parfois 8 + 6 broches)."
   },
   {
    "kind": "gpu",
@@ -2364,7 +2372,8 @@
     "flags": ""
    },
    "availability": "new",
-   "price": 450
+   "price": 450,
+   "powerNote": "La Founders Edition utilise un connecteur 16 broches (adaptateur fourni) ; la plupart des modèles partenaires, un câble 8 broches."
   },
   {
    "kind": "gpu",
@@ -2382,7 +2391,9 @@
     "re": "rtx 4070(?! ?(super|ti))",
     "flags": ""
    },
-   "availability": null
+   "availability": null,
+   "specUrl": "https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4070-family/",
+   "powerNote": "Beaucoup de modèles partenaires utilisent simplement un câble PCIe 8 broches au lieu du connecteur 16 broches."
   },
   {
    "kind": "gpu",
@@ -2401,7 +2412,9 @@
     "flags": ""
    },
    "availability": "new",
-   "price": 750
+   "price": 750,
+   "specUrl": "https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4070-family/",
+   "powerNote": "Beaucoup de modèles partenaires utilisent simplement un câble PCIe 8 broches au lieu du connecteur 16 broches."
   },
   {
    "kind": "gpu",
@@ -2529,7 +2542,8 @@
     "flags": ""
    },
    "availability": "new",
-   "price": 500
+   "price": 500,
+   "lengthMaxMm": 303
   },
   {
    "kind": "gpu",
@@ -2566,7 +2580,9 @@
     "flags": ""
    },
    "availability": "new",
-   "price": 920
+   "price": 920,
+   "lengthMaxMm": 306,
+   "powerNote": "Quelques modèles (ASUS TUF) utilisent un connecteur 16 broches au lieu du câble 8 broches."
   },
   {
    "kind": "gpu",
@@ -2585,7 +2601,8 @@
     "flags": ""
    },
    "availability": "new",
-   "price": 1000
+   "price": 1000,
+   "lengthMaxMm": 338
   },
   {
    "kind": "gpu",
@@ -2604,7 +2621,8 @@
     "flags": ""
    },
    "availability": "new",
-   "price": 1700
+   "price": 1700,
+   "lengthMaxMm": 340
   },
   {
    "kind": "gpu",
@@ -3079,7 +3097,8 @@
     "flags": ""
    },
    "availability": "new",
-   "price": 850
+   "price": 850,
+   "powerNote": "Certains modèles haut de gamme (Sapphire NITRO+) demandent 3 câbles 8 broches."
   },
   {
    "kind": "gpu",
@@ -3097,7 +3116,8 @@
     "re": "rx 7900 ?xtx",
     "flags": ""
    },
-   "availability": null
+   "availability": null,
+   "powerNote": "Certains modèles haut de gamme (Sapphire NITRO+) demandent 3 câbles 8 broches."
   },
   {
    "kind": "gpu",
@@ -3105,7 +3125,7 @@
    "name": "Radeon RX 9060 XT 8 Go",
    "brand": "AMD",
    "vramGb": 8,
-   "tbp": 160,
+   "tbp": 150,
    "psuRec": 450,
    "power": "1x8",
    "lengthMm": 260,
@@ -3116,7 +3136,8 @@
     "flags": ""
    },
    "availability": "new",
-   "price": 520
+   "price": 520,
+   "specUrl": "https://www.amd.com/en/products/graphics/desktops/radeon/9000-series/amd-radeon-rx-9060xt-8gb.html"
   },
   {
    "kind": "gpu",
@@ -3124,8 +3145,8 @@
    "name": "Radeon RX 9060 XT 16 Go",
    "brand": "AMD",
    "vramGb": 16,
-   "tbp": 182,
-   "psuRec": 550,
+   "tbp": 160,
+   "psuRec": 450,
    "power": "1x8",
    "lengthMm": 270,
    "pcieLanes": 16,
@@ -3135,7 +3156,9 @@
     "flags": ""
    },
    "availability": "new",
-   "price": 760
+   "price": 760,
+   "specUrl": "https://www.amd.com/en/products/graphics/desktops/radeon/9000-series/amd-radeon-rx-9060xt.html",
+   "lengthMaxMm": 310
   },
   {
    "kind": "gpu",
@@ -3173,7 +3196,9 @@
     "flags": ""
    },
    "availability": "new",
-   "price": 1050
+   "price": 1050,
+   "lengthMaxMm": 340,
+   "powerNote": "Selon le modèle : 2 câbles 8 broches (Sapphire Pulse, PowerColor Reaper), 3 câbles 8 broches (Gigabyte Gaming OC, PowerColor Red Devil) ou un connecteur 12V-2x6 (Sapphire NITRO+). Les modèles overclockés conseillent 850 à 900 W."
   },
   {
    "kind": "gpu",
@@ -3219,7 +3244,7 @@
    "vramGb": 8,
    "tbp": 225,
    "psuRec": 600,
-   "power": "2x8",
+   "power": "8+6",
    "lengthMm": 270,
    "pcieLanes": 16,
    "perf": 82,
@@ -3228,7 +3253,8 @@
     "flags": ""
    },
    "availability": "new",
-   "price": 250
+   "price": 250,
+   "specUrl": "https://www.intel.com/content/www/us/en/support/articles/000091128/graphics/intel-arc-dedicated-graphics-family.html"
   },
   {
    "kind": "gpu",
@@ -3238,7 +3264,7 @@
    "vramGb": 16,
    "tbp": 225,
    "psuRec": 600,
-   "power": "2x8",
+   "power": "8+6",
    "lengthMm": 270,
    "pcieLanes": 16,
    "perf": 90,
@@ -3274,7 +3300,7 @@
    "brand": "Intel",
    "vramGb": 12,
    "tbp": 190,
-   "psuRec": 550,
+   "psuRec": 600,
    "power": "1x8",
    "lengthMm": 270,
    "pcieLanes": 8,
@@ -3284,7 +3310,8 @@
     "flags": ""
    },
    "availability": "new",
-   "price": 380
+   "price": 380,
+   "specUrl": "https://www.intel.com/content/www/us/en/products/sku/241598/intel-arc-b580-graphics/specifications.html"
   }
  ],
  "boards": [
@@ -3666,7 +3693,7 @@
   {
    "kind": "psu",
    "id": "psu-650",
-   "name": "Alimentation 650 W 80+ Gold ATX 3.1 (ex. Corsair RM650e, MSI MAG A650GL)",
+   "name": "Alimentation 650 W 80+ Gold avec câble 12V-2x6 (ex. Corsair RM650e modèle 2025)",
    "watts": 650,
    "atx3": true,
    "native12v2x6": true,
@@ -3676,7 +3703,7 @@
   {
    "kind": "psu",
    "id": "psu-750",
-   "name": "Alimentation 750 W 80+ Gold ATX 3.1 (ex. Corsair RM750e, be quiet! Pure Power 12)",
+   "name": "Alimentation 750 W 80+ Gold avec câble 12V-2x6 (ex. Corsair RM750e modèle 2025)",
    "watts": 750,
    "atx3": true,
    "native12v2x6": true,
@@ -3686,7 +3713,7 @@
   {
    "kind": "psu",
    "id": "psu-850",
-   "name": "Alimentation 850 W 80+ Gold ATX 3.1 (ex. Corsair RM850e, MSI MAG A850GL)",
+   "name": "Alimentation 850 W 80+ Gold avec câble 12V-2x6 (ex. Corsair RM850e 2025, MSI MAG A850GL PCIE5)",
    "watts": 850,
    "atx3": true,
    "native12v2x6": true,
@@ -3696,7 +3723,7 @@
   {
    "kind": "psu",
    "id": "psu-1000",
-   "name": "Alimentation 1000 W 80+ Gold ATX 3.1 (ex. Corsair RM1000e, Seasonic Focus GX)",
+   "name": "Alimentation 1000 W 80+ Gold avec câble 12V-2x6 (ex. Corsair RM1000e modèle 2025)",
    "watts": 1000,
    "atx3": true,
    "native12v2x6": true,

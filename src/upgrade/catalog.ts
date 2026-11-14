@@ -14,7 +14,7 @@ import { GPU_TABLE, findGpuSpec } from "./gpudb";
 
 export const CATALOG_DATE = "novembre 2026";
 /** Incrémenté à chaque mise à jour du catalogue (le catalogue téléchargé n'est pris que s'il est plus récent). */
-export const CATALOG_VERSION = 4;
+export const CATALOG_VERSION = 5;
 
 // ---------------------------------------------------------------------------
 // Chipsets : ce qui définit la compatibilité CPU / RAM / PCIe d'une carte mère
@@ -25,7 +25,7 @@ const I8_9: CpuGen[] = ["intel-8", "intel-9"];
 const I10: CpuGen[] = ["intel-10"];
 const I10_11: CpuGen[] = ["intel-10", "intel-11"];
 const I12_14: CpuGen[] = ["intel-12", "intel-13", "intel-14"];
-const AM4_ALL: CpuGen[] = ["amd-zen1", "amd-zen2", "amd-zen3"];
+const AM4_ALL: CpuGen[] = ["amd-zen1", "amd-zen1plus", "amd-zen2", "amd-zen3"];
 const AM5_ALL: CpuGen[] = ["amd-zen4", "amd-zen5"];
 
 const chip = (chipset: string, socket: Socket, ramTypes: ChipsetSpec["ramTypes"], pcieGpu: 3 | 4 | 5, cpuGens: CpuGen[], ramOc: boolean, biosUpdateFor?: CpuGen[]): ChipsetSpec =>
@@ -62,20 +62,23 @@ export const CHIPSETS: ChipsetSpec[] = [
   chip("B860", "LGA1851", ["DDR5"], 5, ["intel-ultra2"], true),
   chip("Z890", "LGA1851", ["DDR5"], 5, ["intel-ultra2"], true),
   // AM4
-  chip("A320", "AM4", ["DDR4"], 3, AM4_ALL, false, ["amd-zen3"]),
-  chip("B350", "AM4", ["DDR4"], 3, AM4_ALL, true, ["amd-zen3"]),
-  chip("X370", "AM4", ["DDR4"], 3, AM4_ALL, true, ["amd-zen3"]),
+  // Tableau officiel AMD (amd.com, chipsets AM4) : l'A320 ne prend pas les Ryzen 3000 ; Ryzen 5000 via un BIOS « bêta sélectif ».
+  chip("A320", "AM4", ["DDR4"], 3, ["amd-zen1", "amd-zen1plus", "amd-zen3"], false, ["amd-zen3"]),
+  chip("B350", "AM4", ["DDR4"], 3, AM4_ALL, true, ["amd-zen2", "amd-zen3"]),
+  chip("X370", "AM4", ["DDR4"], 3, AM4_ALL, true, ["amd-zen2", "amd-zen3"]),
   chip("B450", "AM4", ["DDR4"], 3, AM4_ALL, true, ["amd-zen3"]),
   chip("X470", "AM4", ["DDR4"], 3, AM4_ALL, true, ["amd-zen3"]),
   chip("A520", "AM4", ["DDR4"], 3, ["amd-zen2", "amd-zen3"], false),
   chip("B550", "AM4", ["DDR4"], 4, ["amd-zen2", "amd-zen3"], true),
-  chip("X570", "AM4", ["DDR4"], 4, AM4_ALL, true),
+  chip("X570", "AM4", ["DDR4"], 4, ["amd-zen1plus", "amd-zen2", "amd-zen3"], true), // pas de Ryzen 1000 (AMD)
   // AM5
   chip("A620", "AM5", ["DDR5"], 4, AM5_ALL, true, ["amd-zen5"]),
   chip("B650", "AM5", ["DDR5"], 4, AM5_ALL, true, ["amd-zen5"]),
-  chip("X670", "AM5", ["DDR5"], 5, AM5_ALL, true, ["amd-zen5"]),
-  chip("B840", "AM5", ["DDR5"], 3, AM5_ALL, false),
-  chip("B850", "AM5", ["DDR5"], 5, AM5_ALL, true),
+  // Port graphique (tableau AMD) : X670 et B850 en PCIe 4.0 (5.0 en option sur certaines cartes ; seul le M.2 5.0 est obligatoire
+  // sur B850), B840 en PCIe 4.0 (lignes du chipset en 3.0). X670E / X870 : 5.0.
+  chip("X670", "AM5", ["DDR5"], 4, AM5_ALL, true, ["amd-zen5"]),
+  chip("B840", "AM5", ["DDR5"], 4, AM5_ALL, true),
+  chip("B850", "AM5", ["DDR5"], 4, AM5_ALL, true),
   chip("X870", "AM5", ["DDR5"], 5, AM5_ALL, true),
 ];
 
@@ -209,15 +212,21 @@ const psu = (id: string, name: string, watts: number, atx3: boolean, native12v2x
 // câble 12V-2x6 natif pour les cartes graphiques récentes.
 export const PSUS: PsuSpec[] = [
   psu("psu-550", "Alimentation 550 W 80+ Bronze (ex. be quiet! System Power, Corsair CX)", 550, false, false, 2, 60),
-  psu("psu-650", "Alimentation 650 W 80+ Gold ATX 3.1 (ex. Corsair RM650e, MSI MAG A650GL)", 650, true, true, 2, 90),
-  psu("psu-750", "Alimentation 750 W 80+ Gold ATX 3.1 (ex. Corsair RM750e, be quiet! Pure Power 12)", 750, true, true, 3, 110),
-  psu("psu-850", "Alimentation 850 W 80+ Gold ATX 3.1 (ex. Corsair RM850e, MSI MAG A850GL)", 850, true, true, 3, 130),
-  psu("psu-1000", "Alimentation 1000 W 80+ Gold ATX 3.1 (ex. Corsair RM1000e, Seasonic Focus GX)", 1000, true, true, 4, 170),
+  // Exemples vérifiés sur les fiches fabricants (novembre 2026) :
+  // - Corsair RMe « 2025 » (ATX 3.1, câble 12V-2x6 natif) : RM650e CP-9020302, RM750e CP-9020295, RM850e CP-9020296, RM1000e CP-9020297.
+  //   Les RMe « 2023 » portent le même nom mais passent par un câble 2 × 8 broches → 12V-2x6.
+  // - MSI MAG A850GL PCIE5 : 1 connecteur 16 broches + 4 × 8 broches. La MAG A650GL sans « PCIE5 » n'a PAS de 16 broches.
+  psu("psu-650", "Alimentation 650 W 80+ Gold avec câble 12V-2x6 (ex. Corsair RM650e modèle 2025)", 650, true, true, 2, 90),
+  psu("psu-750", "Alimentation 750 W 80+ Gold avec câble 12V-2x6 (ex. Corsair RM750e modèle 2025)", 750, true, true, 3, 110),
+  psu("psu-850", "Alimentation 850 W 80+ Gold avec câble 12V-2x6 (ex. Corsair RM850e 2025, MSI MAG A850GL PCIE5)", 850, true, true, 3, 130),
+  psu("psu-1000", "Alimentation 1000 W 80+ Gold avec câble 12V-2x6 (ex. Corsair RM1000e modèle 2025)", 1000, true, true, 4, 170),
 ];
 
 const cooler = (id: string, name: string, type: CoolerSpec["type"], sockets: Socket[], capacityW: number, price: number): CoolerSpec =>
   ({ kind: "cooler", id, name, type, sockets, capacityW, price });
 
+// Hauteurs, sockets et radiateur vérifiés sur les fiches Arctic et Thermalright (novembre 2026).
+// Ni Arctic ni Thermalright ne publient de capacité en watts : capacityW est une estimation prudente de PCEvolu.
 export const COOLERS: CoolerSpec[] = [
   { ...cooler("arctic-f36", "Arctic Freezer 36", "air", ["LGA1700", "LGA1851", "AM4", "AM5"], 180, 32), heightMm: 159 },
   { ...cooler("pa120se", "Thermalright Peerless Assassin 120 SE", "air", ["LGA1151", "LGA1200", "LGA1700", "LGA1851", "AM4", "AM5"], 240, 40), heightMm: 155 },
@@ -237,6 +246,7 @@ export const FAN_KITS: FanKit[] = [
   { kind: "fans", id: "p12-5", name: "Arctic P12 PWM PST (lot de 5)", count: 5, price: 30 },
 ];
 
+// Longueur max de carte graphique et ventilateurs fournis vérifiés sur les fiches Lian Li et Fractal Design.
 export const CASES: CaseSpec[] = [
   { kind: "case", id: "lancool-216", name: "Lian Li Lancool 216", formFactors: ["ATX", "mATX", "ITX"], maxGpuMm: 392, fansIncluded: 3, price: 100 },
   { kind: "case", id: "pop-air", name: "Fractal Design Pop Air", formFactors: ["ATX", "mATX", "ITX"], maxGpuMm: 405, fansIncluded: 3, price: 85 },

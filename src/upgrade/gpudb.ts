@@ -88,8 +88,8 @@ const AMD: Row[] = [
   ["rx-7900gre", "Radeon RX 7900 GRE", 16, 260, 700, "2x8", 280, 16, 170, /rx 7900 ?gre/],
   ["rx-7900xt", "Radeon RX 7900 XT", 20, 315, 750, "2x8", 300, 16, 200, /rx 7900 ?xt(?! ?x)/],
   ["rx-7900xtx", "Radeon RX 7900 XTX", 24, 355, 800, "2x8", 320, 16, 230, /rx 7900 ?xtx/],
-  ["rx-9060xt-8", "Radeon RX 9060 XT 8 Go", 8, 160, 450, "1x8", 260, 16, 116, /rx 9060 ?xt.*\b8 ?g/],
-  ["rx-9060xt-16", "Radeon RX 9060 XT 16 Go", 16, 182, 550, "1x8", 270, 16, 122, /rx 9060/],
+  ["rx-9060xt-8", "Radeon RX 9060 XT 8 Go", 8, 150, 450, "1x8", 260, 16, 116, /rx 9060 ?xt.*\b8 ?g/],
+  ["rx-9060xt-16", "Radeon RX 9060 XT 16 Go", 16, 160, 450, "1x8", 270, 16, 122, /rx 9060/],
   ["rx-9070", "Radeon RX 9070 16 Go", 16, 220, 650, "2x8", 300, 16, 175, /rx 9070(?! ?xt)/],
   ["rx-9070xt", "Radeon RX 9070 XT 16 Go", 16, 304, 750, "2x8", 330, 16, 195, /rx 9070 ?xt/],
 ];
@@ -97,10 +97,10 @@ const AMD: Row[] = [
 const INTEL: Row[] = [
   ["arc-a380", "Intel Arc A380", 6, 75, 400, "none", 190, 8, 30, /arc a380/],
   ["arc-a580", "Intel Arc A580", 8, 185, 550, "2x8", 250, 16, 75, /arc a580/],
-  ["arc-a750", "Intel Arc A750", 8, 225, 600, "2x8", 270, 16, 82, /arc a750/],
-  ["arc-a770", "Intel Arc A770", 16, 225, 600, "2x8", 270, 16, 90, /arc a770/],
+  ["arc-a750", "Intel Arc A750", 8, 225, 600, "8+6", 270, 16, 82, /arc a750/],
+  ["arc-a770", "Intel Arc A770", 16, 225, 600, "8+6", 270, 16, 90, /arc a770/],
   ["arc-b570", "Intel Arc B570", 10, 150, 450, "1x8", 250, 8, 85, /arc b570/],
-  ["arc-b580", "Intel Arc B580", 12, 190, 550, "1x8", 270, 8, 95, /arc b580/],
+  ["arc-b580", "Intel Arc B580", 12, 190, 600, "1x8", 270, 8, 95, /arc b580/],
 ];
 
 /** Puces graphiques intégrées au processeur (pas de carte graphique). */
@@ -143,7 +143,32 @@ const FOR_SALE: Record<string, { price: number; availability: Availability }> = 
   "arc-b580": { price: 380, availability: "new" },
 };
 
-const withSale = (s: GpuSpec): GpuSpec => (FOR_SALE[s.id] ? { ...s, ...FOR_SALE[s.id] } : s);
+/**
+ * Vérifications sur fiches officielles (14 novembre 2026) : consommation, alimentation conseillée, connecteur.
+ * - specUrl : la fiche du fabricant de la puce ;
+ * - lengthMaxMm : longueur des modèles courants les plus longs, relevée sur les fiches des marques (ASUS, MSI,
+ *   Gigabyte, Sapphire, PowerColor…) ; le contrôle « place dans le boîtier » s'appuie dessus ;
+ * - powerNote : branchement différent selon le modèle partenaire.
+ */
+const VERIFIED: Record<string, Partial<GpuSpec>> = {
+  "rtx-4060ti": { powerNote: "La Founders Edition utilise un connecteur 16 broches (adaptateur fourni) ; la plupart des modèles partenaires, un câble 8 broches." },
+  "rtx-4070": { specUrl: "https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4070-family/", powerNote: "Beaucoup de modèles partenaires utilisent simplement un câble PCIe 8 broches au lieu du connecteur 16 broches." },
+  "rtx-4070s": { specUrl: "https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4070-family/", powerNote: "Beaucoup de modèles partenaires utilisent simplement un câble PCIe 8 broches au lieu du connecteur 16 broches." },
+  "rtx-3070": { specUrl: "https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3070-3070ti/", powerNote: "Selon le modèle : 1 ou 2 câbles PCIe 8 broches (parfois 8 + 6 broches)." },
+  "rtx-5060": { lengthMaxMm: 303 },
+  "rtx-5060ti-16": { lengthMaxMm: 306, powerNote: "Quelques modèles (ASUS TUF) utilisent un connecteur 16 broches au lieu du câble 8 broches." },
+  "rtx-5070": { lengthMaxMm: 338 },
+  "rtx-5070ti": { lengthMaxMm: 340 },
+  "rx-9060xt-8": { specUrl: "https://www.amd.com/en/products/graphics/desktops/radeon/9000-series/amd-radeon-rx-9060xt-8gb.html" },
+  "rx-9060xt-16": { specUrl: "https://www.amd.com/en/products/graphics/desktops/radeon/9000-series/amd-radeon-rx-9060xt.html", lengthMaxMm: 310 },
+  "rx-9070xt": { lengthMaxMm: 340, powerNote: "Selon le modèle : 2 câbles 8 broches (Sapphire Pulse, PowerColor Reaper), 3 câbles 8 broches (Gigabyte Gaming OC, PowerColor Red Devil) ou un connecteur 12V-2x6 (Sapphire NITRO+). Les modèles overclockés conseillent 850 à 900 W." },
+  "rx-7900xt": { powerNote: "Certains modèles haut de gamme (Sapphire NITRO+) demandent 3 câbles 8 broches." },
+  "rx-7900xtx": { powerNote: "Certains modèles haut de gamme (Sapphire NITRO+) demandent 3 câbles 8 broches." },
+  "arc-a750": { specUrl: "https://www.intel.com/content/www/us/en/support/articles/000091128/graphics/intel-arc-dedicated-graphics-family.html" },
+  "arc-b580": { specUrl: "https://www.intel.com/content/www/us/en/products/sku/241598/intel-arc-b580-graphics/specifications.html" },
+};
+
+const withSale = (s: GpuSpec): GpuSpec => ({ ...s, ...(FOR_SALE[s.id] ?? {}), ...(VERIFIED[s.id] ?? {}) });
 
 export const GPU_TABLE: GpuSpec[] = [
   ...NVIDIA.map((r) => withSale(toSpec(r, "NVIDIA"))),

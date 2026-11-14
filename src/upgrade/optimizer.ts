@@ -233,7 +233,7 @@ export function validatePlan(goal: Goal, p: Profile, plan: Plan): Check[] {
   // 3. Port PCIe de la carte graphique, sur la carte mère FINALE
   if (gpu && !gpu.integrated) {
     let gen = newBoard?.kind === "board" ? newBoard.pcieGpu : p.pcieGen;
-    if (gen && (cpu?.gen === "intel-10" || cpu?.gen === "amd-zen1")) gen = 3;
+    if (gen && (cpu?.gen === "intel-10" || cpu?.gen === "amd-zen1" || cpu?.gen === "amd-zen1plus" || /ryzen \d (5500|[45]\d{2}0g)\b/i.test(cpu?.name ?? ""))) gen = 3;
     if (gen === 3 && gpu.pcieLanes < 16) {
       put({ label: "Port PCIe", status: "warn", detail: `La ${gpu.name} n'utilise que ${gpu.pcieLanes} lignes PCIe : sur un port PCIe 3.0, elle perd ${gpu.pcieLanes === 4 ? "10 à 25 %" : "5 à 10 %"}.` });
     } else if (gen) {
@@ -257,7 +257,7 @@ export function validatePlan(goal: Goal, p: Profile, plan: Plan): Check[] {
       const native = psuAdd?.role === "required" || p.psu12v2x6;
       put({ label: "Connecteur carte graphique", status: native ? "ok" : "warn", detail: native ? "Câble 12V-2x6 (16 broches) natif sur l'alimentation." : "Connecteur 12V-2x6 : utilise l'adaptateur fourni, branché sur des câbles PCIe 8 broches séparés." });
     } else if (gpu.power !== "none" && gpu.power !== "1x6" && gpu.power !== "1x8") {
-      put({ label: "Connecteur carte graphique", status: psuAdd?.role === "required" ? "ok" : "warn", detail: `Il faut ${gpu.power === "3x8" ? 3 : 2} câbles PCIe 8 broches séparés sur l'alimentation.` });
+      put({ label: "Connecteur carte graphique", status: psuAdd?.role === "required" ? "ok" : "warn", detail: gpu.power === "8+6" ? "Il faut un câble PCIe 8 broches et un câble 6 broches (un « 6+2 » convient) sur l'alimentation." : `Il faut ${gpu.power === "3x8" ? 3 : 2} câbles PCIe 8 broches séparés sur l'alimentation.${gpu.powerNote ? ` ${gpu.powerNote}` : ""}` });
     }
   }
   if (cpu && choice.cpu) put(epsCable(p, cpu, psuAdd?.role === "required"));

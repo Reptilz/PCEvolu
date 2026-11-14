@@ -135,7 +135,9 @@ export function buildProfile(r: Report, a: Answers): Profile {
   // Les processeurs Intel de 10e génération limitent le port graphique au PCIe 3.0, quelle que soit la carte mère.
   let pcieGen = board?.pcieGpu ?? chipset?.pcieGpu;
   if (pcieGen && cpu?.gen === "intel-10") pcieGen = 3;
-  if (pcieGen && cpu?.gen === "amd-zen1") pcieGen = 3;
+  if (pcieGen && (cpu?.gen === "amd-zen1" || cpu?.gen === "amd-zen1plus")) pcieGen = 3;
+  // Ryzen 5 5500 et APU Ryzen 4000G / 5000G : port graphique limité au PCIe 3.0, même sur une carte B550.
+  if (pcieGen && cpu && /ryzen \d (5500|[45]\d{2}0g)\b/i.test(cpu.name)) pcieGen = 3;
   // Carte mère non reconnue : on déduit la génération PCIe du processeur.
   if (!pcieGen && cpu) {
     const g = cpu.gen;

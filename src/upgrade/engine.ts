@@ -46,9 +46,12 @@ function finalize(
 }
 
 /** Câbles PCIe 8 broches nécessaires (0 si la carte utilise le connecteur 12V-2x6 natif de l'alim). */
-const pcie8Needed = (g: GpuSpec) => (g.power === "3x8" ? 3 : g.power === "2x8" ? 2 : g.power === "1x8" ? 1 : 0);
-/** Avec un adaptateur (alim sans câble 12V-2x6), une carte 16 broches demande 2 à 3 câbles 8 broches. */
-const pcie8ViaAdapter = (g: GpuSpec) => (g.tbp > 300 ? 3 : 2);
+const pcie8Needed = (g: GpuSpec) => (g.power === "3x8" ? 3 : g.power === "2x8" || g.power === "8+6" ? 2 : g.power === "1x8" ? 1 : 0);
+/**
+ * Avec l'adaptateur fourni (alim sans câble 12V-2x6), une carte 16 broches demande des câbles 8 broches séparés :
+ * 2 jusqu'à 300 W (RTX 4070 Ti, 5070, 5070 Ti), 3 jusqu'à 450 W (RTX 4080, 4090, 5080), 4 au-delà (RTX 5090).
+ */
+const pcie8ViaAdapter = (g: GpuSpec) => (g.tbp > 450 ? 4 : g.tbp > 300 ? 3 : 2);
 
 /**
  * Vérifie l'alimentation pour une config donnée et ajoute une alimentation si besoin.
@@ -128,7 +131,7 @@ export function proposeGpus(p: Profile): Proposal[] {
     checkPower(p, p.cpu?.powerW, g, checks, additions, "pour cette carte");
     const newPsu = additions.find((a) => a.part.kind === "psu");
     const psuReplaced = newPsu?.role === "required";
-    const ifNewPsu = newPsu?.role === "verify" ? ` Si tu changes d'alimentation, la ${newPsu.part.name.split(" (")[0]} les a.` : "";
+    const ifNewPsu = newPsu?.role === "verify" ? ` Si tu changes d'alimentation, celle proposée (${"watts" in newPsu.part ? newPsu.part.watts : ""} W) les a.` : "";
 
     // 3. Connecteurs d'alimentation
     if (g.power === "12V-2x6") {
@@ -137,26 +140,53 @@ export function proposeGpus(p: Profile): Proposal[] {
       } else {
         checks.push({
           label: "Connecteur 16 broches", status: "warn",
-          detail: `La carte utilise un connecteur 12V-2x6. Un adaptateur est fourni : il faut ${pcie8ViaAdapter(g)} câbles PCIe 8 broches séparés sur ton alim (pas un câble dédoublé).${ifNewPsu ? ` Si tu changes d'alimentation, la ${newPsu!.part.name.split(" (")[0]} a le câble natif.` : ""}`,
+          detail: `La carte utilise un connecteur 12V-2x6. Un adaptateur est fourni : il faut ${pcie8ViaAdapter(g)} câbles PCIe 8 broches séparés sur ton alim (pas un câble dédoublé).${ifNewPsu ? ` Si tu changes d'alimentation, celle proposée a le câble natif.` : ""}`,
         });
       }
-    } else if (g.power !== "1x8") {
+    } else if (g.power === "8+6") {
+      checks.push({ label: "Câbles PCIe", status: psuReplaced ? "ok" : "warn", detail: `Il faut un câble PCIe 8 broches et un câble 6 broches (un câble « 6+2 » convient)${psuReplaced ? " : la nouvelle alimentation les a." : `. Vérifie que ton alim les a.${ifNewPsu}`}` });
+    } else if (g.power === "2x8" || g.power === "3x8") {
       checks.push({ label: "Câbles PCIe", status: psuReplaced ? "ok" : "warn", detail: `Il faut ${pcie8Needed(g)} câbles PCIe 8 broches séparés${psuReplaced ? " : la nouvelle alimentation les a." : `. Vérifie que ton alim les a.${ifNewPsu}`}` });
+    } else if (g.power === "1x8") {
+      const curNeeds = cur?.power;
+      checks.push({
+        label: "Câbles PCIe",
+        status: "ok",
+        detail: curNeeds && curNeeds !== "none" && curNeeds !== "1x6" ? "1 câble PCIe 8 broches, comme ta carte actuelle." : "1 câble PCIe 8 broches : présent sur toutes les alimentations de PC de jeu.",
+      });
     } else {
-      checks.push({ label: "Câbles PCIe", status: "ok", detail: "1 câble PCIe 8 broches, comme ta carte actuelle." });
+      checks.push({ label: "Câbles PCIe", status: "ok", detail: g.power === "none" ? "Aucun câble : la carte est alimentée par le port PCIe." : "1 câble PCIe 6 broches." });
+    }
+    // Branchement différent selon le modèle partenaire : on le signale, sans changer le verdict.
+    if (g.powerNote) {
+      const last = checks[checks.length - 1];
+      checks[checks.length - 1] = { ...last, detail: `${last.detail} ${g.powerNote}` };
     }
 
     // 4. Place dans le boîtier
+    // Les longueurs varient beaucoup selon le modèle (ex. RTX 5070 : de 229 à 338 mm). On compare aux modèles
+    // les plus longs quand on les connaît ; sinon, une marge de 30 mm sous la longueur typique reste « à vérifier ».
+    const longest = g.lengthMaxMm ?? g.lengthMm + 30;
     if (p.gpuMaxMm != null) {
-      if (g.lengthMm <= p.gpuMaxMm) {
-        checks.push({ label: "Place dans le boîtier", status: "ok", detail: `≈ ${g.lengthMm} mm, ton boîtier accepte jusqu'à ${p.gpuMaxMm} mm.` });
+      if (longest <= p.gpuMaxMm) {
+        checks.push({ label: "Place dans le boîtier", status: "ok", detail: `${g.lengthMaxMm ? `Jusqu'à ${g.lengthMaxMm} mm pour les modèles les plus longs` : `≈ ${g.lengthMm} mm`}, ton boîtier accepte jusqu'à ${p.gpuMaxMm} mm.` });
+      } else if (g.lengthMm <= p.gpuMaxMm) {
+        checks.push({
+          label: "Place dans le boîtier",
+          status: "warn",
+          detail: `Ton boîtier accepte ${p.gpuMaxMm} mm : la plupart des modèles (≈ ${g.lengthMm} mm) rentrent, mais pas les plus longs${g.lengthMaxMm ? ` (jusqu'à ${g.lengthMaxMm} mm)` : ""}. Vérifie la longueur du modèle exact sur sa fiche (compte 15 à 20 mm de marge pour les câbles).`,
+        });
       } else {
         const box = CASES.filter((c) => c.maxGpuMm >= g.lengthMm && (!p.formFactor || c.formFactors.includes(p.formFactor))).sort((a, b) => a.price - b.price)[0];
         checks.push({ label: "Place dans le boîtier", status: "fail", detail: `Les modèles courants mesurent ≈ ${g.lengthMm} mm, ton boîtier n'accepte que ${p.gpuMaxMm} mm.` });
         if (box) additions.push({ role: "required", part: box, quantity: 1, reason: `Pour loger une carte de ${g.lengthMm} mm. Alternative : chercher un modèle compact de cette carte (moins de ${p.gpuMaxMm} mm).` });
       }
     } else {
-      checks.push({ label: "Place dans le boîtier", status: "warn", detail: `Les modèles courants mesurent ≈ ${g.lengthMm} mm : vérifie la longueur max dans la fiche de ton boîtier.` });
+      checks.push({
+        label: "Place dans le boîtier",
+        status: "warn",
+        detail: `Les modèles courants mesurent ≈ ${g.lengthMm} mm${g.lengthMaxMm ? `, jusqu'à ${g.lengthMaxMm} mm pour les plus longs` : ""} : vérifie la longueur max dans la fiche de ton boîtier.`,
+      });
     }
 
     // 5. Ventilation : la chaleur supplémentaire doit sortir du boîtier
