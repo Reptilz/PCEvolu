@@ -323,6 +323,10 @@ export function impactOf(goal: Goal, p: Profile, verdict: Verdict, main: { kind:
   if (goal.usage === "creation" && category === "ram") {
     return { relevant: fixes.has("ram"), reachesGoal: (ramAfterGb ?? 0) >= 32 };
   }
+  // Un disque dur mécanique ajoute de la place, mais ne remplace jamais un SSD pour Windows et les jeux.
+  if (category === "storage" && main.kind === "ssd" && (main as { iface?: string }).iface === "HDD") {
+    return { relevant: false, reachesGoal: false, label: "Pour stocker beaucoup de fichiers, pas pour accélérer le PC" };
+  }
   if (goal.usage === "office" && category === "gpu") {
     return { relevant: false, reachesGoal: false, label: "Inutile pour la bureautique" };
   }

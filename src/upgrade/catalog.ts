@@ -199,10 +199,18 @@ const ssd = (id: string, name: string, iface: SsdSpec["iface"], tb: number, pric
 // Les SSD sont interchangeables : on raisonne par type et capacité (prix = médiane du marché),
 // avec des exemples de modèles. Les SSD PCIe 3.0 ont quasiment disparu du neuf : le NVMe courant est en PCIe 4.0.
 export const SSDS: SsdSpec[] = [
+  ssd("nvme-500gb", "SSD NVMe M.2 500 Go (ex. Kingston NV3, Crucial P3 Plus)", "NVMe4", 0.5, 90),
   ssd("nvme-1tb", "SSD NVMe M.2 1 To (ex. Kingston NV3, WD SN7100)", "NVMe4", 1, 170),
   ssd("nvme-2tb", "SSD NVMe M.2 2 To (ex. Kingston NV3, WD SN7100)", "NVMe4", 2, 300),
+  ssd("nvme-4tb", "SSD NVMe M.2 4 To (ex. WD SN7100, Lexar NM790)", "NVMe4", 4, 600),
+  // PCIe 5.0 : ≈ 12 000 Mo/s, mais seulement sur un emplacement M.2 PCIe 5.0 (cartes AM5 / LGA1851 récentes). Gain peu visible en jeu.
+  ssd("nvme5-2tb", "SSD NVMe PCIe 5.0 2 To (ex. Samsung 9100 Pro, Crucial T705)", "NVMe5", 2, 300),
+  ssd("sata-500gb", "SSD SATA 2,5\" 500 Go (ex. Crucial MX500, Samsung 870 EVO)", "SATA", 0.5, 80),
   ssd("sata-1tb", "SSD SATA 2,5\" 1 To (ex. Crucial MX500)", "SATA", 1, 150),
   ssd("sata-2tb", "SSD SATA 2,5\" 2 To (ex. Crucial MX500)", "SATA", 2, 280),
+  // Disques durs : beaucoup de place pour pas cher, pour stocker (photos, vidéos, sauvegardes), pas pour Windows ni les jeux.
+  ssd("hdd-2tb", "Disque dur 3,5\" 2 To (ex. Seagate BarraCuda, WD Blue)", "HDD", 2, 200),
+  ssd("hdd-4tb", "Disque dur 3,5\" 4 To (ex. Seagate BarraCuda, WD Blue)", "HDD", 4, 250),
 ];
 
 const psu = (id: string, name: string, watts: number, atx3: boolean, native12v2x6: boolean, pcie8pin: number, price: number): PsuSpec =>
@@ -212,6 +220,7 @@ const psu = (id: string, name: string, watts: number, atx3: boolean, native12v2x
 // câble 12V-2x6 natif pour les cartes graphiques récentes.
 export const PSUS: PsuSpec[] = [
   psu("psu-550", "Alimentation 550 W 80+ Bronze (ex. be quiet! System Power, Corsair CX)", 550, false, false, 2, 60),
+  psu("psu-650-bronze", "Alimentation 650 W 80+ Bronze (sans câble 12V-2x6)", 650, false, false, 2, 65),
   // Exemples vérifiés sur les fiches fabricants (novembre 2026) :
   // - Corsair RMe « 2025 » (ATX 3.1, câble 12V-2x6 natif) : RM650e CP-9020302, RM750e CP-9020295, RM850e CP-9020296, RM1000e CP-9020297.
   //   Les RMe « 2023 » portent le même nom mais passent par un câble 2 × 8 broches → 12V-2x6.
@@ -220,6 +229,7 @@ export const PSUS: PsuSpec[] = [
   psu("psu-750", "Alimentation 750 W 80+ Gold avec câble 12V-2x6 (ex. Corsair RM750e modèle 2025)", 750, true, true, 3, 110),
   psu("psu-850", "Alimentation 850 W 80+ Gold avec câble 12V-2x6 (ex. Corsair RM850e 2025, MSI MAG A850GL PCIE5)", 850, true, true, 3, 130),
   psu("psu-1000", "Alimentation 1000 W 80+ Gold avec câble 12V-2x6 (ex. Corsair RM1000e modèle 2025)", 1000, true, true, 4, 170),
+  psu("psu-1200", "Alimentation 1200 W 80+ Gold avec câble 12V-2x6", 1200, true, true, 4, 230),
 ];
 
 const cooler = (id: string, name: string, type: CoolerSpec["type"], sockets: Socket[], capacityW: number, price: number): CoolerSpec =>
@@ -231,6 +241,14 @@ export const COOLERS: CoolerSpec[] = [
   { ...cooler("arctic-f36", "Arctic Freezer 36", "air", ["LGA1700", "LGA1851", "AM4", "AM5"], 180, 32), heightMm: 159 },
   { ...cooler("pa120se", "Thermalright Peerless Assassin 120 SE", "air", ["LGA1151", "LGA1200", "LGA1700", "LGA1851", "AM4", "AM5"], 240, 40), heightMm: 155 },
   { ...cooler("lf3-360", "Arctic Liquid Freezer III 360", "aio", ["LGA1700", "LGA1851", "AM4", "AM5"], 300, 100), radiatorMm: 360 },
+  // Ajouts vérifiés sur les fiches DeepCool, be quiet!, Thermalright, Noctua et Arctic (novembre 2026).
+  // Capacité : seul be quiet! publie un chiffre (Pure Rock 3 : 190 W) ; les autres sont des estimations prudentes de PCEvolu.
+  { ...cooler("nh-l9a-am5", "Noctua NH-L9a-AM5 (bas profil)", "air", ["AM5"], 65, 50), heightMm: 37 },
+  { ...cooler("nh-l9i-17xx", "Noctua NH-L9i-17xx (bas profil)", "air", ["LGA1700", "LGA1851"], 65, 50), heightMm: 37 },
+  { ...cooler("ax120-rse", "Thermalright Assassin X 120 Refined SE", "air", ["LGA1151", "LGA1200", "LGA1700", "LGA1851", "AM4", "AM5"], 180, 20), heightMm: 148 },
+  { ...cooler("ak400-digital", "DeepCool AK400 DIGITAL", "air", ["LGA1151", "LGA1200", "LGA1700", "LGA1851", "AM4", "AM5"], 190, 45), heightMm: 156 },
+  { ...cooler("pure-rock-3", "be quiet! Pure Rock 3", "air", ["LGA1151", "LGA1200", "LGA1700", "LGA1851", "AM4", "AM5"], 190, 30), heightMm: 154 },
+  { ...cooler("nh-d15-g2", "Noctua NH-D15 G2", "air", ["LGA1151", "LGA1200", "LGA1700", "LGA1851", "AM4", "AM5"], 280, 150), heightMm: 168 },
 ];
 
 /** Capacité de refroidissement selon ce que l'utilisateur déclare avoir. */
@@ -248,8 +266,12 @@ export const FAN_KITS: FanKit[] = [
 
 // Longueur max de carte graphique et ventilateurs fournis vérifiés sur les fiches Lian Li et Fractal Design.
 export const CASES: CaseSpec[] = [
-  { kind: "case", id: "lancool-216", name: "Lian Li Lancool 216", formFactors: ["ATX", "mATX", "ITX"], maxGpuMm: 392, fansIncluded: 3, price: 100 },
+  { kind: "case", id: "lancool-216", name: "Lian Li Lancool 216", formFactors: ["ATX", "mATX", "ITX"], maxGpuMm: 392, maxCoolerMm: 180, fansIncluded: 3, price: 100 },
   { kind: "case", id: "pop-air", name: "Fractal Design Pop Air", formFactors: ["ATX", "mATX", "ITX"], maxGpuMm: 405, fansIncluded: 3, price: 85 },
+  { kind: "case", id: "pop-mini-air", name: "Fractal Design Pop Mini Air (micro-ATX)", formFactors: ["mATX", "ITX"], maxGpuMm: 365, maxCoolerMm: 170, fansIncluded: 3, price: 80 },
+  { kind: "case", id: "h5-flow", name: "NZXT H5 Flow (2024)", formFactors: ["ATX", "mATX", "ITX"], maxGpuMm: 410, maxCoolerMm: 170, fansIncluded: 2, price: 95 },
+  { kind: "case", id: "pure-base-500dx", name: "be quiet! Pure Base 500DX", formFactors: ["ATX", "mATX", "ITX"], maxGpuMm: 369, maxCoolerMm: 190, fansIncluded: 3, price: 110 },
+  { kind: "case", id: "fractal-north", name: "Fractal Design North", formFactors: ["ATX", "mATX", "ITX"], maxGpuMm: 355, maxCoolerMm: 170, fansIncluded: 2, price: 140 },
 ];
 
 /** Longueur max de carte graphique selon la taille de boîtier déclarée (valeurs prudentes). */

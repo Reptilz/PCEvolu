@@ -630,12 +630,18 @@ export function proposeStorage(p: Profile): Proposal[] {
       checks.push({
         label: "PC portable",
         status: "warn",
-        detail: s.iface === "SATA"
+        detail: s.iface === "HDD"
+          ? "Un disque dur 3,5 pouces ne rentre pas dans un PC portable : prends plutôt un disque externe USB."
+          : s.iface === "SATA"
           ? "Seulement si ton portable a un emplacement 2,5 pouces (de moins en moins courant) : vérifie la fiche de ton modèle."
           : "Les portables n'ont souvent qu'un emplacement M.2 : tu remplaces alors ton SSD actuel (clonage du disque à prévoir).",
       });
     }
-    if (s.iface === "SATA") {
+    if (s.iface === "HDD") {
+      if (p.isLaptop) continue;
+      checks.push({ label: "Branchement", status: "ok", detail: "Port SATA + câble SATA + câble d'alimentation SATA, et un emplacement 3,5 pouces libre dans le boîtier (vérifie : les boîtiers récents n'en ont parfois qu'un ou deux)." });
+      notes.push("Un disque dur est 30 à 50 fois plus lent qu'un SSD pour ouvrir des fichiers : idéal pour stocker photos, vidéos et sauvegardes, pas pour Windows ni les jeux.");
+    } else if (s.iface === "SATA") {
       checks.push({ label: "Branchement", status: "ok", detail: "Port SATA + câble SATA (souvent fourni avec la carte mère) + câble d'alimentation SATA." });
       if (m2Free && m2Free > 0) notes.push("Un SSD NVMe est 3 à 6 fois plus rapide pour un prix proche : préfère-le si tu as un emplacement M.2 libre.");
     } else {
@@ -650,7 +656,15 @@ export function proposeStorage(p: Profile): Proposal[] {
           detail: `${m2Free} emplacement${m2Free > 1 ? "s" : ""} M.2 libre${m2Free > 1 ? "s" : ""} sur ${p.m2Total}${nextM2Gen ? ` (le prochain en PCIe ${nextM2Gen}.0)` : ""}.${m2Sharing.length ? ` À savoir sur ta carte mère : ${m2Sharing.join(" ")}` : ""}`,
         });
       }
-      if (s.iface === "NVMe4" && gen < 4) {
+      if (s.iface === "NVMe5") {
+        // Le PCIe 5.0 n'a d'intérêt que sur un emplacement PCIe 5.0 : ailleurs, il coûte plus cher pour la même vitesse.
+        if (gen < 5) {
+          checks.push({ label: "Vitesse", status: "warn", detail: `Ton emplacement M.2 est en PCIe ${gen}.0 : ce SSD y fonctionne, mais limité à ≈ ${gen === 4 ? "7 000" : "3 500"} Mo/s. Un SSD PCIe 4.0 fait la même chose pour moins cher.` });
+        } else {
+          checks.push({ label: "Vitesse", status: "ok", detail: "≈ 12 000 Mo/s sur ton emplacement PCIe 5.0. Il chauffe : utilise le dissipateur de la carte mère." });
+        }
+        notes.push("En jeu, un SSD PCIe 5.0 ne charge pas visiblement plus vite qu'un PCIe 4.0 : il sert surtout aux gros transferts de fichiers.");
+      } else if (s.iface === "NVMe4" && gen < 4) {
         checks.push({ label: "Vitesse", status: "ok", detail: `SSD PCIe 4.0 sur ${nextM2Gen ? "un emplacement" : "ta plateforme"} PCIe 3.0 : il fonctionne, limité à ≈ 3 500 Mo/s. Inutile de payer plus cher pour un modèle haut de gamme.` });
       } else {
         checks.push({ label: "Vitesse", status: "ok", detail: s.iface === "NVMe3" ? "≈ 3 500 Mo/s, la pleine vitesse de ton port." : "≈ 7 000 Mo/s." });
@@ -659,7 +673,7 @@ export function proposeStorage(p: Profile): Proposal[] {
     }
     out.push(finalize({
       id: `ssd-${s.id}`, category: "storage", title: s.name, main: s, mainQuantity: 1,
-      gainLabel: `+${s.tb} To`, checks, additions: [], notes,
+      gainLabel: s.tb < 1 ? `+${s.tb * 1000} Go` : `+${s.tb} To`, checks, additions: [], notes,
     }));
   }
   return highlight(out.sort((a, b) => a.main.kind === "ssd" && b.main.kind === "ssd" ? a.main.tb - b.main.tb || a.total - b.total : 0));

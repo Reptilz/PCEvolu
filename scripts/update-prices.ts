@@ -291,7 +291,9 @@ async function main() {
       if (explain) console.log(`\n${t.id} — « ${QUERIES[t.id].q} »`);
       const { kept, rejected } = selectOffers(t, results, explain);
       // Les cartes mères ont moins de vendeurs : 2 offres au titre exact suffisent.
-      const minOffers = t.category === "board" ? 2 : MIN_OFFERS;
+      // Cartes mères, ventirads, boîtiers et ventilateurs : un modèle précis a peu de vendeurs ;
+      // 2 offres au titre exact (le modèle nommé) suffisent.
+      const minOffers = ["board", "cooler", "case", "fans"].includes(t.category) ? 2 : MIN_OFFERS;
       if (kept.length < minOffers) {
         // Pas assez d'offres fiables : on garde le dernier prix connu, marqué comme ancien,
         // à condition que ses offres passent encore les filtres actuels. Sinon on le retire :

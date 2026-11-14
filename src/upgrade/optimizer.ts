@@ -147,8 +147,8 @@ function buildPlan(goal: Goal, p: Profile, base: ConfigState, choice: Partial<Re
   const storage = choice.storage?.main;
   const state: ConfigState = {
     cpu, gpu, ramGb, dual,
-    ssd: base.ssd || !!storage,
-    nvme: base.nvme || (storage?.kind === "ssd" && storage.iface !== "SATA"),
+    ssd: base.ssd || (storage?.kind === "ssd" && storage.iface !== "HDD"),
+    nvme: base.nvme || (storage?.kind === "ssd" && storage.iface.startsWith("NVMe")),
   };
 
   // Pièces communes, dédoublonnées. L'alimentation est recalculée pour le couple final.
@@ -264,7 +264,7 @@ export function validatePlan(goal: Goal, p: Profile, plan: Plan): Check[] {
 
   // 5. Migration des disques si la carte mère change
   if (newBoard?.kind === "board") {
-    const extra = choice.storage?.main.kind === "ssd" && choice.storage.main.iface !== "SATA" ? 1 : 0;
+    const extra = choice.storage?.main.kind === "ssd" && choice.storage.main.iface.startsWith("NVMe") ? 1 : 0;
     put(storageMigration(p, newBoard, extra));
   }
 

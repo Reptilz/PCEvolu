@@ -17,7 +17,7 @@ export interface PriceQuery {
 
 /** Exclusions communes à toutes les catégories (occasion, reconditionné, lots « A + B »). */
 export const GLOBAL_EXCLUDE =
-  /reconditionn|occasion|seconde main|refurb|renewed|ricondizionat|remis a neuf|pieces detachees|pour pieces|\bjunk\b|defectueu|en panne|\bvends\b|vente en gros|wholesale|\s\+\s/;
+  /reconditionn|occasion|seconde main|refurb|renewed|ricondizionat|remis a neuf|pieces detachees|pour pieces|\bjunk\b|defectueu|en panne|\bvends\b|vente en gros|wholesale|pack de \d{2,}|lot de \d{2,}|\s\+\s/;
 
 /** Vendeurs d'occasion ou de reconditionné : leurs offres ne reflètent pas le prix du neuf. */
 export const MERCHANT_EXCLUDE = /leboncoin|beebs|back ?market|ebay|vinted|factorefurb|renewtech|label emmaus|easycash|cash converters|stockx/;
@@ -37,11 +37,13 @@ export const CATEGORY_EXCLUDE: Record<string, RegExp> = {
   board: /\bpc\b|ordinateur|\bkit\b|bundle|pack|processeur inclus/,
   // Mémoire de portable (SO-DIMM, réf. Crucial « SFD ») et de serveur (ECC, RDIMM, Kingston KSM, Micron MTA) : autres produits, autres prix.
   ram: /so-?dimm|portable|laptop|notebook|\bpc gamer\b|serveur|server|\becc\b|rdimm|registered|\bksm\d|\bmta\d|g4sfd|g5sfd|1 ?x ?64|2rx4|4rx4/,
-  ssd: /\bpc\b|ordinateur|laptop|portable|externe|boitier|enclosure|adaptateur/,
+  // Annonces multi-capacités (« 1To/2To/4To ») : le prix affiché correspond rarement à la capacité cherchée.
+  ssd: /\bpc\b|ordinateur|laptop|portable|externe|boitier|enclosure|adaptateur|\d ?t[ob]?\s*\/\s*\d|\bhpe\b|serveur|server|\bsas\b/,
   psu: /\bpc\b|ordinateur|cable|rallonge|sleeve|boitier/,
-  cooler: /\bpc\b|ordinateur|pate thermique|kit de fixation|bracket/,
-  fans: /\bpc\b|ordinateur/,
-  case: /\bpc\b|ordinateur|panneau|filtre|support/,
+  // Ventirads et boîtiers : « pour PC » figure dans presque tous les titres, on n'exclut que les PC complets.
+  cooler: /pc gamer|pc complet|unite centrale|ordinateur|pate thermique|kit de fixation|bracket|\bpack\b/,
+  fans: /pc gamer|pc complet|unite centrale|ordinateur/,
+  case: /pc gamer|pc complet|unite centrale|ordinateur|panneau|filtre|support|\bkit\b/,
 };
 
 /** Le nombre de watts, seul ou dans un nom de modèle (« 750 W », « RM750e », « A750GL »), mais pas dans 7500. */
@@ -142,6 +144,12 @@ export const QUERIES: Record<string, PriceQuery> = {
 
   // Stockage
   // Requêtes génériques par type et capacité (les SSD sont interchangeables).
+  "nvme-500gb": { q: "SSD NVMe M.2 500 Go PCIe 4.0 interne", must: [/nvme|m\.?2/, /\b500 ?g[ob]\b|\b512 ?g[ob]\b/], not: [/\bsata\b|2230|2242|heatsink|dissipateur|externe/], generic: true },
+  "nvme-4tb": { q: "SSD NVMe M.2 4 To PCIe 4.0 interne", must: [/nvme|m\.?2/, /\b4 ?t[ob]\b|4000 ?g[ob]?\b/], not: [/\bsata\b|2230|2242|externe|gen ?5|pcie ?5/], generic: true },
+  "nvme5-2tb": { q: "SSD NVMe PCIe 5.0 2 To M.2", must: [/pcie ?5|gen ?5|5\.0/, /\b2 ?t[ob]\b|2000 ?g[ob]?\b/], not: [/\bsata\b|externe|pcie ?4\.0 x4 only/], generic: true },
+  "sata-500gb": { q: "SSD SATA 2,5 pouces 500 Go interne", must: [/\bsata\b|2[.,]5/, /\b500 ?g[ob]\b|\b480 ?g[ob]\b/], not: [/nvme|\bhdd\b|disque dur (?!ssd)|7200|5400|externe/], generic: true },
+  "hdd-2tb": { q: "disque dur interne 3,5 pouces 2 To SATA", must: [/disque dur|\bhdd\b|barracuda|wd blue|seagate|toshiba/, /\b2 ?t[ob]\b|2000 ?g[ob]?\b/, /3[.,]5/], not: [/ssd|externe|portable|2[.,]5/], generic: true },
+  "hdd-4tb": { q: "disque dur interne 3,5 pouces 4 To SATA", must: [/disque dur|\bhdd\b|barracuda|wd blue|seagate|toshiba|ironwolf|wd red/, /\b4 ?t[ob]\b|4000 ?g[ob]?\b/, /3[.,]5/], not: [/ssd|externe|portable|2[.,]5/], generic: true },
   "nvme-1tb": { q: "SSD NVMe M.2 1 To PCIe 4.0 interne", must: [/nvme|m\.?2/, /\b1 ?t[ob]\b|1000 ?g[ob]?\b/], not: [/\bsata\b|2230|2242|heatsink|dissipateur/], generic: true },
   "nvme-2tb": { q: "SSD NVMe M.2 2 To PCIe 4.0 interne", must: [/nvme|m\.?2/, /\b2 ?t[ob]\b|2000 ?g[ob]?\b/], not: [/\bsata\b|2230|2242|heatsink|dissipateur/], generic: true },
   "sata-1tb": { q: "SSD SATA 2,5 pouces 1 To interne", must: [/\bsata\b|2[.,]5/, /\b1 ?t[ob]\b|1000 ?g[ob]?\b|960 ?g[ob]?\b/], not: [/nvme|\bhdd\b|disque dur (?!ssd)|7200|5400/], generic: true },
@@ -150,6 +158,8 @@ export const QUERIES: Record<string, PriceQuery> = {
   // Alimentations génériques par puissance. À partir de 650 W : gamme 80+ Gold (les modèles récents sont ATX 3.x).
   // La puissance figure souvent dans le nom du modèle (RM750e, A750GL, PQ750G) plutôt qu'en « 750 W ».
   "psu-550": { q: "alimentation PC 550W 80 Plus Bronze ATX", must: [/\b550 ?w/], not: [/sfx|tfx|flex|externe|adaptateur/], generic: true },
+  "psu-650-bronze": { q: "alimentation PC 650W 80 Plus Bronze ATX", must: [watts(650), /bronze/], not: [/sfx|tfx|gold|platinum/], generic: true },
+  "psu-1200": { q: "alimentation PC 1200W 80 Plus Gold ATX 3.1 modulaire", must: [watts(1200), GOLD], not: [NOT_GOLD], generic: true },
   "psu-650": { q: "alimentation PC 650W 80 Plus Gold ATX 3.1 modulaire", must: [watts(650), GOLD], not: [NOT_GOLD], generic: true },
   "psu-750": { q: "alimentation PC 750W 80 Plus Gold ATX 3.1 modulaire", must: [watts(750), GOLD], not: [NOT_GOLD], generic: true },
   "psu-850": { q: "alimentation PC 850W 80 Plus Gold ATX 3.1 modulaire", must: [watts(850), GOLD], not: [NOT_GOLD], generic: true },
@@ -162,6 +172,16 @@ export const QUERIES: Record<string, PriceQuery> = {
   "p12-5": { q: "ventilateurs Arctic P12 PWM PST Value Pack 5", must: [/p12/, /value ?pack|pack de 5|lot de 5|5 ?pcs|\b5 ?x\b|\(5\)/] },
 
   // Boîtiers
+  "nh-l9a-am5": { q: "ventirad Noctua NH-L9a-AM5", must: [/nh-?l9a/, /am5/] },
+  "nh-l9i-17xx": { q: "ventirad Noctua NH-L9i-17xx", must: [/nh-?l9i/, /17xx|1700/] },
+  "ax120-rse": { q: "ventirad Thermalright Assassin X 120 Refined SE", must: [/assassin x ?120/, /refined/], not: [/argb|plus/] },
+  "ak400-digital": { q: "ventirad DeepCool AK400 Digital", must: [/ak400/, /digital/], not: [/pro|wh\b|white|blanc/] },
+  "pure-rock-3": { q: "ventirad be quiet! Pure Rock 3", must: [/pure rock 3/], not: [/lx|fx|ventilateur bo/] },
+  "nh-d15-g2": { q: "ventirad Noctua NH-D15 G2", must: [/nh-?d15/, /g2/], not: [/hbc|lbc|chromax/] },
+  "pop-mini-air": { q: "boîtier Fractal Design Pop Mini Air", must: [/pop mini air/] },
+  "h5-flow": { q: "boîtier NZXT H5 Flow", must: [/\bh5 flow\b/], not: [/rgb|elite/] },
+  "pure-base-500dx": { q: "boîtier be quiet! Pure Base 500DX", must: [/pure base 500 ?dx/] },
+  "fractal-north": { q: "boîtier Fractal Design North", must: [/fractal.*north|north.*fractal/], not: [/\bxl\b/] },
   "lancool-216": { q: "boîtier Lian Li Lancool 216", must: [/lancool 216/], not: [/216 ?x\b/] },
   "pop-air": { q: "boîtier Fractal Design Pop Air", must: [/pop air/], not: [/\bmini\b|\bsilent\b|\bxl\b/] },
 };

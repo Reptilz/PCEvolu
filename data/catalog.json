@@ -1,6 +1,6 @@
 {
  "version": 6,
- "generatedAt": "2026-11-14T23:10:20.243Z",
+ "generatedAt": "2026-11-14T23:32:13.131Z",
  "chipsets": [
   {
    "chipset": "H81",
@@ -3621,6 +3621,14 @@
  "ssds": [
   {
    "kind": "ssd",
+   "id": "nvme-500gb",
+   "name": "SSD NVMe M.2 500 Go (ex. Kingston NV3, Crucial P3 Plus)",
+   "iface": "NVMe4",
+   "tb": 0.5,
+   "price": 90
+  },
+  {
+   "kind": "ssd",
    "id": "nvme-1tb",
    "name": "SSD NVMe M.2 1 To (ex. Kingston NV3, WD SN7100)",
    "iface": "NVMe4",
@@ -3637,6 +3645,30 @@
   },
   {
    "kind": "ssd",
+   "id": "nvme-4tb",
+   "name": "SSD NVMe M.2 4 To (ex. WD SN7100, Lexar NM790)",
+   "iface": "NVMe4",
+   "tb": 4,
+   "price": 600
+  },
+  {
+   "kind": "ssd",
+   "id": "nvme5-2tb",
+   "name": "SSD NVMe PCIe 5.0 2 To (ex. Samsung 9100 Pro, Crucial T705)",
+   "iface": "NVMe5",
+   "tb": 2,
+   "price": 300
+  },
+  {
+   "kind": "ssd",
+   "id": "sata-500gb",
+   "name": "SSD SATA 2,5\" 500 Go (ex. Crucial MX500, Samsung 870 EVO)",
+   "iface": "SATA",
+   "tb": 0.5,
+   "price": 80
+  },
+  {
+   "kind": "ssd",
    "id": "sata-1tb",
    "name": "SSD SATA 2,5\" 1 To (ex. Crucial MX500)",
    "iface": "SATA",
@@ -3650,6 +3682,22 @@
    "iface": "SATA",
    "tb": 2,
    "price": 280
+  },
+  {
+   "kind": "ssd",
+   "id": "hdd-2tb",
+   "name": "Disque dur 3,5\" 2 To (ex. Seagate BarraCuda, WD Blue)",
+   "iface": "HDD",
+   "tb": 2,
+   "price": 200
+  },
+  {
+   "kind": "ssd",
+   "id": "hdd-4tb",
+   "name": "Disque dur 3,5\" 4 To (ex. Seagate BarraCuda, WD Blue)",
+   "iface": "HDD",
+   "tb": 4,
+   "price": 250
   }
  ],
  "psus": [
@@ -3662,6 +3710,16 @@
    "native12v2x6": false,
    "pcie8pin": 2,
    "price": 60
+  },
+  {
+   "kind": "psu",
+   "id": "psu-650-bronze",
+   "name": "Alimentation 650 W 80+ Bronze (sans câble 12V-2x6)",
+   "watts": 650,
+   "atx3": false,
+   "native12v2x6": false,
+   "pcie8pin": 2,
+   "price": 65
   },
   {
    "kind": "psu",
@@ -3702,6 +3760,16 @@
    "native12v2x6": true,
    "pcie8pin": 4,
    "price": 170
+  },
+  {
+   "kind": "psu",
+   "id": "psu-1200",
+   "name": "Alimentation 1200 W 80+ Gold avec câble 12V-2x6",
+   "watts": 1200,
+   "atx3": true,
+   "native12v2x6": true,
+   "pcie8pin": 4,
+   "price": 230
   }
  ],
  "coolers": [
@@ -3751,6 +3819,99 @@
    "capacityW": 300,
    "price": 100,
    "radiatorMm": 360
+  },
+  {
+   "kind": "cooler",
+   "id": "nh-l9a-am5",
+   "name": "Noctua NH-L9a-AM5 (bas profil)",
+   "type": "air",
+   "sockets": [
+    "AM5"
+   ],
+   "capacityW": 65,
+   "price": 50,
+   "heightMm": 37
+  },
+  {
+   "kind": "cooler",
+   "id": "nh-l9i-17xx",
+   "name": "Noctua NH-L9i-17xx (bas profil)",
+   "type": "air",
+   "sockets": [
+    "LGA1700",
+    "LGA1851"
+   ],
+   "capacityW": 65,
+   "price": 50,
+   "heightMm": 37
+  },
+  {
+   "kind": "cooler",
+   "id": "ax120-rse",
+   "name": "Thermalright Assassin X 120 Refined SE",
+   "type": "air",
+   "sockets": [
+    "LGA1151",
+    "LGA1200",
+    "LGA1700",
+    "LGA1851",
+    "AM4",
+    "AM5"
+   ],
+   "capacityW": 180,
+   "price": 20,
+   "heightMm": 148
+  },
+  {
+   "kind": "cooler",
+   "id": "ak400-digital",
+   "name": "DeepCool AK400 DIGITAL",
+   "type": "air",
+   "sockets": [
+    "LGA1151",
+    "LGA1200",
+    "LGA1700",
+    "LGA1851",
+    "AM4",
+    "AM5"
+   ],
+   "capacityW": 190,
+   "price": 45,
+   "heightMm": 156
+  },
+  {
+   "kind": "cooler",
+   "id": "pure-rock-3",
+   "name": "be quiet! Pure Rock 3",
+   "type": "air",
+   "sockets": [
+    "LGA1151",
+    "LGA1200",
+    "LGA1700",
+    "LGA1851",
+    "AM4",
+    "AM5"
+   ],
+   "capacityW": 190,
+   "price": 30,
+   "heightMm": 154
+  },
+  {
+   "kind": "cooler",
+   "id": "nh-d15-g2",
+   "name": "Noctua NH-D15 G2",
+   "type": "air",
+   "sockets": [
+    "LGA1151",
+    "LGA1200",
+    "LGA1700",
+    "LGA1851",
+    "AM4",
+    "AM5"
+   ],
+   "capacityW": 280,
+   "price": 150,
+   "heightMm": 168
   }
  ],
  "fans": [
@@ -3773,6 +3934,7 @@
     "ITX"
    ],
    "maxGpuMm": 392,
+   "maxCoolerMm": 180,
    "fansIncluded": 3,
    "price": 100
   },
@@ -3788,6 +3950,61 @@
    "maxGpuMm": 405,
    "fansIncluded": 3,
    "price": 85
+  },
+  {
+   "kind": "case",
+   "id": "pop-mini-air",
+   "name": "Fractal Design Pop Mini Air (micro-ATX)",
+   "formFactors": [
+    "mATX",
+    "ITX"
+   ],
+   "maxGpuMm": 365,
+   "maxCoolerMm": 170,
+   "fansIncluded": 3,
+   "price": 80
+  },
+  {
+   "kind": "case",
+   "id": "h5-flow",
+   "name": "NZXT H5 Flow (2024)",
+   "formFactors": [
+    "ATX",
+    "mATX",
+    "ITX"
+   ],
+   "maxGpuMm": 410,
+   "maxCoolerMm": 170,
+   "fansIncluded": 2,
+   "price": 95
+  },
+  {
+   "kind": "case",
+   "id": "pure-base-500dx",
+   "name": "be quiet! Pure Base 500DX",
+   "formFactors": [
+    "ATX",
+    "mATX",
+    "ITX"
+   ],
+   "maxGpuMm": 369,
+   "maxCoolerMm": 190,
+   "fansIncluded": 3,
+   "price": 110
+  },
+  {
+   "kind": "case",
+   "id": "fractal-north",
+   "name": "Fractal Design North",
+   "formFactors": [
+    "ATX",
+    "mATX",
+    "ITX"
+   ],
+   "maxGpuMm": 355,
+   "maxCoolerMm": 170,
+   "fansIncluded": 2,
+   "price": 140
   }
  ]
 }

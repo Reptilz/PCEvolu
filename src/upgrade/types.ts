@@ -144,7 +144,8 @@ export interface SsdSpec {
   kind: "ssd";
   id: string;
   name: string;
-  iface: "NVMe3" | "NVMe4" | "SATA";
+  /** NVMe (M.2, PCIe 3.0 / 4.0 / 5.0), SSD SATA 2,5 pouces, ou disque dur mécanique 3,5 pouces. */
+  iface: "NVMe3" | "NVMe4" | "NVMe5" | "SATA" | "HDD";
   tb: number;
   price: number;
 }
@@ -189,6 +190,8 @@ export interface CaseSpec {
   name: string;
   formFactors: FormFactor[];
   maxGpuMm: number;
+  /** Hauteur max de ventirad (mm). */
+  maxCoolerMm?: number;
   fansIncluded: number;
   price: number;
 }

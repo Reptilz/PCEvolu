@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-14T21:33:19.145Z",
+  "updatedAt": "2026-11-14T23:31:36.063Z",
   "currency": "EUR",
   "source": "Google Shopping France (via Serper.dev), médiane des marchands",
   "items": {
@@ -952,11 +952,11 @@
       ]
     },
     "p12-5": {
-      "price": 25,
+      "price": 24,
       "min": 24,
       "max": 25,
-      "offers": 3,
-      "updatedAt": "2026-11-14T21:02:14.461Z",
+      "offers": 2,
+      "updatedAt": "2026-11-14T23:31:36.063Z",
       "best": [
         {
           "merchant": "Fnac",
@@ -969,19 +969,18 @@
           "price": 24.9,
           "title": "Lot 5x Arctic P12 Pro 12cm Noir - Ventilateur | Pixel 404"
         }
-      ],
-      "stale": true
+      ]
     },
     "lancool-216": {
-      "price": 86,
-      "min": 86,
+      "price": 85,
+      "min": 83,
       "max": 86,
-      "offers": 3,
-      "updatedAt": "2026-11-14T21:02:14.461Z",
+      "offers": 2,
+      "updatedAt": "2026-11-14T23:31:36.063Z",
       "best": [
         {
-          "merchant": "Cdiscount",
-          "price": 86.2,
+          "merchant": "Techinn.com",
+          "price": 82.99,
           "title": "Lian-Li Lancool 216",
           "link": "https://www.google.com/search?ibp=oshop&q=bo%C3%AEtier+Lian+Li+Lancool+216&prds=localAnnotatedOfferId:1,catalogid:11325103407663156861,gpcid:4648873036761940556,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         },
@@ -991,22 +990,15 @@
           "title": "Lian Li LANCOOL 216",
           "link": "https://www.google.com/search?ibp=oshop&q=bo%C3%AEtier+Lian+Li+Lancool+216&prds=localAnnotatedOfferId:1,catalogid:7141023341087264595,gpcid:4015948109510452767,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         }
-      ],
-      "stale": true
+      ]
     },
     "pop-air": {
-      "price": 103,
-      "min": 70,
-      "max": 103,
-      "offers": 4,
-      "updatedAt": "2026-11-14T21:28:42.445Z",
+      "price": 100,
+      "min": 80,
+      "max": 120,
+      "offers": 2,
+      "updatedAt": "2026-11-14T23:31:36.063Z",
       "best": [
-        {
-          "merchant": "Cdiscount",
-          "price": 69.99,
-          "title": "Fractal Design Pop Air",
-          "link": "https://www.google.com/search?ibp=oshop&q=bo%C3%AEtier+Fractal+Design+Pop+Air&prds=localAnnotatedOfferId:1,catalogid:17875294777813363132,gpcid:5456813530351731109,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
         {
           "merchant": "Amazon.fr",
           "price": 79.99,
@@ -1014,13 +1006,12 @@
           "link": "https://www.google.com/search?ibp=oshop&q=bo%C3%AEtier+Fractal+Design+Pop+Air&prds=localAnnotatedOfferId:1,catalogid:5385208434179524330,gpcid:12873795108941199150,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         },
         {
-          "merchant": "DropReference",
-          "price": 83,
-          "title": "Fractal Design Pop Air",
-          "link": "https://www.google.com/search?ibp=oshop&q=bo%C3%AEtier+Fractal+Design+Pop+Air&prds=localAnnotatedOfferId:1,catalogid:740558289912264394,gpcid:2945201240591249475,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+          "merchant": "achatmoinscher",
+          "price": 119.99,
+          "title": "Fractal Design Pop Air RGB TG",
+          "link": "https://www.google.com/search?ibp=oshop&q=bo%C3%AEtier+Fractal+Design+Pop+Air&prds=localAnnotatedOfferId:1,catalogid:17081656514969102927,gpcid:16872195600805816261,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         }
-      ],
-      "stale": true
+      ]
     },
     "d4-2x32-3200": {
       "price": 629,
@@ -2574,6 +2565,206 @@
           "price": 179.99,
           "title": "processeur Intel Core i5-12400",
           "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-12400&prds=localAnnotatedOfferId:1,catalogid:588677448452468426,gpcid:9774280384704816143,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "nvme-500gb": {
+      "price": 104,
+      "min": 70,
+      "max": 188,
+      "offers": 6,
+      "updatedAt": "2026-11-14T23:26:19.948Z",
+      "best": [
+        {
+          "merchant": "Boulanger",
+          "price": 69.99,
+          "title": "Disque dur SSD interne Samsung SSD interne M.2 NVMe PCle 512Go",
+          "link": "https://www.google.com/search?ibp=oshop&q=SSD+NVMe+M.2+500+Go+PCIe+4.0+interne&prds=localAnnotatedOfferId:1,catalogid:12672648638122643251,gpcid:1758552276893894494,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 87.65,
+          "title": "Intenso SSD M.2 Premium 500 Go PCIe NVMe",
+          "link": "https://www.google.com/search?ibp=oshop&q=SSD+NVMe+M.2+500+Go+PCIe+4.0+interne&prds=localAnnotatedOfferId:1,catalogid:12705473591115105239,gpcid:11075707404957674077,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 92.99,
+          "title": "fanxiang SSD 500Go PCIe 4x4 NVMe M.2 3D NAND, jusqu'à 4300 Mo/s | Disque SSD interne pour gamers et professionnels - S690Q"
+        }
+      ]
+    },
+    "hdd-2tb": {
+      "price": 206,
+      "min": 188,
+      "max": 262,
+      "offers": 4,
+      "updatedAt": "2026-11-14T23:27:35.324Z",
+      "best": [
+        {
+          "merchant": "monsieurplus.com",
+          "price": 187.99,
+          "title": "Seagate Barracuda 2 To - 3.5'' SATA III 6 Go/s - Cache 256 Mo"
+        },
+        {
+          "merchant": "kit-de-maintenance.fr",
+          "price": 193.8,
+          "title": "HDD WD RED 2TB SATA3 NAS 3,5",
+          "link": "https://www.google.com/search?ibp=oshop&q=disque+dur+interne+3%2C5+pouces+2+To+SATA&prds=localAnnotatedOfferId:1,catalogid:8827489806074990727,gpcid:10779303959545373798,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 219,
+          "title": "Seagate 2 tb Barracuda Disque dur interne 3.5``",
+          "link": "https://www.google.com/search?ibp=oshop&q=disque+dur+interne+3%2C5+pouces+2+To+SATA&prds=localAnnotatedOfferId:1,catalogid:4920812873356125899,gpcid:7493455125535931243,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "hdd-4tb": {
+      "price": 251,
+      "min": 218,
+      "max": 271,
+      "offers": 6,
+      "updatedAt": "2026-11-14T23:27:35.324Z",
+      "best": [
+        {
+          "merchant": "Carrefour",
+          "price": 217.89,
+          "title": "Disque dur HDD Seagate IronWolf 4TB 3,5 ST4000VN006",
+          "link": "https://www.google.com/search?ibp=oshop&q=disque+dur+interne+3%2C5+pouces+4+To+SATA&prds=localAnnotatedOfferId:1,catalogid:17072108011229744926,gpcid:5523525279541261573,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 248,
+          "title": "WD Red Plus 4 To 3,5\" SATA III"
+        },
+        {
+          "merchant": "Darty",
+          "price": 248.9,
+          "title": "Western Digital Wd purple WD43PURZ - disque dur - 4 to - surveillance - interne - 3.5\" - sata 6Gb/s - 5400 tours/min - mémoire tampon : 256 mo Disque"
+        }
+      ]
+    },
+    "psu-650-bronze": {
+      "price": 55,
+      "min": 36,
+      "max": 68,
+      "offers": 14,
+      "updatedAt": "2026-11-14T23:26:19.948Z",
+      "best": [
+        {
+          "merchant": "PcComponentes FR",
+          "price": 35.99,
+          "title": "Alimentation Yeyian Raiden 650 W 80 Plus Bronze",
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+650W+80+Plus+Bronze+ATX&prds=localAnnotatedOfferId:1,catalogid:748949851411621586,gpcid:9645973267075918634,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 47.2,
+          "title": "Alimentation Mars Gaming MPB650 650W Certifié 80 Plus Bronze Blanc",
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+650W+80+Plus+Bronze+ATX&prds=localAnnotatedOfferId:1,catalogid:13527137288552040580,gpcid:15279637498574269079,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "F10.eu",
+          "price": 47.4,
+          "title": "Fuente de Alimentación Asrock PRO-650B 650W Certificación 80 PLUS Bronze ATX 3.1",
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+650W+80+Plus+Bronze+ATX&prds=localAnnotatedOfferId:1,catalogid:15093424749031276640,gpcid:910370183170971875,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "psu-1200": {
+      "price": 160,
+      "min": 95,
+      "max": 208,
+      "offers": 13,
+      "updatedAt": "2026-11-14T23:26:19.948Z",
+      "best": [
+        {
+          "merchant": "Fnac.com",
+          "price": 94.99,
+          "title": "Deepcool PQ1200G",
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+1200W+80+Plus+Gold+ATX+3.1+modulaire&prds=localAnnotatedOfferId:1,catalogid:5430437026462514,gpcid:7161206344009700142,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 100.9,
+          "title": "Mars Gaming MPB1200PSIW Alimentation ATX 1200W 80 Plus Gold",
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+1200W+80+Plus+Gold+ATX+3.1+modulaire&prds=localAnnotatedOfferId:1,catalogid:12590895011890894848,gpcid:5999896728835701601,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 118.44,
+          "title": "Alimentation Nox 1200W 80+ Gold Hummer GDM Modulaire ATX 3.1",
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+1200W+80+Plus+Gold+ATX+3.1+modulaire&prds=localAnnotatedOfferId:1,catalogid:11512636632399865919,gpcid:10561290424108670500,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "h5-flow": {
+      "price": 83,
+      "min": 49,
+      "max": 98,
+      "offers": 3,
+      "updatedAt": "2026-11-14T23:30:27.745Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr",
+          "price": 49.04,
+          "title": "NZXT H5 FLOW",
+          "link": "https://www.google.com/search?ibp=oshop&q=bo%C3%AEtier+NZXT+H5+Flow&prds=localAnnotatedOfferId:1,catalogid:3152875668086858688,gpcid:13915470078131241353,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "F10.eu",
+          "price": 82.9,
+          "title": "NZXT H5 Flow Black",
+          "link": "https://www.google.com/search?ibp=oshop&q=bo%C3%AEtier+NZXT+H5+Flow&prds=localAnnotatedOfferId:1,catalogid:10915548090052267646,gpcid:9895211651498442686,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "reichelt.com",
+          "price": 97.74,
+          "title": "NZXT H5 Flow",
+          "link": "https://www.google.com/search?ibp=oshop&q=bo%C3%AEtier+NZXT+H5+Flow&prds=localAnnotatedOfferId:1,catalogid:9312714810375844687,gpcid:3829362834081343536,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "nh-l9i-17xx": {
+      "price": 55,
+      "min": 50,
+      "max": 60,
+      "offers": 2,
+      "updatedAt": "2026-11-14T23:31:36.063Z",
+      "best": [
+        {
+          "merchant": "reichelt.com",
+          "price": 50.34,
+          "title": "Noctua NH-L9i-17xx",
+          "link": "https://www.google.com/search?ibp=oshop&q=ventirad+Noctua+NH-L9i-17xx&prds=localAnnotatedOfferId:1,catalogid:15943135474217168625,gpcid:9020561129516099231,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 60,
+          "title": "Noctua NH-L9i-17xx chromax.black",
+          "link": "https://www.google.com/search?ibp=oshop&q=ventirad+Noctua+NH-L9i-17xx&prds=localAnnotatedOfferId:1,catalogid:14700350837619051961,gpcid:13211246286006517455,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "ax120-rse": {
+      "price": 33,
+      "min": 25,
+      "max": 41,
+      "offers": 2,
+      "updatedAt": "2026-11-14T23:31:36.063Z",
+      "best": [
+        {
+          "merchant": "LDLC",
+          "price": 24.95,
+          "title": "Thermalright Refroidisseur CPU Assassin X 120 Refined SE",
+          "link": "https://www.google.com/search?ibp=oshop&q=ventirad+Thermalright+Assassin+X+120+Refined+SE&prds=localAnnotatedOfferId:1,catalogid:15315670709319271661,gpcid:105187537437946206,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Galaxus",
+          "price": 40.9,
+          "title": "Thermalright Assassin X 120 REFINED SE White Processeur Dissipateur thermique/Radiateur 12 cm Aluminium",
+          "link": "https://www.google.com/search?ibp=oshop&q=ventirad+Thermalright+Assassin+X+120+Refined+SE&prds=localAnnotatedOfferId:1,catalogid:3632278541938202945,gpcid:16939070432743121468,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         }
       ]
     }
