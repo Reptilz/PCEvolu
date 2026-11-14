@@ -71,6 +71,13 @@ const paths = {
   alert: <path d="M12 4l9 16H3zM12 10v4M12 17.5v.01" />,
   chevron: <path d="M6 9l6 6 6-6" />,
   cart: <path d="M3 4h2l2.4 11h11L21 7H6.2M9 20h.01M18 20h.01" />,
+  target: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="12" r="5" />
+      <circle cx="12" cy="12" r="1.2" />
+    </>
+  ),
 };
 
 export type IconName = keyof typeof paths;

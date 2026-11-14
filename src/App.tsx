@@ -6,11 +6,13 @@ import { demoMetrics, demoReport } from "./demo";
 import { clean, date, diskSize, gb, ghz, speed, uptime } from "./format";
 import { Icon, type IconName } from "./icons";
 import { UpgradesView } from "./upgrade/UpgradesView";
-import { loadAnswers, type Answers } from "./upgrade/profile";
+import { buildProfile, loadAnswers, type Answers } from "./upgrade/profile";
+import { assess, loadGoal, saveGoal, type Goal, type Verdict } from "./upgrade/goal";
+import { GoalDiagnostic, GoalWizard, VerdictBanner } from "./upgrade/GoalViews";
 import { loadPrices } from "./upgrade/prices";
 import { loadCatalog } from "./upgrade/catalog-remote";
 
-type View = "overview" | "improve" | "upgrades" | "components";
+type View = "overview" | "goal" | "improve" | "upgrades" | "components";
 
 const inApp = isTauri();
 
@@ -31,6 +33,10 @@ export default function App() {
   const [live, setLive] = useState<Metrics>();
   const [scannedAt, setScannedAt] = useState<Date>();
   const [answers, setAnswers] = useState<Answers>(loadAnswers);
+  const [goal, setGoal] = useState<Goal>(loadGoal);
+  // L'assistant s'ouvre au premier lancement, tant que l'objectif n'est pas défini.
+  const [wizardOpen, setWizardOpen] = useState(() => !loadGoal().configured);
+  const [upgradeTab, setUpgradeTab] = useState<string>();
   // Incrémenté quand de nouveaux prix du marché sont appliqués, pour recalculer les propositions.
   const [pricesVersion, setPricesVersion] = useState(0);
 
@@ -70,6 +76,19 @@ export default function App() {
   }, []);
 
   const recos = useMemo(() => (report ? recommend(report, live) : []), [report, live]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const verdict = useMemo(() => (report ? assess(goal, buildProfile(report, answers), report) : undefined), [report, answers, goal, pricesVersion]);
+
+  const finishWizard = (g: Goal) => {
+    saveGoal(g);
+    setGoal(g);
+    setWizardOpen(false);
+    setView("goal");
+  };
+  const openUpgrades = (tab?: string) => {
+    setUpgradeTab(tab);
+    setView("upgrades");
+  };
 
   return (
     <div className="app">
@@ -84,7 +103,21 @@ export default function App() {
           </div>
         </div>
         <nav>
-          <NavItem icon="grid" label="Vue d'ensemble" active={view === "overview"} onClick={() => setView("overview")} />
+          <NavItem
+            icon="grid"
+            label="Vue d'ensemble"
+            active={view === "overview" && !wizardOpen}
+            onClick={() => {
+              setWizardOpen(false);
+              setView("overview");
+            }}
+          />
+          <NavItem
+            icon="target"
+            label="Mon objectif"
+            active={view === "goal" || wizardOpen}
+            onClick={() => (goal.configured ? (setWizardOpen(false), setView("goal")) : setWizardOpen(true))}
+          />
           <NavItem icon="spark" label="Améliorations" active={view === "improve"} onClick={() => setView("improve")} count={recos.length} />
           <NavItem icon="cart" label="Upgrades" active={view === "upgrades"} onClick={() => setView("upgrades")} />
           <NavItem icon="chip" label="Composants" active={view === "components"} onClick={() => setView("components")} />
@@ -108,10 +141,27 @@ export default function App() {
           </div>
         )}
         {!report && !error && <Loading />}
-        {report && view === "overview" && <Overview report={report} live={live} recos={recos} go={setView} />}
-        {report && view === "improve" && <Improve recos={recos} go={setView} />}
-        {report && view === "upgrades" && <UpgradesView report={report} answers={answers} setAnswers={setAnswers} pricesVersion={pricesVersion} />}
-        {report && view === "components" && <Components report={report} live={live} />}
+        {report && wizardOpen && <GoalWizard report={report} goal={goal} onDone={finishWizard} onSkip={() => setWizardOpen(false)} />}
+        {report && !wizardOpen && view === "overview" && (
+          <Overview report={report} live={live} recos={recos} go={setView} verdict={goal.configured ? verdict : undefined} onSetGoal={() => setWizardOpen(true)} />
+        )}
+        {report && !wizardOpen && view === "goal" && verdict && (
+          <GoalDiagnostic goal={goal} verdict={verdict} onEdit={() => setWizardOpen(true)} onUpgrades={openUpgrades} />
+        )}
+        {report && !wizardOpen && view === "improve" && <Improve recos={recos} go={setView} />}
+        {report && !wizardOpen && view === "upgrades" && verdict && (
+          <UpgradesView
+            report={report}
+            answers={answers}
+            setAnswers={setAnswers}
+            pricesVersion={pricesVersion}
+            goal={goal}
+            verdict={verdict}
+            initialTab={upgradeTab}
+            onEditGoal={() => setWizardOpen(true)}
+          />
+        )}
+        {report && !wizardOpen && view === "components" && <Components report={report} live={live} />}
       </main>
     </div>
   );
@@ -141,7 +191,9 @@ function Loading() {
 // Vue d'ensemble
 // ---------------------------------------------------------------------------
 
-function Overview({ report: r, live, recos, go }: { report: Report; live?: Metrics; recos: Recommendation[]; go: (v: View) => void }) {
+function Overview({
+  report: r, live, recos, go, verdict, onSetGoal,
+}: { report: Report; live?: Metrics; recos: Recommendation[]; go: (v: View) => void; verdict?: Verdict; onSetGoal: () => void }) {
   const cpu = r.cpus[0];
   const gpu = r.gpus[0];
   const sys = r.volumes.find((v) => v.letter === "C:") ?? r.volumes[0];
@@ -163,6 +215,23 @@ function Overview({ report: r, live, recos, go }: { report: Report; live?: Metri
           <div className="score-lbl">{score.label}</div>
         </div>
       </header>
+
+      {verdict ? (
+        <div className="overview-goal" onClick={() => go("goal")} role="button">
+          <VerdictBanner verdict={verdict} compact />
+        </div>
+      ) : (
+        <div className="verdict v-limited compact goal-cta">
+          <Icon name="target" />
+          <div className="verdict-text">
+            <b>Dis-nous ce que tu veux faire de ton PC</b>
+            <span>Jeu, bureautique, création… et ton budget : PCEvolu te dira si ton PC suffit et quoi améliorer en priorité.</span>
+          </div>
+          <button className="btn primary" onClick={onSetGoal}>
+            Définir mon objectif
+          </button>
+        </div>
+      )}
 
       <section className="kpis">
         <Kpi label="Processeur" value={live?.cpuPercent} unit="%" sub={clean(cpu?.name)} />

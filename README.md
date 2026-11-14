@@ -45,6 +45,20 @@ npm test                         # reconnaissance de ~100 noms réels (processeu
 npx tsx scripts/test-engine.ts   # propositions sur 4 configs types (PC de marque, portable, entrée de gamme, haut de gamme)
 ```
 
+## Mon objectif
+
+Au premier lancement, un assistant demande l'usage (bureautique, jeu, création, jeu + streaming). Pour le jeu, il demande aussi la résolution et la fluidité, préremplies avec l'écran détecté, puis le budget (`src/upgrade/GoalViews.tsx`).
+
+`src/upgrade/goal.ts` en déduit :
+
+- **une estimation d'images/s** : le minimum entre ce que permet la carte graphique (selon la résolution et la mémoire vidéo) et ce que permet le processeur (pénalisé en single channel). Le composant le plus lent est le facteur limitant ;
+- **un diagnostic point par point** : disque, RAM, processeur, carte graphique, VRAM, avec un verdict *suffit / presque / n'atteint pas* ;
+- **l'effet de chaque proposition** : images/s avant et après, objectif atteint ou non, utilité selon l'usage. Les propositions sont classées ainsi, et celles qui dépassent le budget sont regroupées à part.
+
+```bash
+npx tsx scripts/test-goal.ts   # diagnostic de plusieurs objectifs sur des configs types
+```
+
 ## Catalogue téléchargeable
 
 `npm run catalog` exporte le catalogue dans `data/catalog.json`. Au démarrage, l'app télécharge ce fichier (`VITE_CATALOG_URL`) et l'utilise s'il est plus récent (`CATALOG_VERSION`). On peut donc ajouter des composants sans publier de nouvelle version de l'app.

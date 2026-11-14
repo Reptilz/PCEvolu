@@ -6,6 +6,7 @@ import { proposeAll } from "./engine";
 import { CATALOG_DATE } from "./catalog";
 import { priceInfo, pricesFile } from "./prices";
 import { Icon, type IconName } from "../icons";
+import { goalSummary, impactOf, type Goal, type Impact, type Verdict } from "./goal";
 
 const TABS: { id: Category; label: string; icon: IconName }[] = [
   { id: "gpu", label: "Carte graphique", icon: "gpu" },
@@ -14,17 +15,48 @@ const TABS: { id: Category; label: string; icon: IconName }[] = [
   { id: "storage", label: "Stockage", icon: "disk" },
 ];
 
-export function UpgradesView({ report, answers, setAnswers, pricesVersion }: { report: Report; answers: Answers; setAnswers: (a: Answers) => void; pricesVersion: number }) {
-  const [tab, setTab] = useState<Category>("gpu");
+interface Scored {
+  p: Proposal;
+  impact: Impact;
+  inBudget: boolean;
+}
+
+export function UpgradesView({
+  report, answers, setAnswers, pricesVersion, goal, verdict, initialTab, onEditGoal,
+}: {
+  report: Report; answers: Answers; setAnswers: (a: Answers) => void; pricesVersion: number;
+  goal: Goal; verdict: Verdict; initialTab?: string; onEditGoal: () => void;
+}) {
+  // Onglet de départ : celui demandé, sinon le premier composant qui bloque l'objectif.
+  const firstFix = verdict.needs.find((n) => n.fix && n.status !== "ok")?.fix;
+  const [tab, setTab] = useState<Category>(() => (initialTab as Category) ?? firstFix ?? "gpu");
   const [showForm, setShowForm] = useState(() => missingAnswers(answers) > 0);
+  const [showOver, setShowOver] = useState(false);
   const profile = useMemo(() => buildProfile(report, answers), [report, answers]);
   // pricesVersion : les prix du catalogue ont été mis à jour, on recalcule les totaux.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const all = useMemo(() => proposeAll(profile), [profile, pricesVersion]);
   const market = pricesFile();
   const marketCount = market ? Object.keys(market.items).length : 0;
-  const list = all[tab];
   const missing = missingAnswers(answers);
+
+  // Chaque proposition est évaluée face à l'objectif : gain réel, objectif atteint, budget.
+  const scored: Scored[] = useMemo(
+    () =>
+      all[tab].map((p) => ({
+        p,
+        impact: impactOf(goal, profile, verdict, p.main as never, tab, ramAfter(p, profile.ramTotalGb)),
+        inBudget: goal.budget == null || p.total <= goal.budget,
+      })),
+    [all, tab, goal, profile, verdict],
+  );
+  // Ordre : dans le budget d'abord ; puis celles qui atteignent l'objectif ; puis celles qui aident ; puis le prix.
+  const rank = (s: Scored) => (s.impact.reachesGoal ? 0 : s.impact.relevant ? 1 : 2);
+  const sorted = [...scored].sort((a, b) => rank(a) - rank(b) || a.p.total - b.p.total);
+  const inBudget = sorted.filter((s) => s.inBudget);
+  const over = sorted.filter((s) => !s.inBudget);
+  const cheapestGoal = scored.filter((s) => s.impact.reachesGoal).sort((a, b) => a.p.total - b.p.total)[0];
+  const tabNeed = verdict.needs.find((n) => n.fix === tab && n.status !== "ok");
 
   const update = (patch: Partial<Answers>) => {
     const next = { ...answers, ...patch };
@@ -40,6 +72,17 @@ export function UpgradesView({ report, answers, setAnswers, pricesVersion }: { r
           <div className="muted">Chaque proposition est vérifiée face à ta config, avec les composants à ajouter si besoin.</div>
         </div>
       </header>
+
+      <div className="goal-bar">
+        <Icon name="target" />
+        <span>
+          Objectif : <b>{goal.configured ? goalSummary(goal) : "non défini"}</b>
+          {verdict.fps && goal.configured && <span className="muted"> · aujourd'hui ≈ {verdict.fps.fps} i/s</span>}
+        </span>
+        <button className="link" onClick={onEditGoal}>
+          {goal.configured ? "Modifier" : "Définir"}
+        </button>
+      </div>
 
       <section className="panel q-panel">
         <div className="panel-head">
@@ -57,19 +100,51 @@ export function UpgradesView({ report, answers, setAnswers, pricesVersion }: { r
           <button key={t.id} className={`tab ${tab === t.id ? "on" : ""}`} onClick={() => setTab(t.id)}>
             <Icon name={t.icon} />
             {t.label}
+            {verdict.needs.some((n) => n.fix === t.id && n.status !== "ok") && <span className="tab-dot" title="Limite ton objectif" />}
             <span className="tab-count">{all[t.id].length}</span>
           </button>
         ))}
       </div>
 
-      {list.length === 0 ? (
+      {goal.configured && all[tab].length > 0 && (
+        <div className={`tab-advice ${tabNeed ? "need" : ""}`}>
+          {tabNeed
+            ? cheapestGoal
+              ? `${tabNeed.label} : ${tabNeed.detail} La solution la moins chère pour atteindre ton objectif coûte ${cheapestGoal.p.total} €${goal.budget != null && cheapestGoal.p.total > goal.budget ? `, au-delà de ton budget de ${goal.budget} €` : ""}.`
+              : `${tabNeed.label} : ${tabNeed.detail} Aucune proposition de cet onglet ne suffit seule : regarde aussi les autres onglets.`
+            : verdict.level === "ok"
+              ? "Ton PC atteint déjà ton objectif : ces upgrades sont du bonus."
+              : "Ce composant ne limite pas ton objectif : priorité aux onglets marqués d'un point."}
+        </div>
+      )}
+
+      {all[tab].length === 0 ? (
         <div className="panel muted">{emptyMessage(tab, profile)}</div>
       ) : (
-        <div className="stack">
-          {list.map((p) => (
-            <ProposalCard key={p.id} p={p} />
-          ))}
-        </div>
+        <>
+          {inBudget.length === 0 && goal.budget != null && (
+            <div className="panel muted">Aucune proposition de cet onglet ne rentre dans ton budget de {goal.budget} €.</div>
+          )}
+          <div className="stack">
+            {inBudget.map((s) => (
+              <ProposalCard key={s.p.id} p={s.p} impact={goal.configured ? s.impact : undefined} />
+            ))}
+          </div>
+          {over.length > 0 && (
+            <div className="over-budget">
+              <button className="link" onClick={() => setShowOver(!showOver)}>
+                {showOver ? "Masquer" : "Voir"} les {over.length} proposition{over.length > 1 ? "s" : ""} au-delà de ton budget
+              </button>
+              {showOver && (
+                <div className="stack dim">
+                  {over.map((s) => (
+                    <ProposalCard key={s.p.id} p={s.p} impact={goal.configured ? s.impact : undefined} />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </>
       )}
       <p className="muted small note">
         {marketCount > 0
@@ -104,7 +179,14 @@ const ROLE: Record<Role, { title: string; cls: string }> = {
   recommended: { title: "Conseillé", cls: "rec" },
 };
 
-function ProposalCard({ p }: { p: Proposal }) {
+/** Quantité de RAM après une proposition (ajout ou remplacement). */
+function ramAfter(p: Proposal, currentGb: number): number | undefined {
+  if (p.main.kind !== "ram") return undefined;
+  const kitGb = p.main.sticks * p.main.gbPerStick;
+  return p.id.startsWith("ram-add") ? currentGb + kitGb : kitGb;
+}
+
+function ProposalCard({ p, impact }: { p: Proposal; impact?: Impact }) {
   const [open, setOpen] = useState(false);
   const required = p.additions.filter((a) => a.role === "required");
   const fails = p.checks.filter((c) => c.status === "fail").length;
@@ -121,11 +203,15 @@ function ProposalCard({ p }: { p: Proposal }) {
     <div className={`prop st-${status}`}>
       <div className="prop-head" onClick={() => setOpen(!open)}>
         <div className="prop-main">
-          {p.highlight && <div className="prop-hl">{p.highlight}</div>}
+          <div className="prop-tags">
+            {impact?.reachesGoal && <span className="prop-goal">✓ Atteint ton objectif</span>}
+            {impact && !impact.relevant && !impact.reachesGoal && <span className="prop-useless">Peu utile pour ton objectif</span>}
+            {p.highlight && <span className="prop-hl">{p.highlight}</span>}
+          </div>
           <div className="prop-title">{p.title}</div>
           <div className="prop-meta">
             <span className={`prop-status s-${status}`}>{statusLabel}</span>
-            {p.gainLabel && <span className="prop-gain">{p.gainLabel}</span>}
+            {(impact?.label ?? p.gainLabel) && <span className="prop-gain">{impact?.label ?? p.gainLabel}</span>}
           </div>
         </div>
         <div className="prop-price">
