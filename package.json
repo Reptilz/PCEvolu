@@ -10,6 +10,7 @@
     "app": "tauri dev",
     "package": "tauri build",
     "prices": "tsx scripts/update-prices.ts",
+    "logos": "node scripts/build-brand-logos.mjs",
     "catalog": "tsx scripts/build-catalog.ts",
     "test": "tsx scripts/test-recognition.ts"
   },
@@ -25,6 +26,7 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "simple-icons": "^16.37.0",
     "tsx": "^4.23.15",
     "typescript": "^5.5.4",
     "vite": "^5.4.0"

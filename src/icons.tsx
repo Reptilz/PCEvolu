@@ -1,6 +1,6 @@
 // Icônes au trait, dessinées en SVG (aucune dépendance externe, l'app marche hors ligne).
 
-import { BRAND_LOGOS } from "./brand-logos";
+import { BRAND_LOGOS, BRAND_MATCHERS } from "./brand-logos";
 
 const paths = {
   up: <path d="M6 15l6-6 6 6M7 20h10" />,
@@ -114,16 +114,25 @@ export function Icon({ name, className }: { name: IconName; className?: string }
   );
 }
 
-/** Le logo officiel d'un fabricant (NVIDIA, AMD, Intel), ou rien si la marque n'est pas connue. */
+/** La marque reconnue dans un nom (« Micro-Star International » → MSI, « NVIDIA GeForce RTX 3060 Ti » → NVIDIA), ou undefined. */
+export function brandKey(text?: string): string | undefined {
+  if (!text) return undefined;
+  const direct = text.toLowerCase();
+  if (direct in BRAND_LOGOS) return direct;
+  return BRAND_MATCHERS.find(([re]) => re.test(text))?.[1];
+}
+
+/** Le logo officiel du fabricant reconnu dans `brand` (un nom de marque ou de produit), ou rien. */
 export function BrandLogo({ brand, className }: { brand?: string; className?: string }) {
-  const logo = brand ? BRAND_LOGOS[brand.toLowerCase() as keyof typeof BRAND_LOGOS] : undefined;
+  const key = brandKey(brand);
+  const logo = key ? BRAND_LOGOS[key] : undefined;
   if (!logo) return null;
   return (
     <svg className={`brand-logo ${className ?? ""}`} viewBox="0 0 24 24" role="img" aria-label={logo.title}>
       <title>{logo.title}</title>
-      <path d={logo.path} fill={logo.hex} />
+      <path d={logo.path} fill={logo.hex ?? "currentColor"} />
     </svg>
   );
 }
 
-export const hasBrandLogo = (brand?: string) => !!brand && brand.toLowerCase() in BRAND_LOGOS;
+export const hasBrandLogo = (brand?: string) => !!brandKey(brand);

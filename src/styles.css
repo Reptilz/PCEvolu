@@ -812,3 +812,7 @@ abbr.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px;
   .part-opt { grid-template-columns: 1fr auto; }
   .part-opt-effect { grid-column: 1 / -1; grid-row: 2; white-space: normal; }
 }
+/* Logos de fabricants dans la fiche technique */
+.ico.ico-brand { color: var(--text); }
+.ico.ico-brand .brand-logo { width: 22px; height: 22px; }
+.dd-logo { width: 15px; height: 15px; margin-right: 7px; vertical-align: -2px; color: var(--text); }

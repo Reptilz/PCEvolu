@@ -629,8 +629,8 @@ function Components({ report: r, live }: { report: Report; live?: Metrics }) {
           </div>
         </Card>
 
-        <Card icon="board" cat="Carte mère" name={clean(r.board.product)}>
-          <Row k="Fabricant" v={r.board.manufacturer?.replace(" Co., Ltd.", "")} />
+        <Card icon="board" cat="Carte mère" name={clean(r.board.product)} brand={r.board.manufacturer}>
+          <Row k="Fabricant" v={r.board.manufacturer?.replace(" Co., Ltd.", "")} logo />
           <Row k="Révision" v={r.board.version} />
           <Row k="BIOS" v={`${r.board.biosVersion ?? "?"}, du ${date(r.board.biosDate)}`} />
           <Row k="Éditeur du BIOS" v={r.board.biosVendor} />
@@ -644,7 +644,7 @@ function Components({ report: r, live }: { report: Report; live?: Metrics }) {
           </Card>
         ))}
 
-        <Card icon="folder" cat="Volumes" name={`${r.volumes.length} lecteur${r.volumes.length > 1 ? "s" : ""}`}>
+        <Card icon="folder" cat="Volumes" noBrand name={`${r.volumes.length} lecteur${r.volumes.length > 1 ? "s" : ""}`}>
           {r.volumes.map((v) => {
             const pct = v.sizeBytes && v.freeBytes != null ? ((v.sizeBytes - v.freeBytes) / v.sizeBytes) * 100 : 0;
             return (
@@ -668,12 +668,12 @@ function Components({ report: r, live }: { report: Report; live?: Metrics }) {
         {r.displays.map((d, i) => {
           const m = r.monitors[i];
           return (
-            <Card key={d.device} icon="screen" cat="Écran" name={m ? `${m.maker ?? ""} ${m.model ?? ""}`.trim() : d.adapter}>
+            <Card key={d.device} icon="screen" cat="Écran" name={m ? `${m.maker ?? ""} ${m.model ?? ""}`.trim() : d.adapter} brand={m?.maker ?? ""}>
               <Row k="Résolution" v={`${d.width} × ${d.height}`} />
               <Row k="Fréquence actuelle" v={`${d.currentHz} Hz`} badge={d.maxHz - d.currentHz >= 10 ? "bad" : "ok"} />
               <Row k="Fréquence max" v={`${d.maxHz} Hz`} />
               {m?.year && <Row k="Fabrication" v={String(m.year)} />}
-              <Row k="Branché sur" v={clean(d.adapter)} />
+              <Row k="Branché sur" v={clean(d.adapter)} logo />
             </Card>
           );
         })}
@@ -687,7 +687,7 @@ function Components({ report: r, live }: { report: Report; live?: Metrics }) {
 
         <Card icon="audio" cat="Audio" name={r.audio[0]?.name ?? "Périphériques audio"}>
           {r.audio.map((a, i) => (
-            <Row key={i} k={a.name ?? "?"} v={a.manufacturer} />
+            <Row key={i} k={a.name ?? "?"} v={a.manufacturer} logo />
           ))}
         </Card>
       </div>
@@ -698,12 +698,15 @@ function Components({ report: r, live }: { report: Report; live?: Metrics }) {
 const kb = (v?: number) => (v == null ? "—" : v >= 1024 ? `${(v / 1024).toLocaleString("fr-FR")} Mo` : `${v} Ko`);
 const health = (h: string) => ({ healthy: "Sain", warning: "Avertissement", unhealthy: "Défaillant", unknown: "Inconnu" })[h] ?? h;
 
-function Card(p: { icon: IconName; cat: string; name?: string; accent?: string; children: ReactNode }) {
+/** Carte de la fiche technique. L'icône devient le logo du fabricant quand on le reconnaît (dans `brand`, sinon dans le nom). */
+function Card(p: { icon: IconName; cat: string; name?: string; brand?: string; noBrand?: boolean; accent?: string; children: ReactNode }) {
+  const brand = p.noBrand ? undefined : p.brand ?? p.name;
+  const logo = hasBrandLogo(brand);
   return (
     <div className="card">
       <div className="card-top">
-        <div className="ico" style={p.accent ? { color: p.accent } : undefined}>
-          <Icon name={p.icon} />
+        <div className={`ico ${logo ? "ico-brand" : ""}`} style={p.accent && !logo ? { color: p.accent } : undefined}>
+          {logo ? <BrandLogo brand={brand} /> : <Icon name={p.icon} />}
         </div>
         <div>
           <div className="cat">{p.cat}</div>
@@ -715,12 +718,13 @@ function Card(p: { icon: IconName; cat: string; name?: string; accent?: string; 
   );
 }
 
-function Row({ k, v, badge }: { k: string; v?: string; badge?: "ok" | "warn" | "bad" }) {
+function Row({ k, v, badge, logo }: { k: string; v?: string; badge?: "ok" | "warn" | "bad"; logo?: boolean }) {
   const label = { ok: "OK", warn: "À améliorer", bad: "À corriger" };
   return (
     <>
       <dt>{k}</dt>
       <dd>
+        {logo && <BrandLogo brand={v} className="dd-logo" />}
         {v || "—"}
         {badge && badge !== "ok" && <span className={`badge b-${badge}`}>{label[badge]}</span>}
       </dd>
