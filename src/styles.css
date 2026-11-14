@@ -816,3 +816,71 @@ abbr.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px;
 .ico.ico-brand { color: var(--text); }
 .ico.ico-brand .brand-logo { width: 22px; height: 22px; }
 .dd-logo { width: 15px; height: 15px; margin-right: 7px; vertical-align: -2px; color: var(--text); }
+/* ---- Alertes prix v2 ---- */
+.al-page { max-width: 1040px; }
+.bad-text { color: var(--bad); }
+.al-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 28px; }
+.al-summary > div { display: flex; flex-direction: column; gap: 2px; padding: 14px 16px; border-radius: 14px; background: var(--panel); }
+.al-summary b { font-size: 20px; font-weight: 700; }
+.al-summary span { font-size: 13px; color: var(--muted); line-height: 1.35; }
+.al-summary > div.ok b { color: var(--ok); }
+
+.al-cards { display: flex; flex-direction: column; gap: 18px; }
+.al-card { padding: 20px 22px 14px; border-radius: 18px; background: var(--panel); }
+.al-card.hit { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ok) 55%, transparent); }
+.al-card-head { display: grid; grid-template-columns: 42px 1fr auto; gap: 14px; align-items: center; }
+.al-ico { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: var(--panel-2); color: var(--accent); }
+.al-ico .icon, .al-ico .brand-logo { width: 22px; height: 22px; }
+.al-card-title { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; min-width: 0; }
+.al-name { font-size: 17px; }
+.al-status { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 99px; background: var(--panel-2); color: var(--muted); }
+.al-status.s-hit { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
+.al-status.s-down { background: color-mix(in srgb, var(--ok) 12%, transparent); color: var(--ok); }
+.al-status.s-up { background: color-mix(in srgb, var(--bad) 12%, transparent); color: var(--bad); }
+
+.al-card-body { display: grid; grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.4fr); gap: 28px; margin-top: 18px; align-items: start; }
+.al-facts { display: flex; flex-direction: column; gap: 18px; }
+.al-now { display: flex; flex-direction: column; gap: 2px; }
+.al-now > .muted:first-child { font-size: 13px; }
+.al-now b { font-size: 30px; font-weight: 700; letter-spacing: -0.01em; }
+.al-card.hit .al-now b { color: var(--ok); }
+.al-goal-line { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.al-progress { height: 8px; border-radius: 99px; background: var(--panel-2); overflow: hidden; }
+.al-progress i { display: block; height: 100%; border-radius: 99px; background: var(--accent); }
+.al-card.hit .al-progress i { background: var(--ok); }
+.al-gap { margin: 8px 0 0; font-size: 13px; color: var(--muted); line-height: 1.5; }
+.al-edit { display: flex; align-items: center; gap: 8px; }
+.al-edit label { color: var(--muted); font-size: 13px; }
+.al-edit input { width: 90px; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-2); color: var(--text); font: inherit; }
+.al-stats { list-style: none; margin: 0; padding: 0; }
+.al-stats li { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-top: 1px solid var(--line-soft); font-size: 14px; }
+.al-stats li span { color: var(--muted); }
+
+.al-chart { margin: 0; }
+.al-chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.al-grid line { stroke: var(--line-soft); stroke-width: 1; }
+.al-grid text, .al-axis { fill: var(--muted); font-size: 11px; }
+.al-target { stroke: var(--ok); stroke-width: 1.5; stroke-dasharray: 6 5; }
+.al-target-label { fill: var(--ok); font-size: 11px; font-weight: 600; }
+.al-median { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 2 4; opacity: 0.8; }
+.al-area { fill: color-mix(in srgb, var(--accent) 12%, transparent); }
+.al-best { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.al-dot { fill: var(--accent); }
+.al-dot.last { fill: var(--panel); stroke: var(--accent); stroke-width: 3; }
+.al-last-label { fill: var(--text); font-size: 12px; font-weight: 700; }
+.al-chart figcaption { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 8px; font-size: 12px; color: var(--muted); }
+.al-key::before { content: ""; display: inline-block; width: 16px; height: 0; margin-right: 6px; vertical-align: middle; border-top: 2.5px solid var(--accent); }
+.al-key.median::before { border-top: 2px dotted var(--muted); }
+.al-key.target::before { border-top: 2px dashed var(--ok); }
+
+.al-card-foot { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line-soft); }
+.al-card-foot .link { font-size: 14px; }
+
+.al-empty { display: flex; gap: 18px; align-items: flex-start; }
+.al-empty-ico { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: var(--panel-2); color: var(--accent); flex-shrink: 0; }
+.al-empty-ico .icon { width: 24px; height: 24px; }
+
+@media (max-width: 900px) {
+  .al-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .al-card-body { grid-template-columns: 1fr; }
+}
