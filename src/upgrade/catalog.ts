@@ -135,6 +135,23 @@ export const CPUS: CpuSpec[] = [
   purchasable("AMD Ryzen 9 9900X", "new", 400),
   purchasable("AMD Ryzen 9 9950X", "new", 560),
   purchasable("AMD Ryzen 9 9950X3D", "new", 700),
+  // Élargissement de la gamme (novembre 2026)
+  purchasable("Intel Core i5-14400", "new", 190),
+  purchasable("Intel Core i5-13600KF", "new", 230),
+  purchasable("Intel Core i7-13700KF", "new", 330),
+  purchasable("Intel Core i7-14700K", "new", 400),
+  purchasable("Intel Core i9-14900KF", "new", 480),
+  purchasable("Intel Core Ultra 5 225F", "new", 170),
+  purchasable("Intel Core Ultra 5 245K", "new", 220),
+  purchasable("Intel Core Ultra 7 265K", "new", 330),
+  purchasable("AMD Ryzen 5 5600GT", "new", 120),
+  purchasable("AMD Ryzen 5 7600X", "new", 200),
+  purchasable("AMD Ryzen 5 8500G", "new", 150),
+  purchasable("AMD Ryzen 7 8700G", "new", 280),
+  purchasable("AMD Ryzen 5 9600", "new", 200),
+  purchasable("AMD Ryzen 9 7900", "new", 360),
+  purchasable("AMD Ryzen 9 7900X", "new", 380),
+  purchasable("AMD Ryzen 9 9900X3D", "new", 600),
 ];
 
 // ---------------------------------------------------------------------------
@@ -173,7 +190,11 @@ export const BOARDS: BoardSpec[] = [
   board("mb-a620-matx", "Carte mère A620M (micro-ATX, entrée de gamme)", "AM5", "A620", "mATX", "DDR5", { slots: 2, maxGb: 96, m2: 1, pcie: 4, avail: "new", price: 100, note: "Entrée de gamme : 2 emplacements RAM, à réserver aux processeurs 65 W." }),
   board("mb-b650-atx", "Carte mère B650 ATX", "AM5", "B650", "ATX", "DDR5", { maxGb: 192, m2: 2, pcie: 4, avail: "new", price: 160, note: "Choisis un modèle avec bouton de mise à jour du BIOS sans processeur." }),
   board("mb-b650-matx", "Carte mère B650M (micro-ATX)", "AM5", "B650", "mATX", "DDR5", { maxGb: 192, m2: 2, pcie: 4, avail: "new", price: 130, note: "Choisis un modèle avec bouton de mise à jour du BIOS sans processeur." }),
-  board("mb-b850-atx", "Carte mère B850 ATX", "AM5", "B850", "ATX", "DDR5", { maxGb: 256, m2: 3, pcie: 5, avail: "new", price: 200 }),
+  board("mb-b850-atx", "Carte mère B850 ATX", "AM5", "B850", "ATX", "DDR5", { maxGb: 256, m2: 3, pcie: 4, avail: "new", price: 200 }),
+  board("mb-b850-matx", "Carte mère B850M (micro-ATX)", "AM5", "B850", "mATX", "DDR5", { maxGb: 256, m2: 2, pcie: 4, avail: "new", price: 170 }),
+  board("mb-x870-atx", "Carte mère X870 ATX", "AM5", "X870", "ATX", "DDR5", { maxGb: 256, m2: 3, pcie: 5, avail: "new", price: 260 }),
+  board("mb-z790-atx", "Carte mère Z790 ATX (DDR5)", "LGA1700", "Z790", "ATX", "DDR5", { maxGb: 192, m2: 4, pcie: 5, avail: "new", price: 220 }),
+  board("mb-z890-atx", "Carte mère Z890 ATX", "LGA1851", "Z890", "ATX", "DDR5", { maxGb: 256, m2: 4, pcie: 5, avail: "new", price: 280 }),
 ];
 
 
@@ -190,8 +211,16 @@ export const RAM_KITS: RamKit[] = [
   ram("d4-2x8-3200", "Kit 2 × 8 Go DDR4-3200 CL16", "DDR4", 2, 8, 3200, 50),
   ram("d4-2x16-3200", "Kit 2 × 16 Go DDR4-3200 CL16", "DDR4", 2, 16, 3200, 85),
   ram("d4-2x32-3200", "Kit 2 × 32 Go DDR4-3200 CL16", "DDR4", 2, 32, 3200, 165),
+  ram("d4-1x32-3200", "Barrette 32 Go DDR4-3200", "DDR4", 1, 32, 3200, 110),
+  ram("d4-2x16-3600", "Kit 2 × 16 Go DDR4-3600 CL18", "DDR4", 2, 16, 3600, 95),
+  ram("d5-1x16-5600", "Barrette 16 Go DDR5-5600", "DDR5", 1, 16, 5600, 70),
+  ram("d5-1x32-5600", "Barrette 32 Go DDR5-5600", "DDR5", 1, 32, 5600, 130),
+  ram("d5-2x8-5600", "Kit 2 × 8 Go DDR5-5600", "DDR5", 2, 8, 5600, 80),
+  ram("d5-2x16-5600", "Kit 2 × 16 Go DDR5-5600", "DDR5", 2, 16, 5600, 130),
   ram("d5-2x16-6000", "Kit 2 × 16 Go DDR5-6000 CL30", "DDR5", 2, 16, 6000, 140),
+  ram("d5-2x32-5600", "Kit 2 × 32 Go DDR5-5600", "DDR5", 2, 32, 5600, 240),
   ram("d5-2x32-6000", "Kit 2 × 32 Go DDR5-6000 CL30", "DDR5", 2, 32, 6000, 260),
+  ram("d5-2x48-6000", "Kit 2 × 48 Go DDR5-6000", "DDR5", 2, 48, 6000, 420),
 ];
 
 const ssd = (id: string, name: string, iface: SsdSpec["iface"], tb: number, price: number): SsdSpec => ({ kind: "ssd", id, name, iface, tb, price });
@@ -204,6 +233,8 @@ export const SSDS: SsdSpec[] = [
   ssd("nvme-2tb", "SSD NVMe M.2 2 To (ex. Kingston NV3, WD SN7100)", "NVMe4", 2, 300),
   ssd("nvme-4tb", "SSD NVMe M.2 4 To (ex. WD SN7100, Lexar NM790)", "NVMe4", 4, 600),
   // PCIe 5.0 : ≈ 12 000 Mo/s, mais seulement sur un emplacement M.2 PCIe 5.0 (cartes AM5 / LGA1851 récentes). Gain peu visible en jeu.
+  ssd("nvme5-1tb", "SSD NVMe PCIe 5.0 1 To (ex. Crucial T705, Samsung 9100 Pro)", "NVMe5", 1, 200),
+  ssd("nvme5-4tb", "SSD NVMe PCIe 5.0 4 To (ex. Crucial T705, Samsung 9100 Pro)", "NVMe5", 4, 600),
   ssd("nvme5-2tb", "SSD NVMe PCIe 5.0 2 To (ex. Samsung 9100 Pro, Crucial T705)", "NVMe5", 2, 300),
   ssd("sata-500gb", "SSD SATA 2,5\" 500 Go (ex. Crucial MX500, Samsung 870 EVO)", "SATA", 0.5, 80),
   ssd("sata-1tb", "SSD SATA 2,5\" 1 To (ex. Crucial MX500)", "SATA", 1, 150),
@@ -211,6 +242,7 @@ export const SSDS: SsdSpec[] = [
   // Disques durs : beaucoup de place pour pas cher, pour stocker (photos, vidéos, sauvegardes), pas pour Windows ni les jeux.
   ssd("hdd-2tb", "Disque dur 3,5\" 2 To (ex. Seagate BarraCuda, WD Blue)", "HDD", 2, 200),
   ssd("hdd-4tb", "Disque dur 3,5\" 4 To (ex. Seagate BarraCuda, WD Blue)", "HDD", 4, 250),
+  ssd("hdd-8tb", "Disque dur 3,5\" 8 To (ex. Seagate BarraCuda, WD Red Plus)", "HDD", 8, 330),
 ];
 
 const psu = (id: string, name: string, watts: number, atx3: boolean, native12v2x6: boolean, pcie8pin: number, price: number): PsuSpec =>
@@ -221,6 +253,7 @@ const psu = (id: string, name: string, watts: number, atx3: boolean, native12v2x
 export const PSUS: PsuSpec[] = [
   psu("psu-550", "Alimentation 550 W 80+ Bronze (ex. be quiet! System Power, Corsair CX)", 550, false, false, 2, 60),
   psu("psu-650-bronze", "Alimentation 650 W 80+ Bronze (sans câble 12V-2x6)", 650, false, false, 2, 65),
+  psu("psu-750-bronze", "Alimentation 750 W 80+ Bronze (sans câble 12V-2x6)", 750, false, false, 2, 75),
   // Exemples vérifiés sur les fiches fabricants (novembre 2026) :
   // - Corsair RMe « 2025 » (ATX 3.1, câble 12V-2x6 natif) : RM650e CP-9020302, RM750e CP-9020295, RM850e CP-9020296, RM1000e CP-9020297.
   //   Les RMe « 2023 » portent le même nom mais passent par un câble 2 × 8 broches → 12V-2x6.
@@ -262,6 +295,7 @@ export const COOLER_CAPACITY: Record<string, number> = {
 
 export const FAN_KITS: FanKit[] = [
   { kind: "fans", id: "p12-5", name: "Arctic P12 PWM PST (lot de 5)", count: 5, price: 30 },
+  { kind: "fans", id: "p14-5", name: "Arctic P14 PWM PST (lot de 5, 140 mm)", count: 5, price: 40 },
 ];
 
 // Longueur max de carte graphique et ventilateurs fournis vérifiés sur les fiches Lian Li et Fractal Design.

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-14T23:31:36.063Z",
+  "updatedAt": "2026-11-14T23:53:32.578Z",
   "currency": "EUR",
   "source": "Google Shopping France (via Serper.dev), médiane des marchands",
   "items": {
@@ -2765,6 +2765,1208 @@
           "price": 40.9,
           "title": "Thermalright Assassin X 120 REFINED SE White Processeur Dissipateur thermique/Radiateur 12 cm Aluminium",
           "link": "https://www.google.com/search?ibp=oshop&q=ventirad+Thermalright+Assassin+X+120+Refined+SE&prds=localAnnotatedOfferId:1,catalogid:3632278541938202945,gpcid:16939070432743121468,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "rtx-3050": {
+      "price": 377,
+      "min": 334,
+      "max": 434,
+      "offers": 9,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "achatmoinscher",
+          "price": 333.82,
+          "title": "Inno3D GeForce RTX 3050 Twin X2 Nvidia 8 Go GDDR6",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+3050+8+Go&prds=localAnnotatedOfferId:1,catalogid:10330804396751726061,gpcid:10881441789412953520,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 338.54,
+          "title": "Zotac GeForce RTX 3050 Eco",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+3050+8+Go&prds=localAnnotatedOfferId:1,catalogid:1237332529389225016,gpcid:16127445444067338440,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Outlet PC FR",
+          "price": 349,
+          "title": "Carte graphique MSI GeForce RTX 3050 Ventus 2X XS OC 8GB GDDR6",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+3050+8+Go&prds=localAnnotatedOfferId:1,catalogid:2706277053675842542,gpcid:9446911947443605792,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 359.4,
+          "title": "Gigabyte GeForce RTX 3050 WINDFORCE OC V2",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+3050+8+Go&prds=localAnnotatedOfferId:1,catalogid:18263496369999394980,gpcid:14286585445455687013,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 376.85,
+          "title": "ASUS Dual GeForce RTX 3050 O8G V2",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+3050+8+Go&prds=localAnnotatedOfferId:1,catalogid:10790412893922042596,gpcid:8005488216897671604,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "rtx-3060": {
+      "price": 560,
+      "min": 370,
+      "max": 670,
+      "offers": 13,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 369.9,
+          "title": "Palit GeForce RTX 3060 StormX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+3060+12+Go&prds=localAnnotatedOfferId:1,catalogid:3668331436379571942,gpcid:484804986234264792,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Fnac",
+          "price": 399.9,
+          "title": "Palit GeForce RTX 3060 Dual Carte graphique",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+3060+12+Go&prds=localAnnotatedOfferId:1,catalogid:11996082162311724758,gpcid:15869946275280588281,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 476.02,
+          "title": "Biostar GeForce RTX 3060",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+3060+12+Go&prds=localAnnotatedOfferId:1,catalogid:922456040600370962,gpcid:15766748721993859953,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "rtx-4070": {
+      "price": 656,
+      "min": 630,
+      "max": 944,
+      "offers": 3,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Maxnet24.de",
+          "price": 630,
+          "title": "Palit NED4070S19K9-1047D Carte graphique NVIDIA GeForce RTX 4070 12",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+4070+12+Go&prds=localAnnotatedOfferId:1,catalogid:8293194228804022787,gpcid:17446219126631629938,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Tech-discount",
+          "price": 655.9,
+          "title": "Asus GeForce RTX 4070 Dual O12G EVO",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+4070+12+Go&prds=localAnnotatedOfferId:1,catalogid:2257424376726626458,gpcid:15649131325603032591,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 944.16,
+          "title": "PNY Carte Graphique GeForce RTX 4070 VERTO",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+4070+12+Go&prds=localAnnotatedOfferId:1,catalogid:14735932137874639031,gpcid:12741636894294457027,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "rtx-4070tis": {
+      "price": 1307,
+      "min": 985,
+      "max": 1890,
+      "offers": 7,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Tech-discount",
+          "price": 984.9,
+          "title": "Asus GeForce RTX 4070 Ti SUPER Dual O16G",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+4070+Ti+Super+16+Go&prds=localAnnotatedOfferId:1,catalogid:5808976540795446576,gpcid:6164771529263091654,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 1215.46,
+          "title": "Gigabyte GeForce RTX 4070 Ti SUPER EAGLE OC 16G",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+4070+Ti+Super+16+Go&prds=localAnnotatedOfferId:1,catalogid:13324639409842425949,gpcid:14277063736798163959,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 1279,
+          "title": "Gigabyte GeForce RTX 4070 Ti SUPER WINDFORCE OC 16G",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+4070+Ti+Super+16+Go&prds=localAnnotatedOfferId:1,catalogid:7651389450149359040,gpcid:778179797292269935,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "rtx-4080s": {
+      "price": 1498,
+      "min": 1342,
+      "max": 1990,
+      "offers": 5,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr",
+          "price": 1342.06,
+          "title": "MSI GeForce RTX 4080 SUPER 16G VENTUS 3X OC",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+4080+Super+16+Go&prds=localAnnotatedOfferId:1,catalogid:13216391964047915446,gpcid:6671389583389706041,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Tech-discount",
+          "price": 1367.9,
+          "title": "ASUS TUF Gaming GeForce RTX 4080 SUPER 16G GDDR6X",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+4080+Super+16+Go&prds=localAnnotatedOfferId:1,catalogid:13493706590194132187,gpcid:7973920332065233431,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Integral System",
+          "price": 1497.6,
+          "title": "Carte graphique RTX 4080 Super 16GB HDMI, 3 x DP, 2 slot PCIe 4.0 x16, avec blower"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 1798.21,
+          "title": "Zotac Zt-d40820q-10p Carte Graphique Nvidia Geforce Rtx 4080 Super 16 Go Gddr6x"
+        }
+      ]
+    },
+    "rtx-4090": {
+      "price": 4599,
+      "min": 3392,
+      "max": 5150,
+      "offers": 3,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Router-switch.com",
+          "price": 3391.97,
+          "title": "Nvidia RTX 4090 GPU Haute Performance IA & Deep Learning Datasheet",
+          "link": "https://www.google.com/search?ibp=oshop&q=GeForce+4090+graphique+Go+carte+RTX+24&prds=localAnnotatedOfferId:1,catalogid:15341598731994599191,gpcid:7433825256305218665,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 4599.01,
+          "title": "Asus - ROG SCAR17-G733PYV-DRLL088W Noir 17,3\" - AMD Ryzen 9 7945HX3D - NVIDIA GeForce RTX 4090 - SSD 2To - RAM 64Go - Windows 11"
+        },
+        {
+          "merchant": "DIY Micro",
+          "price": 5150,
+          "title": "GeForce RTX 4090 Kinpower Turbo Edition GDDR6X",
+          "link": "https://www.google.com/search?ibp=oshop&q=GeForce+4090+graphique+Go+carte+RTX+24&prds=localAnnotatedOfferId:1,catalogid:8008102025312942462,gpcid:12827333223817856910,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "rtx-5060ti-8": {
+      "price": 660,
+      "min": 600,
+      "max": 699,
+      "offers": 8,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Fnac.com",
+          "price": 599.99,
+          "title": "MSI GeForce RTX 5060 Ti 8G VENTUS 2X OC PLUS",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+5060+Ti+8+Go&prds=localAnnotatedOfferId:1,catalogid:12113003506183608577,gpcid:306823800533180281,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "achatmoinscher",
+          "price": 604.95,
+          "title": "MSI GeForce RTX 5060 Ti 8G Gaming Trio OC",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+5060+Ti+8+Go&prds=localAnnotatedOfferId:1,catalogid:2359419947400358326,gpcid:2304737923812516385,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Alternate.fr",
+          "price": 635,
+          "title": "Palit GeForce RTX 5060 Ti OC RiTONA 8GB Carte Graphique",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+5060+Ti+8+Go&prds=localAnnotatedOfferId:1,catalogid:4594807941217148936,gpcid:13106224755308766734,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "rx-6600xt": {
+      "price": 595,
+      "min": 546,
+      "max": 902,
+      "offers": 4,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "KultureGeek",
+          "price": 545.96,
+          "title": "MSI Radeon RX 6600 XT Mech 2X OC",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+6650+XT+8+Go&prds=localAnnotatedOfferId:1,catalogid:3917388196032639167,gpcid:8217697675975871680,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 573.59,
+          "title": "MSI MSI Radeon RX 6650 XT MECH 2X 8G OC",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+6650+XT+8+Go&prds=localAnnotatedOfferId:1,catalogid:15321736029938026185,gpcid:10741309518252358506,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 616.73,
+          "title": "Gigabyte Radeon RX 6600 XT GAMING OC PRO",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+6650+XT+8+Go&prds=localAnnotatedOfferId:1,catalogid:11867594967002918163,gpcid:17150194239852293295,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "rx-6700xt": {
+      "price": 907,
+      "min": 580,
+      "max": 1254,
+      "offers": 8,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 580,
+          "title": "ASUS TUF-RX6700XT-O12G-GAMING - OC Edition - carte graphique - Radeon RX 6700 XT - 12 Go GDDR6 - PCIe 4.0 - HDMI, 3 x DisplayPort",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+6750+XT+12+Go&prds=localAnnotatedOfferId:1,catalogid:3410158360671237968,gpcid:14248011648302937381,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "KultureGeek",
+          "price": 599.9,
+          "title": "ASUS DUAL AMD Radeon RX 6750 XT OC Edition – Carte graphique gaming gaming (12GB GDDR6, AMD RDNA 2, PCIe 4.0, HDMI 2.1, DisplayPort 1.4a,"
+        },
+        {
+          "merchant": "LaBonneConfig",
+          "price": 649,
+          "title": "Sapphire Radeon RX 6750 XT Pulse",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+6750+XT+12+Go&prds=localAnnotatedOfferId:1,catalogid:9942835237134376382,gpcid:11073930368243689692,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "i5-14400": {
+      "price": 181,
+      "min": 152,
+      "max": 224,
+      "offers": 10,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "dLcompare FR",
+          "price": 152.41,
+          "title": "Intel Core i5 14600 / 14500 / 14400"
+        },
+        {
+          "merchant": "Powerplanet",
+          "price": 168.54,
+          "title": "Intel Core i5-14400 processeur 20 Mo Smart Cache",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-14400&prds=localAnnotatedOfferId:1,catalogid:6961508192701738168,gpcid:429978676990259558,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Microdistri.com",
+          "price": 170.42,
+          "title": "Intel Core i5-14400",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-14400&prds=localAnnotatedOfferId:1,catalogid:13072704297317027847,gpcid:5906246625442621657,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 184.9,
+          "title": "Intel Core i5-14400 Processeur",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-14400&prds=localAnnotatedOfferId:1,catalogid:17515181984559529381,gpcid:11097060591224505168,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Darty",
+          "price": 202.99,
+          "title": "processeur Intel Core i5-14400",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-14400&prds=localAnnotatedOfferId:1,catalogid:11777787934962280876,gpcid:630133126520337971,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "i5-13600kf": {
+      "price": 235,
+      "min": 189,
+      "max": 259,
+      "offers": 6,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "DropReference",
+          "price": 189,
+          "title": "Intel processeur Core i5-13600KF Boîte Smart Cache",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-13600KF&prds=localAnnotatedOfferId:1,catalogid:11609842999618064342,gpcid:449411920669038418,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Fnac",
+          "price": 189.99,
+          "title": "Intel Core I5-13600kf Processeur",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-13600KF&prds=localAnnotatedOfferId:1,catalogid:11251263833114891840,gpcid:2527479430846839034,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 225.58,
+          "title": "Intel Core i5-13600KF Processeur",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-13600KF&prds=localAnnotatedOfferId:1,catalogid:1466776776328016130,gpcid:7279471884314106590,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "i7-13700kf": {
+      "price": 267,
+      "min": 267,
+      "max": 381,
+      "offers": 3,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "achatmoinscher",
+          "price": 267,
+          "title": "Intel Core i7 13700KF - 3.4 GHz - 16 cœurs - 24 filetages - 30 Mo cache - LGA1700 Socket - OEM",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i7-13700KF&prds=localAnnotatedOfferId:1,catalogid:5715499611306475945,gpcid:12692836537285401360,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "DropReference",
+          "price": 267,
+          "title": "Intel Core i7-13700KF Processeur",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i7-13700KF&prds=localAnnotatedOfferId:1,catalogid:14145835376628655799,gpcid:1595033365153047397,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 381.38,
+          "title": "Processeur Intel Core i7-13700KF 3,4 GHz Box",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i7-13700KF&prds=localAnnotatedOfferId:1,catalogid:18180228122843915416,gpcid:18212182433935931388,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "i7-14700k": {
+      "price": 373,
+      "min": 363,
+      "max": 469,
+      "offers": 7,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 362.99,
+          "title": "Processeur Intel Core i7-14700K",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i7-14700K&prds=localAnnotatedOfferId:1,catalogid:5082393201574364851,gpcid:2382068924630592144,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 366.23,
+          "title": "Intel Core i7 i7-14700K",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i7-14700K&prds=localAnnotatedOfferId:1,catalogid:6368476590018865018,gpcid:9821291066336058594,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "achatmoinscher",
+          "price": 372.99,
+          "title": "Intel Core i7-14700K Processeur",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i7-14700K&prds=localAnnotatedOfferId:1,catalogid:15208857966970134331,gpcid:11830207691819391382,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "i9-14900kf": {
+      "price": 459,
+      "min": 435,
+      "max": 560,
+      "offers": 7,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "reichelt.com",
+          "price": 434.6,
+          "title": "Intel Core i9-14900KF Processeur 36 Mo Smart Cache",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i9-14900KF&prds=localAnnotatedOfferId:1,catalogid:16691509245779502222,gpcid:16831334103703116164,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Microconcept",
+          "price": 439.9,
+          "title": "Intel Core i9-14900KF processeur",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i9-14900KF&prds=localAnnotatedOfferId:1,catalogid:11757994938964795613,gpcid:6618737132626736004,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Alternate.fr",
+          "price": 446,
+          "title": "Intel Cpu I9-14900kf 6.00ghz Tray cm8071505094018",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i9-14900KF&prds=localAnnotatedOfferId:1,catalogid:12865183001434634477,gpcid:7651194043291295669,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 459,
+          "title": "Intel Core i9-14900KF Processeur",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i9-14900KF&prds=localAnnotatedOfferId:1,catalogid:9633670061856653799,gpcid:17710504589965537177,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "u5-225f": {
+      "price": 174,
+      "min": 142,
+      "max": 187,
+      "offers": 7,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Powerplanet",
+          "price": 141.77,
+          "title": "Intel CPU Core Ultra 5 225F",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+Ultra+5+225F&prds=localAnnotatedOfferId:1,catalogid:9322413071505280688,gpcid:11020219045773018750,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 153.9,
+          "title": "Processeur Intel Core Ultra 5 225F",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+Ultra+5+225F&prds=localAnnotatedOfferId:1,catalogid:15711691310482378346,gpcid:6586813213622563519,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "F10.eu",
+          "price": 168.6,
+          "title": "Boîtier micro Intel Core Ultra 5 225F 4,90 GHz LGA 1851",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+Ultra+5+225F&prds=localAnnotatedOfferId:1,catalogid:4516133686400457939,gpcid:4630157727351365145,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "u5-245k": {
+      "price": 200,
+      "min": 191,
+      "max": 247,
+      "offers": 6,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "DropReference",
+          "price": 191,
+          "title": "Intel Core Ultra 5 245K processeur 24 Mo Smart Cache",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+Ultra+5+245K&prds=localAnnotatedOfferId:1,catalogid:12585371386722982201,gpcid:1922118157479467009,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 199.33,
+          "title": "Intel Core Ultra 5 245K Processeur",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+Ultra+5+245K&prds=localAnnotatedOfferId:1,catalogid:7391732568254437556,gpcid:13553773974161311018,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Darty.com",
+          "price": 199.99,
+          "title": "Intel Core Ultra 5 245K",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+Ultra+5+245K&prds=localAnnotatedOfferId:1,catalogid:16376210586657702703,gpcid:12067136740496613953,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "u7-265k": {
+      "price": 332,
+      "min": 304,
+      "max": 390,
+      "offers": 6,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 303.9,
+          "title": "Intel Core Ultra 7 265K",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+Ultra+7+265K&prds=localAnnotatedOfferId:1,catalogid:6613521476272724756,gpcid:16295235381079091570,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Powerplanet",
+          "price": 309.37,
+          "title": "Intel Core Ultra 7 265K 20 Cœurs LGA1851 20 threads 5,5GHz Processeur",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+Ultra+7+265K&prds=localAnnotatedOfferId:1,catalogid:5388679287482205027,gpcid:7649070680685020386,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Microconcept",
+          "price": 329.9,
+          "title": "INTEL Processeur Core Ultra 7 265K 5.5 GHz 20 Cœurs Socket LGA1851"
+        },
+        {
+          "merchant": "Rue du Commerce Marketplace",
+          "price": 333.99,
+          "title": "Intel Core Ultra 7 265K Tray",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+Ultra+7+265K&prds=localAnnotatedOfferId:1,catalogid:16165479661255942922,gpcid:2963189801926951128,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 344.91,
+          "title": "Processeur Intel Core Ultra 7 265K",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+Ultra+7+265K&prds=localAnnotatedOfferId:1,catalogid:3733055050744325230,gpcid:8271818423320524225,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "r5-5600gt": {
+      "price": 213,
+      "min": 167,
+      "max": 316,
+      "offers": 6,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Dotiri",
+          "price": 166.99,
+          "title": "AMD Ryzen 5 5600GT processeur 3,6 GHz 16 Mo L3",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+5600GT&prds=localAnnotatedOfferId:1,catalogid:17226683768367467090,gpcid:9557532097480451156,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Rue du Commerce Marketplace",
+          "price": 201.99,
+          "title": "AMD Ryzen 5 5600GT",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+5600GT&prds=localAnnotatedOfferId:1,catalogid:618849622601981821,gpcid:918881090443805608,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 210.17,
+          "title": "AMD Ryzen 5 5600GT Processeur",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+5600GT&prds=localAnnotatedOfferId:1,catalogid:17199455361357238477,gpcid:8651793857242422005,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "r5-7600x": {
+      "price": 168,
+      "min": 148,
+      "max": 186,
+      "offers": 6,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 147.99,
+          "title": "AMD Ryzen 5 7600X / 4.7 GHz processeur",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+7600X&prds=localAnnotatedOfferId:1,catalogid:11205658914848985662,gpcid:8810657322763615392,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Fnac",
+          "price": 162,
+          "title": "AMD Ryzen 5 7600X processeur 4,7 GHz 32 Mo L3",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+7600X&prds=localAnnotatedOfferId:1,catalogid:13635467190168066700,gpcid:2350670367449391787,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "1fodiscount",
+          "price": 162.38,
+          "title": "Processeur AMD Ryzen 5 7600X AM5",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+7600X&prds=localAnnotatedOfferId:1,catalogid:14640697055854068435,gpcid:1415854527805276313,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "r5-8500g": {
+      "price": 135,
+      "min": 122,
+      "max": 187,
+      "offers": 7,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 121.62,
+          "title": "Processeur AMD Ryzen 5 8500G Tray",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+8500G&prds=localAnnotatedOfferId:1,catalogid:13717444667411791491,gpcid:12510861999301390090,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "F10.eu",
+          "price": 127,
+          "title": "Amd Cpu R5-8500g 3.5ghz Tray",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+8500G&prds=localAnnotatedOfferId:1,catalogid:10276968472386932843,gpcid:18216807143982917920,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "GreaTecno",
+          "price": 131,
+          "title": "AMD Ryzen 5 8500G tray",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+8500G&prds=localAnnotatedOfferId:1,catalogid:9445495523678023550,gpcid:17862836972523543111,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "r7-8700g": {
+      "price": 282,
+      "min": 254,
+      "max": 363,
+      "offers": 7,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "achatmoinscher",
+          "price": 253.6,
+          "title": "AMD Ryzen 7 8700G Processeur 4,2 GHz",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+8700G&prds=localAnnotatedOfferId:1,catalogid:1634578644493521773,gpcid:5921076765591036106,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Microdistri.com",
+          "price": 264.81,
+          "title": "AMD Ryzen 7 8700G processeur 4,2 GHz 16 Mo L3 Plateau",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+8700G&prds=localAnnotatedOfferId:1,catalogid:4391960221256907816,gpcid:10201438320990887778,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 276.8,
+          "title": "AMD Ryzen 7 8700G Processeur",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+8700G&prds=localAnnotatedOfferId:1,catalogid:3908869852271520880,gpcid:14085335091890070398,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Grosbill",
+          "price": 289.99,
+          "title": "Processeur AMD Ryzen 7 8700G",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+8700G&prds=localAnnotatedOfferId:1,catalogid:13438873241616273195,gpcid:16448017769554334800,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "r5-9600": {
+      "price": 218,
+      "min": 204,
+      "max": 259,
+      "offers": 4,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "OCTO24",
+          "price": 203.69,
+          "title": "AMD Ryzen 5 9600 / 3.8 GHz processeur",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+9600&prds=localAnnotatedOfferId:1,catalogid:4963098065684220279,gpcid:13915460268479238485,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Alternate.fr",
+          "price": 207.9,
+          "title": "AMD Ryzen 5 9600",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+9600&prds=localAnnotatedOfferId:1,catalogid:18069050951543236507,gpcid:9993921621870481684,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Powerplanet",
+          "price": 228.05,
+          "title": "AMD Ryzen 5 9600 processeur 3,8 GHz 32 Mo L3 Plateau",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+9600&prds=localAnnotatedOfferId:1,catalogid:302753876359610156,gpcid:8847366322327641976,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 258.84,
+          "title": "Processeur AMD Ryzen 5 9600 3,8 GHz 32 Mo L3",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+9600&prds=localAnnotatedOfferId:1,catalogid:13893738672989578043,gpcid:9332908925856679725,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "r9-7900": {
+      "price": 388,
+      "min": 350,
+      "max": 480,
+      "offers": 4,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Rue du Commerce Marketplace",
+          "price": 350,
+          "title": "AMD Ryzen 9 7900",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+9+7900&prds=localAnnotatedOfferId:1,catalogid:6779824409067145700,gpcid:18260655556573550352,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 383.63,
+          "title": "AMD Ryzen 9 7900 Processeur",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+9+7900&prds=localAnnotatedOfferId:1,catalogid:6738930812026316532,gpcid:1902896603907171216,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "achatmoinscher",
+          "price": 393.13,
+          "title": "AMD Ryzen 9 7900 processeur 3,7 GHz 64 Mo L3",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+9+7900&prds=localAnnotatedOfferId:1,catalogid:4930566255183943939,gpcid:4989525541975726797,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "r9-7900x": {
+      "price": 434,
+      "min": 333,
+      "max": 701,
+      "offers": 6,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Orange",
+          "price": 332.71,
+          "title": "AMD Ryzen 9 7900X Processeur",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+9+7900X&prds=localAnnotatedOfferId:1,catalogid:2204463495747288051,gpcid:2158338182788637302,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 399,
+          "title": "processeur AMD Ryzen 9 7900X",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+9+7900X&prds=localAnnotatedOfferId:1,catalogid:11049121215840190558,gpcid:10420969419125717214,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Fabrika Tech",
+          "price": 432.31,
+          "title": "Amd Ryzen 9 7900x 4.7ghz 76mb 170w Am5 Fansız",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+9+7900X&prds=localAnnotatedOfferId:1,catalogid:3954043374606894898,gpcid:1707955688511650561,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "r9-9900x3d": {
+      "price": 560,
+      "min": 469,
+      "max": 660,
+      "offers": 5,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 469,
+          "title": "AMD Ryzen 9 9900X3D",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+9+9900X3D&prds=localAnnotatedOfferId:1,catalogid:17969895559316596071,gpcid:4731574462660602352,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "F10.eu",
+          "price": 543.8,
+          "title": "Processeur Amd ryzen 9 9900X3D 12 cœurs 24 threads 140 mo cache 5,5 ghz socket AM5 DDR5 pcie 5.0",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+9+9900X3D&prds=localAnnotatedOfferId:1,catalogid:18232539567800276784,gpcid:5754288001893892641,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Rue du Commerce Marketplace",
+          "price": 559.99,
+          "title": "AMD Ryzen 9 9900X3D 5.5GHZ",
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+9+9900X3D&prds=localAnnotatedOfferId:1,catalogid:14105727760555691496,gpcid:11732232755642177011,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b850-matx": {
+      "price": 164,
+      "min": 114,
+      "max": 230,
+      "offers": 39,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr",
+          "price": 113.9,
+          "title": "Carte mère ASRock B850M-X R2.0 micro ATX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B850M+micro+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:17348576135597772979,gpcid:11116741007441304334,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 114.74,
+          "title": "Carte mère ASRock B850M-X WiFi R2.0 Micro ATX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B850M+micro+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:10957233669314150538,gpcid:11852089961992208692,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 119,
+          "title": "Carte mère ASRock B850M Challenger",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B850M+micro+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:10132078718129056860,gpcid:13458159219291940354,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-x870-atx": {
+      "price": 278,
+      "min": 182,
+      "max": 400,
+      "offers": 28,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr",
+          "price": 181.99,
+          "title": "Carte Mère Gigabyte X870 GAMING WIFI6",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+X870+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:2097018451932809338,gpcid:14568450214319147930,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 194.44,
+          "title": "Carte Mère GIGABYTE X870 EAGLE WIFI7",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+X870+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:3143489237213541155,gpcid:7131492525851461859,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 194.68,
+          "title": "ASRock X870 Pro RS AM5",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+X870+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:13096649599729343239,gpcid:9490253460921509665,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-z790-atx": {
+      "price": 219,
+      "min": 149,
+      "max": 350,
+      "offers": 27,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "OCTO24",
+          "price": 149.23,
+          "title": "MSI PRO Z790 S WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Z790+ATX+DDR5&prds=localAnnotatedOfferId:1,catalogid:14176731836943084355,gpcid:15659259739762481796,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 171.9,
+          "title": "Carte mère Gigabyte z790 eagle",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Z790+ATX+DDR5&prds=localAnnotatedOfferId:1,catalogid:2061609185511379630,gpcid:4900283908877054185,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 173.49,
+          "title": "Carte mère Gigabyte Z790 EAGLE AX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Z790+ATX+DDR5&prds=localAnnotatedOfferId:1,catalogid:2279088995912751000,gpcid:6459443863725462508,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-z890-atx": {
+      "price": 270,
+      "min": 183,
+      "max": 412,
+      "offers": 33,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 182.88,
+          "title": "ASRock Z890 Pro-A",
+          "link": "https://www.google.com/search?ibp=oshop&q=Z890+m%C3%A8re+carte+ATX&prds=localAnnotatedOfferId:1,catalogid:12184672491964778703,gpcid:5271297384079966103,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 189.74,
+          "title": "ASUS PRIME Z890 P",
+          "link": "https://www.google.com/search?ibp=oshop&q=Z890+m%C3%A8re+carte+ATX&prds=localAnnotatedOfferId:1,catalogid:7583896111481865985,gpcid:15555321316843095088,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Alternate.fr",
+          "price": 190.9,
+          "title": "ASRock Z890 Pro-A WiFi",
+          "link": "https://www.google.com/search?ibp=oshop&q=Z890+m%C3%A8re+carte+ATX&prds=localAnnotatedOfferId:1,catalogid:12386918602617309773,gpcid:897946514124290848,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "d4-1x32-3200": {
+      "price": 319,
+      "min": 282,
+      "max": 501,
+      "offers": 6,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 282,
+          "title": "Crucial DDR4 module 32 Go",
+          "link": "https://www.google.com/search?ibp=oshop&q=barrette+m%C3%A9moire+32+Go+DDR4+3200+MHz&prds=localAnnotatedOfferId:1,catalogid:6617535006490980564,gpcid:16280273819428529871,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Icoza",
+          "price": 303.42,
+          "title": "DDR4 G.Skill Aegis 32 Go 3200 MHz",
+          "link": "https://www.google.com/search?ibp=oshop&q=barrette+m%C3%A9moire+32+Go+DDR4+3200+MHz&prds=localAnnotatedOfferId:1,catalogid:6465729145935060472,gpcid:8346250156023628127,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 318.86,
+          "title": "Team Group ELITE ted432g3200c2201 32Go 3200MHz DDR4",
+          "link": "https://www.google.com/search?ibp=oshop&q=barrette+m%C3%A9moire+32+Go+DDR4+3200+MHz&prds=localAnnotatedOfferId:1,catalogid:4139464224685639669,gpcid:9450880343548542955,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "LDLC",
+          "price": 319.94,
+          "title": "Textorm 32 Go DDR4 3200 MHz CL16",
+          "link": "https://www.google.com/search?ibp=oshop&q=barrette+m%C3%A9moire+32+Go+DDR4+3200+MHz&prds=localAnnotatedOfferId:1,catalogid:8559087009995233800,gpcid:1174457618834930716,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "d4-2x16-3600": {
+      "price": 340,
+      "min": 261,
+      "max": 562,
+      "offers": 8,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "LaBonneConfig",
+          "price": 260.99,
+          "title": "Mémoire RAM PC KINGSPEC RGB DDR4 3600MHz 1.35V 2 x 16Go Argenté avec RGB",
+          "link": "https://www.google.com/search?ibp=oshop&q=kit+m%C3%A9moire+32+Go+2x16+Go+DDR4+3600&prds=localAnnotatedOfferId:1,catalogid:5056093894576052280,gpcid:16115169395527367503,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 300.24,
+          "title": "G.Skill 32 Go de Trident Z Neo DDR4 3600MHz PC4-28800 CL18 RGB Double Channel Kit (2X 16Go)"
+        },
+        {
+          "merchant": "KultureGeek",
+          "price": 327.53,
+          "title": "G.Skill Trident Z Neo 32 Go DDR4 3600 MHz CL18",
+          "link": "https://www.google.com/search?ibp=oshop&q=kit+m%C3%A9moire+32+Go+2x16+Go+DDR4+3600&prds=localAnnotatedOfferId:1,catalogid:8911986635824707151,gpcid:13334148947968127004,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 333.32,
+          "title": "G.Skill Trident Z RGB 32 Go DDR4 3600 MHz",
+          "link": "https://www.google.com/search?ibp=oshop&q=kit+m%C3%A9moire+32+Go+2x16+Go+DDR4+3600&prds=localAnnotatedOfferId:1,catalogid:8152700945000395592,gpcid:1428023682699878187,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "d5-1x16-5600": {
+      "price": 336,
+      "min": 230,
+      "max": 412,
+      "offers": 7,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 230,
+          "title": "Crucial DDR5 module 16 Go",
+          "link": "https://www.google.com/search?ibp=oshop&q=barrette+m%C3%A9moire+16+Go+DDR5+5600+MHz&prds=localAnnotatedOfferId:1,catalogid:18429420190891292389,gpcid:12869643555966026991,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 295.95,
+          "title": "Integral DDR5 module 16 Go",
+          "link": "https://www.google.com/search?ibp=oshop&q=barrette+m%C3%A9moire+16+Go+DDR5+5600+MHz&prds=localAnnotatedOfferId:1,catalogid:13223879128017306454,gpcid:2392001242999645046,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Rue du Commerce",
+          "price": 299.99,
+          "title": "Textorm 16 Go DDR5 5600 MHz CL46",
+          "link": "https://www.google.com/search?ibp=oshop&q=barrette+m%C3%A9moire+16+Go+DDR5+5600+MHz&prds=localAnnotatedOfferId:1,catalogid:8729831747606863281,gpcid:898213406781208820,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "d5-1x32-5600": {
+      "price": 629,
+      "min": 517,
+      "max": 899,
+      "offers": 10,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr",
+          "price": 516.99,
+          "title": "Mémoire Corsair DDR5 32 Go VENGEANCE RGB cmg64gx5m2b5600z40",
+          "link": "https://www.google.com/search?ibp=oshop&q=barrette+m%C3%A9moire+32+Go+DDR5+5600+MHz&prds=localAnnotatedOfferId:1,catalogid:14485776738675889793,gpcid:8974920574624247919,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Accessoires Asus",
+          "price": 549,
+          "title": "RAM 32Go DDR5 5600 MHz ASUS"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 581.82,
+          "title": "PNY 32GB DDR5 5600MHz DIMM MD32GSD55600-SB",
+          "link": "https://www.google.com/search?ibp=oshop&q=barrette+m%C3%A9moire+32+Go+DDR5+5600+MHz&prds=localAnnotatedOfferId:1,catalogid:5928170720199135055,gpcid:6386006969428773112,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "d5-2x8-5600": {
+      "price": 300,
+      "min": 284,
+      "max": 386,
+      "offers": 7,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Alternate.fr",
+          "price": 284,
+          "title": "Patriot DIMM 16 GB DDR5-5600 pvvr516g56c36",
+          "link": "https://www.google.com/search?ibp=oshop&q=kit+m%C3%A9moire+16+Go+2x8+Go+DDR5+5600&prds=localAnnotatedOfferId:1,catalogid:9644703305082720989,gpcid:2637414159635759828,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 286.99,
+          "title": "DDR5 Patriot Viper Venom 16 Go 5600 MHz pvv516g560c40k",
+          "link": "https://www.google.com/search?ibp=oshop&q=kit+m%C3%A9moire+16+Go+2x8+Go+DDR5+5600&prds=localAnnotatedOfferId:1,catalogid:1070053902089438750,gpcid:18218134689643333070,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "reichelt.com",
+          "price": 292.39,
+          "title": "Mémoire DIMM DDR5-5600MHZ 16 GO CSX",
+          "link": "https://www.google.com/search?ibp=oshop&q=kit+m%C3%A9moire+16+Go+2x8+Go+DDR5+5600&prds=localAnnotatedOfferId:1,catalogid:12529792768628939627,gpcid:8666857028920810334,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Rue du Commerce",
+          "price": 299.99,
+          "title": "Textorm 16 Go DDR5 5600 MHz CL46",
+          "link": "https://www.google.com/search?ibp=oshop&q=kit+m%C3%A9moire+16+Go+2x8+Go+DDR5+5600&prds=localAnnotatedOfferId:1,catalogid:8729831747606863281,gpcid:898213406781208820,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "d5-2x16-5600": {
+      "price": 646,
+      "min": 517,
+      "max": 761,
+      "offers": 5,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr",
+          "price": 516.99,
+          "title": "Mémoire Corsair DDR5 32 Go VENGEANCE RGB cmg64gx5m2b5600z40",
+          "link": "https://www.google.com/search?ibp=oshop&q=kit+m%C3%A9moire+32+Go+2x16+Go+DDR5+5600&prds=localAnnotatedOfferId:1,catalogid:14485776738675889793,gpcid:8974920574624247919,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 599,
+          "title": "ADATA XPG Armax RGB 32 Go 5600 DIMM DDR5",
+          "link": "https://www.google.com/search?ibp=oshop&q=kit+m%C3%A9moire+32+Go+2x16+Go+DDR5+5600&prds=localAnnotatedOfferId:1,catalogid:15607233447991278286,gpcid:16380188439436585326,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Fnac",
+          "price": 645.5,
+          "title": "ADATA DDR5 5600 U-DIMM · 32 Go",
+          "link": "https://www.google.com/search?ibp=oshop&q=kit+m%C3%A9moire+32+Go+2x16+Go+DDR5+5600&prds=localAnnotatedOfferId:1,catalogid:101269393293610281,gpcid:659501307683977020,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "d5-2x32-5600": {
+      "price": 1264,
+      "min": 1101,
+      "max": 1413,
+      "offers": 4,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 1100.99,
+          "title": "AGI UD238 64Go Kit (2x32Go) RAM DDR5 UDIMM 5600MHz pour Intel XMP AMD Expo | Latence CL46, Module de mémoire vive haute performance compatible avec"
+        },
+        {
+          "merchant": "Powerplanet",
+          "price": 1147.39,
+          "title": "Mémoire RAM Corsair Vengeance DDR5 64 Go 5600 MHz",
+          "link": "https://www.google.com/search?ibp=oshop&q=kit+m%C3%A9moire+64+Go+2x32+Go+DDR5+5600&prds=localAnnotatedOfferId:1,catalogid:14489869088385234910,gpcid:14175110014945307177,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "monsieurplus.com",
+          "price": 1379.99,
+          "title": "CORSAIR Vengeance DDR5 64 Go (2 x 32 Go) 5600 MHz CL36"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 1413.2,
+          "title": "G.Skill F5-5600J3636D32GX2-IS module de Mémoire 64 Go 2 x 32 Go DDR5",
+          "link": "https://www.google.com/search?ibp=oshop&q=kit+m%C3%A9moire+64+Go+2x32+Go+DDR5+5600&prds=localAnnotatedOfferId:1,catalogid:12944279782516961134,gpcid:12294858609543184439,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "d5-2x48-6000": {
+      "price": 2934,
+      "min": 2293,
+      "max": 3204,
+      "offers": 4,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Pixmania",
+          "price": 2292.75,
+          "title": "DDR5 Corsair Vengeance 96 Go 5600 MHz",
+          "link": "https://www.google.com/search?ibp=oshop&q=kit+m%C3%A9moire+96+Go+2x48+Go+DDR5+6000&prds=localAnnotatedOfferId:1,catalogid:14783466645072705958,gpcid:3918010100264201148,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Trippodo Shop",
+          "price": 2696.99,
+          "title": "G.Skill Trident Z5 RGB 96 Gb Ddr5 6000 Mt/s Cl30 Dimm",
+          "link": "https://www.google.com/search?ibp=oshop&q=kit+m%C3%A9moire+96+Go+2x48+Go+DDR5+6000&prds=localAnnotatedOfferId:1,catalogid:18014592774246245569,gpcid:11117031678784364138,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "achatmoinscher",
+          "price": 3171.84,
+          "title": "Kingston FURY 96Go 6400MT/s DDR5 CL32 DIMM Renegade RGB XMP",
+          "link": "https://www.google.com/search?ibp=oshop&q=kit+m%C3%A9moire+96+Go+2x48+Go+DDR5+6000&prds=localAnnotatedOfferId:1,catalogid:10853750296288693718,gpcid:8164207733572428523,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 3204.15,
+          "title": "G.Skill Flare X5 DDR5 96 Go",
+          "link": "https://www.google.com/search?ibp=oshop&q=kit+m%C3%A9moire+96+Go+2x48+Go+DDR5+6000&prds=localAnnotatedOfferId:1,catalogid:1727273415675683308,gpcid:3866437295374915525,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "nvme5-1tb": {
+      "price": 198,
+      "min": 168,
+      "max": 251,
+      "offers": 6,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 168.09,
+          "title": "Disque Ssd Pcie 5.0 M.2 Nvme 1 To Fanxiang S910 14 000 Mo/S Bleu"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 187.89,
+          "title": "Disque Ssd avec Dram Pcie 5.0 M.2 Nvme 1 To Fanxiang S910pro 14 000 Mo/S Bleu"
+        },
+        {
+          "merchant": "LaBonneConfig",
+          "price": 197.89,
+          "title": "Fanxiang S910 Pro 1 To PCIe 5.0 NVMe"
+        }
+      ]
+    },
+    "nvme5-4tb": {
+      "price": 750,
+      "min": 539,
+      "max": 940,
+      "offers": 3,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 539,
+          "title": "KingSpec OneBoom SSD PCIe 5.0 NVMe M.2 4 To 2280-14000 Mo/s Lecture 13000 Mo/s Écriture TLC 3D NAND w/DRAM – Compatible PS5, optimisé pour les joueurs"
+        },
+        {
+          "merchant": "LDLC",
+          "price": 749.95,
+          "title": "Corsair MP700 ELITE SSD 4TB PCIe 5.0 x4",
+          "link": "https://www.google.com/search?ibp=oshop&q=SSD+NVMe+PCIe+5.0+4+To+M.2&prds=localAnnotatedOfferId:1,catalogid:18431861793899471069,gpcid:18230617993480479162,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 939.92,
+          "title": "WD-40>Disco Duro>Tecnología de Disco Duro>Almacenamiento Disque Dur WD Black SN8100 4 To SSD M.2 PCIe 5.0 NVMe 14900 Mo/s Chiffrement"
+        }
+      ]
+    },
+    "hdd-8tb": {
+      "price": 370,
+      "min": 314,
+      "max": 491,
+      "offers": 5,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 314.15,
+          "title": "Seagate 8 TB BarraCuda Disque dur Interne 3.5",
+          "link": "https://www.google.com/search?ibp=oshop&q=disque+dur+interne+3%2C5+pouces+8+To+SATA&prds=localAnnotatedOfferId:1,catalogid:14765061458597596563,gpcid:14952031198212318920,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "123consommables.com",
+          "price": 327.99,
+          "title": "Seagate Barracuda ST8000DM004 - Disque dur - 8 To - interne - 3.5\" - SATA 6Gb/s - mémoire tampon : 256 Mo",
+          "link": "https://www.google.com/search?ibp=oshop&q=disque+dur+interne+3%2C5+pouces+8+To+SATA&prds=localAnnotatedOfferId:1,catalogid:1067279543756234349,gpcid:8190841089850431135,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 369.9,
+          "title": "Seagate IronWolf 8 To Drive dur interne NAS 3,5\" SATA 6 Go/s 5 400 tr/min",
+          "link": "https://www.google.com/search?ibp=oshop&q=disque+dur+interne+3%2C5+pouces+8+To+SATA&prds=localAnnotatedOfferId:1,catalogid:15755947367410547241,gpcid:12709019305403680365,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "psu-750-bronze": {
+      "price": 62,
+      "min": 35,
+      "max": 91,
+      "offers": 14,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Carrefour",
+          "price": 34.99,
+          "title": "Alimentation Yeyian Raiden 750W 80+ Bronze",
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+750W+80+Plus+Bronze+ATX&prds=localAnnotatedOfferId:1,catalogid:8766876434150132315,gpcid:12210464568841132070,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 46.67,
+          "title": "Alimentation Mars Gaming MPB750SI ATX 750 W 80 plus Bronze",
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+750W+80+Plus+Bronze+ATX&prds=localAnnotatedOfferId:1,catalogid:2060223406167397322,gpcid:8512396565548371932,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "reichelt.com",
+          "price": 52.41,
+          "title": "Sama B750 Black 80+ Bronze",
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+750W+80+Plus+Bronze+ATX&prds=localAnnotatedOfferId:1,catalogid:2138373073811227512,gpcid:4141652506050413162,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "p14-5": {
+      "price": 34,
+      "min": 32,
+      "max": 35,
+      "offers": 2,
+      "updatedAt": "2026-11-14T23:53:32.578Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 31.99,
+          "title": "Arctic P14 Value Pack Ventilateur PC",
+          "link": "https://www.google.com/search?ibp=oshop&q=ventilateurs+Arctic+P14+PWM+PST+Value+Pack+5&prds=localAnnotatedOfferId:1,catalogid:11639404610268694601,gpcid:3894753511947246982,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Booksite",
+          "price": 35.09,
+          "title": "Arctic p14 pro a-rgb (White) - 3 Pack - pwm 140mm Case fan Value Pack - max 2500 rpm - pwm Regulated"
         }
       ]
     }

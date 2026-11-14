@@ -60,7 +60,8 @@ const office: Report = {
   const goal: Goal = { usage: "gaming", resolution: "1440p", fps: 100, budget: 1500, configured: true };
   const res = optimize(goal, p, demoReport, proposeAll(p));
   showPlan("Meilleur plan", res.best);
-  const big = res.tiers.find((t) => t.choice.cpu && t.choice.gpu);
+  // Un palier qui change de plateforme (le processeur apporte une nouvelle carte mère).
+  const big = [...res.tiers, ...res.alternatives].find((t) => t.choice.cpu?.additions.some((a) => a.part.kind === "board"));
   showPlan("Palier avec nouvelle plateforme", big);
   assert("le meilleur plan a une liste de compatibilité d'ensemble", (res.best?.checks?.length ?? 0) >= 6);
   assert("aucun contrôle en échec non résolu", !(res.best?.checks ?? []).some((c) => c.status === "fail"));

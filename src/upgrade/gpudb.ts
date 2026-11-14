@@ -127,6 +127,16 @@ const FOR_SALE: Record<string, { price: number; availability: Availability }> = 
   "rx-7900gre": { price: 700, availability: "new" },
   "rx-7900xt": { price: 850, availability: "new" },
   "arc-a750": { price: 250, availability: "new" },
+  // Élargissement (novembre 2026) : retirés ensuite si le relevé ne trouve plus assez d'offres neuves.
+  "rtx-3050": { price: 230, availability: "new" },
+  "rtx-3060": { price: 300, availability: "new" },
+  "rtx-4070": { price: 650, availability: "new" },
+  "rtx-4070tis": { price: 900, availability: "new" },
+  "rtx-4080s": { price: 1200, availability: "new" },
+  "rtx-4090": { price: 2500, availability: "new" },
+  "rx-6600xt": { price: 300, availability: "new" },
+  "rx-6700xt": { price: 380, availability: "new" },
+  "rtx-5060ti-8": { price: 450, availability: "new" },
   // Génération actuelle
   "rtx-5050": { price: 330, availability: "new" },
   "rtx-5060": { price: 500, availability: "new" },

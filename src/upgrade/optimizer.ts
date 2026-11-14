@@ -233,7 +233,7 @@ export function validatePlan(goal: Goal, p: Profile, plan: Plan): Check[] {
   // 3. Port PCIe de la carte graphique, sur la carte mère FINALE
   if (gpu && !gpu.integrated) {
     let gen = newBoard?.kind === "board" ? newBoard.pcieGpu : p.pcieGen;
-    if (gen && (cpu?.gen === "intel-10" || cpu?.gen === "amd-zen1" || cpu?.gen === "amd-zen1plus" || /ryzen \d (5500|[45]\d{2}0g)\b/i.test(cpu?.name ?? ""))) gen = 3;
+    if (gen && (cpu?.gen === "intel-10" || cpu?.gen === "amd-zen1" || cpu?.gen === "amd-zen1plus" || /ryzen \d (5500|5700|[45]\d{2}0gt?)\b/i.test(cpu?.name ?? ""))) gen = 3;
     if (gen === 3 && gpu.pcieLanes < 16) {
       put({ label: "Port PCIe", status: "warn", detail: `La ${gpu.name} n'utilise que ${gpu.pcieLanes} lignes PCIe : sur un port PCIe 3.0, elle perd ${gpu.pcieLanes === 4 ? "10 à 25 %" : "5 à 10 %"}.` });
     } else if (gen) {

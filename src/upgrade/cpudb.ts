@@ -113,7 +113,7 @@ function intelUltra(tier: 5 | 7 | 9, sku: number, suffix: string): CpuSpec {
     socket: "LGA1851",
     gen: "intel-ultra2",
     cores, threads,
-    powerW: mobile ? 65 : k ? (tier === 5 ? 159 : 250) : 121,
+    powerW: mobile ? 65 : k ? (tier === 5 ? 159 : 250) : tier === 5 ? 121 : 182,
     gaming,
     ramMaxMts: { DDR5: 6400 },
     igpu: !/f/.test(suffix),

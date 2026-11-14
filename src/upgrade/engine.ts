@@ -141,6 +141,17 @@ export function proposeGpus(p: Profile, cpuProposals: Proposal[] = []): Proposal
     } else {
       checks.push({ label: "Port PCIe", status: "ok", detail: "Toute carte mère avec un port PCIe x16 convient." });
     }
+    // Ryzen 8000G : le processeur ne donne que 8 lignes PCIe à la carte graphique (4 pour les 8500G / 8300G).
+    const apu = p.cpu?.name.match(/ryzen \d (8\d)00g/i);
+    if (apu) {
+      const lanes = /8[53]00g/i.test(p.cpu!.name) ? 4 : 8;
+      const last = checks[checks.length - 1];
+      checks[checks.length - 1] = {
+        ...last,
+        status: lanes === 4 ? "warn" : last.status,
+        detail: `${last.detail} Ton ${p.cpuDisplay} ne donne que ${lanes} lignes PCIe 4.0 à la carte graphique : perte ${lanes === 4 ? "sensible (10 % ou plus) avec une carte puissante" : "faible (quelques %)"}.`,
+      };
+    }
     // Partage du port graphique sur ta carte (ex. « utiliser le M2_2 fait passer le port en x8 »).
     const gpuSharing = relevantSharing(p).filter((s) => /carte graphique/i.test(s));
     if (gpuSharing.length) {
@@ -589,7 +600,8 @@ export function proposeRam(p: Profile): Proposal[] {
 
   // 1. Compléter en dual channel avec une barrette identique
   if (p.ramModules === 1 && freeSlots >= 1 && p.ramStickGb) {
-    const kit = RAM_KITS.filter((k) => k.type === p.ramType && k.sticks === 1 && k.gbPerStick === p.ramStickGb)[0];
+    // Barrette de même capacité, à la vitesse la plus proche de celle déjà installée.
+    const kit = RAM_KITS.filter((k) => k.type === p.ramType && k.sticks === 1 && k.gbPerStick === p.ramStickGb).sort((a, b) => Math.abs(a.mts - (p.ramMts ?? a.mts)) - Math.abs(b.mts - (p.ramMts ?? b.mts)))[0];
     if (kit) {
       out.push(finalize({
         id: "ram-add-same", category: "ram", title: `Ajouter 1 × ${p.ramStickGb} Go (dual channel)`, main: kit, mainQuantity: 1,

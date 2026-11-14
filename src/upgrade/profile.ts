@@ -141,8 +141,8 @@ export function buildProfile(r: Report, a: Answers): Profile {
   let pcieGen = board?.pcieGpu || chipset?.pcieGpu;
   if (pcieGen && cpu?.gen === "intel-10") pcieGen = 3;
   if (pcieGen && (cpu?.gen === "amd-zen1" || cpu?.gen === "amd-zen1plus")) pcieGen = 3;
-  // Ryzen 5 5500 et APU Ryzen 4000G / 5000G : port graphique limité au PCIe 3.0, même sur une carte B550.
-  if (pcieGen && cpu && /ryzen \d (5500|[45]\d{2}0g)\b/i.test(cpu.name)) pcieGen = 3;
+  // Ryzen 5 5500, Ryzen 7 5700 et APU Ryzen 4000G / 5000G (dont 5600GT) : port graphique limité au PCIe 3.0, même sur une carte B550.
+  if (pcieGen && cpu && /ryzen \d (5500|5700|[45]\d{2}0gt?)\b/i.test(cpu.name)) pcieGen = 3;
   // Carte mère non reconnue : on déduit la génération PCIe du processeur.
   if (!pcieGen && cpu) {
     const g = cpu.gen;
