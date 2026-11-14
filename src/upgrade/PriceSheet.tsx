@@ -85,7 +85,7 @@ export function PriceSheet({ part, onClose }: { part: SheetPart; onClose: () => 
                 <div className="sheet-mid">{eur(info.price)}</div>
               </div>
               <div>
-                <div className="muted small">Évolution</div>
+                <div className="muted small">Depuis le relevé précédent</div>
                 <div className={`sheet-mid ${trend.change == null ? "" : trend.change < 0 ? "down" : trend.change > 0 ? "up" : ""}`}>
                   {trend.change == null ? "—" : `${trend.change > 0 ? "↗ +" : trend.change < 0 ? "↘ " : "→ "}${trend.change} %`}
                 </div>
@@ -128,8 +128,10 @@ export function PriceSheet({ part, onClose }: { part: SheetPart; onClose: () => 
                 })}
             </div>
             <p className="muted small">
-              Les liens ouvrent le site du marchand. Les prix peuvent avoir changé depuis le relevé : vérifie le prix et le modèle exact sur la page.
+              Prix TTC affichés par les marchands, frais de livraison non compris. Ils peuvent avoir changé depuis le relevé : vérifie le prix et le modèle
+              exact sur la page du marchand.
             </p>
+            <PriceDisclosure />
           </>
         ) : (
           <p className="muted">Ce composant n'a pas encore de prix relevé : le prix affiché ({part.price ? eur(part.price) : "—"}) est indicatif.</p>
@@ -167,6 +169,40 @@ export function PriceSheet({ part, onClose }: { part: SheetPart; onClose: () => 
         </p>
       </div>
     </div>
+  );
+}
+
+/** Informations obligatoires d'un comparateur de prix (art. L111-7 du Code de la consommation). */
+export function PriceDisclosure() {
+  return (
+    <details className="sheet-legal">
+      <summary>Comment ces prix sont choisis</summary>
+      <ul>
+        <li>
+          <b>Source.</b> Offres de produits neufs trouvées sur Google Shopping France lors du relevé du lundi. La liste n'est pas exhaustive : d'autres
+          marchands peuvent proposer ce produit, parfois moins cher.
+        </li>
+        <li>
+          <b>Classement.</b> Du moins cher au plus cher, selon le seul prix. On affiche les trois offres les moins chères, plus jusqu'à deux offres de
+          grandes enseignes si leur prix reste proche de la médiane.
+        </li>
+        <li>
+          <b>Grandes enseignes.</b> Marchands connus qui vendent en France (Amazon hors vendeurs tiers, Fnac, Darty, LDLC, Materiel.net, Cdiscount…),
+          choisis par PCEvolu pour leur notoriété et leur service après-vente. Ce n'est ni un partenariat ni un label.
+        </li>
+        <li>
+          <b>Offres écartées.</b> Occasion et reconditionné, vendeurs étrangers ou d'import, annonces qui ne correspondent pas exactement au produit, et prix
+          anormalement éloignés de la médiane.
+        </li>
+        <li>
+          <b>Prix médian.</b> La moitié des offres retenues est moins chère, l'autre moitié plus chère. C'est ce prix qui sert au coût des plans.
+        </li>
+        <li>
+          <b>Aucun lien commercial.</b> PCEvolu n'est rémunéré par aucun des marchands cités : aucun lien n'est sponsorisé ou affilié, et le classement
+          ne peut pas être acheté.
+        </li>
+      </ul>
+    </details>
   );
 }
 

@@ -182,7 +182,7 @@ export function UpgradesView({
         {marketCount > 0
           ? `Prix du marché relevés le ${new Date(market!.updatedAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })} sur Google Shopping (médiane des marchands, ${marketCount} composants). Les autres prix sont indicatifs (${CATALOG_DATE}).`
           : `Prix indicatifs (${CATALOG_DATE}).`}{" "}
-        Les performances sont des ordres de grandeur : vérifie toujours la fiche du modèle exact avant d'acheter.
+        Les performances sont des ordres de grandeur : vérifie toujours la fiche du modèle exact avant d'acheter. PCEvolu n'a aucun lien commercial avec les marchands cités.
       </p>
     </div>
   );
@@ -313,7 +313,7 @@ export function MarketLine({ part }: { part: Part }) {
   const best = info.best?.[0];
   const t = trendOf(part.id);
   const eur = (n: number) => n.toLocaleString("fr-FR", { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
-  const trend = t.change != null && t.change !== 0 ? `, ${t.change < 0 ? "en baisse" : "en hausse"} de ${Math.abs(t.change)} %` : "";
+  const trend = t.change != null && t.change !== 0 ? `, ${t.change < 0 ? "en baisse" : "en hausse"} de ${Math.abs(t.change)} % depuis le relevé précédent` : "";
   return (
     <button className={`market small market-btn ${info.stale ? "stale" : ""}`} onClick={sheet} title="Voir les offres, l'évolution du prix et créer une alerte">
       {best ? `Dès ${eur(best.price)} € chez ${best.merchant}` : `Prix médian de ${info.offers} marchands`}

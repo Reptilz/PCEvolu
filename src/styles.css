@@ -678,3 +678,9 @@ dd { font-size: 14px; }
   .offer { flex-wrap: wrap; }
   .offer-main { flex-basis: 100%; }
 }
+/* Mentions du comparateur */
+.sheet-legal { margin: 10px 0 18px; font-size: 13px; color: var(--muted); }
+.sheet-legal summary { cursor: pointer; padding: 4px 0; color: var(--accent); font-weight: 600; }
+.sheet-legal ul { margin: 8px 0 0; padding-left: 18px; line-height: 1.55; }
+.sheet-legal li + li { margin-top: 6px; }
+.sheet-legal b { color: var(--text); font-weight: 600; }
