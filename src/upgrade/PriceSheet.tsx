@@ -172,6 +172,21 @@ export function PriceSheet({ part, onClose }: { part: SheetPart; onClose: () => 
   );
 }
 
+/** Mentions sous une page qui cite des prix de marchands : date du relevé, ce que comprend le prix, absence de lien commercial. */
+export function PriceNotice({ extra }: { extra?: string }) {
+  const f = pricesFile();
+  return (
+    <footer className="price-notice">
+      <p>
+        {f ? `Prix relevés le ${day(f.updatedAt)} sur Google Shopping France` : "Prix indicatifs"} : prix TTC affichés par les marchands, frais
+        de livraison non compris, susceptibles d'avoir changé depuis. Le prix d'une pièce est la médiane des offres retenues. PCEvolu n'a aucun lien
+        commercial avec les marchands cités.{extra ? ` ${extra}` : ""}
+      </p>
+      <PriceDisclosure />
+    </footer>
+  );
+}
+
 /** Informations obligatoires d'un comparateur de prix (art. L111-7 du Code de la consommation). */
 export function PriceDisclosure() {
   return (

@@ -756,3 +756,7 @@ abbr.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px;
 .row-detail .pd-top { display: none; }
 .row-detail .pd-sub { margin-top: 14px; }
 @media (prefers-reduced-motion: reduce) { .row { transition: none; } }
+/* Mentions sous les pages qui citent des prix */
+.price-notice { margin-top: 48px; max-width: 80ch; font-size: 13px; color: var(--muted); line-height: 1.6; }
+.price-notice p { margin: 0 0 6px; }
+.price-notice .sheet-legal { margin: 4px 0 0; }

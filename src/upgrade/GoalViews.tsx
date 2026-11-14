@@ -8,6 +8,7 @@ import {
 import { Icon, type IconName } from "../icons";
 import type { OptimizeResult } from "./optimizer";
 import { Alternatives, RecommendedPlan, Tiers } from "./PlanView";
+import { PriceNotice } from "./PriceSheet";
 
 // ---------------------------------------------------------------------------
 // Assistant « Mon objectif »
@@ -232,6 +233,7 @@ export function GoalDiagnostic({ goal, verdict, plan, onBudget, onEdit, onUpgrad
         {tab === "tiers" && plan && <Tiers result={plan} goal={goal} onBudget={onBudget} onDetails={(t) => onUpgrades(t)} />}
         {tab === "diagnostic" && <Diagnostic goal={goal} verdict={verdict} onUpgrades={onUpgrades} byPart={byPart} />}
       </div>
+      <PriceNotice />
       {next}
     </div>
   );

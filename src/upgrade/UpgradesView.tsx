@@ -6,7 +6,7 @@ import { buildProfile, missingAnswers, saveAnswers, type Answers, type Profile }
 import { proposeAll } from "./engine";
 import { CATALOG_DATE } from "./catalog";
 import { priceInfo, pricesFile, trendOf } from "./prices";
-import { usePrices } from "./PriceSheet";
+import { PriceNotice, usePrices } from "./PriceSheet";
 import { BrandLogo, Icon, type IconName } from "../icons";
 import { impactOf, type Goal, type Impact, type Verdict } from "./goal";
 import { AdditionRow, CompatSummary, ItemRow, KindIcons, kindLabel } from "./PlanView";
@@ -181,12 +181,9 @@ export function UpgradesView({
           )}
         </>
       )}
-      <p className="muted small up-foot">
-        {marketCount > 0
-          ? `Prix du marché relevés le ${new Date(market!.updatedAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })} sur Google Shopping (médiane des marchands, ${marketCount} composants). Les autres prix sont indicatifs (${CATALOG_DATE}).`
-          : `Prix indicatifs (${CATALOG_DATE}).`}{" "}
-        Les performances sont des ordres de grandeur : vérifie toujours la fiche du modèle exact avant d'acheter. PCEvolu n'a aucun lien commercial avec les marchands cités.
-      </p>
+      <PriceNotice
+        extra={`${marketCount > 0 ? `${marketCount} composants ont un prix relevé ; les autres prix sont indicatifs (${CATALOG_DATE}).` : ""} Les performances sont des ordres de grandeur : vérifie toujours la fiche du modèle exact avant d'acheter.`}
+      />
     </div>
   );
 }
