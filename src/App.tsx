@@ -511,11 +511,24 @@ function BuyList({ recos, openTab, options, goal, verdict }: {
 
 const price = (a?: number, b?: number) => (a == null ? "—" : a === b || b == null ? `${a} €` : `${a} à ${b} €`);
 
+/** L'icône du composant concerné par une amélioration (écran, mémoire, BIOS…). */
+function recoIcon(id: string): IconName {
+  if (id.startsWith("hz-")) return "screen";
+  if (id.startsWith("ram-")) return "ram";
+  if (id.startsWith("disk-") || id === "no-ssd" || id.startsWith("vol-")) return "disk";
+  if (id.startsWith("gpu-")) return "gpu";
+  if (id === "bios-old") return "board";
+  if (id.startsWith("net-")) return "wifi";
+  return "spark";
+}
+
 /** Une amélioration en une ligne : titre, et le détail si demandé. */
 function RecoLine({ r, detail }: { r: Recommendation; detail?: boolean }) {
   return (
     <li className={`imp-item l-${r.level}`}>
-      <span className="imp-dot" aria-hidden />
+      <span className="imp-ico" aria-hidden>
+        <Icon name={recoIcon(r.id)} />
+      </span>
       <div>
         <div className="imp-title">
           <T>{r.title}</T>

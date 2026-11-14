@@ -7,7 +7,7 @@ import { bestPriceOf, saveAlerts, suggestedTarget } from "./alerts";
 import { isGaming, type Goal } from "./goal";
 import { planTitle, type OptimizeResult, type Plan } from "./optimizer";
 import { price } from "./engine";
-import { Icon } from "../icons";
+import { Icon, type IconName } from "../icons";
 
 /** Arrondit un coût au palier de budget supérieur (par 50 €). */
 const roundBudget = (c: number) => Math.ceil(c / 50) * 50;
@@ -17,6 +17,22 @@ const KIND: Record<Part["kind"], string> = {
   psu: "Alimentation", cooler: "Ventirad", fans: "Ventilateurs", case: "Boîtier",
 };
 export const kindLabel = (p: Part) => KIND[p.kind];
+const KIND_ICON: Record<Part["kind"], IconName> = {
+  cpu: "chip", board: "board", gpu: "gpu", ram: "ram", ssd: "disk", psu: "power", cooler: "fan", fans: "fan", case: "tower",
+};
+export const kindIcon = (p: Part): IconName => KIND_ICON[p.kind];
+
+/** Les icônes des pièces d'un achat, côte à côte (une par type de pièce). */
+export function KindIcons({ parts }: { parts: Part[] }) {
+  const kinds = [...new Set(parts.map((p) => p.kind))];
+  return (
+    <span className="kind-icons" aria-hidden>
+      {kinds.map((k) => (
+        <Icon key={k} name={KIND_ICON[k]} />
+      ))}
+    </span>
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Le plan conseillé (bloc principal de « Mon objectif »)
@@ -125,7 +141,10 @@ export function PlanDetail({ plan, goal, currentFps, onDetails }: { plan: Plan; 
 export function ItemRow({ kind, part, amount, children, note }: { kind: string; part: Part; amount: number; children?: ReactNode; note?: ReactNode }) {
   return (
     <li className="pd-item">
-      <span className="pd-kind">{kind}</span>
+      <span className="pd-kind">
+        <Icon name={KIND_ICON[part.kind]} className="pd-kind-ico" />
+        {kind}
+      </span>
       <div className="pd-what">
         <span className="pd-name">{part.name}</span>
         {note}
@@ -270,7 +289,10 @@ function PlanRow({ plan, goal, currentFps, onDetails, action }: { plan: Plan; go
   return (
     <li className={`row ${open ? "open" : ""}`}>
       <button className="row-line" onClick={() => setOpen(!open)} aria-expanded={open}>
-        <span className="row-title">{planTitle(plan)}</span>
+        <span className="row-title">
+          <KindIcons parts={[...plan.items.map((it) => it.main), ...plan.additions.filter((a) => a.role === "required").map((a) => a.part)]} />
+          {planTitle(plan)}
+        </span>
         <span className="row-effect">
           {effect}
           {ev.reached && <span className="row-ok">, objectif atteint</span>}

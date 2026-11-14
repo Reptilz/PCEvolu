@@ -65,6 +65,27 @@ const paths = {
       <rect x="17" y="14" width="5" height="7" rx="1.5" />
     </>
   ),
+  power: (
+    <>
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <circle cx="9" cy="12" r="3.5" />
+      <path d="M9 9.5v1M16 9h2M16 12h2M16 15h2" />
+    </>
+  ),
+  fan: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="12" r="1.5" />
+      <path d="M12 10.5c0-3 1-5.5 3.5-5.5M13.5 12c3 0 5.5 1 5.5 3.5M12 13.5c0 3-1 5.5-3.5 5.5M10.5 12c-3 0-5.5-1-5.5-3.5" />
+    </>
+  ),
+  tower: (
+    <>
+      <rect x="6" y="2" width="12" height="20" rx="2" />
+      <circle cx="12" cy="15" r="3" />
+      <path d="M9 6h6M9 9h6" />
+    </>
+  ),
   refresh: <path d="M20 11a8 8 0 10-2.3 5.7M20 4v7h-7" />,
   check: <path d="M5 12.5l4.5 4.5L19 7.5" />,
   cross: <path d="M6 6l12 12M18 6L6 18" />,

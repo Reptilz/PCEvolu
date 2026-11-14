@@ -9,7 +9,7 @@ import { priceInfo, pricesFile, trendOf } from "./prices";
 import { usePrices } from "./PriceSheet";
 import { Icon, type IconName } from "../icons";
 import { impactOf, type Goal, type Impact, type Verdict } from "./goal";
-import { AdditionRow, CompatSummary, ItemRow, kindLabel } from "./PlanView";
+import { AdditionRow, CompatSummary, ItemRow, KindIcons, kindLabel } from "./PlanView";
 import { goalSentence } from "./GoalViews";
 
 const TABS: { id: Category; label: string; icon: IconName }[] = [
@@ -252,6 +252,7 @@ function ProposalRow({ p, impact }: { p: Proposal; impact?: Impact }) {
       <button className="row-line" onClick={() => setOpen(!open)} aria-expanded={open}>
         <span className="row-main">
           <span className="row-title">
+            <KindIcons parts={[p.main, ...required.map((a) => a.part)]} />
             {p.title}
             {flag && <span className={`row-flag ${impact?.reachesGoal ? "ok" : impact && !impact.relevant ? "dim" : ""}`}>{flag}</span>}
           </span>

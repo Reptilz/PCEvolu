@@ -713,3 +713,19 @@ dd { font-size: 14px; }
 abbr.term { text-decoration: underline dotted; text-decoration-color: color-mix(in srgb, var(--muted) 70%, transparent); text-underline-offset: 3px; cursor: help; }
 abbr.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
 .ov-tech { padding-top: 32px; border-top: 1px solid var(--line-soft); }
+
+/* Icône du composant devant chaque amélioration */
+.imp-item { grid-template-columns: 36px 1fr; align-items: start; }
+.imp-ico { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--panel-2); color: var(--muted); }
+.imp-ico svg { width: 19px; height: 19px; }
+.l-high .imp-ico { background: color-mix(in srgb, var(--bad) 14%, transparent); color: var(--bad); }
+.l-medium .imp-ico { background: color-mix(in srgb, var(--warn) 16%, transparent); color: var(--warn); }
+.l-low .imp-ico { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
+.imp-item > div { padding-top: 7px; }
+/* Icônes des pièces : plan, lignes d'options */
+.pd-kind { display: flex; align-items: flex-start; gap: 8px; }
+.pd-kind-ico { width: 18px; height: 18px; flex-shrink: 0; color: var(--accent); margin-top: -1px; }
+.kind-icons { display: inline-flex; gap: 3px; margin-right: 10px; vertical-align: -3px; color: var(--accent); }
+.kind-icons .icon { width: 17px; height: 17px; }
+.rows.dim .kind-icons { color: var(--muted); }
+.pd-item { grid-template-columns: 156px 1fr auto; }
