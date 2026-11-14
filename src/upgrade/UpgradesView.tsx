@@ -287,8 +287,8 @@ function ProposalCard({ p, impact }: { p: Proposal; impact?: Impact }) {
   );
 }
 
-function CheckRow({ c }: { c: Check }) {
-  const icon = c.status === "ok" ? "check" : c.status === "warn" ? "alert" : "cross";
+export function CheckRow({ c }: { c: Check }) {
+  const icon = c.status === "ok" ? "check" : c.status === "warn" ? "alert" : c.status === "fixed" ? "refresh" : "cross";
   return (
     <li className={`chk c-${c.status}`}>
       <Icon name={icon} />

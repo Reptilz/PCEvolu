@@ -8,11 +8,11 @@
 // 3. Chaque combinaison reçoit un score face à l'objectif (même logique que le diagnostic).
 // 4. On garde la meilleure dans le budget, et la « frontière » coût / score pour afficher des paliers.
 
-import type { Addition, Category, CpuSpec, GpuSpec, Part, Proposal } from "./types";
+import type { Addition, Category, Check, CpuSpec, GpuSpec, Part, Proposal } from "./types";
 import type { Report } from "../types";
 import type { Profile } from "./profile";
 import { estimateFps, isGaming, type Goal } from "./goal";
-import { checkPower, price } from "./engine";
+import { checkPower, epsCable, gpuThickness, price, storageMigration } from "./engine";
 
 // ---------------------------------------------------------------------------
 // Évaluation d'une config (réelle ou hypothétique)
@@ -110,6 +110,10 @@ export interface Plan {
   /** Idem + pièces « à vérifier ». */
   costIfVerify: number;
   evaluation: Evaluation;
+  /** Choix par catégorie (pour revérifier le plan comme une config complète). */
+  choice: Partial<Record<Category, Proposal>>;
+  /** Compatibilité d'ensemble, calculée sur la config APRÈS le plan (voir validatePlan). */
+  checks?: Check[];
 }
 
 /** Quantité de RAM après une proposition RAM (ajout ou remplacement). */
@@ -122,7 +126,10 @@ function ramGbAfter(p: Proposal, currentGb: number): number {
 /** Assemble un plan à partir d'un choix par catégorie. */
 function buildPlan(goal: Goal, p: Profile, base: ConfigState, choice: Partial<Record<Category, Proposal>>): Plan {
   const items = (["gpu", "cpu", "ram", "storage"] as Category[]).map((c) => choice[c]).filter(Boolean) as Proposal[];
-  const gpu = choice.gpu ? (choice.gpu.main as GpuSpec) : base.gpu;
+  // Un processeur sans puce graphique peut avoir ajouté une carte graphique « pour avoir une image » :
+  // elle compte comme la carte du plan, sauf si le plan en choisit déjà une.
+  const cpuGpu = choice.cpu?.additions.find((a) => a.part.kind === "gpu")?.part as GpuSpec | undefined;
+  const gpu = choice.gpu ? (choice.gpu.main as GpuSpec) : cpuGpu ?? base.gpu;
   const cpu = choice.cpu ? (choice.cpu.main as CpuSpec) : base.cpu;
   const platformRam = choice.cpu?.additions.find((a) => a.part.kind === "ram");
 
@@ -149,6 +156,7 @@ function buildPlan(goal: Goal, p: Profile, base: ConfigState, choice: Partial<Re
   for (const it of items) {
     for (const a of it.additions) {
       if (a.part.kind === "psu") continue;
+      if (a.part.kind === "gpu" && choice.gpu) continue; // la carte choisie dans le plan fournit déjà l'image
       const key = a.part.kind === "cooler" || a.part.kind === "case" || a.part.kind === "fans" ? a.part.kind : `${a.part.kind}:${a.part.id}`;
       const prev = seen.get(key);
       const rank = { required: 0, verify: 1, recommended: 2 };
@@ -171,7 +179,107 @@ function buildPlan(goal: Goal, p: Profile, base: ConfigState, choice: Partial<Re
     cost: mains + sum(["required"]),
     costIfVerify: mains + sum(["required", "verify"]),
     evaluation: evaluate(goal, state),
+    choice,
   };
+}
+
+// ---------------------------------------------------------------------------
+// Vérification d'un plan comme une config complète
+// ---------------------------------------------------------------------------
+
+/** Contrôles propres à chaque pièce, qui ne dépendent pas des autres pièces du plan. */
+const LOCAL_CHECKS = new Set([
+  "Carte mère", "Mémoire vive", "Format", "BIOS", "Ventirad", "Hauteur du ventirad", "Encombrement du ventirad",
+  "Place dans le boîtier", "Ventilation du boîtier", "Épaisseur", "PC de marque", "Type de mémoire", "Emplacement libre",
+  "Emplacements libres", "Vitesse", "Barrettes assorties", "Capacité max", "4 barrettes", "Emplacement M.2", "Branchement", "PC portable",
+]);
+const RANK: Record<string, number> = { fail: 0, warn: 1, fixed: 2, ok: 3 };
+
+/**
+ * Revérifie le plan sur la config APRÈS achat : sortie vidéo, carte mère, RAM, port PCIe de la nouvelle carte mère,
+ * alimentation et câbles pour le couple final, ventirad, boîtier, migration des disques, équilibre CPU / GPU.
+ * Un contrôle « incompatible » réglé par une pièce du plan devient « réglé dans ce plan ».
+ */
+export function validatePlan(goal: Goal, p: Profile, plan: Plan): Check[] {
+  const { choice } = plan;
+  const cpu = (choice.cpu?.main as CpuSpec | undefined) ?? p.cpu;
+  const cpuGpu = choice.cpu?.additions.find((a) => a.part.kind === "gpu")?.part as GpuSpec | undefined;
+  const gpu = (choice.gpu?.main as GpuSpec | undefined) ?? cpuGpu ?? p.gpu;
+  const newBoard = choice.cpu?.additions.find((a) => a.part.kind === "board")?.part;
+  const out = new Map<string, Check>();
+  const put = (c: Check) => {
+    const prev = out.get(c.label);
+    if (!prev || RANK[c.status] < RANK[prev.status]) out.set(c.label, c);
+  };
+
+  // 1. Contrôles locaux des pièces (un « incompatible » corrigé par une pièce ajoutée devient « réglé »).
+  for (const it of plan.items) {
+    for (const c of it.checks) {
+      if (!LOCAL_CHECKS.has(c.label)) continue;
+      put(c.status === "fail" ? { ...c, status: "fixed", detail: `${c.detail} → réglé dans ce plan.` } : c);
+    }
+  }
+
+  // 2. Sortie vidéo
+  if (gpu && !gpu.integrated) {
+    put({ label: "Sortie vidéo", status: cpuGpu && !choice.gpu ? "fixed" : "ok", detail: `L'image passe par la ${gpu.name}.` });
+  } else if (cpu?.igpu) {
+    put({ label: "Sortie vidéo", status: "ok", detail: "L'image passe par la puce graphique du processeur." });
+  } else {
+    put({ label: "Sortie vidéo", status: "fail", detail: "Ni carte graphique, ni puce graphique dans le processeur : pas d'image." });
+  }
+
+  // 3. Port PCIe de la carte graphique, sur la carte mère FINALE
+  if (gpu && !gpu.integrated) {
+    let gen = newBoard?.kind === "board" ? newBoard.pcieGpu : p.pcieGen;
+    if (gen && (cpu?.gen === "intel-10" || cpu?.gen === "amd-zen1")) gen = 3;
+    if (gen === 3 && gpu.pcieLanes < 16) {
+      put({ label: "Port PCIe", status: "warn", detail: `La ${gpu.name} n'utilise que ${gpu.pcieLanes} lignes PCIe : sur un port PCIe 3.0, elle perd ${gpu.pcieLanes === 4 ? "10 à 25 %" : "5 à 10 %"}.` });
+    } else if (gen) {
+      put({ label: "Port PCIe", status: "ok", detail: `La ${gpu.name} fonctionne sur un port PCIe ${gen}.0${newBoard ? " (nouvelle carte mère)" : ""}.` });
+    }
+  }
+
+  // 3 bis. Épaisseur de la carte graphique sur la carte mère FINALE (une micro-ATX laisse moins de place)
+  if (gpu && !gpu.integrated && (choice.gpu || newBoard)) {
+    const thick = gpuThickness(newBoard?.kind === "board" ? { ...p, formFactor: newBoard.formFactor } : p, gpu);
+    if (thick) out.set(thick.label, thick);
+  }
+
+  // 4. Alimentation et câbles pour le couple processeur + carte graphique FINAL
+  const psuAdd = plan.additions.find((a) => a.part.kind === "psu");
+  const psuChecks: Check[] = [];
+  checkPower(p, cpu?.powerW, gpu, psuChecks, [], "pour cette config");
+  for (const c of psuChecks) put(psuAdd?.role === "required" && c.status === "fail" ? { ...c, status: "fixed", detail: `${c.detail} → nouvelle alimentation incluse dans ce plan.` } : c);
+  if (gpu && !gpu.integrated && (choice.gpu || cpuGpu)) {
+    if (gpu.power === "12V-2x6") {
+      const native = psuAdd?.role === "required" || p.psu12v2x6;
+      put({ label: "Connecteur carte graphique", status: native ? "ok" : "warn", detail: native ? "Câble 12V-2x6 (16 broches) natif sur l'alimentation." : "Connecteur 12V-2x6 : utilise l'adaptateur fourni, branché sur des câbles PCIe 8 broches séparés." });
+    } else if (gpu.power !== "none" && gpu.power !== "1x6" && gpu.power !== "1x8") {
+      put({ label: "Connecteur carte graphique", status: psuAdd?.role === "required" ? "ok" : "warn", detail: `Il faut ${gpu.power === "3x8" ? 3 : 2} câbles PCIe 8 broches séparés sur l'alimentation.` });
+    }
+  }
+  if (cpu && choice.cpu) put(epsCable(p, cpu, psuAdd?.role === "required"));
+
+  // 5. Migration des disques si la carte mère change
+  if (newBoard?.kind === "board") {
+    const extra = choice.storage?.main.kind === "ssd" && choice.storage.main.iface !== "SATA" ? 1 : 0;
+    put(storageMigration(p, newBoard, extra));
+  }
+
+  // 6. Équilibre final pour le jeu
+  const ev = plan.evaluation;
+  if (isGaming(goal.usage) && ev.fps != null) {
+    const who = ev.limit === "cpu" ? "le processeur" : "la carte graphique";
+    put({
+      label: "Équilibre de la config",
+      status: ev.fps >= goal.fps ? "ok" : "warn",
+      detail: `≈ ${ev.fps} i/s dans les jeux récents ; c'est ${who} qui fixe la limite${ev.fps >= goal.fps ? ", au-dessus de ton objectif" : `, sous ton objectif de ${goal.fps} i/s`}.`,
+    });
+  }
+
+  // Ordre d'affichage : problèmes d'abord, puis à vérifier, réglés, OK.
+  return [...out.values()].sort((a, b) => RANK[a.status] - RANK[b.status]);
 }
 
 export interface OptimizeResult {
@@ -223,7 +331,10 @@ export function optimize(goal: Goal, p: Profile, r: Report, all: Record<Category
   // Dans le budget : le moins cher qui atteint l'objectif, sinon celui qui s'en approche le plus.
   const best = reachInBudget ?? [...affordable].sort((a, b) => b.evaluation.score - a.evaluation.score || a.cost - b.cost)[0];
 
-  return { current, best, cheapestReach, tiers: pickTiers(frontier, cheapestReach) };
+  const tiers = pickTiers(frontier, cheapestReach);
+  // Les plans affichés sont revérifiés comme des configs complètes.
+  for (const pl of new Set([best, cheapestReach, ...tiers])) if (pl) pl.checks = validatePlan(goal, p, pl);
+  return { current, best, cheapestReach, tiers };
 }
 
 /** Garde au plus 5 paliers lisibles, dont toujours le premier pas et le premier plan qui atteint l'objectif. */

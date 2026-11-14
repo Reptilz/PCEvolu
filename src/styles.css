@@ -362,3 +362,10 @@ dd { margin: 0; text-align: right; font-family: "Cascadia Mono", Consolas, monos
 .tier-title { font-weight: 600; }
 .tier-ok { color: var(--ok); font-weight: 700; font-size: 12px; white-space: nowrap; }
 .link.small { font-size: 12px; }
+
+/* ---------- Compatibilité d'ensemble du plan ---------- */
+.plan-cols { display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px; }
+.plan-body h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0 0 6px; }
+.plan-check-sum { margin: 0 0 12px; }
+.chk.c-fixed .icon { color: var(--accent); }
+@media (max-width: 1100px) { .plan-cols { grid-template-columns: 1fr; } }

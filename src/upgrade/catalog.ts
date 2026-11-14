@@ -206,9 +206,9 @@ const cooler = (id: string, name: string, type: CoolerSpec["type"], sockets: Soc
   ({ kind: "cooler", id, name, type, sockets, capacityW, price });
 
 export const COOLERS: CoolerSpec[] = [
-  cooler("arctic-f36", "Arctic Freezer 36", "air", ["LGA1700", "LGA1851", "AM4", "AM5"], 180, 32),
-  cooler("pa120se", "Thermalright Peerless Assassin 120 SE", "air", ["LGA1151", "LGA1200", "LGA1700", "LGA1851", "AM4", "AM5"], 240, 40),
-  cooler("lf3-360", "Arctic Liquid Freezer III 360", "aio", ["LGA1700", "LGA1851", "AM4", "AM5"], 300, 100),
+  { ...cooler("arctic-f36", "Arctic Freezer 36", "air", ["LGA1700", "LGA1851", "AM4", "AM5"], 180, 32), heightMm: 159 },
+  { ...cooler("pa120se", "Thermalright Peerless Assassin 120 SE", "air", ["LGA1151", "LGA1200", "LGA1700", "LGA1851", "AM4", "AM5"], 240, 40), heightMm: 155 },
+  { ...cooler("lf3-360", "Arctic Liquid Freezer III 360", "aio", ["LGA1700", "LGA1851", "AM4", "AM5"], 300, 100), radiatorMm: 360 },
 ];
 
 /** Capacité de refroidissement selon ce que l'utilisateur déclare avoir. */

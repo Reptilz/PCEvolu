@@ -142,6 +142,10 @@ export interface CoolerSpec {
   sockets: Socket[];
   /** Puissance CPU qu'il dissipe confortablement (W). */
   capacityW: number;
+  /** Hauteur (ventirad tour), à comparer à la hauteur max du boîtier. */
+  heightMm?: number;
+  /** Taille du radiateur (watercooling AIO), qui doit trouver sa place dans le boîtier. */
+  radiatorMm?: number;
   price: number;
 }
 
@@ -169,7 +173,8 @@ export type Part = CpuSpec | BoardSpec | GpuSpec | RamKit | SsdSpec | PsuSpec | 
 // Résultat du moteur
 // ---------------------------------------------------------------------------
 
-export type CheckStatus = "ok" | "warn" | "fail";
+/** fixed : incompatible en l'état, mais réglé par une pièce ajoutée au plan. */
+export type CheckStatus = "ok" | "warn" | "fail" | "fixed";
 
 export interface Check {
   label: string;

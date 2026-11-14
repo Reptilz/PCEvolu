@@ -1,5 +1,6 @@
 import { useState } from "react";
-import type { Addition, Part } from "./types";
+import type { Addition, Check, Part } from "./types";
+import { CheckRow } from "./UpgradesView";
 import { isGaming, type Goal } from "./goal";
 import { planTitle, type OptimizeResult, type Plan } from "./optimizer";
 import { price } from "./engine";
@@ -132,7 +133,20 @@ function PlanCard({ plan, goal, currentFps, recommended, onDetails }: { plan: Pl
       </div>
 
       {open && (
-        <div className="plan-body">
+        <div className="plan-body plan-cols">
+          {plan.checks && (
+            <div>
+              <h3>Compatibilité de ta config après ce plan</h3>
+              <p className="muted small plan-check-sum">{checkSummary(plan.checks)}</p>
+              <ul className="checks">
+                {plan.checks.map((c, i) => (
+                  <CheckRow key={i} c={c} />
+                ))}
+              </ul>
+            </div>
+          )}
+          <div>
+          <h3>Liste d'achat</h3>
           <ul className="cart">
             {plan.items.map((it) => (
               <li key={it.id} className="cart-main">
@@ -159,6 +173,7 @@ function PlanCard({ plan, goal, currentFps, recommended, onDetails }: { plan: Pl
               <span className="mono">{plan.cost} €</span>
             </li>
           </ul>
+          </div>
         </div>
       )}
     </div>
@@ -183,6 +198,16 @@ function AddGroup({ title, cls, items }: { title: string; cls: string; items: Ad
       ))}
     </li>
   );
+}
+
+/** « 9 points vérifiés · 2 réglés par les pièces ajoutées · 3 à vérifier toi-même » */
+function checkSummary(checks: Check[]): string {
+  const n = (s: string) => checks.filter((c) => c.status === s).length;
+  const parts = [`${checks.length} points vérifiés sur la config finale`];
+  if (n("fixed")) parts.push(`${n("fixed")} réglé${n("fixed") > 1 ? "s" : ""} par les pièces ajoutées`);
+  if (n("warn")) parts.push(`${n("warn")} à vérifier toi-même`);
+  if (n("fail")) parts.push(`${n("fail")} problème${n("fail") > 1 ? "s" : ""}`);
+  return parts.join(" · ");
 }
 
 const KIND: Record<Part["kind"], string> = {

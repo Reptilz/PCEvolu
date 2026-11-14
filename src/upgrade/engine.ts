@@ -184,6 +184,10 @@ export function proposeGpus(p: Profile): Proposal[] {
       checks.push({ label: "Ventilation du boîtier", status: "ok", detail: `Le nouveau boîtier inclut ${"fansIncluded" in box ? box.fansIncluded : 3} ventilateurs.` });
     }
 
+    // 5 bis. Épaisseur de la carte
+    const thick = gpuThickness(p, g);
+    if (thick) checks.push(thick);
+
     // 6. Équilibre avec le processeur
     let gainPercent: number | undefined;
     let gainLabel: string | undefined;
@@ -218,6 +222,61 @@ export function proposeGpus(p: Profile): Proposal[] {
 // ---------------------------------------------------------------------------
 // Processeurs
 // ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// Vérifications partagées (propositions seules et plans combinés)
+// ---------------------------------------------------------------------------
+
+/** Carte graphique neuve la moins chère : le minimum pour avoir une image. */
+export function cheapestGpu(): GpuSpec | undefined {
+  return GPUS.filter((g) => g.availability === "new" && g.price).sort((a, b) => a.price! - b.price!)[0];
+}
+
+/** Nouvelle carte mère : tous les SSD NVMe actuels (et ceux du plan) trouvent-ils un emplacement M.2 ? */
+export function storageMigration(p: Profile, board: BoardSpec, extraNvme: number): Check {
+  const nvme = p.m2Used + extraNvme;
+  if (nvme > board.m2Slots) {
+    return {
+      label: "Stockage (migration)",
+      status: "warn",
+      detail: `La nouvelle carte mère a ${board.m2Slots} emplacement${board.m2Slots > 1 ? "s" : ""} M.2 pour ${nvme} SSD NVMe : il faudra un adaptateur PCIe (≈ 15 €) ou un boîtier USB pour l'un d'eux.`,
+    };
+  }
+  return {
+    label: "Stockage (migration)",
+    status: "ok",
+    detail: `${nvme === 1 ? `Ton SSD NVMe se rebranche sur l'un des ${board.m2Slots} emplacements M.2` : nvme > 1 ? `Tes ${nvme} SSD NVMe se rebranchent sur les ${board.m2Slots} emplacements M.2` : `${board.m2Slots} emplacements M.2 disponibles`} ; les disques SATA se rebranchent tels quels. Windows démarre en général sans réinstallation.`,
+  };
+}
+
+/** Le ventirad ajouté rentre-t-il dans le boîtier ? */
+export function coolerFit(p: Profile, cooler: CoolerSpec): Check {
+  if (cooler.radiatorMm) {
+    return { label: "Encombrement du ventirad", status: "warn", detail: `Radiateur de ${cooler.radiatorMm} mm : ton boîtier doit avoir un emplacement ${cooler.radiatorMm} mm en façade ou au plafond.` };
+  }
+  const h = cooler.heightMm ?? 155;
+  if (p.caseSmall) return { label: "Hauteur du ventirad", status: "warn", detail: `Ventirad de ${h} mm de haut : les petits boîtiers acceptent souvent 130 à 150 mm. Vérifie la fiche de ton boîtier, sinon choisis un ventirad bas profil.` };
+  if (!p.caseKnown) return { label: "Hauteur du ventirad", status: "warn", detail: `Ventirad de ${h} mm de haut : la plupart des boîtiers moyen tour l'acceptent (≥ 160 mm), vérifie la fiche du tien.` };
+  return { label: "Hauteur du ventirad", status: "ok", detail: `${h} mm de haut : rentre dans un boîtier moyen ou grand tour.` };
+}
+
+/** Câble d'alimentation du processeur (EPS 8 broches), absent ou unique sur les vieilles alims. */
+export function epsCable(p: Profile, c: CpuSpec, psuReplaced: boolean): Check {
+  if (psuReplaced) return { label: "Câble processeur", status: "ok", detail: "La nouvelle alimentation a les câbles processeur 8 broches (EPS) nécessaires." };
+  if (c.powerW >= 180 && !p.psuKnown) {
+    return { label: "Câble processeur", status: "warn", detail: `Ce processeur peut consommer ≈ ${c.powerW} W : ton alim doit avoir un câble processeur 8 broches (EPS 4+4). Les très vieilles alims n'ont qu'un 4 broches.` };
+  }
+  return { label: "Câble processeur", status: "ok", detail: "Le câble processeur 8 broches (EPS) de ton alimentation suffit." };
+}
+
+/** Épaisseur des grosses cartes graphiques (2,5 à 3 emplacements). */
+export function gpuThickness(p: Profile, g: GpuSpec): Check | undefined {
+  if (g.tbp < 220) return undefined;
+  if (p.caseSmall || p.formFactor === "mATX" || p.formFactor === "ITX") {
+    return { label: "Épaisseur", status: "warn", detail: "Carte épaisse (≈ 2,5 à 3 emplacements) : en micro-ATX ou en petit boîtier, elle peut masquer un port PCIe ou gêner l'alimentation. Vérifie la place sous la carte." };
+  }
+  return { label: "Épaisseur", status: "ok", detail: "Carte de ≈ 2,5 à 3 emplacements : standard dans un boîtier moyen tour avec une carte mère ATX." };
+}
 
 /** Les ventirads se fixent de la même façon entre ces sockets. */
 function sameMounting(a?: Socket, b?: Socket) {
@@ -292,6 +351,24 @@ export function proposeCpus(p: Profile): Proposal[] {
         });
       }
       if (c.gen === "intel-13" || c.gen === "intel-14") notes.push("Intel 13e/14e gén. : installe le dernier BIOS (microcode à jour) dès le montage.");
+      checks.push(storageMigration(p, board, 0));
+    }
+
+    // Sortie vidéo : un processeur sans puce graphique (F, KF, la plupart des Ryzen AM4) a besoin d'une carte graphique.
+    let gpuAfter = p.gpu;
+    if (!c.igpu && (!p.gpu || p.gpu.integrated)) {
+      const g = cheapestGpu();
+      checks.push({
+        label: "Sortie vidéo",
+        status: "fail",
+        detail: "Ce processeur n'a pas de puce graphique et ton PC n'a pas de carte graphique : sans en ajouter une, l'écran resterait noir.",
+      });
+      if (g) {
+        additions.push({ role: "required", part: g, quantity: 1, reason: "Pour avoir une image : ce processeur n'a pas de puce graphique intégrée." });
+        gpuAfter = g;
+      }
+    } else if (!c.igpu) {
+      checks.push({ label: "Sortie vidéo", status: "ok", detail: "Ce processeur n'a pas de puce graphique : l'image passe par ta carte graphique, comme aujourd'hui." });
     }
 
     // Ventirad
@@ -312,9 +389,12 @@ export function proposeCpus(p: Profile): Proposal[] {
     } else {
       checks.push({ label: "Ventirad", status: "ok", detail: `Ton ventirad actuel suffit (≈ ${coolNeed} W).` });
     }
+    const newCooler = additions.find((a) => a.part.kind === "cooler")?.part;
+    if (newCooler?.kind === "cooler") checks.push(coolerFit(p, newCooler));
 
-    // Alimentation avec la carte graphique actuelle
-    checkPower(p, c.powerW, p.gpu, checks, additions, "avec ta carte graphique actuelle");
+    // Alimentation avec la carte graphique (actuelle, ou ajoutée pour la sortie vidéo)
+    checkPower(p, c.powerW, gpuAfter, checks, additions, gpuAfter === p.gpu ? "avec ta carte graphique actuelle" : "avec la carte graphique ajoutée");
+    checks.push(epsCable(p, c, additions.some((a) => a.part.kind === "psu" && a.role === "required")));
 
     // Gain réel : en jeu, les images/s dépendent du plus faible entre CPU et GPU.
     let gainPercent: number | undefined;

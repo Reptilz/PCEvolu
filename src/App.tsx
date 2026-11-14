@@ -162,7 +162,7 @@ export default function App() {
         {report && !wizardOpen && view === "goal" && verdict && (
           <GoalDiagnostic goal={goal} verdict={verdict} plan={plan} onBudget={setBudget} onEdit={() => setWizardOpen(true)} onUpgrades={openUpgrades} />
         )}
-        {report && !wizardOpen && view === "improve" && <Improve recos={recos} go={setView} />}
+        {report && !wizardOpen && view === "improve" && <Improve recos={recos} openTab={openUpgrades} />}
         {report && !wizardOpen && view === "upgrades" && verdict && (
           <UpgradesView
             report={report}
@@ -328,7 +328,10 @@ function Fact({ icon, k, v }: { icon: IconName; k: string; v?: string }) {
 // Améliorations + liste d'upgrades
 // ---------------------------------------------------------------------------
 
-function Improve({ recos, go }: { recos: Recommendation[]; go: (v: View) => void }) {
+/** Onglet de l'écran Upgrades correspondant à une suggestion de l'onglet Améliorations. */
+const UPGRADE_TAB: Record<string, string> = { "Mémoire vive": "ram", Stockage: "storage", "Carte graphique": "gpu", Processeur: "cpu" };
+
+function Improve({ recos, openTab }: { recos: Recommendation[]; openTab: (tab: string) => void }) {
   const upgrades = recos.filter((r) => r.upgrade);
   const min = upgrades.reduce((s, r) => s + (r.upgrade?.priceMin ?? 0), 0);
   const max = upgrades.reduce((s, r) => s + (r.upgrade?.priceMax ?? 0), 0);
@@ -371,6 +374,7 @@ function Improve({ recos, go }: { recos: Recommendation[]; go: (v: View) => void
                   <th>Suggestion</th>
                   <th>Pourquoi</th>
                   <th className="num">Prix indicatif</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -382,6 +386,11 @@ function Improve({ recos, go }: { recos: Recommendation[]; go: (v: View) => void
                     <td className="strong">{r.upgrade!.suggestion}</td>
                     <td className="muted">{r.title}</td>
                     <td className="num mono">{price(r.upgrade!.priceMin, r.upgrade!.priceMax)}</td>
+                    <td className="num">
+                      <button className="link small" onClick={() => openTab(UPGRADE_TAB[r.upgrade!.component] ?? "gpu")}>
+                        Options compatibles →
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -389,14 +398,13 @@ function Improve({ recos, go }: { recos: Recommendation[]; go: (v: View) => void
                 <tr>
                   <td colSpan={3}>Budget total estimé</td>
                   <td className="num mono">{price(min, max)}</td>
+                  <td></td>
                 </tr>
               </tfoot>
             </table>
             <p className="muted small note">
-              Prix observés en neuf, à titre indicatif.{" "}
-              <button className="link" onClick={() => go("upgrades")}>
-                Voir tous les upgrades compatibles avec ta config
-              </button>
+              Ces suggestions sont des pistes rapides avec un prix moyen. Les options compatibles, vérifiées pièce par pièce face à ta config (alimentation,
+              carte mère, boîtier, ventirad…), sont dans l'onglet Upgrades.
             </p>
           </div>
           <div className="stack" style={{ marginTop: 12 }}>

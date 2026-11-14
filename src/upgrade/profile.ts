@@ -103,6 +103,10 @@ export interface Profile {
   psuKnown: boolean;
   psu12v2x6?: boolean;
   gpuMaxMm?: number;
+  /** Boîtier déclaré petit (mini-tour, micro-ATX). */
+  caseSmall: boolean;
+  /** Taille du boîtier renseignée par l'utilisateur. */
+  caseKnown: boolean;
   caseFans?: number;
   coolerW?: number;
   cooler: CoolerAnswer;
@@ -174,6 +178,8 @@ export function buildProfile(r: Report, a: Answers): Profile {
     psuKnown,
     psu12v2x6: a.psu12v2x6 === "unknown" ? undefined : a.psu12v2x6 === "yes",
     gpuMaxMm,
+    caseSmall: a.caseSize === "small",
+    caseKnown: a.caseSize !== "unknown" || a.gpuMaxMm != null,
     caseFans: a.caseFans ?? undefined,
     coolerW: a.cooler !== "unknown" ? COOLER_CAPACITY[a.cooler] : undefined,
     cooler: a.cooler,

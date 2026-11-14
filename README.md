@@ -70,8 +70,21 @@ Résultat, affiché dans « Mon objectif » (`src/upgrade/PlanView.tsx`) :
 - **les paliers** : chaque palier fait nettement mieux que tous les plans moins chers ;
 - un **curseur de budget** qui recalcule le plan en direct.
 
+Chaque plan affiché est **revérifié comme une config complète** (`validatePlan`). Les contrôles qui dépendent de la combinaison sont recalculés sur la config *après* achat :
+
+- sortie vidéo ;
+- port PCIe sur la nouvelle carte mère ;
+- alimentation et câbles pour le couple final ;
+- câble processeur EPS ;
+- épaisseur de la carte graphique sur la carte mère finale ;
+- migration des SSD NVMe ;
+- équilibre processeur / carte graphique.
+
+Un contrôle « incompatible » corrigé par une pièce du plan apparaît comme **réglé dans ce plan**.
+
 ```bash
-npx tsx scripts/test-plan.ts   # plans et paliers pour plusieurs configs et objectifs
+npx tsx scripts/test-plan.ts     # plans et paliers pour plusieurs configs et objectifs
+npx tsx scripts/test-compat.ts   # cas pièges : PC sans carte graphique + CPU sans iGPU, plan avec nouvelle plateforme, SSD NVMe en trop, petit boîtier
 ```
 
 ## Catalogue téléchargeable
