@@ -56,6 +56,8 @@ for (const [label, report, goal] of CASES_) {
   console.log(`  aujourd'hui : score ${res.current.score}${res.current.fps != null ? `, ≈ ${res.current.fps} i/s` : ""}${res.current.reached ? " ✓ objectif atteint" : ""}`);
   console.log(`  meilleur plan dans le budget : ${res.best ? line(res.best) : "aucun"}`);
   if (res.cheapestReach && res.cheapestReach !== res.best) console.log(`  objectif atteint dès : ${line(res.cheapestReach)}`);
+  console.log(`  autres options dans le budget :`);
+  for (const a of res.alternatives) console.log(`    ${line(a)}`);
   console.log(`  paliers :`);
   for (const t of res.tiers) console.log(`    ${line(t)}`);
 }

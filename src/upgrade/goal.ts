@@ -256,6 +256,35 @@ export interface Impact {
   fpsAfter?: number;
 }
 
+/** Les meilleures propositions vérifiées d'une catégorie, dans le budget, classées selon l'objectif. */
+export function topOptions(
+  goal: Goal, p: Profile, verdict: Verdict,
+  list: { id: string; total: number; main: { kind: string; brand?: string } & Record<string, unknown> }[],
+  category: "gpu" | "cpu" | "ram" | "storage", n = 3,
+) {
+  const ramAfter = (x: (typeof list)[number]) => {
+    if (x.main.kind !== "ram") return undefined;
+    const kit = (x.main.sticks as number) * (x.main.gbPerStick as number);
+    return x.id.startsWith("ram-add") ? p.ramTotalGb + kit : kit;
+  };
+  const scored = list
+    .map((x) => ({ proposal: x, impact: impactOf(goal, p, verdict, x.main, category, ramAfter(x)) }))
+    .filter((s) => (goal.budget == null || s.proposal.total <= goal.budget) && (!goal.configured || s.impact.relevant || s.impact.reachesGoal));
+  scored.sort((a, b) => Number(b.impact.reachesGoal) - Number(a.impact.reachesGoal) || (b.impact.fpsAfter ?? 0) - (a.impact.fpsAfter ?? 0) || a.proposal.total - b.proposal.total);
+  // Variété : pas deux fois la même marque en tête de liste si une autre est disponible.
+  const out: typeof scored = [];
+  const brands = new Set<string>();
+  for (const s of scored) {
+    if (out.length >= n) break;
+    const b = s.proposal.main.brand;
+    if (b && brands.has(b) && scored.some((o) => !out.includes(o) && o !== s && o.proposal.main.brand && !brands.has(o.proposal.main.brand))) continue;
+    if (b) brands.add(b);
+    out.push(s);
+  }
+  for (const s of scored) if (out.length < n && !out.includes(s)) out.push(s);
+  return out;
+}
+
 export function impactOf(goal: Goal, p: Profile, verdict: Verdict, main: { kind: string }, category: "gpu" | "cpu" | "ram" | "storage", ramAfterGb?: number): Impact {
   const fixes = new Set(verdict.needs.filter((n) => n.status !== "ok").map((n) => n.fix));
   const res = RES_LABEL[goal.resolution].split(" (")[0];

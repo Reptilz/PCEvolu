@@ -32,6 +32,7 @@ export function UpgradesView({
   const [tab, setTab] = useState<Category>(() => (initialTab as Category) ?? firstFix ?? "gpu");
   const [showForm, setShowForm] = useState(() => missingAnswers(answers) > 0);
   const [showOver, setShowOver] = useState(false);
+  const [brand, setBrand] = useState<string>("all");
   const profile = useMemo(() => buildProfile(report, answers), [report, answers]);
   // pricesVersion : les prix du catalogue ont été mis à jour, on recalcule les totaux.
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -52,7 +53,11 @@ export function UpgradesView({
   );
   // Ordre : dans le budget d'abord ; puis celles qui atteignent l'objectif ; puis celles qui aident ; puis le prix.
   const rank = (s: Scored) => (s.impact.reachesGoal ? 0 : s.impact.relevant ? 1 : 2);
-  const sorted = [...scored].sort((a, b) => rank(a) - rank(b) || a.p.total - b.p.total);
+  // Filtre par marque (cartes graphiques et processeurs).
+  const brandOf = (s: Scored) => ("brand" in s.p.main ? (s.p.main.brand as string) : undefined);
+  const brands = [...new Set(scored.map(brandOf).filter(Boolean))] as string[];
+  const visible = brand === "all" ? scored : scored.filter((s) => brandOf(s) === brand);
+  const sorted = [...visible].sort((a, b) => rank(a) - rank(b) || a.p.total - b.p.total);
   const inBudget = sorted.filter((s) => s.inBudget);
   const over = sorted.filter((s) => !s.inBudget);
   const cheapestGoal = scored.filter((s) => s.impact.reachesGoal).sort((a, b) => a.p.total - b.p.total)[0];
@@ -97,7 +102,14 @@ export function UpgradesView({
 
       <div className="tabs">
         {TABS.map((t) => (
-          <button key={t.id} className={`tab ${tab === t.id ? "on" : ""}`} onClick={() => setTab(t.id)}>
+          <button
+            key={t.id}
+            className={`tab ${tab === t.id ? "on" : ""}`}
+            onClick={() => {
+              setTab(t.id);
+              setBrand("all");
+            }}
+          >
             <Icon name={t.icon} />
             {t.label}
             {verdict.needs.some((n) => n.fix === t.id && n.status !== "ok") && <span className="tab-dot" title="Limite ton objectif" />}
@@ -115,6 +127,19 @@ export function UpgradesView({
             : verdict.level === "ok"
               ? "Ton PC atteint déjà ton objectif : ces upgrades sont du bonus."
               : "Ce composant ne limite pas ton objectif : priorité aux onglets marqués d'un point."}
+        </div>
+      )}
+
+      {brands.length > 1 && (
+        <div className="brand-filter">
+          {["all", ...brands.sort()].map((b) => {
+            const n = b === "all" ? scored.length : scored.filter((s) => brandOf(s) === b).length;
+            return (
+              <button key={b} className={`chip-btn ${brand === b ? "on" : ""}`} onClick={() => setBrand(b)}>
+                {b === "all" ? "Toutes les marques" : b} ({n})
+              </button>
+            );
+          })}
         </div>
       )}
 

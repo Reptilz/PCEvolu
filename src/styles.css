@@ -369,3 +369,23 @@ dd { margin: 0; text-align: right; font-family: "Cascadia Mono", Consolas, monos
 .plan-check-sum { margin: 0 0 12px; }
 .chk.c-fixed .icon { color: var(--accent); }
 @media (max-width: 1100px) { .plan-cols { grid-template-columns: 1fr; } }
+
+/* ---------- Options alternatives ---------- */
+.alts { display: grid; gap: 6px; }
+.alt { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; cursor: pointer; }
+.alt:hover { border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
+.alt-main { flex: 1; min-width: 0; }
+.alt-title { font-weight: 600; }
+.alt-cost { font-weight: 700; font-size: 15px; min-width: 70px; text-align: right; }
+.alt-open { display: flex; flex-direction: column; gap: 6px; }
+.alt-open > .link { align-self: flex-end; }
+
+/* ---------- Options vérifiées (Améliorations) ---------- */
+.opts-row td { border-top: 0; padding-top: 0; }
+.opts-head { margin-bottom: 6px; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.opt { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; text-align: left; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; cursor: pointer; max-width: 100%; }
+.opt:hover { border-color: var(--accent); }
+.opt-title { font-weight: 600; }
+.reco.r-medium { border-left-color: var(--warn); }
+.brand-filter { display: flex; gap: 6px; margin: -4px 0 12px; flex-wrap: wrap; }

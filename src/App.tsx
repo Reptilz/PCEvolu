@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { invoke, isTauri } from "@tauri-apps/api/core";
 import type { Metrics, Report } from "./types";
 import { recommend, type Recommendation } from "./recommendations";
@@ -7,7 +7,9 @@ import { clean, date, diskSize, gb, ghz, speed, uptime } from "./format";
 import { Icon, type IconName } from "./icons";
 import { UpgradesView } from "./upgrade/UpgradesView";
 import { buildProfile, loadAnswers, type Answers } from "./upgrade/profile";
-import { assess, loadGoal, saveGoal, type Goal, type Verdict } from "./upgrade/goal";
+import { assess, goalSummary, loadGoal, saveGoal, topOptions, type Goal, type Verdict } from "./upgrade/goal";
+
+type OptionList = ReturnType<typeof topOptions>;
 import { GoalDiagnostic, GoalWizard, VerdictBanner } from "./upgrade/GoalViews";
 import { proposeAll } from "./upgrade/engine";
 import { optimize } from "./upgrade/optimizer";
@@ -83,6 +85,13 @@ export default function App() {
   // Plan d'évolution : toutes les combinaisons d'upgrades, recalculées quand l'objectif, le budget ou les prix changent.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const proposals = useMemo(() => (profile ? proposeAll(profile) : undefined), [profile, pricesVersion]);
+  // 3 options vérifiées par catégorie, dans le budget, pour l'onglet Améliorations.
+  const options = useMemo(() => {
+    if (!profile || !proposals || !verdict) return undefined;
+    const o: Record<string, OptionList> = {};
+    for (const cat of ["gpu", "cpu", "ram", "storage"] as const) o[cat] = topOptions(goal, profile, verdict, proposals[cat] as never, cat);
+    return o;
+  }, [profile, proposals, verdict, goal]);
   const plan = useMemo(
     () => (report && profile && proposals && goal.configured ? optimize(goal, profile, report, proposals) : undefined),
     [report, profile, proposals, goal],
@@ -162,7 +171,7 @@ export default function App() {
         {report && !wizardOpen && view === "goal" && verdict && (
           <GoalDiagnostic goal={goal} verdict={verdict} plan={plan} onBudget={setBudget} onEdit={() => setWizardOpen(true)} onUpgrades={openUpgrades} />
         )}
-        {report && !wizardOpen && view === "improve" && <Improve recos={recos} openTab={openUpgrades} />}
+        {report && !wizardOpen && view === "improve" && <Improve recos={recos} openTab={openUpgrades} options={options} goal={goal} verdict={verdict} />}
         {report && !wizardOpen && view === "upgrades" && verdict && (
           <UpgradesView
             report={report}
@@ -331,8 +340,14 @@ function Fact({ icon, k, v }: { icon: IconName; k: string; v?: string }) {
 /** Onglet de l'écran Upgrades correspondant à une suggestion de l'onglet Améliorations. */
 const UPGRADE_TAB: Record<string, string> = { "Mémoire vive": "ram", Stockage: "storage", "Carte graphique": "gpu", Processeur: "cpu" };
 
-function Improve({ recos, openTab }: { recos: Recommendation[]; openTab: (tab: string) => void }) {
+function Improve({ recos, openTab, options, goal, verdict }: {
+  recos: Recommendation[]; openTab: (tab: string) => void; options?: Record<string, OptionList>; goal: Goal; verdict?: Verdict;
+}) {
   const upgrades = recos.filter((r) => r.upgrade);
+  // Composants qui bloquent l'objectif et qui ne sont pas déjà couverts par une suggestion ci-dessous.
+  const covered = new Set(upgrades.map((r) => UPGRADE_TAB[r.upgrade!.component]));
+  const goalNeeds = (goal.configured && verdict ? verdict.needs.filter((n) => n.fix && n.status !== "ok" && !covered.has(n.fix)) : [])
+    .filter((n, i, all) => all.findIndex((m) => m.fix === n.fix) === i); // un seul bloc par composant (ex. carte graphique + VRAM)
   const min = upgrades.reduce((s, r) => s + (r.upgrade?.priceMin ?? 0), 0);
   const max = upgrades.reduce((s, r) => s + (r.upgrade?.priceMax ?? 0), 0);
   const free = recos.filter((r) => !r.upgrade);
@@ -350,6 +365,43 @@ function Improve({ recos, openTab }: { recos: Recommendation[]; openTab: (tab: s
         <div className="panel all-good">
           <Icon name="check" /> Rien à améliorer pour l'instant.
         </div>
+      )}
+
+      {goalNeeds.length > 0 && (
+        <section>
+          <h2 className="section">Pour atteindre ton objectif · {goalSummary(goal)}</h2>
+          <div className="stack">
+            {goalNeeds.map((n) => {
+              const opts = options?.[n.fix!] ?? [];
+              return (
+                <div key={n.id} className={`reco ${n.status === "missing" ? "r-high" : "r-medium"}`}>
+                  <div className="reco-tag">{n.label}</div>
+                  <div className="reco-title">
+                    {n.current} · objectif : {n.target}
+                  </div>
+                  <p className="reco-detail">{n.detail}</p>
+                  {opts.length > 0 ? (
+                    <div className="opts" style={{ marginTop: 10 }}>
+                      {opts.map((o) => (
+                        <button key={o.proposal.id} className="opt" onClick={() => openTab(n.fix!)}>
+                          <span className="opt-title">{(o.proposal as unknown as { title: string }).title}</span>
+                          <span className="mono">{o.proposal.total} €</span>
+                          {o.impact.label && <span className="muted small">{o.impact.label}</span>}
+                          {o.impact.reachesGoal && <span className="tier-ok">✓ Objectif</span>}
+                        </button>
+                      ))}
+                      <button className="link small" onClick={() => openTab(n.fix!)}>
+                        Toutes les options →
+                      </button>
+                    </div>
+                  ) : (
+                    <p className="muted small">Aucune option seule dans ton budget : regarde le plan combiné dans « Mon objectif ».</p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </section>
       )}
 
       {free.length > 0 && (
@@ -378,21 +430,46 @@ function Improve({ recos, openTab }: { recos: Recommendation[]; openTab: (tab: s
                 </tr>
               </thead>
               <tbody>
-                {upgrades.map((r) => (
-                  <tr key={r.id}>
-                    <td>
-                      <span className={`pill p-${r.level}`}>{r.upgrade!.component}</span>
-                    </td>
-                    <td className="strong">{r.upgrade!.suggestion}</td>
-                    <td className="muted">{r.title}</td>
-                    <td className="num mono">{price(r.upgrade!.priceMin, r.upgrade!.priceMax)}</td>
-                    <td className="num">
-                      <button className="link small" onClick={() => openTab(UPGRADE_TAB[r.upgrade!.component] ?? "gpu")}>
-                        Options compatibles →
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {upgrades.map((r) => {
+                  const tab = UPGRADE_TAB[r.upgrade!.component] ?? "gpu";
+                  const opts = options?.[tab] ?? [];
+                  return (
+                    <Fragment key={r.id}>
+                      <tr>
+                        <td>
+                          <span className={`pill p-${r.level}`}>{r.upgrade!.component}</span>
+                        </td>
+                        <td className="strong">{r.upgrade!.suggestion}</td>
+                        <td className="muted">{r.title}</td>
+                        <td className="num mono">{price(r.upgrade!.priceMin, r.upgrade!.priceMax)}</td>
+                        <td className="num">
+                          <button className="link small" onClick={() => openTab(tab)}>
+                            Toutes les options →
+                          </button>
+                        </td>
+                      </tr>
+                      {opts.length > 0 && (
+                        <tr className="opts-row">
+                          <td colSpan={5}>
+                            <div className="opts-head muted small">
+                              Options vérifiées avec ta config{goal.configured ? ` · ${goalSummary(goal)}` : ""}
+                            </div>
+                            <div className="opts">
+                              {opts.map((o) => (
+                                <button key={o.proposal.id} className="opt" onClick={() => openTab(tab)}>
+                                  <span className="opt-title">{(o.proposal as unknown as { title: string }).title}</span>
+                                  <span className="mono">{o.proposal.total} €</span>
+                                  {o.impact.label && <span className="muted small">{o.impact.label}</span>}
+                                  {o.impact.reachesGoal && <span className="tier-ok">✓ Objectif</span>}
+                                </button>
+                              ))}
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
+                  );
+                })}
               </tbody>
               <tfoot>
                 <tr>

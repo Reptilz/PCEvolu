@@ -1,6 +1,6 @@
 {
- "version": 3,
- "generatedAt": "2026-11-14T20:16:51.701Z",
+ "version": 4,
+ "generatedAt": "2026-11-14T20:42:30.669Z",
  "chipsets": [
   {
    "chipset": "H81",
@@ -967,6 +967,312 @@
     "flags": "i"
    },
    "price": 90
+  },
+  {
+   "kind": "cpu",
+   "id": "i3-14100f",
+   "name": "Intel Core i3-14100F",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-14",
+   "cores": 4,
+   "threads": 8,
+   "powerW": 110,
+   "gaming": 124,
+   "multi": 90,
+   "gpuCeiling": 192,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 4800
+   },
+   "igpu": false,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "14100f",
+    "flags": "i"
+   },
+   "price": 110
+  },
+  {
+   "kind": "cpu",
+   "id": "i3-12100",
+   "name": "Intel Core i3-12100",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-12",
+   "cores": 4,
+   "threads": 8,
+   "powerW": 89,
+   "gaming": 111,
+   "multi": 80,
+   "gpuCeiling": 172,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 4800
+   },
+   "igpu": true,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "12100",
+    "flags": "i"
+   },
+   "price": 110
+  },
+  {
+   "kind": "cpu",
+   "id": "i5-12400",
+   "name": "Intel Core i5-12400",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-12",
+   "cores": 6,
+   "threads": 12,
+   "powerW": 117,
+   "gaming": 126,
+   "multi": 126,
+   "gpuCeiling": 195,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 4800
+   },
+   "igpu": true,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "12400",
+    "flags": "i"
+   },
+   "price": 170
+  },
+  {
+   "kind": "cpu",
+   "id": "r5-5600g",
+   "name": "AMD Ryzen 5 5600G",
+   "brand": "AMD",
+   "socket": "AM4",
+   "gen": "amd-zen3",
+   "cores": 6,
+   "threads": 12,
+   "powerW": 88,
+   "gaming": 91,
+   "multi": 91,
+   "gpuCeiling": 141,
+   "ramMaxMts": {
+    "DDR4": 3200
+   },
+   "igpu": true,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "5600g",
+    "flags": "i"
+   },
+   "price": 130
+  },
+  {
+   "kind": "cpu",
+   "id": "i5-13400f",
+   "name": "Intel Core i5-13400F",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-13",
+   "cores": 10,
+   "threads": 16,
+   "powerW": 148,
+   "gaming": 137,
+   "multi": 172,
+   "gpuCeiling": 212,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 4800
+   },
+   "igpu": false,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "13400f",
+    "flags": "i"
+   },
+   "price": 150
+  },
+  {
+   "kind": "cpu",
+   "id": "i5-12600kf",
+   "name": "Intel Core i5-12600KF",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-12",
+   "cores": 10,
+   "threads": 16,
+   "powerW": 150,
+   "gaming": 140,
+   "multi": 176,
+   "gpuCeiling": 217,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 4800
+   },
+   "igpu": false,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "12600kf",
+    "flags": "i"
+   },
+   "price": 170
+  },
+  {
+   "kind": "cpu",
+   "id": "i7-12700kf",
+   "name": "Intel Core i7-12700KF",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-12",
+   "cores": 12,
+   "threads": 20,
+   "powerW": 190,
+   "gaming": 151,
+   "multi": 227,
+   "gpuCeiling": 234,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 4800
+   },
+   "igpu": false,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "12700kf",
+    "flags": "i"
+   },
+   "price": 250
+  },
+  {
+   "kind": "cpu",
+   "id": "r5-5600x",
+   "name": "AMD Ryzen 5 5600X",
+   "brand": "AMD",
+   "socket": "AM4",
+   "gen": "amd-zen3",
+   "cores": 6,
+   "threads": 12,
+   "powerW": 88,
+   "gaming": 110,
+   "multi": 110,
+   "gpuCeiling": 171,
+   "ramMaxMts": {
+    "DDR4": 3200
+   },
+   "igpu": false,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "5600x",
+    "flags": "i"
+   },
+   "price": 140
+  },
+  {
+   "kind": "cpu",
+   "id": "r7-5800x3d",
+   "name": "AMD Ryzen 7 5800X3D",
+   "brand": "AMD",
+   "socket": "AM4",
+   "gen": "amd-zen3",
+   "cores": 8,
+   "threads": 16,
+   "powerW": 142,
+   "gaming": 145,
+   "multi": 142,
+   "gpuCeiling": 225,
+   "ramMaxMts": {
+    "DDR4": 3200
+   },
+   "igpu": false,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "5800x3d",
+    "flags": "i"
+   },
+   "price": 300
+  },
+  {
+   "kind": "cpu",
+   "id": "r5-8600g",
+   "name": "AMD Ryzen 5 8600G",
+   "brand": "AMD",
+   "socket": "AM5",
+   "gen": "amd-zen4",
+   "cores": 6,
+   "threads": 12,
+   "powerW": 88,
+   "gaming": 120,
+   "multi": 120,
+   "gpuCeiling": 186,
+   "ramMaxMts": {
+    "DDR5": 5200
+   },
+   "igpu": true,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "8600g",
+    "flags": "i"
+   },
+   "price": 190
+  },
+  {
+   "kind": "cpu",
+   "id": "r7-7700",
+   "name": "AMD Ryzen 7 7700",
+   "brand": "AMD",
+   "socket": "AM5",
+   "gen": "amd-zen4",
+   "cores": 8,
+   "threads": 16,
+   "powerW": 88,
+   "gaming": 152,
+   "multi": 191,
+   "gpuCeiling": 236,
+   "ramMaxMts": {
+    "DDR5": 5200
+   },
+   "igpu": true,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "7700",
+    "flags": "i"
+   },
+   "price": 270
+  },
+  {
+   "kind": "cpu",
+   "id": "r7-7700x",
+   "name": "AMD Ryzen 7 7700X",
+   "brand": "AMD",
+   "socket": "AM5",
+   "gen": "amd-zen4",
+   "cores": 8,
+   "threads": 16,
+   "powerW": 142,
+   "gaming": 158,
+   "multi": 199,
+   "gpuCeiling": 245,
+   "ramMaxMts": {
+    "DDR5": 5200
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "7700x",
+    "flags": "i"
+   },
+   "price": 280
   },
   {
    "kind": "cpu",
@@ -2038,7 +2344,8 @@
     "re": "rtx 4060(?! ?ti)",
     "flags": ""
    },
-   "availability": null
+   "availability": "new",
+   "price": 330
   },
   {
    "kind": "gpu",
@@ -2056,7 +2363,8 @@
     "re": "rtx 4060 ?ti",
     "flags": ""
    },
-   "availability": null
+   "availability": "new",
+   "price": 450
   },
   {
    "kind": "gpu",
@@ -2092,7 +2400,8 @@
     "re": "rtx 4070 ?super",
     "flags": ""
    },
-   "availability": null
+   "availability": "new",
+   "price": 750
   },
   {
    "kind": "gpu",
@@ -2693,7 +3002,8 @@
     "re": "rx 7600",
     "flags": ""
    },
-   "availability": null
+   "availability": "new",
+   "price": 320
   },
   {
    "kind": "gpu",
@@ -2711,7 +3021,8 @@
     "re": "rx 7700",
     "flags": ""
    },
-   "availability": null
+   "availability": "new",
+   "price": 520
   },
   {
    "kind": "gpu",
@@ -2729,7 +3040,8 @@
     "re": "rx 7800",
     "flags": ""
    },
-   "availability": null
+   "availability": "new",
+   "price": 650
   },
   {
    "kind": "gpu",
@@ -2747,7 +3059,8 @@
     "re": "rx 7900 ?gre",
     "flags": ""
    },
-   "availability": null
+   "availability": "new",
+   "price": 700
   },
   {
    "kind": "gpu",
@@ -2765,7 +3078,8 @@
     "re": "rx 7900 ?xt(?! ?x)",
     "flags": ""
    },
-   "availability": null
+   "availability": "new",
+   "price": 850
   },
   {
    "kind": "gpu",
@@ -2913,7 +3227,8 @@
     "re": "arc a750",
     "flags": ""
    },
-   "availability": null
+   "availability": "new",
+   "price": 250
   },
   {
    "kind": "gpu",
@@ -3402,7 +3717,8 @@
     "AM5"
    ],
    "capacityW": 180,
-   "price": 32
+   "price": 32,
+   "heightMm": 159
   },
   {
    "kind": "cooler",
@@ -3418,7 +3734,8 @@
     "AM5"
    ],
    "capacityW": 240,
-   "price": 40
+   "price": 40,
+   "heightMm": 155
   },
   {
    "kind": "cooler",
@@ -3432,7 +3749,8 @@
     "AM5"
    ],
    "capacityW": 300,
-   "price": 100
+   "price": 100,
+   "radiatorMm": 360
   }
  ],
  "fans": [

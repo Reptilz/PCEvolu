@@ -117,6 +117,17 @@ function toSpec(r: Row, brand: GpuSpec["brand"], extra: Partial<GpuSpec> = {}): 
 
 /** Cartes proposées à l'achat (prix indicatif, remplacé chaque semaine par le relevé). */
 const FOR_SALE: Record<string, { price: number; availability: Availability }> = {
+  // Génération précédente encore en vente (fins de séries, souvent bon rapport qualité/prix)
+  "rtx-4060": { price: 330, availability: "new" },
+  "rtx-4060ti": { price: 450, availability: "new" },
+  "rtx-4070s": { price: 750, availability: "new" },
+  "rx-7600": { price: 320, availability: "new" },
+  "rx-7700xt": { price: 520, availability: "new" },
+  "rx-7800xt": { price: 650, availability: "new" },
+  "rx-7900gre": { price: 700, availability: "new" },
+  "rx-7900xt": { price: 850, availability: "new" },
+  "arc-a750": { price: 250, availability: "new" },
+  // Génération actuelle
   "rtx-5050": { price: 330, availability: "new" },
   "rtx-5060": { price: 500, availability: "new" },
   "rtx-5060ti-16": { price: 920, availability: "new" },

@@ -14,7 +14,7 @@ import { GPU_TABLE, findGpuSpec } from "./gpudb";
 
 export const CATALOG_DATE = "novembre 2026";
 /** Incrémenté à chaque mise à jour du catalogue (le catalogue téléchargé n'est pris que s'il est plus récent). */
-export const CATALOG_VERSION = 3;
+export const CATALOG_VERSION = 4;
 
 // ---------------------------------------------------------------------------
 // Chipsets : ce qui définit la compatibilité CPU / RAM / PCIe d'une carte mère
@@ -94,6 +94,19 @@ export const CPUS: CpuSpec[] = [
   purchasable("AMD Ryzen 7 5800X", "used", 140),
   // Neufs : de l'entrée de gamme au très haut de gamme
   purchasable("Intel Core i3-12100F", "new", 90),
+  purchasable("Intel Core i3-14100F", "new", 110),
+  // Avec puce graphique intégrée : idéaux pour la bureautique, sans carte graphique à acheter
+  purchasable("Intel Core i3-12100", "new", 110),
+  purchasable("Intel Core i5-12400", "new", 170),
+  purchasable("AMD Ryzen 5 5600G", "new", 130),
+  purchasable("Intel Core i5-13400F", "new", 150),
+  purchasable("Intel Core i5-12600KF", "new", 170),
+  purchasable("Intel Core i7-12700KF", "new", 250),
+  purchasable("AMD Ryzen 5 5600X", "new", 140),
+  purchasable("AMD Ryzen 7 5800X3D", "new", 300),
+  purchasable("AMD Ryzen 5 8600G", "new", 190),
+  purchasable("AMD Ryzen 7 7700", "new", 270),
+  purchasable("AMD Ryzen 7 7700X", "new", 280),
   purchasable("Intel Core i5-12400F", "new", 150),
   purchasable("Intel Core i5-14400F", "new", 165),
   purchasable("Intel Core i5-14600KF", "new", 245),

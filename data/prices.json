@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-14T20:16:33.250Z",
+  "updatedAt": "2026-11-14T20:39:27.102Z",
   "currency": "EUR",
   "source": "Google Shopping France (via Serper.dev), médiane des marchands",
   "items": {
@@ -196,11 +196,11 @@
       ]
     },
     "i5-12400f": {
-      "price": 149,
+      "price": 154,
       "min": 125,
-      "max": 164,
-      "offers": 9,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "max": 169,
+      "offers": 10,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
         {
           "merchant": "LambdaTek",
@@ -220,11 +220,11 @@
       ]
     },
     "i5-14400f": {
-      "price": 159,
+      "price": 153,
       "min": 146,
-      "max": 209,
-      "offers": 9,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "max": 166,
+      "offers": 7,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
         {
           "merchant": "LambdaTek",
@@ -232,46 +232,46 @@
           "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-14400F&prds=localAnnotatedOfferId:1,catalogid:5437876699434262745,gpcid:12991530199921748789,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         },
         {
+          "merchant": "GreaTecno",
+          "price": 149.76,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-14400F&prds=localAnnotatedOfferId:1,catalogid:13746830584618147947,gpcid:4905547477948687759,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
           "merchant": "F10.eu",
           "price": 150.2,
           "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-14400F&prds=localAnnotatedOfferId:1,catalogid:11203190346817076752,gpcid:13699404142964026407,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
-        {
-          "merchant": "Cdiscount",
-          "price": 155.06,
-          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-14400F&prds=localAnnotatedOfferId:1,catalogid:13612440257991468122,gpcid:11842041608949842032,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         }
       ]
     },
     "i5-14600kf": {
-      "price": 250,
-      "min": 210,
-      "max": 388,
-      "offers": 10,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "price": 246,
+      "min": 235,
+      "max": 291,
+      "offers": 9,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
         {
-          "merchant": "DropReference",
-          "price": 210,
+          "merchant": "Cdiscount",
+          "price": 234.71,
           "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-14600KF&prds=localAnnotatedOfferId:1,catalogid:6516144460289379462,gpcid:17490380387028842284,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
-        {
-          "merchant": "Grosbill",
-          "price": 234.99,
-          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-14600KF&prds=localAnnotatedOfferId:1,catalogid:15995430301973843344,gpcid:2118841817620639243,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         },
         {
           "merchant": "achatmoinscher",
           "price": 234.99
+        },
+        {
+          "merchant": "Materiel.net",
+          "price": 239.95,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-14600KF&prds=localAnnotatedOfferId:1,catalogid:11011431197160406925,gpcid:8178776318803240676,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         }
       ]
     },
     "i7-14700kf": {
-      "price": 426,
+      "price": 407,
       "min": 375,
-      "max": 2699,
-      "offers": 10,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "max": 428,
+      "offers": 6,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
         {
           "merchant": "Powerplanet",
@@ -294,8 +294,8 @@
       "price": 191,
       "min": 138,
       "max": 225,
-      "offers": 8,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "offers": 6,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
         {
           "merchant": "Showgiftprive",
@@ -303,14 +303,14 @@
           "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+Ultra+5+245KF&prds=localAnnotatedOfferId:1,catalogid:552279278266638222,gpcid:6851173520170502653,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         },
         {
-          "merchant": "Fnac",
-          "price": 179,
+          "merchant": "Cdiscount",
+          "price": 176.9,
           "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+Ultra+5+245KF&prds=localAnnotatedOfferId:1,catalogid:106778181387026906,gpcid:4409343652884577628,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         },
         {
-          "merchant": "achatmoinscher",
-          "price": 179.99,
-          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+Ultra+5+245KF&prds=localAnnotatedOfferId:1,catalogid:17000621435164917423,gpcid:1815139403749136451,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+          "merchant": "reichelt.com",
+          "price": 188.5,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+Ultra+5+245KF&prds=localAnnotatedOfferId:1,catalogid:4127420060533545822,gpcid:4565156096436839952,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         }
       ]
     },
@@ -319,7 +319,7 @@
       "min": 260,
       "max": 449,
       "offers": 5,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
         {
           "merchant": "Cdiscount",
@@ -343,7 +343,7 @@
       "min": 119,
       "max": 136,
       "offers": 3,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
         {
           "merchant": "Cdiscount",
@@ -367,7 +367,7 @@
       "min": 168,
       "max": 189,
       "offers": 5,
-      "updatedAt": "2026-11-14T19:11:49.081Z",
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
         {
           "merchant": "DropReference",
@@ -384,15 +384,14 @@
           "price": 181.44,
           "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+7600&prds=localAnnotatedOfferId:1,catalogid:15649429508520211300,gpcid:8668203288417062033,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         }
-      ],
-      "stale": true
+      ]
     },
     "r5-9600x": {
-      "price": 222,
+      "price": 189,
       "min": 149,
-      "max": 379,
-      "offers": 12,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "max": 307,
+      "offers": 8,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
         {
           "merchant": "Amazon.fr",
@@ -416,7 +415,7 @@
       "min": 273,
       "max": 540,
       "offers": 6,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
         {
           "merchant": "Fnac",
@@ -435,26 +434,25 @@
       ]
     },
     "r7-9800x3d": {
-      "price": 450,
-      "min": 440,
-      "max": 475,
-      "offers": 3,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "price": 489,
+      "min": 430,
+      "max": 1023,
+      "offers": 6,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
+        {
+          "merchant": "BanzaiHobby",
+          "price": 430.2
+        },
         {
           "merchant": "Cdiscount",
           "price": 439.99,
-          "link": "https://www.google.com/search?ibp=oshop&q=AMD+Ryzen+7+processeur+9800X3D&prds=localAnnotatedOfferId:1,catalogid:3791093264586209709,gpcid:11868234765098862170,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+9800X3D&prds=localAnnotatedOfferId:1,catalogid:3791093264586209709,gpcid:11868234765098862170,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         },
         {
           "merchant": "Materiel.net",
           "price": 449.95,
-          "link": "https://www.google.com/search?ibp=oshop&q=AMD+Ryzen+7+processeur+9800X3D&prds=localAnnotatedOfferId:1,catalogid:18253686099349388496,gpcid:17823936646667969377,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
-        {
-          "merchant": "Fnac",
-          "price": 474.99,
-          "link": "https://www.google.com/search?ibp=oshop&q=AMD+Ryzen+7+processeur+9800X3D&prds=localAnnotatedOfferId:1,catalogid:15793842567222286354,gpcid:2373727345983809977,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+9800X3D&prds=localAnnotatedOfferId:1,catalogid:18253686099349388496,gpcid:17823936646667969377,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         }
       ]
     },
@@ -978,7 +976,7 @@
       "min": 89,
       "max": 114,
       "offers": 7,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
         {
           "merchant": "友和 Yoho",
@@ -996,33 +994,33 @@
       ]
     },
     "i9-14900k": {
-      "price": 500,
-      "min": 430,
-      "max": 796,
-      "offers": 9,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "price": 487,
+      "min": 444,
+      "max": 512,
+      "offers": 6,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
         {
-          "merchant": "BanzaiHobby",
-          "price": 430.2
+          "merchant": "DropReference",
+          "price": 444
+        },
+        {
+          "merchant": "reichelt.com",
+          "price": 457.79,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i9-14900K&prds=localAnnotatedOfferId:1,catalogid:13212882207420364820,gpcid:16051211895014619624,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         },
         {
           "merchant": "ETB Technologies",
           "price": 478.64
-        },
-        {
-          "merchant": "Amazon.fr - Seller",
-          "price": 482.99,
-          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i9-14900K&prds=localAnnotatedOfferId:1,catalogid:2952639642818279633,gpcid:5909505860515963251,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         }
       ]
     },
     "u9-285k": {
-      "price": 690,
+      "price": 606,
       "min": 494,
-      "max": 6379,
-      "offers": 14,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "max": 867,
+      "offers": 10,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
         {
           "merchant": "rightdeal.sk",
@@ -1042,17 +1040,12 @@
       ]
     },
     "r5-5500": {
-      "price": 101,
-      "min": 85,
+      "price": 100,
+      "min": 89,
       "max": 138,
-      "offers": 10,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "offers": 11,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
-        {
-          "merchant": "Cdiscount",
-          "price": 84.99,
-          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+5500&prds=localAnnotatedOfferId:1,catalogid:14861111337886984998,gpcid:14856867836430747203,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
         {
           "merchant": "wimotic.fr",
           "price": 89,
@@ -1062,6 +1055,11 @@
           "merchant": "LaBonneConfig",
           "price": 89.9,
           "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+5500&prds=localAnnotatedOfferId:1,catalogid:15975615591057949604,gpcid:2041641260863574246,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 90.79,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+5500&prds=localAnnotatedOfferId:1,catalogid:3582632264593162770,gpcid:16141734705461711104,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         }
       ]
     },
@@ -1070,7 +1068,7 @@
       "min": 109,
       "max": 273,
       "offers": 9,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
         {
           "merchant": "Alibaba.com",
@@ -1090,20 +1088,20 @@
       ]
     },
     "r5-7500f": {
-      "price": 219,
-      "min": 111,
-      "max": 2030,
-      "offers": 13,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "price": 165,
+      "min": 114,
+      "max": 243,
+      "offers": 10,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
-        {
-          "merchant": "Cdiscount",
-          "price": 110.77,
-          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+7500F&prds=localAnnotatedOfferId:1,catalogid:13813279476166279852,gpcid:15441389106444738176,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
         {
           "merchant": "Alibaba.com",
           "price": 114.31
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 120.77,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+7500F&prds=localAnnotatedOfferId:1,catalogid:13813279476166279852,gpcid:15441389106444738176,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         },
         {
           "merchant": "Microdistri.com",
@@ -1113,11 +1111,11 @@
       ]
     },
     "r7-9700x": {
-      "price": 249,
+      "price": 260,
       "min": 234,
-      "max": 304,
+      "max": 2999,
       "offers": 7,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
         {
           "merchant": "Fnac",
@@ -1130,22 +1128,22 @@
           "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+9700X&prds=localAnnotatedOfferId:1,catalogid:16687909389203824254,gpcid:1995100658516491285,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         },
         {
-          "merchant": "Cdiscount",
-          "price": 247.73,
-          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+9700X&prds=localAnnotatedOfferId:1,catalogid:17794619751165152940,gpcid:13202093638252223813,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+          "merchant": "Amazon.fr",
+          "price": 249,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+9700X&prds=localAnnotatedOfferId:1,catalogid:98147212859604585,gpcid:16103024707583056658,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         }
       ]
     },
     "r9-9900x": {
       "price": 372,
-      "min": 300,
+      "min": 290,
       "max": 460,
       "offers": 6,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
         {
           "merchant": "Cdiscount",
-          "price": 299.99,
+          "price": 289.99,
           "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+9+9900X&prds=localAnnotatedOfferId:1,catalogid:4272995959577397335,gpcid:17610670261715207651,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         },
         {
@@ -1162,39 +1160,34 @@
     },
     "r9-9950x": {
       "price": 547,
-      "min": 399,
-      "max": 720,
-      "offers": 6,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "min": 509,
+      "max": 547,
+      "offers": 3,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
         {
-          "merchant": "Cdiscount",
-          "price": 399,
-          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+9+9950X&prds=localAnnotatedOfferId:1,catalogid:9778633677919820213,gpcid:140054256246438682,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
-        {
-          "merchant": "PcComponentes FR",
+          "merchant": "Amazon.fr",
           "price": 509,
           "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+9+9950X&prds=localAnnotatedOfferId:1,catalogid:3384584436670908380,gpcid:16531250299087675312,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         },
         {
           "merchant": "Microless.com",
           "price": 546.58
+        },
+        {
+          "merchant": "it-market.com",
+          "price": 547.4,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+9+9950X&prds=localAnnotatedOfferId:1,catalogid:2417416842430317075,gpcid:12954995078431422254,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         }
       ]
     },
     "r9-9950x3d": {
       "price": 787,
-      "min": 549,
-      "max": 1499,
-      "offers": 6,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
+      "min": 723,
+      "max": 869,
+      "offers": 4,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
       "best": [
-        {
-          "merchant": "Alternate.fr",
-          "price": 549,
-          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+9+9950X3D&prds=localAnnotatedOfferId:1,catalogid:2741003527512259676,gpcid:12280504807335346691,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
         {
           "merchant": "GolookShop.it",
           "price": 722.9
@@ -1203,6 +1196,11 @@
           "merchant": "Materiel.net",
           "price": 779.95,
           "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+9+9950X3D&prds=localAnnotatedOfferId:1,catalogid:15557198900200925239,gpcid:11174148818740531789,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 794,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+9+9950X3D&prds=localAnnotatedOfferId:1,catalogid:5603750789487384243,gpcid:8577345777355313172,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         }
       ]
     },
@@ -1228,7 +1226,8 @@
           "price": 499,
           "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+5700X3D&prds=localAnnotatedOfferId:1,catalogid:4029977722873560320,gpcid:10801900234925807280,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         }
-      ]
+      ],
+      "stale": true
     },
     "mb-b760-ddr4-atx": {
       "price": 145,
@@ -1634,6 +1633,483 @@
           "merchant": "showroomprive.com",
           "price": 91.9,
           "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+1000W+80+Plus+Gold+ATX+3.1+modulaire&prds=localAnnotatedOfferId:1,catalogid:661022957165116636,gpcid:12441983558304286454,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "rtx-4060": {
+      "price": 470,
+      "min": 316,
+      "max": 745,
+      "offers": 6,
+      "updatedAt": "2026-11-14T20:36:16.738Z",
+      "best": [
+        {
+          "merchant": "rightdeal.sk",
+          "price": 316.41,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+4060+8+Go&prds=localAnnotatedOfferId:1,catalogid:16785359795417643405,gpcid:6592533986238221614,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Tech-discount",
+          "price": 385.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+4060+8+Go&prds=localAnnotatedOfferId:1,catalogid:11917450628490412766,gpcid:15053519159094543108,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "quadrimedia.com",
+          "price": 460.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+4060+8+Go&prds=localAnnotatedOfferId:1,catalogid:17639595915796497904,gpcid:4284687578179277319,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "rtx-4060ti": {
+      "price": 605,
+      "min": 474,
+      "max": 824,
+      "offers": 7,
+      "updatedAt": "2026-11-14T20:36:16.738Z",
+      "best": [
+        {
+          "merchant": "achatmoinscher",
+          "price": 474.14,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+4060+Ti&prds=localAnnotatedOfferId:1,catalogid:4631483774277111898,gpcid:1416198083837974162,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Tech-discount",
+          "price": 490.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+4060+Ti&prds=localAnnotatedOfferId:1,catalogid:14523886869755654362,gpcid:6400492912460800654,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "KultureGeek",
+          "price": 546,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+4060+Ti&prds=localAnnotatedOfferId:1,catalogid:2550914919385693873,gpcid:6181948345879581390,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "rtx-4070s": {
+      "price": 1149,
+      "min": 768,
+      "max": 1952,
+      "offers": 6,
+      "updatedAt": "2026-11-14T20:36:16.738Z",
+      "best": [
+        {
+          "merchant": "Tech-discount",
+          "price": 767.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+4070+Super+12+Go&prds=localAnnotatedOfferId:1,catalogid:6633491642596974360,gpcid:2901451721717044012,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 1072.27,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+4070+Super+12+Go&prds=localAnnotatedOfferId:1,catalogid:11519433432811394439,gpcid:5950742460395514794,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Fnac",
+          "price": 1099,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+GeForce+RTX+4070+Super+12+Go&prds=localAnnotatedOfferId:1,catalogid:17731171485923972349,gpcid:2506715096642794915,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "rx-7600": {
+      "price": 480,
+      "min": 257,
+      "max": 776,
+      "offers": 15,
+      "updatedAt": "2026-11-14T20:36:16.738Z",
+      "best": [
+        {
+          "merchant": "rightdeal.sk",
+          "price": 256.54,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+7600+8+Go&prds=localAnnotatedOfferId:1,catalogid:1433720967462192890,gpcid:2095391813405151918,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Shoppydeals UK - ShoppyDeals France",
+          "price": 314.46,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+7600+8+Go&prds=localAnnotatedOfferId:1,catalogid:3944305393677075576,gpcid:13836290991074275212,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Tech-discount",
+          "price": 354.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+7600+8+Go&prds=localAnnotatedOfferId:1,catalogid:4069534521450107484,gpcid:1350485689013670400,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "rx-7700xt": {
+      "price": 662,
+      "min": 450,
+      "max": 1422,
+      "offers": 6,
+      "updatedAt": "2026-11-14T20:36:16.738Z",
+      "best": [
+        {
+          "merchant": "instinctgaming.gg",
+          "price": 449.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+7700+XT+12+Go&prds=localAnnotatedOfferId:1,catalogid:13320399757962103144,gpcid:4526627241931484523,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "rightdeal.sk",
+          "price": 513.94,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+7700+XT+12+Go&prds=localAnnotatedOfferId:1,catalogid:10370534295234048296,gpcid:15531310821006498075,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Pop-Informatique",
+          "price": 529.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+7700+XT+12+Go&prds=localAnnotatedOfferId:1,catalogid:6300493790263773221,gpcid:15094804839284103921,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "rx-7800xt": {
+      "price": 709,
+      "min": 489,
+      "max": 1729,
+      "offers": 9,
+      "updatedAt": "2026-11-14T20:36:16.738Z",
+      "best": [
+        {
+          "merchant": "rightdeal.sk",
+          "price": 489.39,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+7800+XT+16+Go&prds=localAnnotatedOfferId:1,catalogid:13772899816157127919,gpcid:12749935215154750350,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 571.13,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+7800+XT+16+Go&prds=localAnnotatedOfferId:1,catalogid:12439581914110842034,gpcid:7029773711838818804,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Tech-discount",
+          "price": 677.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+7800+XT+16+Go&prds=localAnnotatedOfferId:1,catalogid:12963598687633103870,gpcid:6897385480028149105,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "rx-7900gre": {
+      "price": 746,
+      "min": 724,
+      "max": 849,
+      "offers": 3,
+      "updatedAt": "2026-11-14T20:36:16.738Z",
+      "best": [
+        {
+          "merchant": "Tech-discount",
+          "price": 723.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+7900+GRE+16+Go&prds=localAnnotatedOfferId:1,catalogid:11908076856161826440,gpcid:9054759505868939496,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 745.61,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+7900+GRE+16+Go&prds=localAnnotatedOfferId:1,catalogid:12282323970867401867,gpcid:17136227927469768690,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 849,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+7900+GRE+16+Go&prds=localAnnotatedOfferId:1,catalogid:14270115770595267585,gpcid:2691017945810693595,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "rx-7900xt": {
+      "price": 1000,
+      "min": 893,
+      "max": 1114,
+      "offers": 4,
+      "updatedAt": "2026-11-14T20:36:16.738Z",
+      "best": [
+        {
+          "merchant": "rightdeal.sk",
+          "price": 892.91,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+7900+XT+20+Go&prds=localAnnotatedOfferId:1,catalogid:4348040208285547322,gpcid:17475636331266889043,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "LaBonneConfig",
+          "price": 999,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+7900+XT+20+Go&prds=localAnnotatedOfferId:1,catalogid:5697261966536619667,gpcid:15912618148503163115,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Tech-discount",
+          "price": 1000.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Radeon+RX+7900+XT+20+Go&prds=localAnnotatedOfferId:1,catalogid:3703110596135126918,gpcid:3824248779400167237,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "arc-a750": {
+      "price": 353,
+      "min": 197,
+      "max": 440,
+      "offers": 5,
+      "updatedAt": "2026-11-14T20:36:56.112Z",
+      "best": [
+        {
+          "merchant": "ubuy.fr",
+          "price": 197,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Intel+Arc+A750+8+Go&prds=localAnnotatedOfferId:1,catalogid:3971140562070438385,gpcid:17691715470144202307,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Galaxus",
+          "price": 308.87,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Intel+Arc+A750+8+Go&prds=localAnnotatedOfferId:1,catalogid:13093332978767983885,gpcid:16797551094044880053,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "OnBuy.com",
+          "price": 352.99,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+graphique+Intel+Arc+A750+8+Go&prds=localAnnotatedOfferId:1,catalogid:2057044740603980213,gpcid:7626149803388637450,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "i3-14100f": {
+      "price": 91,
+      "min": 86,
+      "max": 100,
+      "offers": 5,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
+      "best": [
+        {
+          "merchant": "achatmoinscher",
+          "price": 85.99,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i3-14100F&prds=localAnnotatedOfferId:1,catalogid:7023692581481016330,gpcid:57252538708224416,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Senetic.fr",
+          "price": 89.05,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i3-14100F&prds=localAnnotatedOfferId:1,catalogid:73870122470759705,gpcid:7770697068913632897,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "informaticabarata.com",
+          "price": 91.2,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i3-14100F&prds=localAnnotatedOfferId:1,catalogid:15347018618146413642,gpcid:12641654849784944114,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "i5-13400f": {
+      "price": 171,
+      "min": 151,
+      "max": 219,
+      "offers": 5,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
+      "best": [
+        {
+          "merchant": "Tech-discount",
+          "price": 150.75,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-13400F&prds=localAnnotatedOfferId:1,catalogid:17602131952595614887,gpcid:11965953982790281077,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 166.67,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-13400F&prds=localAnnotatedOfferId:1,catalogid:14604177559071320159,gpcid:16596806974959897692,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Senetic.fr",
+          "price": 171.08,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-13400F&prds=localAnnotatedOfferId:1,catalogid:2091707004594788567,gpcid:10782434664729085453,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "i5-12600kf": {
+      "price": 190,
+      "min": 170,
+      "max": 250,
+      "offers": 6,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 169.96,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-12600KF&prds=localAnnotatedOfferId:1,catalogid:15320322342409608278,gpcid:682349741255574607,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Rue du Commerce Marketplace",
+          "price": 174.99,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-12600KF&prds=localAnnotatedOfferId:1,catalogid:2985205292119105068,gpcid:9184672536217353259,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 175.99,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-12600KF&prds=localAnnotatedOfferId:1,catalogid:6638093303965321134,gpcid:15738242561799585699,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "i7-12700kf": {
+      "price": 253,
+      "min": 228,
+      "max": 270,
+      "offers": 8,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 228.44,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i7-12700KF&prds=localAnnotatedOfferId:1,catalogid:3822360802809405429,gpcid:9793918796059528973,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "rightdeal.sk",
+          "price": 239.76
+        },
+        {
+          "merchant": "F10.eu",
+          "price": 249.6
+        }
+      ]
+    },
+    "r5-5600x": {
+      "price": 146,
+      "min": 121,
+      "max": 333,
+      "offers": 7,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 120.99,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+5600X&prds=localAnnotatedOfferId:1,catalogid:5660697820456809569,gpcid:16450694985038265615,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "F10.eu",
+          "price": 125.5,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+5600X&prds=localAnnotatedOfferId:1,catalogid:10027172579211347779,gpcid:6273375128551194590,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 144.23,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+5600X&prds=localAnnotatedOfferId:1,catalogid:5877364905911995025,gpcid:16863638926296604914,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "r7-5800x3d": {
+      "price": 403,
+      "min": 335,
+      "max": 440,
+      "offers": 4,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr",
+          "price": 335,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+5800X3D&prds=localAnnotatedOfferId:1,catalogid:10508911392278911329,gpcid:16243510598328929949,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "F10.eu",
+          "price": 381,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+5800X3D&prds=localAnnotatedOfferId:1,catalogid:10092222640997808489,gpcid:17427728090846000962,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Alibaba.com",
+          "price": 425.49,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+5800X3D&prds=localAnnotatedOfferId:1,catalogid:13442702819700771326,gpcid:16235357467668852959,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "r5-8600g": {
+      "price": 177,
+      "min": 149,
+      "max": 258,
+      "offers": 7,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
+      "best": [
+        {
+          "merchant": "GreaTecno",
+          "price": 148.81,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+8600G&prds=localAnnotatedOfferId:1,catalogid:12826408334763689222,gpcid:5989584056355755805,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 153.69,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+8600G&prds=localAnnotatedOfferId:1,catalogid:2013181843107890455,gpcid:17664007379081529981,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 167.52,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+5+8600G&prds=localAnnotatedOfferId:1,catalogid:2953143586865739539,gpcid:5761024186813771529,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "r7-7700": {
+      "price": 221,
+      "min": 164,
+      "max": 393,
+      "offers": 10,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 164.49,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+7700&prds=localAnnotatedOfferId:1,catalogid:10807394581902330657,gpcid:1493529159695016426,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Répare et Nettoie",
+          "price": 185,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+7700&prds=localAnnotatedOfferId:1,catalogid:3364999066871585263,gpcid:7729872113480683923,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "GreaTecno",
+          "price": 190.81,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+7700&prds=localAnnotatedOfferId:1,catalogid:86081505193728055,gpcid:203434695184754044,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "r7-7700x": {
+      "price": 252,
+      "min": 213,
+      "max": 333,
+      "offers": 8,
+      "updatedAt": "2026-11-14T20:38:58.321Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 212.6,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+7700X&prds=localAnnotatedOfferId:1,catalogid:17697107270939210243,gpcid:8742616550611799907,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "informaticabarata.com",
+          "price": 219.02,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+7700X&prds=localAnnotatedOfferId:1,catalogid:713280349318346718,gpcid:10488048888253491181,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 237,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+7700X&prds=localAnnotatedOfferId:1,catalogid:13694504477592362598,gpcid:2786342843947732735,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "i3-12100": {
+      "price": 140,
+      "min": 116,
+      "max": 150,
+      "offers": 9,
+      "updatedAt": "2026-11-14T20:39:27.102Z",
+      "best": [
+        {
+          "merchant": "reichelt.com",
+          "price": 115.94,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i3-12100&prds=localAnnotatedOfferId:1,catalogid:9519975527246439163,gpcid:3479017051305917232,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 120,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i3-12100&prds=localAnnotatedOfferId:1,catalogid:1094073137973509782,gpcid:8552889550982757546,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Alternate.fr",
+          "price": 122.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i3-12100&prds=localAnnotatedOfferId:1,catalogid:15054959367363268371,gpcid:5115465131271271529,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "i5-12400": {
+      "price": 175,
+      "min": 147,
+      "max": 225,
+      "offers": 9,
+      "updatedAt": "2026-11-14T20:39:27.102Z",
+      "best": [
+        {
+          "merchant": "DropReference",
+          "price": 147,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-12400&prds=localAnnotatedOfferId:1,catalogid:5867562333477048055,gpcid:147286974317375057,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "informaticabarata.com",
+          "price": 149.35,
+          "link": "https://www.google.com/search?ibp=oshop&q=processeur+Intel+Core+i5-12400&prds=localAnnotatedOfferId:1,catalogid:9163232724312809112,gpcid:5766207358794141182,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "F10.eu",
+          "price": 158.8
         }
       ]
     }

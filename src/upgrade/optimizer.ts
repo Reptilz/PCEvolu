@@ -58,7 +58,8 @@ export function evaluate(goal: Goal, s: ConfigState): Evaluation {
     const ratio = fps / goal.fps;
     parts.push([6, Math.min(ratio, 1)]);
     parts.push([1, est && !est.vramShort ? 1 : 0]);
-    parts.push([1, s.ramGb >= 16 && s.dual ? 1 : s.ramGb >= 16 ? 0.6 : 0.3]);
+    // Le dual channel compte déjà dans les i/s estimés : ici, il ne pèse que pour le confort (multitâche, jeux futurs).
+    parts.push([0.5, s.ramGb >= 16 && s.dual ? 1 : s.ramGb >= 16 ? 0.7 : 0.3]);
     parts.push([1, ssd]);
     // Au-delà de l'objectif, un peu de marge vaut quelque chose (jeux futurs), mais de moins en moins.
     bonus += Math.min(Math.max(ratio - 1, 0), 0.5) * 0.08;
@@ -290,6 +291,8 @@ export interface OptimizeResult {
   cheapestReach?: Plan;
   /** Paliers : chaque plan fait nettement mieux que tous les plans moins chers. */
   tiers: Plan[];
+  /** Autres options dans le budget, variées (cartes graphiques, processeurs, marques). */
+  alternatives: Plan[];
 }
 
 export function optimize(goal: Goal, p: Profile, r: Report, all: Record<Category, Proposal[]>): OptimizeResult {
@@ -332,9 +335,66 @@ export function optimize(goal: Goal, p: Profile, r: Report, all: Record<Category
   const best = reachInBudget ?? [...affordable].sort((a, b) => b.evaluation.score - a.evaluation.score || a.cost - b.cost)[0];
 
   const tiers = pickTiers(frontier, cheapestReach);
+  const alternatives = pickAlternatives(affordable, best, cheapestReach, goal, current.score);
   // Les plans affichés sont revérifiés comme des configs complètes.
-  for (const pl of new Set([best, cheapestReach, ...tiers])) if (pl) pl.checks = validatePlan(goal, p, pl);
-  return { current, best, cheapestReach, tiers };
+  for (const pl of new Set([best, cheapestReach, ...tiers, ...alternatives])) if (pl) pl.checks = validatePlan(goal, p, pl);
+  return { current, best, cheapestReach, tiers, alternatives };
+}
+
+/** Marque de la carte graphique d'un plan (pour varier les options proposées). */
+function gpuBrand(pl: Plan): string {
+  const g = pl.choice.gpu?.main;
+  return g?.kind === "gpu" ? g.brand : "aucune";
+}
+
+/**
+ * Autres options dans le budget : un plan par couple « carte graphique + processeur » (la meilleure variante RAM / stockage),
+ * classés par objectif atteint, puis score, puis prix. On varie les marques (au plus 4 options par marque de carte graphique)
+ * et on écarte les options nettement moins bonnes que la recommandation.
+ */
+function pickAlternatives(affordable: Plan[], best: Plan | undefined, reach: Plan | undefined, goal: Goal, currentScore: number, max = 6): Plan[] {
+  if (!best) return [];
+  const key = (pl: Plan) => `${pl.choice.gpu?.main.id ?? "-"}|${pl.choice.cpu?.main.id ?? "-"}`;
+  const better = (a: Plan, b: Plan) =>
+    Number(b.evaluation.reached) - Number(a.evaluation.reached) || b.evaluation.score - a.evaluation.score || a.cost - b.cost;
+
+  const byKey = new Map<string, Plan>();
+  for (const pl of affordable) {
+    const prev = byKey.get(key(pl));
+    if (!prev || better(pl, prev) < 0) byKey.set(key(pl), pl);
+  }
+  byKey.delete(key(best));
+
+  // Pertinence : apporter au moins la moitié du gain de la recommandation ; sans budget fixé, pas beaucoup plus cher que l'objectif.
+  const floor = currentScore + (best.evaluation.score - currentScore) * 0.5;
+  const ceiling = goal.budget == null && reach ? reach.cost * 1.6 : Infinity;
+  const candidates = [...byKey.values()]
+    .filter((pl) => pl.evaluation.score >= floor && pl.cost <= ceiling)
+    .sort((a, b) => Number(b.evaluation.reached) - Number(a.evaluation.reached) || Math.round((b.evaluation.score - a.evaluation.score) * 50) || a.cost - b.cost);
+
+  // Variété : une option par modèle de carte graphique, deux par processeur, quatre par marque de carte graphique.
+  const picked: Plan[] = [];
+  const count = new Map<string, number>();
+  const bump = (k: string) => count.set(k, (count.get(k) ?? 0) + 1);
+  const used = (k: string) => count.get(k) ?? 0;
+  const gpuId = (pl: Plan) => pl.choice.gpu?.main.id;
+  const cpuId = (pl: Plan) => pl.choice.cpu?.main.id;
+  if (gpuId(best)) bump(`gpu:${gpuId(best)}`);
+  if (cpuId(best)) bump(`cpu:${cpuId(best)}`);
+  bump(`brand:${gpuBrand(best)}`);
+  for (const pl of candidates) {
+    if (picked.length >= max) break;
+    const g = gpuId(pl);
+    const c = cpuId(pl);
+    if (g && used(`gpu:${g}`) >= 1) continue;
+    if (c && used(`cpu:${c}`) >= 2) continue;
+    if (g && used(`brand:${gpuBrand(pl)}`) >= 4) continue;
+    if (g) bump(`gpu:${g}`);
+    if (c) bump(`cpu:${c}`);
+    bump(`brand:${gpuBrand(pl)}`);
+    picked.push(pl);
+  }
+  return picked;
 }
 
 /** Garde au plus 5 paliers lisibles, dont toujours le premier pas et le premier plan qui atteint l'objectif. */

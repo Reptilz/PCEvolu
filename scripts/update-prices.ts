@@ -234,9 +234,10 @@ async function main() {
   let updated = 0;
   let failed = 0;
   for (const t of list.filter((x) => QUERIES[x.id])) {
-    // Référence du garde-fou : le dernier prix du marché connu, plus fiable que le catalogue.
+    // Référence du garde-fou (limite basse, contre les accessoires) : le plus petit entre le dernier prix relevé
+    // et le prix du catalogue. Prendre le minimum évite qu'un mauvais relevé trop haut ne bloque ensuite les vraies offres.
     const prev = items[t.id];
-    if (prev && !prev.stale) t.ref = prev.price;
+    if (prev && !prev.stale) t.ref = Math.min(prev.price, t.ref);
     try {
       const results = await search(QUERIES[t.id].q, t.id, fixtures, dump);
       if (explain) console.log(`\n${t.id} — « ${QUERIES[t.id].q} »`);

@@ -68,7 +68,10 @@ Résultat, affiché dans « Mon objectif » (`src/upgrade/PlanView.tsx`) :
 - **le meilleur plan dans le budget** : le moins cher qui atteint l'objectif, sinon celui qui s'en approche le plus ;
 - **le coût pour atteindre complètement l'objectif**, avec un bouton pour ajuster le budget ;
 - **les paliers** : chaque palier fait nettement mieux que tous les plans moins chers ;
-- un **curseur de budget** qui recalcule le plan en direct.
+- un **curseur de budget** qui recalcule le plan en direct ;
+- **jusqu'à 6 autres options dans le budget**, variées : une seule par modèle de carte graphique, au plus deux par processeur et quatre par marque. Chacune apporte au moins la moitié du gain de la recommandation et se déplie avec sa compatibilité complète.
+
+L'onglet **Améliorations** affiche 3 options vérifiées par composant, dans le budget et classées selon l'objectif. Une section « Pour atteindre ton objectif » couvre les composants qui bloquent. L'onglet **Upgrades** se filtre par marque.
 
 Chaque plan affiché est **revérifié comme une config complète** (`validatePlan`). Les contrôles qui dépendent de la combinaison sont recalculés sur la config *après* achat :
 

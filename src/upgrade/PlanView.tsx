@@ -62,6 +62,19 @@ export function PlanSection({ goal, result, onBudget, onDetails }: {
         </div>
       )}
 
+      {result.alternatives.length > 0 && (
+        <>
+          <h3 className="tiers-title">
+            {current.reached ? "Pour aller plus loin, dans ton budget" : "Autres options dans ton budget"} ({result.alternatives.length})
+          </h3>
+          <div className="alts">
+            {result.alternatives.map((a, i) => (
+              <AltRow key={i} plan={a} goal={goal} currentFps={current.fps} onDetails={onDetails} />
+            ))}
+          </div>
+        </>
+      )}
+
       {tiers.length > 0 && (
         <>
           <h3 className="tiers-title">Ce que chaque budget apporte</h3>
@@ -177,6 +190,39 @@ function PlanCard({ plan, goal, currentFps, recommended, onDetails }: { plan: Pl
         </div>
       )}
     </div>
+  );
+}
+
+/** Une option alternative, repliée : titre, résultat, prix ; dépliée : la carte complète avec sa compatibilité. */
+function AltRow({ plan, goal, currentFps, onDetails }: { plan: Plan; goal: Goal; currentFps?: number; onDetails: (tab: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const ev = plan.evaluation;
+  const warns = (plan.checks ?? []).filter((c) => c.status === "warn").length;
+  const req = plan.additions.filter((a) => a.role === "required");
+  if (open) {
+    return (
+      <div className="alt-open">
+        <PlanCard plan={plan} goal={goal} currentFps={currentFps} onDetails={onDetails} />
+        <button className="link small" onClick={() => setOpen(false)}>
+          Replier
+        </button>
+      </div>
+    );
+  }
+  return (
+    <button className="alt" onClick={() => setOpen(true)}>
+      <div className="alt-main">
+        <div className="alt-title">{planTitle(plan)}</div>
+        <div className="muted small">
+          {ev.fps != null && currentFps != null ? `≈ ${currentFps} → ${ev.fps} i/s` : `${Math.round(Math.min(ev.score, 1) * 100)} % de l'objectif`}
+          {req.length > 0 && ` · avec ${req.map((a) => kindLabel(a.part).toLowerCase()).join(", ")}`}
+          {warns > 0 && ` · ${warns} point${warns > 1 ? "s" : ""} à vérifier`}
+        </div>
+      </div>
+      {ev.reached && <span className="tier-ok">✓ Objectif</span>}
+      <span className="alt-cost mono">{plan.cost} €</span>
+      <Icon name="chevron" className="chev" />
+    </button>
   );
 }
 
