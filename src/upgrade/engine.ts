@@ -6,10 +6,11 @@
 // à la proposition, puis on vérifie à son tour ce que ce nouveau composant implique.
 
 import type {
-  Addition, BiosFamily, BoardSpec, Category, Check, CoolerSpec, CpuSpec, GpuSpec, Part, Proposal, PsuSpec, RamKit, Socket,
+  Addition, BiosFamily, BoardSpec, Category, Check, ModelPick, CoolerSpec, CpuSpec, GpuSpec, Part, Proposal, PsuSpec, RamKit, Socket,
 } from "./types";
 import type { Profile } from "./profile";
 import { BOARDS, CASES, COOLERS, CPUS, FAN_KITS, GPUS, PSUS, RAM_KITS, SSDS, CHIPSETS } from "./catalog";
+import { KNOWN_BOARDS } from "./boards";
 
 // ---------------------------------------------------------------------------
 // Outils communs
@@ -410,16 +411,17 @@ export function proposeCpus(p: Profile): Proposal[] {
       const plan = platformFor(c, p);
       if (!plan) continue;
       const { board, ram } = plan;
+      // La nouvelle carte mère fait partie de la proposition : le point est « réglé », pas un problème restant.
       checks.push({
         label: "Carte mère",
-        status: "fail",
-        detail: c.socket !== p.socket
-          ? `Ce processeur utilise le socket ${c.socket}, ta carte mère est en ${p.socket ?? "?"}.`
-          : `Ton chipset ${p.chipset?.chipset ?? ""} ne supporte pas cette génération de processeur.`,
+        status: "fixed",
+        detail: `${c.socket !== p.socket
+          ? `Ce processeur utilise le socket ${c.socket}, ta carte mère est en ${p.socket ?? "?"}`
+          : `Ton chipset ${p.chipset?.chipset ?? ""} ne supporte pas cette génération de processeur`} : une carte mère compatible est incluse.`,
       });
-      additions.push({ role: "required", part: board, quantity: 1, reason: `Carte mère ${board.chipset} ${board.formFactor} compatible. ${board.note ?? ""}`.trim() });
+      additions.push({ role: "required", part: board, quantity: 1, reason: `Carte mère ${board.chipset} ${board.formFactor} compatible. ${board.note ?? ""}`.trim(), models: recommendBoards(board, c, p) });
       if (ram) {
-        checks.push({ label: "Mémoire vive", status: "fail", detail: `La nouvelle carte mère utilise de la ${board.ramType}, ta RAM ${p.ramType ?? ""} n'est pas compatible.` });
+        checks.push({ label: "Mémoire vive", status: "fixed", detail: `La nouvelle carte mère utilise de la ${board.ramType}, ta RAM ${p.ramType ?? ""} n'est pas compatible : un kit ${board.ramType} est inclus.` });
         additions.push({ role: "required", part: ram, quantity: 1, reason: `${ram.sticks * ram.gbPerStick} Go en ${board.ramType}, en dual channel.` });
       } else {
         checks.push({ label: "Mémoire vive", status: "ok", detail: `Ta RAM ${p.ramType} actuelle est réutilisée.` });
@@ -674,5 +676,100 @@ function highlight(list: Proposal[]): Proposal[] {
 }
 
 export function proposeAll(p: Profile): Record<Category, Proposal[]> {
-  return { gpu: proposeGpus(p), cpu: proposeCpus(p), ram: proposeRam(p), storage: proposeStorage(p) };
+  const cpu = proposeCpus(p);
+  return { gpu: proposeGpus(p), cpu, board: proposeBoards(cpu), ram: proposeRam(p), storage: proposeStorage(p) };
+}
+
+// ---------------------------------------------------------------------------
+// Cartes mères : modèles réels conseillés et changements de plateforme
+// ---------------------------------------------------------------------------
+
+/**
+ * 2 ou 3 modèles réels de la base pour une carte générique (même chipset, même format, même type de RAM),
+ * un par fabricant. On privilégie, dans l'ordre :
+ * - la mise à jour du BIOS sans processeur (indispensable si le BIOS d'usine est trop ancien pour le processeur) ;
+ * - un BIOS documenté pour ce processeur ;
+ * - assez d'emplacements M.2 pour les SSD actuels, puis le port graphique en PCIe 5.0.
+ */
+export function recommendBoards(generic: BoardSpec, cpu: CpuSpec | undefined, p: Profile): ModelPick[] {
+  const fams = cpu ? biosFamilies(cpu) : [];
+  const candidates = KNOWN_BOARDS.filter(
+    (b) => (b.chipset === generic.chipset || b.chipset === `${generic.chipset}E`) && b.formFactor === generic.formFactor && b.ramType === generic.ramType,
+  );
+  const scored = candidates.map((b) => {
+    const bios = fams.map((f) => b.biosMin?.[f]).find((v) => v !== undefined);
+    const m2 = b.m2Slots || 0;
+    let score = 0;
+    if (b.biosFlashback) score += 4;
+    if (bios) score += 2;
+    if (m2 > p.m2Used) score += 2;
+    score += Math.min(m2, 4) * 0.5;
+    if (b.pcieGpu === 5) score += 1;
+    const why: string[] = [];
+    if (m2) why.push(`${m2} emplacement${m2 > 1 ? "s" : ""} M.2${b.m2Gens?.includes(5) ? " dont un en PCIe 5.0" : ""}`);
+    if (b.pcieGpu === 5) why.push("port graphique PCIe 5.0");
+    if (b.biosFlashback) why.push("BIOS à jour sans processeur");
+    if (/wifi|\bax\b/i.test(b.name)) why.push("Wi-Fi intégré");
+    if (b.sata) why.push(`${b.sata} ports SATA`);
+    return { b, score, why };
+  });
+  const out: ModelPick[] = [];
+  const vendors = new Set<string>();
+  for (const s of scored.sort((x, y) => y.score - x.score)) {
+    const vendor = s.b.name.split(" ")[0].toLowerCase();
+    if (vendors.has(vendor)) continue;
+    vendors.add(vendor);
+    out.push({ name: s.b.name, why: s.why, url: s.b.source });
+    if (out.length === 3) break;
+  }
+  return out;
+}
+
+/**
+ * Onglet « Carte mère » : un changement de plateforme par carte possible, avec le processeur le moins cher
+ * qui apporte un vrai gain, et les autres processeurs compatibles en note.
+ */
+export function proposeBoards(cpuProposals: Proposal[]): Proposal[] {
+  const groups = new Map<string, Proposal[]>();
+  for (const prop of cpuProposals) {
+    const board = prop.additions.find((a) => a.role === "required" && a.part.kind === "board");
+    if (!board) continue;
+    const list = groups.get(board.part.id) ?? [];
+    list.push(prop);
+    groups.set(board.part.id, list);
+  }
+  const out: Proposal[] = [];
+  for (const props of groups.values()) {
+    const sorted = [...props].sort((a, b) => a.total - b.total);
+    const first = sorted[0];
+    const boardAdd = first.additions.find((a) => a.part.kind === "board")!;
+    const board = boardAdd.part as BoardSpec;
+    const cpu = first.main as CpuSpec;
+    const others = sorted.slice(1, 4).map((x) => `${(x.main as CpuSpec).name.replace(/^(AMD|Intel) /, "")} (${x.total} € au total)`);
+    out.push(
+      finalize({
+        id: `board-${board.id}`,
+        category: "board",
+        title: `Passer en ${board.socket} : ${board.name.replace(/^Carte mère /, "")}`,
+        main: board,
+        mainQuantity: 1,
+        gainLabel: first.gainLabel,
+        gainPercent: first.gainPercent,
+        highlight: undefined,
+        checks: first.checks,
+        additions: [
+          { role: "required", part: cpu, quantity: 1, reason: `Le processeur le moins cher qui apporte un vrai gain sur cette plateforme.` },
+          ...first.additions.filter((a) => a.part.kind !== "board"),
+        ],
+        mainModels: boardAdd.models,
+        notes: [
+          ...(others.length ? [`Autres processeurs possibles sur cette carte : ${others.join(", ")}.`] : []),
+          board.socket === "AM5" ? "Le socket AM5 est prévu pour les prochaines générations de Ryzen : tu pourras changer de processeur plus tard sans changer de carte." : "",
+          board.socket === "LGA1700" ? "Le socket LGA1700 est en fin de série : pas de nouveau processeur Intel prévu dessus." : "",
+        ].filter(Boolean),
+      }),
+    );
+
+  }
+  return out.sort((a, b) => a.total - b.total);
 }

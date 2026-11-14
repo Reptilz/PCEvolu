@@ -9,12 +9,13 @@ import { priceInfo, pricesFile, trendOf } from "./prices";
 import { PriceNotice, usePrices } from "./PriceSheet";
 import { BrandLogo, Icon, type IconName } from "../icons";
 import { impactOf, type Goal, type Impact, type Verdict } from "./goal";
-import { AdditionRow, CompatSummary, ItemRow, KindIcons, kindLabel } from "./PlanView";
+import { AdditionRow, CompatSummary, ItemRow, KindIcons, ModelPicks, kindLabel } from "./PlanView";
 import { goalSentence } from "./GoalViews";
 
 const TABS: { id: Category; label: string; icon: IconName }[] = [
   { id: "gpu", label: "Carte graphique", icon: "gpu" },
   { id: "cpu", label: "Processeur", icon: "chip" },
+  { id: "board", label: "Carte mère", icon: "board" },
   { id: "ram", label: "Mémoire vive", icon: "ram" },
   { id: "storage", label: "Stockage", icon: "disk" },
 ];
@@ -50,7 +51,11 @@ export function UpgradesView({
     () =>
       all[tab].map((p) => ({
         p,
-        impact: impactOf(goal, profile, verdict, p.main as never, tab, ramAfter(p, profile.ramTotalGb)),
+        // Onglet « Carte mère » : l'effet vient du processeur qui accompagne la carte.
+        impact:
+          tab === "board"
+            ? impactOf(goal, profile, verdict, (p.additions.find((a) => a.part.kind === "cpu")?.part ?? p.main) as never, "cpu")
+            : impactOf(goal, profile, verdict, p.main as never, tab, ramAfter(p, profile.ramTotalGb)),
         inBudget: goal.budget == null || p.total <= goal.budget,
       })),
     [all, tab, goal, profile, verdict],
@@ -205,6 +210,8 @@ function emptyMessage(tab: Category, p: Profile) {
     return "Ton PC utilise de la DDR3, qui n'est plus vendue neuve. Plutôt que d'en racheter, mieux vaut investir dans une nouvelle plateforme (onglet Processeur).";
   if (tab === "gpu" && !p.gpu) return "Ta carte graphique n'a pas été reconnue : impossible de calculer un gain fiable.";
   if (tab === "cpu" && !p.cpu) return "Ton processeur n'a pas été reconnu.";
+  if (tab === "board" && p.isLaptop) return "Sur un PC portable, la carte mère ne se change pas.";
+  if (tab === "board") return "Aucun changement de plateforme n'apporte de vrai gain pour l'instant : ta carte mère actuelle suffit pour les processeurs proposés.";
   if (tab === "ram" && !p.ramType) return "Type de mémoire non détecté.";
   return "Aucun upgrade pertinent dans le catalogue pour l'instant : ce composant est déjà au niveau.";
 }
@@ -297,7 +304,9 @@ function ProposalRow({ p, impact }: { p: Proposal; impact?: Impact }) {
       {open && (
         <div className="row-detail pd">
           <ul className="pd-items">
-            <ItemRow kind={kindLabel(p.main)} part={p.main} amount={price(p.main) * p.mainQuantity} />
+            <ItemRow kind={kindLabel(p.main)} part={p.main} amount={price(p.main) * p.mainQuantity}>
+              {p.mainModels?.length ? <ModelPicks models={p.mainModels} /> : null}
+            </ItemRow>
             {extras.map((a, i) => (
               <AdditionRow key={i} a={a} />
             ))}

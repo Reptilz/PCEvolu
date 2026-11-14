@@ -220,9 +220,18 @@ export interface Addition {
   part: Part;
   quantity: number;
   reason: string;
+  /** Modèles réels conseillés pour une pièce générique (ex. cartes mères B650 de la base). */
+  models?: ModelPick[];
 }
 
-export type Category = "gpu" | "cpu" | "ram" | "storage";
+/** Un modèle réel conseillé, avec ce qui le distingue et sa fiche chez le fabricant. */
+export interface ModelPick {
+  name: string;
+  why: string[];
+  url?: string;
+}
+
+export type Category = "gpu" | "cpu" | "board" | "ram" | "storage";
 
 export interface Proposal {
   id: string;
@@ -230,6 +239,8 @@ export interface Proposal {
   title: string;
   main: Part;
   mainQuantity: number;
+  /** Modèles réels conseillés quand la pièce principale est générique (carte mère). */
+  mainModels?: ModelPick[];
   gainLabel?: string;
   gainPercent?: number;
   checks: Check[];

@@ -1,6 +1,6 @@
 import { T } from "../glossary";
 import { useState, type ReactNode } from "react";
-import type { Addition, Check, Part, Role } from "./types";
+import type { Addition, Check, ModelPick, Part, Role } from "./types";
 import { CheckRow, MarketLine } from "./UpgradesView";
 import { usePrices } from "./PriceSheet";
 import { bestPriceOf, saveAlerts, suggestedTarget } from "./alerts";
@@ -8,6 +8,7 @@ import { isGaming, type Goal } from "./goal";
 import { planTitle, type OptimizeResult, type Plan } from "./optimizer";
 import { price } from "./engine";
 import { BrandLogo, hasBrandLogo, Icon, type IconName } from "../icons";
+import { openUrl } from "../platform";
 
 /** Arrondit un coût au palier de budget supérieur (par 50 €). */
 const roundBudget = (c: number) => Math.ceil(c / 50) * 50;
@@ -176,7 +177,33 @@ export function AdditionRow({ a }: { a: Addition }) {
           {ROLE_NOTE[a.role]} : <T>{a.reason.charAt(0).toLowerCase() + a.reason.slice(1)}</T>
         </span>
       }
-    />
+    >
+      {a.models?.length ? <ModelPicks models={a.models} /> : null}
+    </ItemRow>
+  );
+}
+
+/** Modèles réels conseillés pour une pièce générique, avec ce qui les distingue et leur fiche chez le fabricant. */
+export function ModelPicks({ models }: { models: ModelPick[] }) {
+  return (
+    <div className="picks">
+      <span className="picks-title">Modèles conseillés (prix de la catégorie, vérifie le prix du modèle) :</span>
+      <ul>
+        {models.map((m) => (
+          <li key={m.name}>
+            <BrandLogo brand={m.name} className="picks-logo" />
+            {m.url ? (
+              <button className="picks-name" onClick={() => openUrl(m.url!)} title="Ouvrir la fiche du fabricant">
+                {m.name}
+              </button>
+            ) : (
+              <span className="picks-name">{m.name}</span>
+            )}
+            <span className="picks-why">{m.why.join(", ")}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

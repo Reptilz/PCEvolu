@@ -887,3 +887,16 @@ abbr.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px;
 .chk-source { margin-top: 3px; font-size: 12px; color: color-mix(in srgb, var(--muted) 80%, transparent); }
 
 .up-unsupported { padding: 12px 14px; border-radius: 10px; background: color-mix(in srgb, var(--warn) 12%, transparent); color: var(--text) !important; }
+
+/* Modèles réels conseillés (cartes mères) */
+.picks { margin-top: 8px; padding: 10px 12px; border-radius: 10px; background: var(--panel-2); }
+.picks-title { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+.picks ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.picks li { display: grid; grid-template-columns: 16px auto 1fr; gap: 4px 8px; align-items: baseline; font-size: 14px; }
+.picks-logo { width: 15px; height: 15px; align-self: center; color: var(--text); }
+.picks li > .picks-name:first-child { grid-column: 2; }
+.picks-name { border: 0; background: none; padding: 0; font: inherit; font-weight: 600; color: var(--accent); cursor: pointer; text-align: left; }
+span.picks-name { color: var(--text); cursor: default; }
+.picks-name:hover { text-decoration: underline; }
+.picks-why { color: var(--muted); font-size: 13px; }
+@media (max-width: 900px) { .picks li { grid-template-columns: 16px 1fr; } .picks-why { grid-column: 2; } }
