@@ -91,6 +91,8 @@ function checkPower(p: Profile, cpuPowerW: number | undefined, gpu: GpuSpec | un
 // ---------------------------------------------------------------------------
 
 export function proposeGpus(p: Profile): Proposal[] {
+  // Sur un portable, la puce graphique est soudée : rien à proposer.
+  if (p.isLaptop) return [];
   const cur = p.gpu;
   const out: Proposal[] = [];
 
@@ -103,12 +105,23 @@ export function proposeGpus(p: Profile): Proposal[] {
     const notes: string[] = [];
 
     // 1. Port PCIe
-    if (g.pcieLanes === 8 && p.pcieGen === 3) {
+    if (g.pcieLanes === 4 && p.pcieGen === 3) {
+      checks.push({ label: "Port PCIe", status: "warn", detail: "Cette carte n'utilise que 4 lignes PCIe : sur ton port PCIe 3.0, elle perd 10 à 25 %. Une carte en x16 est préférable." });
+    } else if (g.pcieLanes === 8 && p.pcieGen === 3) {
       checks.push({ label: "Port PCIe", status: "warn", detail: "Cette carte n'utilise que 8 lignes PCIe. Sur ton port PCIe 3.0, elle perd environ 5 à 10 % (davantage si sa mémoire vidéo sature)." });
     } else if (p.pcieGen) {
       checks.push({ label: "Port PCIe", status: "ok", detail: `Fonctionne sur ton port PCIe ${p.pcieGen}.0 x16${p.pcieGen < 4 ? " avec une perte négligeable (1 à 3 %)" : ""}.` });
     } else {
       checks.push({ label: "Port PCIe", status: "ok", detail: "Toute carte mère avec un port PCIe x16 convient." });
+    }
+
+    // PC de marque : boîtier, alimentation et carte mère souvent propriétaires.
+    if (p.isOem) {
+      checks.push({
+        label: "PC de marque",
+        status: "warn",
+        detail: `Les PC ${p.manufacturer ?? "de marque"} ont souvent une alimentation propriétaire (180 à 300 W, sans câble PCIe) et un boîtier compact. Vérifie la fiche de ton modèle : une alimentation standard peut ne pas rentrer.`,
+      });
     }
 
     // 2. Alimentation (puissance)
@@ -178,11 +191,13 @@ export function proposeGpus(p: Profile): Proposal[] {
       const ceiling = p.cpu?.gpuCeiling ?? Infinity;
       const effective = Math.min(g.perf, ceiling);
       gainPercent = Math.round((effective / Math.min(cur.perf, ceiling) - 1) * 100);
-      gainLabel = `≈ +${gainPercent} % en jeu (1440p)`;
+      gainLabel = cur.integrated
+        ? `≈ ${Math.round(effective / cur.perf)} fois plus rapide que les graphiques intégrés`
+        : `≈ +${gainPercent} % en jeu (1440p)`;
       if (p.cpu && g.perf > ceiling * 1.05) {
         const used = Math.round((ceiling / g.perf) * 100);
         const full = Math.round((g.perf / cur.perf - 1) * 100);
-        gainLabel = `≈ +${gainPercent} % en jeu, plafonné par ton processeur (+${full} % avec un CPU plus récent)`;
+        if (!cur.integrated) gainLabel = `≈ +${gainPercent} % en jeu, plafonné par ton processeur (+${full} % avec un CPU plus récent)`;
         checks.push({ label: "Équilibre avec le processeur", status: "warn", detail: `Ton ${p.cpuDisplay} limitera cette carte : tu profiteras d'environ ${used} % de sa puissance en 1440p (moins en 1080p).` });
         notes.push("Regarde l'onglet Processeur pour équilibrer la config.");
       } else if (p.cpu) {
@@ -208,11 +223,13 @@ export function proposeGpus(p: Profile): Proposal[] {
 function sameMounting(a?: Socket, b?: Socket) {
   if (!a || !b) return false;
   if (a === b) return true;
-  const groups: Socket[][] = [["AM4", "AM5"], ["LGA1700", "LGA1851"], ["LGA1151", "LGA1200"]];
+  const groups: Socket[][] = [["AM4", "AM5"], ["LGA1700", "LGA1851"], ["LGA1150", "LGA1151", "LGA1200"]];
   return groups.some((g) => g.includes(a) && g.includes(b));
 }
 
 export function proposeCpus(p: Profile): Proposal[] {
+  // Sur un portable, le processeur est soudé : rien à proposer.
+  if (p.isLaptop) return [];
   const cur = p.cpu;
   const out: Proposal[] = [];
 
@@ -339,7 +356,8 @@ function platformFor(c: CpuSpec, p: Profile): { board: BoardSpec; ram?: RamKit }
 // ---------------------------------------------------------------------------
 
 export function proposeRam(p: Profile): Proposal[] {
-  if (!p.ramType) return [];
+  // Portables (SO-DIMM, souvent soudée) et DDR3 (plus vendue neuve) : pas de proposition, voir le message de la vue.
+  if (!p.ramType || p.isLaptop || !RAM_KITS.some((k) => k.type === p.ramType)) return [];
   const out: Proposal[] = [];
   const freeSlots = p.ramSlots - p.ramModules;
   const effective = (mts: number) => Math.min(mts, p.ramPlatformMaxMts ?? mts, p.ramMts && p.ramModules > 0 ? p.ramMts : mts);
@@ -418,6 +436,15 @@ export function proposeStorage(p: Profile): Proposal[] {
   for (const s of SSDS) {
     const checks: Check[] = [];
     const notes: string[] = [];
+    if (p.isLaptop) {
+      checks.push({
+        label: "PC portable",
+        status: "warn",
+        detail: s.iface === "SATA"
+          ? "Seulement si ton portable a un emplacement 2,5 pouces (de moins en moins courant) : vérifie la fiche de ton modèle."
+          : "Les portables n'ont souvent qu'un emplacement M.2 : tu remplaces alors ton SSD actuel (clonage du disque à prévoir).",
+      });
+    }
     if (s.iface === "SATA") {
       checks.push({ label: "Branchement", status: "ok", detail: "Port SATA + câble SATA (souvent fourni avec la carte mère) + câble d'alimentation SATA." });
       if (m2Free && m2Free > 0) notes.push("Un SSD NVMe est 3 à 6 fois plus rapide pour un prix proche : préfère-le si tu as un emplacement M.2 libre.");

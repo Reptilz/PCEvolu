@@ -33,6 +33,22 @@ Prérequis : Node 18+, Rust (rustup), Visual Studio Build Tools avec « Dévelop
 | `src/upgrade/engine.ts` | Moteur de compatibilité : vérifie chaque contrainte et ajoute les composants nécessaires |
 | `src/upgrade/UpgradesView.tsx` | Vue « Upgrades » : propositions par catégorie, contrôles, liste d'achat |
 
+## Reconnaissance des composants
+
+- **Processeurs** (`src/upgrade/cpudb.ts`) : décodés depuis leur nom. « i5-10600KF » donne la génération, la gamme, l'overclocking et l'iGPU, puis socket, RAM, consommation et indices de performance. Ça couvre les Intel Core de 4e à 14e génération, les Core Ultra 200S, les Pentium/Celeron récents et tous les Ryzen, portables compris.
+- **Cartes graphiques** (`src/upgrade/gpudb.ts`) : la table couvre NVIDIA GTX 10 → RTX 50, AMD RX 400 → RX 9000 et Intel Arc, plus les puces intégrées. Les versions portables valent ≈ 70 % des versions de bureau, et les modèles absents sont estimés d'après le plus proche.
+- **Chipsets** (`src/upgrade/catalog.ts`) : 55 chipsets, du LGA1150 (DDR3) à l'AM5.
+- **Cas particuliers** : sur un PC portable, on ne propose ni processeur ni carte graphique (soudés). Sur un PC de marque (Dell, HP, Lenovo…), l'app prévient que l'alim et la carte mère sont souvent propriétaires. En DDR3, elle oriente vers une nouvelle plateforme.
+
+```bash
+npm test                         # reconnaissance de ~100 noms réels (processeurs, cartes graphiques, chipsets)
+npx tsx scripts/test-engine.ts   # propositions sur 4 configs types (PC de marque, portable, entrée de gamme, haut de gamme)
+```
+
+## Catalogue téléchargeable
+
+`npm run catalog` exporte le catalogue dans `data/catalog.json`. Au démarrage, l'app télécharge ce fichier (`VITE_CATALOG_URL`) et l'utilise s'il est plus récent (`CATALOG_VERSION`). On peut donc ajouter des composants sans publier de nouvelle version de l'app.
+
 ## Moteur d'upgrades
 
 Pour chaque composant candidat, le moteur vérifie les contraintes face à la config actuelle. Quand une contrainte échoue et qu'un autre composant la résout, il l'ajoute à la proposition :

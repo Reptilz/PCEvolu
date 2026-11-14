@@ -20,7 +20,7 @@ export const GLOBAL_EXCLUDE =
   /reconditionn|occasion|seconde main|refurb|renewed|ricondizionat|remis a neuf|pieces detachees|\bvends\b|\s\+\s/;
 
 /** Vendeurs d'occasion ou de reconditionné : leurs offres ne reflètent pas le prix du neuf. */
-export const MERCHANT_EXCLUDE = /leboncoin|beebs|back ?market|ebay|vinted|factorefurb|renewtech|label emmaus|easycash|cash converters/;
+export const MERCHANT_EXCLUDE = /leboncoin|beebs|back ?market|ebay|vinted|factorefurb|renewtech|label emmaus|easycash|cash converters|stockx/;
 
 /** Exclusions par catégorie (PC complets, accessoires…). */
 export const CATEGORY_EXCLUDE: Record<string, RegExp> = {
@@ -47,7 +47,23 @@ export const QUERIES: Record<string, PriceQuery> = {
   "rx-9070": { q: "carte graphique Radeon RX 9070 16 Go", must: [/rx ?9070\b/], not: [/\bxt\b/, /\bgre\b/] },
   "rx-9070xt": { q: "carte graphique Radeon RX 9070 XT 16 Go", must: [/9070 ?xt/] },
 
+  "rtx-5050": { q: "carte graphique GeForce RTX 5050 8 Go", must: [/rtx ?5050\b/] },
+  "rtx-5090": { q: "carte graphique GeForce RTX 5090 32 Go", must: [/rtx ?5090\b/] },
+  "rx-9060xt-8": { q: "carte graphique Radeon RX 9060 XT 8 Go", must: [/9060 ?xt/, /\b8 ?g[ob]?\b/], not: [/16 ?g/] },
+  "arc-b570": { q: "carte graphique Intel Arc B570 10 Go", must: [/\bb570\b/] },
+  "arc-b580": { q: "carte graphique Intel Arc B580 12 Go", must: [/\bb580\b/] },
+
   // Processeurs (neufs)
+  "i3-12100f": { q: "processeur Intel Core i3-12100F", must: [/12100f/] },
+  "i9-14900k": { q: "processeur Intel Core i9-14900K", must: [/14900k\b/], not: [/14900ks/] },
+  "u9-285k": { q: "processeur Intel Core Ultra 9 285K", must: [/285k\b/] },
+  "r5-5500": { q: "processeur AMD Ryzen 5 5500", must: [/ryzen 5 5500\b/], not: [/5500 ?(x3d|gt|u)\b/] },
+  "r7-5700x": { q: "processeur AMD Ryzen 7 5700X", must: [/5700x\b/], not: [/5700x3d/] },
+  "r5-7500f": { q: "processeur AMD Ryzen 5 7500F", must: [/7500f/] },
+  "r7-9700x": { q: "processeur AMD Ryzen 7 9700X", must: [/9700x\b/] },
+  "r9-9900x": { q: "processeur AMD Ryzen 9 9900X", must: [/9900x\b/], not: [/9900x3d/] },
+  "r9-9950x": { q: "processeur AMD Ryzen 9 9950X", must: [/9950x\b/], not: [/9950x3d/] },
+  "r9-9950x3d": { q: "processeur AMD Ryzen 9 9950X3D", must: [/9950x3d/] },
   "i5-12400f": { q: "processeur Intel Core i5-12400F", must: [/12400f/] },
   "i5-14400f": { q: "processeur Intel Core i5-14400F", must: [/14400f/] },
   "i5-14600kf": { q: "processeur Intel Core i5-14600KF", must: [/14600kf/] },

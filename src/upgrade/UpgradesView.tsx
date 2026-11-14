@@ -82,8 +82,14 @@ export function UpgradesView({ report, answers, setAnswers, pricesVersion }: { r
 }
 
 function emptyMessage(tab: Category, p: Profile) {
-  if (tab === "gpu" && !p.gpu) return "Ta carte graphique n'est pas encore dans le catalogue : impossible de calculer un gain fiable.";
-  if (tab === "cpu" && !p.cpu) return "Ton processeur n'est pas encore dans le catalogue.";
+  if (p.isLaptop && (tab === "gpu" || tab === "cpu"))
+    return "Sur un PC portable, le processeur et la carte graphique sont soudés à la carte mère : impossible de les changer. Les gains possibles passent par la RAM et le stockage.";
+  if (p.isLaptop && tab === "ram")
+    return "PC portable : la RAM est au format SO-DIMM, et souvent soudée sur les modèles récents. Vérifie dans la fiche de ton modèle s'il reste un emplacement libre.";
+  if (tab === "ram" && p.ramType === "DDR3")
+    return "Ton PC utilise de la DDR3, qui n'est plus vendue neuve. Plutôt que d'en racheter, mieux vaut investir dans une nouvelle plateforme (onglet Processeur).";
+  if (tab === "gpu" && !p.gpu) return "Ta carte graphique n'a pas été reconnue : impossible de calculer un gain fiable.";
+  if (tab === "cpu" && !p.cpu) return "Ton processeur n'a pas été reconnu.";
   if (tab === "ram" && !p.ramType) return "Type de mémoire non détecté.";
   return "Aucun upgrade pertinent dans le catalogue pour l'instant : ce composant est déjà au niveau.";
 }

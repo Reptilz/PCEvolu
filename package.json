@@ -9,7 +9,9 @@
     "tauri": "tauri",
     "app": "tauri dev",
     "package": "tauri build",
-    "prices": "tsx scripts/update-prices.ts"
+    "prices": "tsx scripts/update-prices.ts",
+    "catalog": "tsx scripts/build-catalog.ts",
+    "test": "tsx scripts/test-recognition.ts"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.1.0",

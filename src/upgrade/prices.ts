@@ -34,19 +34,21 @@ export interface PricesFile {
  * À renseigner une fois le dépôt GitHub créé, par exemple :
  * https://raw.githubusercontent.com/<compte>/<depot>/main/data/prices.json
  */
-export const PRICES_URL: string | null = import.meta.env.VITE_PRICES_URL ?? null;
+export const PRICES_URL: string | null = import.meta.env?.VITE_PRICES_URL ?? null;
 
 const CACHE_KEY = "pcevolu.prices.v1";
-const ALL = [...GPUS, ...CPUS, ...BOARDS, ...RAM_KITS, ...SSDS, ...PSUS, ...COOLERS, ...FAN_KITS, ...CASES];
+/** Tous les composants du catalogue, relus à chaque fois (le catalogue peut avoir été remplacé par un plus récent). */
+const all = () => [...GPUS, ...CPUS, ...BOARDS, ...RAM_KITS, ...SSDS, ...PSUS, ...COOLERS, ...FAN_KITS, ...CASES];
 /** Prix du catalogue, conservés pour pouvoir y revenir. */
-const BASE = new Map(ALL.map((p) => [p.id, p.price]));
+const BASE = new Map<string, number | undefined>();
 
 let current: PricesFile | undefined;
 
 /** Remplace les prix du catalogue par ceux du relevé (sans toucher aux composants absents du relevé). */
 function apply(file: PricesFile) {
   current = file;
-  for (const p of ALL) {
+  for (const p of all()) {
+    if (!BASE.has(p.id)) BASE.set(p.id, p.price);
     const live = file.items[p.id];
     (p as { price?: number }).price = live ? live.price : BASE.get(p.id);
   }

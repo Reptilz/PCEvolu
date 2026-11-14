@@ -8,6 +8,7 @@ import { Icon, type IconName } from "./icons";
 import { UpgradesView } from "./upgrade/UpgradesView";
 import { loadAnswers, type Answers } from "./upgrade/profile";
 import { loadPrices } from "./upgrade/prices";
+import { loadCatalog } from "./upgrade/catalog-remote";
 
 type View = "overview" | "improve" | "upgrades" | "components";
 
@@ -34,7 +35,10 @@ export default function App() {
   const [pricesVersion, setPricesVersion] = useState(0);
 
   useEffect(() => {
-    loadPrices().then(() => setPricesVersion((v) => v + 1));
+    // Catalogue d'abord (il peut ajouter des composants), puis les prix du marché.
+    loadCatalog()
+      .then(() => loadPrices())
+      .then(() => setPricesVersion((v) => v + 1));
   }, []);
 
   const scan = useCallback(async () => {

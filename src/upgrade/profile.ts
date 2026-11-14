@@ -3,7 +3,7 @@
 
 import type { Report } from "../types";
 import type { BoardSpec, ChipsetSpec, CpuSpec, FormFactor, GpuSpec, RamType, Socket } from "./types";
-import { CASE_GPU_LENGTH, COOLER_CAPACITY, findBoard, findChipset, findCpu, findGpu } from "./catalog";
+import { CASE_GPU_LENGTH, COOLER_CAPACITY, OEM_BRANDS, findBoard, findChipset, findCpu, findGpu } from "./catalog";
 import { clean } from "../format";
 
 // ---------------------------------------------------------------------------
@@ -74,6 +74,11 @@ export interface Profile {
   chipset?: ChipsetSpec;
   socket?: Socket;
   formFactor?: FormFactor;
+  /** PC portable : processeur et carte graphique soudés. */
+  isLaptop: boolean;
+  /** PC de marque (Dell, HP, Lenovo…) : alimentation, carte mère et boîtier souvent propriétaires. */
+  isOem: boolean;
+  manufacturer?: string;
 
   ramType?: RamType;
   ramModules: number;
@@ -116,7 +121,8 @@ export function buildProfile(r: Report, a: Answers): Profile {
   const socket = board?.socket ?? chipset?.socket ?? cpu?.socket;
 
   const mods = r.memory.modules;
-  const ramType = (mods[0]?.kind === "DDR4" || mods[0]?.kind === "DDR5" ? mods[0].kind : undefined) ?? board?.ramType;
+  const kind = mods[0]?.kind;
+  const ramType = (kind === "DDR3" || kind === "DDR4" || kind === "DDR5" ? kind : undefined) ?? board?.ramType;
   const ramMts = mods[0]?.configuredMts ?? mods[0]?.speedMts;
   const cpuRamMax = ramType ? cpu?.ramMaxMts[ramType] : undefined;
   // Sans overclocking mémoire autorisé, la RAM est bridée à la vitesse officielle du processeur.
@@ -126,12 +132,22 @@ export function buildProfile(r: Report, a: Answers): Profile {
   let pcieGen = board?.pcieGpu ?? chipset?.pcieGpu;
   if (pcieGen && cpu?.gen === "intel-10") pcieGen = 3;
   if (pcieGen && cpu?.gen === "amd-zen1") pcieGen = 3;
+  // Carte mère non reconnue : on déduit la génération PCIe du processeur.
+  if (!pcieGen && cpu) {
+    const g = cpu.gen;
+    pcieGen = g === "intel-12" || g === "intel-13" || g === "intel-14" || g === "amd-zen2" || g === "amd-zen3" ? 4
+      : g === "intel-ultra2" || g === "amd-zen4" || g === "amd-zen5" ? 4 : 3;
+  }
+
+  const isLaptop = r.system.isLaptop || !!cpu?.mobile || !!gpu?.mobile;
+  const isOem = !isLaptop && OEM_BRANDS.test(r.system.manufacturer ?? "");
 
   const sys = r.volumes.find((v) => v.letter === "C:") ?? r.volumes[0];
 
   // Alimentation inconnue : on suppose qu'elle correspond au minimum recommandé pour la carte actuelle.
+  // Sans carte graphique dédiée, un PC de marque a souvent une petite alim (180-300 W).
   const psuKnown = a.psuWatts != null;
-  const psuWatts = a.psuWatts ?? gpu?.psuRec ?? 500;
+  const psuWatts = a.psuWatts ?? (gpu && !gpu.integrated ? gpu.psuRec : isOem ? 250 : 400);
 
   const gpuMaxMm = a.gpuMaxMm ?? (a.caseSize !== "unknown" ? CASE_GPU_LENGTH[a.caseSize] : undefined);
 
@@ -139,6 +155,7 @@ export function buildProfile(r: Report, a: Answers): Profile {
     cpuName, cpu, gpuName, gpu,
     cpuDisplay: clean(cpuName) || cpu?.name || "processeur", boardName, board, chipset, socket,
     formFactor: board?.formFactor ?? (a.caseSize === "small" ? "mATX" : undefined),
+    isLaptop, isOem, manufacturer: r.system.manufacturer,
     ramType,
     ramModules: mods.length,
     ramStickGb: mods[0]?.capacityBytes ? Math.round(mods[0].capacityBytes / GB) : undefined,

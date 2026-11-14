@@ -1,0 +1,3405 @@
+{
+ "version": 2,
+ "generatedAt": "2026-11-14T19:37:11.961Z",
+ "chipsets": [
+  {
+   "chipset": "H81",
+   "socket": "LGA1150",
+   "ramTypes": [
+    "DDR3"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-4"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "B85",
+   "socket": "LGA1150",
+   "ramTypes": [
+    "DDR3"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-4"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "H87",
+   "socket": "LGA1150",
+   "ramTypes": [
+    "DDR3"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-4"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "Q87",
+   "socket": "LGA1150",
+   "ramTypes": [
+    "DDR3"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-4"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "H97",
+   "socket": "LGA1150",
+   "ramTypes": [
+    "DDR3"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-4"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "Z87",
+   "socket": "LGA1150",
+   "ramTypes": [
+    "DDR3"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-4"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "Z97",
+   "socket": "LGA1150",
+   "ramTypes": [
+    "DDR3"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-4"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "H110",
+   "socket": "LGA1151",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-6",
+    "intel-7"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "B150",
+   "socket": "LGA1151",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-6",
+    "intel-7"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "H170",
+   "socket": "LGA1151",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-6",
+    "intel-7"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "Q170",
+   "socket": "LGA1151",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-6",
+    "intel-7"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "B250",
+   "socket": "LGA1151",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-6",
+    "intel-7"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "H270",
+   "socket": "LGA1151",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-6",
+    "intel-7"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "Q270",
+   "socket": "LGA1151",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-6",
+    "intel-7"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "Z170",
+   "socket": "LGA1151",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-6",
+    "intel-7"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "Z270",
+   "socket": "LGA1151",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-6",
+    "intel-7"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "H310",
+   "socket": "LGA1151",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-8",
+    "intel-9"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "B360",
+   "socket": "LGA1151",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-8",
+    "intel-9"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "B365",
+   "socket": "LGA1151",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-8",
+    "intel-9"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "H370",
+   "socket": "LGA1151",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-8",
+    "intel-9"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "Q370",
+   "socket": "LGA1151",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-8",
+    "intel-9"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "Z370",
+   "socket": "LGA1151",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-8",
+    "intel-9"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "Z390",
+   "socket": "LGA1151",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-8",
+    "intel-9"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "H410",
+   "socket": "LGA1200",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-10"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "B460",
+   "socket": "LGA1200",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-10"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "H470",
+   "socket": "LGA1200",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-10",
+    "intel-11"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "Z490",
+   "socket": "LGA1200",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 4,
+   "cpuGens": [
+    "intel-10",
+    "intel-11"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "H510",
+   "socket": "LGA1200",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "intel-10",
+    "intel-11"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "B560",
+   "socket": "LGA1200",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 4,
+   "cpuGens": [
+    "intel-10",
+    "intel-11"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "H570",
+   "socket": "LGA1200",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 4,
+   "cpuGens": [
+    "intel-10",
+    "intel-11"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "Z590",
+   "socket": "LGA1200",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 4,
+   "cpuGens": [
+    "intel-10",
+    "intel-11"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "H610",
+   "socket": "LGA1700",
+   "ramTypes": [
+    "DDR4",
+    "DDR5"
+   ],
+   "pcieGpu": 4,
+   "cpuGens": [
+    "intel-12",
+    "intel-13",
+    "intel-14"
+   ],
+   "ramOc": false,
+   "biosUpdateFor": [
+    "intel-13",
+    "intel-14"
+   ]
+  },
+  {
+   "chipset": "B660",
+   "socket": "LGA1700",
+   "ramTypes": [
+    "DDR4",
+    "DDR5"
+   ],
+   "pcieGpu": 4,
+   "cpuGens": [
+    "intel-12",
+    "intel-13",
+    "intel-14"
+   ],
+   "ramOc": true,
+   "biosUpdateFor": [
+    "intel-13",
+    "intel-14"
+   ]
+  },
+  {
+   "chipset": "H670",
+   "socket": "LGA1700",
+   "ramTypes": [
+    "DDR4",
+    "DDR5"
+   ],
+   "pcieGpu": 4,
+   "cpuGens": [
+    "intel-12",
+    "intel-13",
+    "intel-14"
+   ],
+   "ramOc": true,
+   "biosUpdateFor": [
+    "intel-13",
+    "intel-14"
+   ]
+  },
+  {
+   "chipset": "Z690",
+   "socket": "LGA1700",
+   "ramTypes": [
+    "DDR4",
+    "DDR5"
+   ],
+   "pcieGpu": 5,
+   "cpuGens": [
+    "intel-12",
+    "intel-13",
+    "intel-14"
+   ],
+   "ramOc": true,
+   "biosUpdateFor": [
+    "intel-13",
+    "intel-14"
+   ]
+  },
+  {
+   "chipset": "B760",
+   "socket": "LGA1700",
+   "ramTypes": [
+    "DDR4",
+    "DDR5"
+   ],
+   "pcieGpu": 4,
+   "cpuGens": [
+    "intel-12",
+    "intel-13",
+    "intel-14"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "H770",
+   "socket": "LGA1700",
+   "ramTypes": [
+    "DDR4",
+    "DDR5"
+   ],
+   "pcieGpu": 4,
+   "cpuGens": [
+    "intel-12",
+    "intel-13",
+    "intel-14"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "Z790",
+   "socket": "LGA1700",
+   "ramTypes": [
+    "DDR4",
+    "DDR5"
+   ],
+   "pcieGpu": 5,
+   "cpuGens": [
+    "intel-12",
+    "intel-13",
+    "intel-14"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "H810",
+   "socket": "LGA1851",
+   "ramTypes": [
+    "DDR5"
+   ],
+   "pcieGpu": 4,
+   "cpuGens": [
+    "intel-ultra2"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "B860",
+   "socket": "LGA1851",
+   "ramTypes": [
+    "DDR5"
+   ],
+   "pcieGpu": 5,
+   "cpuGens": [
+    "intel-ultra2"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "Z890",
+   "socket": "LGA1851",
+   "ramTypes": [
+    "DDR5"
+   ],
+   "pcieGpu": 5,
+   "cpuGens": [
+    "intel-ultra2"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "A320",
+   "socket": "AM4",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "amd-zen1",
+    "amd-zen2",
+    "amd-zen3"
+   ],
+   "ramOc": false,
+   "biosUpdateFor": [
+    "amd-zen3"
+   ]
+  },
+  {
+   "chipset": "B350",
+   "socket": "AM4",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "amd-zen1",
+    "amd-zen2",
+    "amd-zen3"
+   ],
+   "ramOc": true,
+   "biosUpdateFor": [
+    "amd-zen3"
+   ]
+  },
+  {
+   "chipset": "X370",
+   "socket": "AM4",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "amd-zen1",
+    "amd-zen2",
+    "amd-zen3"
+   ],
+   "ramOc": true,
+   "biosUpdateFor": [
+    "amd-zen3"
+   ]
+  },
+  {
+   "chipset": "B450",
+   "socket": "AM4",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "amd-zen1",
+    "amd-zen2",
+    "amd-zen3"
+   ],
+   "ramOc": true,
+   "biosUpdateFor": [
+    "amd-zen3"
+   ]
+  },
+  {
+   "chipset": "X470",
+   "socket": "AM4",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "amd-zen1",
+    "amd-zen2",
+    "amd-zen3"
+   ],
+   "ramOc": true,
+   "biosUpdateFor": [
+    "amd-zen3"
+   ]
+  },
+  {
+   "chipset": "A520",
+   "socket": "AM4",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "amd-zen2",
+    "amd-zen3"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "B550",
+   "socket": "AM4",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 4,
+   "cpuGens": [
+    "amd-zen2",
+    "amd-zen3"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "X570",
+   "socket": "AM4",
+   "ramTypes": [
+    "DDR4"
+   ],
+   "pcieGpu": 4,
+   "cpuGens": [
+    "amd-zen1",
+    "amd-zen2",
+    "amd-zen3"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "A620",
+   "socket": "AM5",
+   "ramTypes": [
+    "DDR5"
+   ],
+   "pcieGpu": 4,
+   "cpuGens": [
+    "amd-zen4",
+    "amd-zen5"
+   ],
+   "ramOc": true,
+   "biosUpdateFor": [
+    "amd-zen5"
+   ]
+  },
+  {
+   "chipset": "B650",
+   "socket": "AM5",
+   "ramTypes": [
+    "DDR5"
+   ],
+   "pcieGpu": 4,
+   "cpuGens": [
+    "amd-zen4",
+    "amd-zen5"
+   ],
+   "ramOc": true,
+   "biosUpdateFor": [
+    "amd-zen5"
+   ]
+  },
+  {
+   "chipset": "X670",
+   "socket": "AM5",
+   "ramTypes": [
+    "DDR5"
+   ],
+   "pcieGpu": 5,
+   "cpuGens": [
+    "amd-zen4",
+    "amd-zen5"
+   ],
+   "ramOc": true,
+   "biosUpdateFor": [
+    "amd-zen5"
+   ]
+  },
+  {
+   "chipset": "B840",
+   "socket": "AM5",
+   "ramTypes": [
+    "DDR5"
+   ],
+   "pcieGpu": 3,
+   "cpuGens": [
+    "amd-zen4",
+    "amd-zen5"
+   ],
+   "ramOc": false
+  },
+  {
+   "chipset": "B850",
+   "socket": "AM5",
+   "ramTypes": [
+    "DDR5"
+   ],
+   "pcieGpu": 5,
+   "cpuGens": [
+    "amd-zen4",
+    "amd-zen5"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "X870",
+   "socket": "AM5",
+   "ramTypes": [
+    "DDR5"
+   ],
+   "pcieGpu": 5,
+   "cpuGens": [
+    "amd-zen4",
+    "amd-zen5"
+   ],
+   "ramOc": true
+  }
+ ],
+ "cpus": [
+  {
+   "kind": "cpu",
+   "id": "i7-10700f",
+   "name": "Intel Core i7-10700F",
+   "brand": "Intel",
+   "socket": "LGA1200",
+   "gen": "intel-10",
+   "cores": 8,
+   "threads": 16,
+   "powerW": 224,
+   "gaming": 104,
+   "multi": 131,
+   "gpuCeiling": 161,
+   "ramMaxMts": {
+    "DDR4": 2933
+   },
+   "igpu": false,
+   "boxCooler": true,
+   "availability": "used",
+   "match": {
+    "re": "10700f",
+    "flags": "i"
+   },
+   "price": 140
+  },
+  {
+   "kind": "cpu",
+   "id": "i7-10700k",
+   "name": "Intel Core i7-10700K",
+   "brand": "Intel",
+   "socket": "LGA1200",
+   "gen": "intel-10",
+   "cores": 8,
+   "threads": 16,
+   "powerW": 229,
+   "gaming": 108,
+   "multi": 136,
+   "gpuCeiling": 167,
+   "ramMaxMts": {
+    "DDR4": 2933
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "used",
+   "match": {
+    "re": "10700k",
+    "flags": "i"
+   },
+   "price": 160
+  },
+  {
+   "kind": "cpu",
+   "id": "i9-10900f",
+   "name": "Intel Core i9-10900F",
+   "brand": "Intel",
+   "socket": "LGA1200",
+   "gen": "intel-10",
+   "cores": 10,
+   "threads": 20,
+   "powerW": 224,
+   "gaming": 108,
+   "multi": 163,
+   "gpuCeiling": 167,
+   "ramMaxMts": {
+    "DDR4": 2933
+   },
+   "igpu": false,
+   "boxCooler": true,
+   "availability": "used",
+   "match": {
+    "re": "10900f",
+    "flags": "i"
+   },
+   "price": 190
+  },
+  {
+   "kind": "cpu",
+   "id": "i9-10900k",
+   "name": "Intel Core i9-10900K",
+   "brand": "Intel",
+   "socket": "LGA1200",
+   "gen": "intel-10",
+   "cores": 10,
+   "threads": 20,
+   "powerW": 250,
+   "gaming": 112,
+   "multi": 169,
+   "gpuCeiling": 174,
+   "ramMaxMts": {
+    "DDR4": 2933
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "used",
+   "match": {
+    "re": "10900k",
+    "flags": "i"
+   },
+   "price": 220
+  },
+  {
+   "kind": "cpu",
+   "id": "i5-11400",
+   "name": "Intel Core i5-11400",
+   "brand": "Intel",
+   "socket": "LGA1200",
+   "gen": "intel-11",
+   "cores": 6,
+   "threads": 12,
+   "powerW": 154,
+   "gaming": 95,
+   "multi": 95,
+   "gpuCeiling": 147,
+   "ramMaxMts": {
+    "DDR4": 3200
+   },
+   "igpu": true,
+   "boxCooler": true,
+   "availability": "used",
+   "match": {
+    "re": "11400",
+    "flags": "i"
+   },
+   "price": 100
+  },
+  {
+   "kind": "cpu",
+   "id": "i7-11700k",
+   "name": "Intel Core i7-11700K",
+   "brand": "Intel",
+   "socket": "LGA1200",
+   "gen": "intel-11",
+   "cores": 8,
+   "threads": 16,
+   "powerW": 251,
+   "gaming": 114,
+   "multi": 144,
+   "gpuCeiling": 177,
+   "ramMaxMts": {
+    "DDR4": 3200
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "used",
+   "match": {
+    "re": "11700k",
+    "flags": "i"
+   },
+   "price": 170
+  },
+  {
+   "kind": "cpu",
+   "id": "r7-5800x",
+   "name": "AMD Ryzen 7 5800X",
+   "brand": "AMD",
+   "socket": "AM4",
+   "gen": "amd-zen3",
+   "cores": 8,
+   "threads": 16,
+   "powerW": 142,
+   "gaming": 114,
+   "multi": 144,
+   "gpuCeiling": 177,
+   "ramMaxMts": {
+    "DDR4": 3200
+   },
+   "igpu": false,
+   "boxCooler": false,
+   "availability": "used",
+   "match": {
+    "re": "5800x",
+    "flags": "i"
+   },
+   "price": 140
+  },
+  {
+   "kind": "cpu",
+   "id": "i3-12100f",
+   "name": "Intel Core i3-12100F",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-12",
+   "cores": 4,
+   "threads": 8,
+   "powerW": 89,
+   "gaming": 111,
+   "multi": 80,
+   "gpuCeiling": 172,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 4800
+   },
+   "igpu": false,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "12100f",
+    "flags": "i"
+   },
+   "price": 90
+  },
+  {
+   "kind": "cpu",
+   "id": "i5-12400f",
+   "name": "Intel Core i5-12400F",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-12",
+   "cores": 6,
+   "threads": 12,
+   "powerW": 117,
+   "gaming": 126,
+   "multi": 126,
+   "gpuCeiling": 195,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 4800
+   },
+   "igpu": false,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "12400f",
+    "flags": "i"
+   },
+   "price": 150
+  },
+  {
+   "kind": "cpu",
+   "id": "i5-14400f",
+   "name": "Intel Core i5-14400F",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-14",
+   "cores": 10,
+   "threads": 16,
+   "powerW": 148,
+   "gaming": 140,
+   "multi": 176,
+   "gpuCeiling": 217,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 4800
+   },
+   "igpu": false,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "14400f",
+    "flags": "i"
+   },
+   "price": 165
+  },
+  {
+   "kind": "cpu",
+   "id": "i5-14600kf",
+   "name": "Intel Core i5-14600KF",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-14",
+   "cores": 14,
+   "threads": 20,
+   "powerW": 181,
+   "gaming": 156,
+   "multi": 235,
+   "gpuCeiling": 242,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 5600
+   },
+   "igpu": false,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "14600kf",
+    "flags": "i"
+   },
+   "price": 245
+  },
+  {
+   "kind": "cpu",
+   "id": "i7-14700kf",
+   "name": "Intel Core i7-14700KF",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-14",
+   "cores": 20,
+   "threads": 28,
+   "powerW": 253,
+   "gaming": 168,
+   "multi": 331,
+   "gpuCeiling": 260,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 5600
+   },
+   "igpu": false,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "14700kf",
+    "flags": "i"
+   },
+   "price": 425
+  },
+  {
+   "kind": "cpu",
+   "id": "i9-14900k",
+   "name": "Intel Core i9-14900K",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-14",
+   "cores": 24,
+   "threads": 32,
+   "powerW": 253,
+   "gaming": 175,
+   "multi": 384,
+   "gpuCeiling": 271,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 5600
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "14900k",
+    "flags": "i"
+   },
+   "price": 520
+  },
+  {
+   "kind": "cpu",
+   "id": "u5-245kf",
+   "name": "Intel Core Ultra 5 245KF",
+   "brand": "Intel",
+   "socket": "LGA1851",
+   "gen": "intel-ultra2",
+   "cores": 14,
+   "threads": 14,
+   "powerW": 159,
+   "gaming": 146,
+   "multi": 165,
+   "gpuCeiling": 226,
+   "ramMaxMts": {
+    "DDR5": 6400
+   },
+   "igpu": false,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "245kf",
+    "flags": "i"
+   },
+   "price": 190
+  },
+  {
+   "kind": "cpu",
+   "id": "u7-265kf",
+   "name": "Intel Core Ultra 7 265KF",
+   "brand": "Intel",
+   "socket": "LGA1851",
+   "gen": "intel-ultra2",
+   "cores": 20,
+   "threads": 20,
+   "powerW": 250,
+   "gaming": 158,
+   "multi": 238,
+   "gpuCeiling": 245,
+   "ramMaxMts": {
+    "DDR5": 6400
+   },
+   "igpu": false,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "265kf",
+    "flags": "i"
+   },
+   "price": 340
+  },
+  {
+   "kind": "cpu",
+   "id": "u9-285k",
+   "name": "Intel Core Ultra 9 285K",
+   "brand": "Intel",
+   "socket": "LGA1851",
+   "gen": "intel-ultra2",
+   "cores": 24,
+   "threads": 24,
+   "powerW": 250,
+   "gaming": 164,
+   "multi": 286,
+   "gpuCeiling": 254,
+   "ramMaxMts": {
+    "DDR5": 6400
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "285k",
+    "flags": "i"
+   },
+   "price": 600
+  },
+  {
+   "kind": "cpu",
+   "id": "r5-5500",
+   "name": "AMD Ryzen 5 5500",
+   "brand": "AMD",
+   "socket": "AM4",
+   "gen": "amd-zen3",
+   "cores": 6,
+   "threads": 12,
+   "powerW": 88,
+   "gaming": 106,
+   "multi": 106,
+   "gpuCeiling": 164,
+   "ramMaxMts": {
+    "DDR4": 3200
+   },
+   "igpu": false,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "5500",
+    "flags": "i"
+   },
+   "price": 90
+  },
+  {
+   "kind": "cpu",
+   "id": "r5-5600",
+   "name": "AMD Ryzen 5 5600",
+   "brand": "AMD",
+   "socket": "AM4",
+   "gen": "amd-zen3",
+   "cores": 6,
+   "threads": 12,
+   "powerW": 88,
+   "gaming": 106,
+   "multi": 106,
+   "gpuCeiling": 164,
+   "ramMaxMts": {
+    "DDR4": 3200
+   },
+   "igpu": false,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "5600",
+    "flags": "i"
+   },
+   "price": 135
+  },
+  {
+   "kind": "cpu",
+   "id": "r7-5700x",
+   "name": "AMD Ryzen 7 5700X",
+   "brand": "AMD",
+   "socket": "AM4",
+   "gen": "amd-zen3",
+   "cores": 8,
+   "threads": 16,
+   "powerW": 142,
+   "gaming": 114,
+   "multi": 144,
+   "gpuCeiling": 177,
+   "ramMaxMts": {
+    "DDR4": 3200
+   },
+   "igpu": false,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "5700x",
+    "flags": "i"
+   },
+   "price": 170
+  },
+  {
+   "kind": "cpu",
+   "id": "r7-5700x3d",
+   "name": "AMD Ryzen 7 5700X3D",
+   "brand": "AMD",
+   "socket": "AM4",
+   "gen": "amd-zen3",
+   "cores": 8,
+   "threads": 16,
+   "powerW": 142,
+   "gaming": 140,
+   "multi": 137,
+   "gpuCeiling": 217,
+   "ramMaxMts": {
+    "DDR4": 3200
+   },
+   "igpu": false,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "5700x3d",
+    "flags": "i"
+   },
+   "price": 230
+  },
+  {
+   "kind": "cpu",
+   "id": "r5-7500f",
+   "name": "AMD Ryzen 5 7500F",
+   "brand": "AMD",
+   "socket": "AM5",
+   "gen": "amd-zen4",
+   "cores": 6,
+   "threads": 12,
+   "powerW": 88,
+   "gaming": 146,
+   "multi": 146,
+   "gpuCeiling": 226,
+   "ramMaxMts": {
+    "DDR5": 5200
+   },
+   "igpu": false,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "7500f",
+    "flags": "i"
+   },
+   "price": 160
+  },
+  {
+   "kind": "cpu",
+   "id": "r5-7600",
+   "name": "AMD Ryzen 5 7600",
+   "brand": "AMD",
+   "socket": "AM5",
+   "gen": "amd-zen4",
+   "cores": 6,
+   "threads": 12,
+   "powerW": 88,
+   "gaming": 146,
+   "multi": 146,
+   "gpuCeiling": 226,
+   "ramMaxMts": {
+    "DDR5": 5200
+   },
+   "igpu": true,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "7600",
+    "flags": "i"
+   },
+   "price": 180
+  },
+  {
+   "kind": "cpu",
+   "id": "r5-9600x",
+   "name": "AMD Ryzen 5 9600X",
+   "brand": "AMD",
+   "socket": "AM5",
+   "gen": "amd-zen5",
+   "cores": 6,
+   "threads": 12,
+   "powerW": 88,
+   "gaming": 160,
+   "multi": 160,
+   "gpuCeiling": 248,
+   "ramMaxMts": {
+    "DDR5": 5600
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "9600x",
+    "flags": "i"
+   },
+   "price": 190
+  },
+  {
+   "kind": "cpu",
+   "id": "r7-9700x",
+   "name": "AMD Ryzen 7 9700X",
+   "brand": "AMD",
+   "socket": "AM5",
+   "gen": "amd-zen5",
+   "cores": 8,
+   "threads": 16,
+   "powerW": 88,
+   "gaming": 166,
+   "multi": 209,
+   "gpuCeiling": 257,
+   "ramMaxMts": {
+    "DDR5": 5600
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "9700x",
+    "flags": "i"
+   },
+   "price": 300
+  },
+  {
+   "kind": "cpu",
+   "id": "r7-7800x3d",
+   "name": "AMD Ryzen 7 7800X3D",
+   "brand": "AMD",
+   "socket": "AM5",
+   "gen": "amd-zen4",
+   "cores": 8,
+   "threads": 16,
+   "powerW": 162,
+   "gaming": 185,
+   "multi": 182,
+   "gpuCeiling": 287,
+   "ramMaxMts": {
+    "DDR5": 5200
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "7800x3d",
+    "flags": "i"
+   },
+   "price": 320
+  },
+  {
+   "kind": "cpu",
+   "id": "r7-9800x3d",
+   "name": "AMD Ryzen 7 9800X3D",
+   "brand": "AMD",
+   "socket": "AM5",
+   "gen": "amd-zen5",
+   "cores": 8,
+   "threads": 16,
+   "powerW": 162,
+   "gaming": 210,
+   "multi": 206,
+   "gpuCeiling": 326,
+   "ramMaxMts": {
+    "DDR5": 5600
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "9800x3d",
+    "flags": "i"
+   },
+   "price": 490
+  },
+  {
+   "kind": "cpu",
+   "id": "r9-9900x",
+   "name": "AMD Ryzen 9 9900X",
+   "brand": "AMD",
+   "socket": "AM5",
+   "gen": "amd-zen5",
+   "cores": 12,
+   "threads": 24,
+   "powerW": 162,
+   "gaming": 170,
+   "multi": 296,
+   "gpuCeiling": 264,
+   "ramMaxMts": {
+    "DDR5": 5600
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "9900x",
+    "flags": "i"
+   },
+   "price": 400
+  },
+  {
+   "kind": "cpu",
+   "id": "r9-9950x",
+   "name": "AMD Ryzen 9 9950X",
+   "brand": "AMD",
+   "socket": "AM5",
+   "gen": "amd-zen5",
+   "cores": 16,
+   "threads": 32,
+   "powerW": 230,
+   "gaming": 170,
+   "multi": 373,
+   "gpuCeiling": 264,
+   "ramMaxMts": {
+    "DDR5": 5600
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "9950x",
+    "flags": "i"
+   },
+   "price": 560
+  },
+  {
+   "kind": "cpu",
+   "id": "r9-9950x3d",
+   "name": "AMD Ryzen 9 9950X3D",
+   "brand": "AMD",
+   "socket": "AM5",
+   "gen": "amd-zen5",
+   "cores": 16,
+   "threads": 32,
+   "powerW": 162,
+   "gaming": 212,
+   "multi": 362,
+   "gpuCeiling": 329,
+   "ramMaxMts": {
+    "DDR5": 5600
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "9950x3d",
+    "flags": "i"
+   },
+   "price": 700
+  }
+ ],
+ "gpus": [
+  {
+   "kind": "gpu",
+   "id": "gtx-1050",
+   "name": "GeForce GTX 1050",
+   "brand": "NVIDIA",
+   "vramGb": 2,
+   "tbp": 75,
+   "psuRec": 300,
+   "power": "none",
+   "lengthMm": 180,
+   "pcieLanes": 16,
+   "perf": 22,
+   "match": {
+    "re": "gtx 1050(?! ?ti)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "gtx-1050ti",
+   "name": "GeForce GTX 1050 Ti",
+   "brand": "NVIDIA",
+   "vramGb": 4,
+   "tbp": 75,
+   "psuRec": 300,
+   "power": "none",
+   "lengthMm": 190,
+   "pcieLanes": 16,
+   "perf": 28,
+   "match": {
+    "re": "gtx 1050 ?ti",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "gtx-1060-3",
+   "name": "GeForce GTX 1060 3 Go",
+   "brand": "NVIDIA",
+   "vramGb": 3,
+   "tbp": 120,
+   "psuRec": 400,
+   "power": "1x6",
+   "lengthMm": 230,
+   "pcieLanes": 16,
+   "perf": 40,
+   "match": {
+    "re": "gtx 1060.*3 ?g",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "gtx-1060",
+   "name": "GeForce GTX 1060 6 Go",
+   "brand": "NVIDIA",
+   "vramGb": 6,
+   "tbp": 120,
+   "psuRec": 400,
+   "power": "1x6",
+   "lengthMm": 230,
+   "pcieLanes": 16,
+   "perf": 44,
+   "match": {
+    "re": "gtx 1060",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "gtx-1070",
+   "name": "GeForce GTX 1070",
+   "brand": "NVIDIA",
+   "vramGb": 8,
+   "tbp": 150,
+   "psuRec": 500,
+   "power": "1x8",
+   "lengthMm": 260,
+   "pcieLanes": 16,
+   "perf": 57,
+   "match": {
+    "re": "gtx 1070(?! ?ti)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "gtx-1070ti",
+   "name": "GeForce GTX 1070 Ti",
+   "brand": "NVIDIA",
+   "vramGb": 8,
+   "tbp": 180,
+   "psuRec": 500,
+   "power": "1x8",
+   "lengthMm": 270,
+   "pcieLanes": 16,
+   "perf": 63,
+   "match": {
+    "re": "gtx 1070 ?ti",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "gtx-1080",
+   "name": "GeForce GTX 1080",
+   "brand": "NVIDIA",
+   "vramGb": 8,
+   "tbp": 180,
+   "psuRec": 500,
+   "power": "1x8",
+   "lengthMm": 270,
+   "pcieLanes": 16,
+   "perf": 68,
+   "match": {
+    "re": "gtx 1080(?! ?ti)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "gtx-1080ti",
+   "name": "GeForce GTX 1080 Ti",
+   "brand": "NVIDIA",
+   "vramGb": 11,
+   "tbp": 250,
+   "psuRec": 600,
+   "power": "2x8",
+   "lengthMm": 280,
+   "pcieLanes": 16,
+   "perf": 85,
+   "match": {
+    "re": "gtx 1080 ?ti",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "gtx-1650",
+   "name": "GeForce GTX 1650",
+   "brand": "NVIDIA",
+   "vramGb": 4,
+   "tbp": 75,
+   "psuRec": 300,
+   "power": "none",
+   "lengthMm": 190,
+   "pcieLanes": 16,
+   "perf": 32,
+   "match": {
+    "re": "gtx 1650(?! ?super)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "gtx-1650s",
+   "name": "GeForce GTX 1650 Super",
+   "brand": "NVIDIA",
+   "vramGb": 4,
+   "tbp": 100,
+   "psuRec": 350,
+   "power": "1x6",
+   "lengthMm": 200,
+   "pcieLanes": 16,
+   "perf": 42,
+   "match": {
+    "re": "gtx 1650 ?super",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "gtx-1660",
+   "name": "GeForce GTX 1660",
+   "brand": "NVIDIA",
+   "vramGb": 6,
+   "tbp": 120,
+   "psuRec": 450,
+   "power": "1x8",
+   "lengthMm": 220,
+   "pcieLanes": 16,
+   "perf": 48,
+   "match": {
+    "re": "gtx 1660(?! ?(super|ti))",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "gtx-1660s",
+   "name": "GeForce GTX 1660 Super",
+   "brand": "NVIDIA",
+   "vramGb": 6,
+   "tbp": 125,
+   "psuRec": 450,
+   "power": "1x8",
+   "lengthMm": 220,
+   "pcieLanes": 16,
+   "perf": 53,
+   "match": {
+    "re": "gtx 1660 ?super",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "gtx-1660ti",
+   "name": "GeForce GTX 1660 Ti",
+   "brand": "NVIDIA",
+   "vramGb": 6,
+   "tbp": 120,
+   "psuRec": 450,
+   "power": "1x8",
+   "lengthMm": 220,
+   "pcieLanes": 16,
+   "perf": 54,
+   "match": {
+    "re": "gtx 1660 ?ti",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-2060",
+   "name": "GeForce RTX 2060",
+   "brand": "NVIDIA",
+   "vramGb": 6,
+   "tbp": 160,
+   "psuRec": 500,
+   "power": "1x8",
+   "lengthMm": 240,
+   "pcieLanes": 16,
+   "perf": 66,
+   "match": {
+    "re": "rtx 2060(?! ?super)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-2060s",
+   "name": "GeForce RTX 2060 Super",
+   "brand": "NVIDIA",
+   "vramGb": 8,
+   "tbp": 175,
+   "psuRec": 550,
+   "power": "1x8",
+   "lengthMm": 250,
+   "pcieLanes": 16,
+   "perf": 76,
+   "match": {
+    "re": "rtx 2060 ?super",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-2070",
+   "name": "GeForce RTX 2070",
+   "brand": "NVIDIA",
+   "vramGb": 8,
+   "tbp": 175,
+   "psuRec": 550,
+   "power": "1x8",
+   "lengthMm": 260,
+   "pcieLanes": 16,
+   "perf": 79,
+   "match": {
+    "re": "rtx 2070(?! ?super)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-2070s",
+   "name": "GeForce RTX 2070 Super",
+   "brand": "NVIDIA",
+   "vramGb": 8,
+   "tbp": 215,
+   "psuRec": 650,
+   "power": "2x8",
+   "lengthMm": 270,
+   "pcieLanes": 16,
+   "perf": 87,
+   "match": {
+    "re": "rtx 2070 ?super",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-2080",
+   "name": "GeForce RTX 2080",
+   "brand": "NVIDIA",
+   "vramGb": 8,
+   "tbp": 215,
+   "psuRec": 650,
+   "power": "2x8",
+   "lengthMm": 270,
+   "pcieLanes": 16,
+   "perf": 92,
+   "match": {
+    "re": "rtx 2080(?! ?(super|ti))",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-2080s",
+   "name": "GeForce RTX 2080 Super",
+   "brand": "NVIDIA",
+   "vramGb": 8,
+   "tbp": 250,
+   "psuRec": 650,
+   "power": "2x8",
+   "lengthMm": 270,
+   "pcieLanes": 16,
+   "perf": 96,
+   "match": {
+    "re": "rtx 2080 ?super",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-2080ti",
+   "name": "GeForce RTX 2080 Ti",
+   "brand": "NVIDIA",
+   "vramGb": 11,
+   "tbp": 250,
+   "psuRec": 650,
+   "power": "2x8",
+   "lengthMm": 280,
+   "pcieLanes": 16,
+   "perf": 113,
+   "match": {
+    "re": "rtx 2080 ?ti",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-3050",
+   "name": "GeForce RTX 3050",
+   "brand": "NVIDIA",
+   "vramGb": 8,
+   "tbp": 130,
+   "psuRec": 550,
+   "power": "1x8",
+   "lengthMm": 230,
+   "pcieLanes": 8,
+   "perf": 52,
+   "match": {
+    "re": "rtx 3050",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-3060",
+   "name": "GeForce RTX 3060",
+   "brand": "NVIDIA",
+   "vramGb": 12,
+   "tbp": 170,
+   "psuRec": 550,
+   "power": "1x8",
+   "lengthMm": 240,
+   "pcieLanes": 16,
+   "perf": 78,
+   "match": {
+    "re": "rtx 3060(?! ?ti)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-3060ti",
+   "name": "GeForce RTX 3060 Ti",
+   "brand": "NVIDIA",
+   "vramGb": 8,
+   "tbp": 200,
+   "psuRec": 600,
+   "power": "1x8",
+   "lengthMm": 250,
+   "pcieLanes": 16,
+   "perf": 100,
+   "match": {
+    "re": "rtx 3060 ?ti",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-3070",
+   "name": "GeForce RTX 3070",
+   "brand": "NVIDIA",
+   "vramGb": 8,
+   "tbp": 220,
+   "psuRec": 650,
+   "power": "2x8",
+   "lengthMm": 270,
+   "pcieLanes": 16,
+   "perf": 113,
+   "match": {
+    "re": "rtx 3070(?! ?ti)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-3070ti",
+   "name": "GeForce RTX 3070 Ti",
+   "brand": "NVIDIA",
+   "vramGb": 8,
+   "tbp": 290,
+   "psuRec": 750,
+   "power": "2x8",
+   "lengthMm": 285,
+   "pcieLanes": 16,
+   "perf": 120,
+   "match": {
+    "re": "rtx 3070 ?ti",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-3080",
+   "name": "GeForce RTX 3080",
+   "brand": "NVIDIA",
+   "vramGb": 10,
+   "tbp": 320,
+   "psuRec": 750,
+   "power": "2x8",
+   "lengthMm": 300,
+   "pcieLanes": 16,
+   "perf": 145,
+   "match": {
+    "re": "rtx 3080(?! ?ti)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-3080ti",
+   "name": "GeForce RTX 3080 Ti",
+   "brand": "NVIDIA",
+   "vramGb": 12,
+   "tbp": 350,
+   "psuRec": 750,
+   "power": "2x8",
+   "lengthMm": 300,
+   "pcieLanes": 16,
+   "perf": 160,
+   "match": {
+    "re": "rtx 3080 ?ti",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-3090",
+   "name": "GeForce RTX 3090",
+   "brand": "NVIDIA",
+   "vramGb": 24,
+   "tbp": 350,
+   "psuRec": 750,
+   "power": "2x8",
+   "lengthMm": 310,
+   "pcieLanes": 16,
+   "perf": 165,
+   "match": {
+    "re": "rtx 3090(?! ?ti)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-3090ti",
+   "name": "GeForce RTX 3090 Ti",
+   "brand": "NVIDIA",
+   "vramGb": 24,
+   "tbp": 450,
+   "psuRec": 850,
+   "power": "12V-2x6",
+   "lengthMm": 320,
+   "pcieLanes": 16,
+   "perf": 178,
+   "match": {
+    "re": "rtx 3090 ?ti",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-4060",
+   "name": "GeForce RTX 4060",
+   "brand": "NVIDIA",
+   "vramGb": 8,
+   "tbp": 115,
+   "psuRec": 550,
+   "power": "1x8",
+   "lengthMm": 230,
+   "pcieLanes": 8,
+   "perf": 92,
+   "match": {
+    "re": "rtx 4060(?! ?ti)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-4060ti",
+   "name": "GeForce RTX 4060 Ti",
+   "brand": "NVIDIA",
+   "vramGb": 8,
+   "tbp": 160,
+   "psuRec": 550,
+   "power": "1x8",
+   "lengthMm": 250,
+   "pcieLanes": 8,
+   "perf": 106,
+   "match": {
+    "re": "rtx 4060 ?ti",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-4070",
+   "name": "GeForce RTX 4070",
+   "brand": "NVIDIA",
+   "vramGb": 12,
+   "tbp": 200,
+   "psuRec": 650,
+   "power": "12V-2x6",
+   "lengthMm": 260,
+   "pcieLanes": 16,
+   "perf": 145,
+   "match": {
+    "re": "rtx 4070(?! ?(super|ti))",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-4070s",
+   "name": "GeForce RTX 4070 Super",
+   "brand": "NVIDIA",
+   "vramGb": 12,
+   "tbp": 220,
+   "psuRec": 650,
+   "power": "12V-2x6",
+   "lengthMm": 270,
+   "pcieLanes": 16,
+   "perf": 165,
+   "match": {
+    "re": "rtx 4070 ?super",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-4070ti",
+   "name": "GeForce RTX 4070 Ti",
+   "brand": "NVIDIA",
+   "vramGb": 12,
+   "tbp": 285,
+   "psuRec": 700,
+   "power": "12V-2x6",
+   "lengthMm": 300,
+   "pcieLanes": 16,
+   "perf": 178,
+   "match": {
+    "re": "rtx 4070 ?ti(?! ?super)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-4070tis",
+   "name": "GeForce RTX 4070 Ti Super",
+   "brand": "NVIDIA",
+   "vramGb": 16,
+   "tbp": 285,
+   "psuRec": 700,
+   "power": "12V-2x6",
+   "lengthMm": 300,
+   "pcieLanes": 16,
+   "perf": 192,
+   "match": {
+    "re": "rtx 4070 ?ti ?super",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-4080",
+   "name": "GeForce RTX 4080",
+   "brand": "NVIDIA",
+   "vramGb": 16,
+   "tbp": 320,
+   "psuRec": 750,
+   "power": "12V-2x6",
+   "lengthMm": 330,
+   "pcieLanes": 16,
+   "perf": 220,
+   "match": {
+    "re": "rtx 4080(?! ?super)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-4080s",
+   "name": "GeForce RTX 4080 Super",
+   "brand": "NVIDIA",
+   "vramGb": 16,
+   "tbp": 320,
+   "psuRec": 750,
+   "power": "12V-2x6",
+   "lengthMm": 330,
+   "pcieLanes": 16,
+   "perf": 224,
+   "match": {
+    "re": "rtx 4080 ?super",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-4090",
+   "name": "GeForce RTX 4090",
+   "brand": "NVIDIA",
+   "vramGb": 24,
+   "tbp": 450,
+   "psuRec": 850,
+   "power": "12V-2x6",
+   "lengthMm": 340,
+   "pcieLanes": 16,
+   "perf": 285,
+   "match": {
+    "re": "rtx 4090",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-5050",
+   "name": "GeForce RTX 5050",
+   "brand": "NVIDIA",
+   "vramGb": 8,
+   "tbp": 130,
+   "psuRec": 550,
+   "power": "1x8",
+   "lengthMm": 220,
+   "pcieLanes": 8,
+   "perf": 82,
+   "match": {
+    "re": "rtx 5050",
+    "flags": ""
+   },
+   "availability": "new",
+   "price": 330
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-5060",
+   "name": "GeForce RTX 5060 8 Go",
+   "brand": "NVIDIA",
+   "vramGb": 8,
+   "tbp": 145,
+   "psuRec": 550,
+   "power": "1x8",
+   "lengthMm": 240,
+   "pcieLanes": 8,
+   "perf": 112,
+   "match": {
+    "re": "rtx 5060(?! ?ti)",
+    "flags": ""
+   },
+   "availability": "new",
+   "price": 500
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-5060ti-8",
+   "name": "GeForce RTX 5060 Ti 8 Go",
+   "brand": "NVIDIA",
+   "vramGb": 8,
+   "tbp": 180,
+   "psuRec": 600,
+   "power": "1x8",
+   "lengthMm": 280,
+   "pcieLanes": 8,
+   "perf": 125,
+   "match": {
+    "re": "rtx 5060 ?ti.*\\b8 ?g",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-5060ti-16",
+   "name": "GeForce RTX 5060 Ti 16 Go",
+   "brand": "NVIDIA",
+   "vramGb": 16,
+   "tbp": 180,
+   "psuRec": 600,
+   "power": "1x8",
+   "lengthMm": 280,
+   "pcieLanes": 8,
+   "perf": 128,
+   "match": {
+    "re": "rtx 5060 ?ti",
+    "flags": ""
+   },
+   "availability": "new",
+   "price": 920
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-5070",
+   "name": "GeForce RTX 5070 12 Go",
+   "brand": "NVIDIA",
+   "vramGb": 12,
+   "tbp": 250,
+   "psuRec": 650,
+   "power": "12V-2x6",
+   "lengthMm": 300,
+   "pcieLanes": 16,
+   "perf": 162,
+   "match": {
+    "re": "rtx 5070(?! ?ti)",
+    "flags": ""
+   },
+   "availability": "new",
+   "price": 1000
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-5070ti",
+   "name": "GeForce RTX 5070 Ti 16 Go",
+   "brand": "NVIDIA",
+   "vramGb": 16,
+   "tbp": 300,
+   "psuRec": 750,
+   "power": "12V-2x6",
+   "lengthMm": 330,
+   "pcieLanes": 16,
+   "perf": 205,
+   "match": {
+    "re": "rtx 5070 ?ti",
+    "flags": ""
+   },
+   "availability": "new",
+   "price": 1700
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-5080",
+   "name": "GeForce RTX 5080 16 Go",
+   "brand": "NVIDIA",
+   "vramGb": 16,
+   "tbp": 360,
+   "psuRec": 850,
+   "power": "12V-2x6",
+   "lengthMm": 340,
+   "pcieLanes": 16,
+   "perf": 245,
+   "match": {
+    "re": "rtx 5080",
+    "flags": ""
+   },
+   "availability": "new",
+   "price": 1950
+  },
+  {
+   "kind": "gpu",
+   "id": "rtx-5090",
+   "name": "GeForce RTX 5090 32 Go",
+   "brand": "NVIDIA",
+   "vramGb": 32,
+   "tbp": 575,
+   "psuRec": 1000,
+   "power": "12V-2x6",
+   "lengthMm": 340,
+   "pcieLanes": 16,
+   "perf": 330,
+   "match": {
+    "re": "rtx 5090",
+    "flags": ""
+   },
+   "availability": "new",
+   "price": 3800
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-460",
+   "name": "Radeon RX 460 / 560",
+   "brand": "AMD",
+   "vramGb": 4,
+   "tbp": 75,
+   "psuRec": 350,
+   "power": "none",
+   "lengthMm": 180,
+   "pcieLanes": 8,
+   "perf": 19,
+   "match": {
+    "re": "rx 5?[46]60(?!0)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-470",
+   "name": "Radeon RX 470 / 570",
+   "brand": "AMD",
+   "vramGb": 4,
+   "tbp": 150,
+   "psuRec": 450,
+   "power": "1x8",
+   "lengthMm": 230,
+   "pcieLanes": 16,
+   "perf": 38,
+   "match": {
+    "re": "rx [45]70(?!0)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-480",
+   "name": "Radeon RX 480 / 580",
+   "brand": "AMD",
+   "vramGb": 8,
+   "tbp": 185,
+   "psuRec": 500,
+   "power": "1x8",
+   "lengthMm": 240,
+   "pcieLanes": 16,
+   "perf": 44,
+   "match": {
+    "re": "rx [45]80(?!0)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-590",
+   "name": "Radeon RX 590",
+   "brand": "AMD",
+   "vramGb": 8,
+   "tbp": 225,
+   "psuRec": 500,
+   "power": "1x8",
+   "lengthMm": 250,
+   "pcieLanes": 16,
+   "perf": 49,
+   "match": {
+    "re": "rx 590(?!0)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "vega-56",
+   "name": "Radeon RX Vega 56",
+   "brand": "AMD",
+   "vramGb": 8,
+   "tbp": 210,
+   "psuRec": 650,
+   "power": "2x8",
+   "lengthMm": 270,
+   "pcieLanes": 16,
+   "perf": 62,
+   "match": {
+    "re": "vega 56",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "vega-64",
+   "name": "Radeon RX Vega 64",
+   "brand": "AMD",
+   "vramGb": 8,
+   "tbp": 295,
+   "psuRec": 750,
+   "power": "2x8",
+   "lengthMm": 280,
+   "pcieLanes": 16,
+   "perf": 68,
+   "match": {
+    "re": "vega 64",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-5500xt",
+   "name": "Radeon RX 5500 XT",
+   "brand": "AMD",
+   "vramGb": 8,
+   "tbp": 130,
+   "psuRec": 450,
+   "power": "1x8",
+   "lengthMm": 220,
+   "pcieLanes": 8,
+   "perf": 45,
+   "match": {
+    "re": "rx 5500",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-5600xt",
+   "name": "Radeon RX 5600 XT",
+   "brand": "AMD",
+   "vramGb": 6,
+   "tbp": 150,
+   "psuRec": 550,
+   "power": "1x8",
+   "lengthMm": 240,
+   "pcieLanes": 16,
+   "perf": 72,
+   "match": {
+    "re": "rx 5600",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-5700",
+   "name": "Radeon RX 5700",
+   "brand": "AMD",
+   "vramGb": 8,
+   "tbp": 180,
+   "psuRec": 600,
+   "power": "2x8",
+   "lengthMm": 260,
+   "pcieLanes": 16,
+   "perf": 78,
+   "match": {
+    "re": "rx 5700(?! ?xt)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-5700xt",
+   "name": "Radeon RX 5700 XT",
+   "brand": "AMD",
+   "vramGb": 8,
+   "tbp": 225,
+   "psuRec": 600,
+   "power": "2x8",
+   "lengthMm": 270,
+   "pcieLanes": 16,
+   "perf": 88,
+   "match": {
+    "re": "rx 5700 ?xt",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-6400",
+   "name": "Radeon RX 6400",
+   "brand": "AMD",
+   "vramGb": 4,
+   "tbp": 53,
+   "psuRec": 300,
+   "power": "none",
+   "lengthMm": 170,
+   "pcieLanes": 4,
+   "perf": 30,
+   "match": {
+    "re": "rx 6400",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-6500xt",
+   "name": "Radeon RX 6500 XT",
+   "brand": "AMD",
+   "vramGb": 4,
+   "tbp": 107,
+   "psuRec": 400,
+   "power": "1x6",
+   "lengthMm": 200,
+   "pcieLanes": 4,
+   "perf": 33,
+   "match": {
+    "re": "rx 6500",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-6600",
+   "name": "Radeon RX 6600",
+   "brand": "AMD",
+   "vramGb": 8,
+   "tbp": 132,
+   "psuRec": 450,
+   "power": "1x8",
+   "lengthMm": 230,
+   "pcieLanes": 8,
+   "perf": 82,
+   "match": {
+    "re": "rx 6600(?! ?xt)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-6600xt",
+   "name": "Radeon RX 6600 XT / 6650 XT",
+   "brand": "AMD",
+   "vramGb": 8,
+   "tbp": 170,
+   "psuRec": 500,
+   "power": "1x8",
+   "lengthMm": 240,
+   "pcieLanes": 8,
+   "perf": 94,
+   "match": {
+    "re": "rx 66[05]0 ?xt",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-6700",
+   "name": "Radeon RX 6700",
+   "brand": "AMD",
+   "vramGb": 10,
+   "tbp": 175,
+   "psuRec": 550,
+   "power": "1x8",
+   "lengthMm": 250,
+   "pcieLanes": 16,
+   "perf": 103,
+   "match": {
+    "re": "rx 6700(?! ?xt)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-6700xt",
+   "name": "Radeon RX 6700 XT / 6750 XT",
+   "brand": "AMD",
+   "vramGb": 12,
+   "tbp": 230,
+   "psuRec": 650,
+   "power": "2x8",
+   "lengthMm": 270,
+   "pcieLanes": 16,
+   "perf": 114,
+   "match": {
+    "re": "rx 67[05]0 ?xt",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-6800",
+   "name": "Radeon RX 6800",
+   "brand": "AMD",
+   "vramGb": 16,
+   "tbp": 250,
+   "psuRec": 650,
+   "power": "2x8",
+   "lengthMm": 280,
+   "pcieLanes": 16,
+   "perf": 140,
+   "match": {
+    "re": "rx 6800(?! ?xt)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-6800xt",
+   "name": "Radeon RX 6800 XT",
+   "brand": "AMD",
+   "vramGb": 16,
+   "tbp": 300,
+   "psuRec": 750,
+   "power": "2x8",
+   "lengthMm": 300,
+   "pcieLanes": 16,
+   "perf": 162,
+   "match": {
+    "re": "rx 6800 ?xt",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-6900xt",
+   "name": "Radeon RX 6900 XT / 6950 XT",
+   "brand": "AMD",
+   "vramGb": 16,
+   "tbp": 335,
+   "psuRec": 850,
+   "power": "2x8",
+   "lengthMm": 300,
+   "pcieLanes": 16,
+   "perf": 177,
+   "match": {
+    "re": "rx 69[05]0",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-7600",
+   "name": "Radeon RX 7600 / 7600 XT",
+   "brand": "AMD",
+   "vramGb": 8,
+   "tbp": 165,
+   "psuRec": 550,
+   "power": "1x8",
+   "lengthMm": 240,
+   "pcieLanes": 8,
+   "perf": 93,
+   "match": {
+    "re": "rx 7600",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-7700xt",
+   "name": "Radeon RX 7700 XT",
+   "brand": "AMD",
+   "vramGb": 12,
+   "tbp": 245,
+   "psuRec": 700,
+   "power": "2x8",
+   "lengthMm": 270,
+   "pcieLanes": 16,
+   "perf": 130,
+   "match": {
+    "re": "rx 7700",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-7800xt",
+   "name": "Radeon RX 7800 XT",
+   "brand": "AMD",
+   "vramGb": 16,
+   "tbp": 263,
+   "psuRec": 700,
+   "power": "2x8",
+   "lengthMm": 280,
+   "pcieLanes": 16,
+   "perf": 155,
+   "match": {
+    "re": "rx 7800",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-7900gre",
+   "name": "Radeon RX 7900 GRE",
+   "brand": "AMD",
+   "vramGb": 16,
+   "tbp": 260,
+   "psuRec": 700,
+   "power": "2x8",
+   "lengthMm": 280,
+   "pcieLanes": 16,
+   "perf": 170,
+   "match": {
+    "re": "rx 7900 ?gre",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-7900xt",
+   "name": "Radeon RX 7900 XT",
+   "brand": "AMD",
+   "vramGb": 20,
+   "tbp": 315,
+   "psuRec": 750,
+   "power": "2x8",
+   "lengthMm": 300,
+   "pcieLanes": 16,
+   "perf": 200,
+   "match": {
+    "re": "rx 7900 ?xt(?! ?x)",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-7900xtx",
+   "name": "Radeon RX 7900 XTX",
+   "brand": "AMD",
+   "vramGb": 24,
+   "tbp": 355,
+   "psuRec": 800,
+   "power": "2x8",
+   "lengthMm": 320,
+   "pcieLanes": 16,
+   "perf": 230,
+   "match": {
+    "re": "rx 7900 ?xtx",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-9060xt-8",
+   "name": "Radeon RX 9060 XT 8 Go",
+   "brand": "AMD",
+   "vramGb": 8,
+   "tbp": 160,
+   "psuRec": 450,
+   "power": "1x8",
+   "lengthMm": 260,
+   "pcieLanes": 16,
+   "perf": 116,
+   "match": {
+    "re": "rx 9060 ?xt.*\\b8 ?g",
+    "flags": ""
+   },
+   "availability": "new",
+   "price": 520
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-9060xt-16",
+   "name": "Radeon RX 9060 XT 16 Go",
+   "brand": "AMD",
+   "vramGb": 16,
+   "tbp": 182,
+   "psuRec": 550,
+   "power": "1x8",
+   "lengthMm": 270,
+   "pcieLanes": 16,
+   "perf": 122,
+   "match": {
+    "re": "rx 9060",
+    "flags": ""
+   },
+   "availability": "new",
+   "price": 760
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-9070",
+   "name": "Radeon RX 9070 16 Go",
+   "brand": "AMD",
+   "vramGb": 16,
+   "tbp": 220,
+   "psuRec": 650,
+   "power": "2x8",
+   "lengthMm": 300,
+   "pcieLanes": 16,
+   "perf": 175,
+   "match": {
+    "re": "rx 9070(?! ?xt)",
+    "flags": ""
+   },
+   "availability": "new",
+   "price": 900
+  },
+  {
+   "kind": "gpu",
+   "id": "rx-9070xt",
+   "name": "Radeon RX 9070 XT 16 Go",
+   "brand": "AMD",
+   "vramGb": 16,
+   "tbp": 304,
+   "psuRec": 750,
+   "power": "2x8",
+   "lengthMm": 330,
+   "pcieLanes": 16,
+   "perf": 195,
+   "match": {
+    "re": "rx 9070 ?xt",
+    "flags": ""
+   },
+   "availability": "new",
+   "price": 1050
+  },
+  {
+   "kind": "gpu",
+   "id": "arc-a380",
+   "name": "Intel Arc A380",
+   "brand": "Intel",
+   "vramGb": 6,
+   "tbp": 75,
+   "psuRec": 400,
+   "power": "none",
+   "lengthMm": 190,
+   "pcieLanes": 8,
+   "perf": 30,
+   "match": {
+    "re": "arc a380",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "arc-a580",
+   "name": "Intel Arc A580",
+   "brand": "Intel",
+   "vramGb": 8,
+   "tbp": 185,
+   "psuRec": 550,
+   "power": "2x8",
+   "lengthMm": 250,
+   "pcieLanes": 16,
+   "perf": 75,
+   "match": {
+    "re": "arc a580",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "arc-a750",
+   "name": "Intel Arc A750",
+   "brand": "Intel",
+   "vramGb": 8,
+   "tbp": 225,
+   "psuRec": 600,
+   "power": "2x8",
+   "lengthMm": 270,
+   "pcieLanes": 16,
+   "perf": 82,
+   "match": {
+    "re": "arc a750",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "arc-a770",
+   "name": "Intel Arc A770",
+   "brand": "Intel",
+   "vramGb": 16,
+   "tbp": 225,
+   "psuRec": 600,
+   "power": "2x8",
+   "lengthMm": 270,
+   "pcieLanes": 16,
+   "perf": 90,
+   "match": {
+    "re": "arc a770",
+    "flags": ""
+   },
+   "availability": null
+  },
+  {
+   "kind": "gpu",
+   "id": "arc-b570",
+   "name": "Intel Arc B570",
+   "brand": "Intel",
+   "vramGb": 10,
+   "tbp": 150,
+   "psuRec": 450,
+   "power": "1x8",
+   "lengthMm": 250,
+   "pcieLanes": 8,
+   "perf": 85,
+   "match": {
+    "re": "arc b570",
+    "flags": ""
+   },
+   "availability": "new",
+   "price": 300
+  },
+  {
+   "kind": "gpu",
+   "id": "arc-b580",
+   "name": "Intel Arc B580",
+   "brand": "Intel",
+   "vramGb": 12,
+   "tbp": 190,
+   "psuRec": 550,
+   "power": "1x8",
+   "lengthMm": 270,
+   "pcieLanes": 8,
+   "perf": 95,
+   "match": {
+    "re": "arc b580",
+    "flags": ""
+   },
+   "availability": "new",
+   "price": 380
+  }
+ ],
+ "boards": [
+  {
+   "kind": "board",
+   "id": "msi-b460-torpedo",
+   "name": "MSI MAG B460 TORPEDO",
+   "socket": "LGA1200",
+   "chipset": "B460",
+   "formFactor": "ATX",
+   "ramType": "DDR4",
+   "ramSlots": 4,
+   "maxRamGb": 128,
+   "m2Slots": 2,
+   "pcieGpu": 3,
+   "availability": null,
+   "match": {
+    "re": "B460 TORPEDO",
+    "flags": "i"
+   }
+  },
+  {
+   "kind": "board",
+   "id": "msi-b460m-pro",
+   "name": "MSI B460M PRO",
+   "socket": "LGA1200",
+   "chipset": "B460",
+   "formFactor": "mATX",
+   "ramType": "DDR4",
+   "ramSlots": 2,
+   "maxRamGb": 64,
+   "m2Slots": 1,
+   "pcieGpu": 3,
+   "availability": null,
+   "match": {
+    "re": "B460M[- ]PRO",
+    "flags": "i"
+   }
+  },
+  {
+   "kind": "board",
+   "id": "msi-b450-tomahawk",
+   "name": "MSI B450 TOMAHAWK",
+   "socket": "AM4",
+   "chipset": "B450",
+   "formFactor": "ATX",
+   "ramType": "DDR4",
+   "ramSlots": 4,
+   "maxRamGb": 64,
+   "m2Slots": 1,
+   "pcieGpu": 3,
+   "availability": null,
+   "match": {
+    "re": "B450 TOMAHAWK",
+    "flags": "i"
+   }
+  },
+  {
+   "kind": "board",
+   "id": "msi-b550-a-pro",
+   "name": "MSI B550-A PRO",
+   "socket": "AM4",
+   "chipset": "B550",
+   "formFactor": "ATX",
+   "ramType": "DDR4",
+   "ramSlots": 4,
+   "maxRamGb": 128,
+   "m2Slots": 2,
+   "pcieGpu": 4,
+   "availability": "new",
+   "price": 115,
+   "match": {
+    "re": "B550-A PRO",
+    "flags": "i"
+   }
+  },
+  {
+   "kind": "board",
+   "id": "msi-b760-p-ddr4",
+   "name": "MSI PRO B760-P DDR4 II",
+   "socket": "LGA1700",
+   "chipset": "B760",
+   "formFactor": "ATX",
+   "ramType": "DDR4",
+   "ramSlots": 4,
+   "maxRamGb": 128,
+   "m2Slots": 2,
+   "pcieGpu": 4,
+   "availability": "new",
+   "price": 125,
+   "note": "Garde ta RAM DDR4 actuelle."
+  },
+  {
+   "kind": "board",
+   "id": "asus-b760m-a-d4",
+   "name": "ASUS PRIME B760M-A D4",
+   "socket": "LGA1700",
+   "chipset": "B760",
+   "formFactor": "mATX",
+   "ramType": "DDR4",
+   "ramSlots": 4,
+   "maxRamGb": 128,
+   "m2Slots": 2,
+   "pcieGpu": 4,
+   "availability": "new",
+   "price": 115,
+   "note": "Garde ta RAM DDR4 actuelle."
+  },
+  {
+   "kind": "board",
+   "id": "msi-b760-p-ddr5",
+   "name": "MSI PRO B760-P II (DDR5)",
+   "socket": "LGA1700",
+   "chipset": "B760",
+   "formFactor": "ATX",
+   "ramType": "DDR5",
+   "ramSlots": 4,
+   "maxRamGb": 192,
+   "m2Slots": 2,
+   "pcieGpu": 4,
+   "availability": "new",
+   "price": 145
+  },
+  {
+   "kind": "board",
+   "id": "msi-b860-p",
+   "name": "MSI PRO B860-P",
+   "socket": "LGA1851",
+   "chipset": "B860",
+   "formFactor": "ATX",
+   "ramType": "DDR5",
+   "ramSlots": 4,
+   "maxRamGb": 256,
+   "m2Slots": 3,
+   "pcieGpu": 5,
+   "availability": "new",
+   "price": 165
+  },
+  {
+   "kind": "board",
+   "id": "asus-b860m-a",
+   "name": "ASUS PRIME B860M-A",
+   "socket": "LGA1851",
+   "chipset": "B860",
+   "formFactor": "mATX",
+   "ramType": "DDR5",
+   "ramSlots": 4,
+   "maxRamGb": 256,
+   "m2Slots": 2,
+   "pcieGpu": 5,
+   "availability": "new",
+   "price": 150
+  },
+  {
+   "kind": "board",
+   "id": "msi-b650-p",
+   "name": "MSI PRO B650-P WIFI",
+   "socket": "AM5",
+   "chipset": "B650",
+   "formFactor": "ATX",
+   "ramType": "DDR5",
+   "ramSlots": 4,
+   "maxRamGb": 192,
+   "m2Slots": 2,
+   "pcieGpu": 4,
+   "availability": "new",
+   "price": 150,
+   "note": "Bouton Flash BIOS : mise à jour possible sans processeur."
+  },
+  {
+   "kind": "board",
+   "id": "gb-b650m-ds3h",
+   "name": "Gigabyte B650M DS3H",
+   "socket": "AM5",
+   "chipset": "B650",
+   "formFactor": "mATX",
+   "ramType": "DDR5",
+   "ramSlots": 4,
+   "maxRamGb": 192,
+   "m2Slots": 2,
+   "pcieGpu": 4,
+   "availability": "new",
+   "price": 125,
+   "note": "Q-Flash Plus : mise à jour du BIOS possible sans processeur."
+  },
+  {
+   "kind": "board",
+   "id": "gb-b850-eagle",
+   "name": "Gigabyte B850 EAGLE WIFI6E",
+   "socket": "AM5",
+   "chipset": "B850",
+   "formFactor": "ATX",
+   "ramType": "DDR5",
+   "ramSlots": 4,
+   "maxRamGb": 256,
+   "m2Slots": 3,
+   "pcieGpu": 5,
+   "availability": "new",
+   "price": 180
+  }
+ ],
+ "ram": [
+  {
+   "kind": "ram",
+   "id": "d4-1x8-3200",
+   "name": "Crucial 8 Go DDR4-3200",
+   "type": "DDR4",
+   "sticks": 1,
+   "gbPerStick": 8,
+   "mts": 3200,
+   "price": 25
+  },
+  {
+   "kind": "ram",
+   "id": "d4-1x16-3200",
+   "name": "Crucial 16 Go DDR4-3200",
+   "type": "DDR4",
+   "sticks": 1,
+   "gbPerStick": 16,
+   "mts": 3200,
+   "price": 45
+  },
+  {
+   "kind": "ram",
+   "id": "d4-2x8-3200",
+   "name": "Kit 2 × 8 Go DDR4-3200 CL16",
+   "type": "DDR4",
+   "sticks": 2,
+   "gbPerStick": 8,
+   "mts": 3200,
+   "price": 50
+  },
+  {
+   "kind": "ram",
+   "id": "d4-2x16-3200",
+   "name": "Kit 2 × 16 Go DDR4-3200 CL16",
+   "type": "DDR4",
+   "sticks": 2,
+   "gbPerStick": 16,
+   "mts": 3200,
+   "price": 85
+  },
+  {
+   "kind": "ram",
+   "id": "d4-2x32-3200",
+   "name": "Kit 2 × 32 Go DDR4-3200 CL16",
+   "type": "DDR4",
+   "sticks": 2,
+   "gbPerStick": 32,
+   "mts": 3200,
+   "price": 165
+  },
+  {
+   "kind": "ram",
+   "id": "d5-2x16-6000",
+   "name": "Kit 2 × 16 Go DDR5-6000 CL30",
+   "type": "DDR5",
+   "sticks": 2,
+   "gbPerStick": 16,
+   "mts": 6000,
+   "price": 140
+  },
+  {
+   "kind": "ram",
+   "id": "d5-2x32-6000",
+   "name": "Kit 2 × 32 Go DDR5-6000 CL30",
+   "type": "DDR5",
+   "sticks": 2,
+   "gbPerStick": 32,
+   "mts": 6000,
+   "price": 260
+  }
+ ],
+ "ssds": [
+  {
+   "kind": "ssd",
+   "id": "nvme-1tb",
+   "name": "SSD NVMe M.2 1 To (ex. Kingston NV3, WD SN7100)",
+   "iface": "NVMe4",
+   "tb": 1,
+   "price": 170
+  },
+  {
+   "kind": "ssd",
+   "id": "nvme-2tb",
+   "name": "SSD NVMe M.2 2 To (ex. Kingston NV3, WD SN7100)",
+   "iface": "NVMe4",
+   "tb": 2,
+   "price": 300
+  },
+  {
+   "kind": "ssd",
+   "id": "sata-1tb",
+   "name": "SSD SATA 2,5\" 1 To (ex. Crucial MX500)",
+   "iface": "SATA",
+   "tb": 1,
+   "price": 150
+  },
+  {
+   "kind": "ssd",
+   "id": "sata-2tb",
+   "name": "SSD SATA 2,5\" 2 To (ex. Crucial MX500)",
+   "iface": "SATA",
+   "tb": 2,
+   "price": 280
+  }
+ ],
+ "psus": [
+  {
+   "kind": "psu",
+   "id": "rm650e",
+   "name": "Corsair RM650e (ATX 3.1, 80+ Gold)",
+   "watts": 650,
+   "atx3": true,
+   "native12v2x6": true,
+   "pcie8pin": 2,
+   "price": 90
+  },
+  {
+   "kind": "psu",
+   "id": "rm750e",
+   "name": "Corsair RM750e (ATX 3.1, 80+ Gold)",
+   "watts": 750,
+   "atx3": true,
+   "native12v2x6": true,
+   "pcie8pin": 3,
+   "price": 105
+  },
+  {
+   "kind": "psu",
+   "id": "rm850e",
+   "name": "Corsair RM850e (ATX 3.1, 80+ Gold)",
+   "watts": 850,
+   "atx3": true,
+   "native12v2x6": true,
+   "pcie8pin": 3,
+   "price": 125
+  },
+  {
+   "kind": "psu",
+   "id": "rm1000e",
+   "name": "Corsair RM1000e (ATX 3.1, 80+ Gold)",
+   "watts": 1000,
+   "atx3": true,
+   "native12v2x6": true,
+   "pcie8pin": 4,
+   "price": 165
+  }
+ ],
+ "coolers": [
+  {
+   "kind": "cooler",
+   "id": "arctic-f36",
+   "name": "Arctic Freezer 36",
+   "type": "air",
+   "sockets": [
+    "LGA1700",
+    "LGA1851",
+    "AM4",
+    "AM5"
+   ],
+   "capacityW": 180,
+   "price": 32
+  },
+  {
+   "kind": "cooler",
+   "id": "pa120se",
+   "name": "Thermalright Peerless Assassin 120 SE",
+   "type": "air",
+   "sockets": [
+    "LGA1151",
+    "LGA1200",
+    "LGA1700",
+    "LGA1851",
+    "AM4",
+    "AM5"
+   ],
+   "capacityW": 240,
+   "price": 40
+  },
+  {
+   "kind": "cooler",
+   "id": "lf3-360",
+   "name": "Arctic Liquid Freezer III 360",
+   "type": "aio",
+   "sockets": [
+    "LGA1700",
+    "LGA1851",
+    "AM4",
+    "AM5"
+   ],
+   "capacityW": 300,
+   "price": 100
+  }
+ ],
+ "fans": [
+  {
+   "kind": "fans",
+   "id": "p12-5",
+   "name": "Arctic P12 PWM PST (lot de 5)",
+   "count": 5,
+   "price": 30
+  }
+ ],
+ "cases": [
+  {
+   "kind": "case",
+   "id": "lancool-216",
+   "name": "Lian Li Lancool 216",
+   "formFactors": [
+    "ATX",
+    "mATX",
+    "ITX"
+   ],
+   "maxGpuMm": 392,
+   "fansIncluded": 3,
+   "price": 100
+  },
+  {
+   "kind": "case",
+   "id": "pop-air",
+   "name": "Fractal Design Pop Air",
+   "formFactors": [
+    "ATX",
+    "mATX",
+    "ITX"
+   ],
+   "maxGpuMm": 405,
+   "fansIncluded": 3,
+   "price": 85
+  }
+ ]
+}
