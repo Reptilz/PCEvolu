@@ -33,6 +33,8 @@ interface RawBoard {
   biosFlashback?: boolean;
   biosMin: Record<string, RawBios | null>;
   source: string | null;
+  supportUrl?: string;
+  biosLatest?: BoardSpec["biosLatest"];
 }
 
 const FAMILY: Record<string, BiosFamily[]> = {
@@ -107,6 +109,8 @@ function convert(r: RawBoard): BoardSpec | undefined {
     biosFlashback: r.biosFlashback,
     biosMin,
     source: r.source ?? undefined,
+    supportUrl: r.supportUrl,
+    biosLatest: r.biosLatest,
     availability: null,
     // Windows donne le nom du modèle (MSI y ajoute son code « MS-7C81 ») : on compare les noms normalisés.
     match: undefined,

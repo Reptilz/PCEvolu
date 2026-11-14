@@ -3,7 +3,7 @@
 
 import type { Metrics, Report } from "./types";
 import { gb, yearsSince } from "./format";
-import { RAM_KITS, SSDS } from "./upgrade/catalog";
+import { RAM_KITS, SSDS, findBoard } from "./upgrade/catalog";
 import { priceInfo } from "./upgrade/prices";
 
 /** Fourchette de prix d'un composant du catalogue : min/max du marché si relevés, sinon son prix. */
@@ -162,13 +162,37 @@ export function recommend(r: Report, live?: Metrics): Recommendation[] {
 
   // --- BIOS ---------------------------------------------------------------
   const biosAge = yearsSince(r.board.biosDate);
-  if (biosAge && biosAge > 4) {
+  const board = findBoard(r.board.product);
+  const tool = flashTool(r.board.manufacturer ?? board?.name);
+  const latest = board?.biosLatest;
+  const installedAt = r.board.biosDate ? Date.parse(r.board.biosDate) : NaN;
+  if (latest && !Number.isNaN(installedAt) && installedAt < Date.parse(latest.date)) {
+    // Carte connue : on sait ce que les versions plus récentes apportent.
+    const missed = latest.history.filter((h) => Date.parse(h.date) > installedAt);
+    const security = missed.some((h) => /sécurité|secure boot|tpm|cve/i.test(h.what));
+    out.push({
+      id: "bios-old",
+      level: security ? "medium" : "low",
+      tag: security ? "Sécurité, gratuit" : "Facultatif, gratuit",
+      title: `BIOS à mettre à jour : tu as une version ${deMonth(r.board.biosDate!)}, la dernière date ${deMonth(latest.date)}`,
+      detail:
+        `Depuis ta version, ta ${board!.name.replace(/^(MSI|ASUS|Gigabyte|ASRock)\s+/i, "")} a reçu ${missed.length} mise${missed.length > 1 ? "s" : ""} à jour notable${missed.length > 1 ? "s" : ""} : ` +
+        `${missed.map((h) => `${h.what} (${monthYear(h.date)})`).join(", ")}. ` +
+        (security ? "Les correctifs de sécurité, Secure Boot et TPM comptent pour Windows 11. " : "") +
+        `Télécharge le BIOS ${latest.version} sur la page Support de ta carte mère (site du fabricant), copie-le sur une clé USB, puis installe-le depuis le BIOS avec ${tool}. ` +
+        "Ne coupe pas le courant pendant l'opération (quelques minutes). " +
+        `Dernière version relevée le ${new Date(latest.checked).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}.`,
+    });
+  } else if (biosAge && biosAge > 4) {
     out.push({
       id: "bios-old",
       level: "low",
       tag: "Facultatif",
       title: `BIOS vieux de ${Math.floor(biosAge)} ans (version ${r.board.biosVersion ?? "?"})`,
-      detail: `Une version plus récente existe peut-être sur le site du fabricant pour la ${r.board.product ?? "carte mère"}. Ne le mets à jour que si tu rencontres un problème : l'opération comporte un petit risque.`,
+      detail:
+        `Une version plus récente existe probablement sur le site du fabricant pour la ${r.board.product ?? "carte mère"} (page Support, onglet BIOS). ` +
+        `Les mises à jour apportent surtout des correctifs de sécurité et la prise en charge de nouveaux processeurs. ` +
+        `Si tu la fais, utilise ${tool} depuis le BIOS et ne coupe pas le courant pendant l'opération.`,
     });
   }
 
@@ -208,3 +232,17 @@ function ramKitRange() {
   const b = range("d4-2x16-3200", { min: 85, max: 300 });
   return { priceMin: a.min, priceMax: b.max };
 }
+
+/** L'outil de mise à jour intégré au BIOS de chaque fabricant. */
+function flashTool(maker?: string): string {
+  const m = (maker ?? "").toLowerCase();
+  if (/micro-star|msi/.test(m)) return "M-Flash";
+  if (/asus/.test(m)) return "EZ Flash";
+  if (/gigabyte/.test(m)) return "Q-Flash";
+  if (/asrock/.test(m)) return "Instant Flash";
+  return "l'outil de mise à jour intégré au BIOS";
+}
+
+const monthYear = (iso: string) => new Date(iso).toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+/** « de mars 2024 », « d'octobre 2020 ». */
+const deMonth = (iso: string) => { const m = monthYear(iso); return /^[aeiou]/i.test(m) ? `d'${m}` : `de ${m}`; };

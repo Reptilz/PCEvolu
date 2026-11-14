@@ -83,6 +83,10 @@ export interface BoardSpec {
   biosMin?: Partial<Record<BiosFamily, { version: string; date: string } | null>>;
   /** Fiche du fabricant de la carte mère. */
   source?: string;
+  /** Page de téléchargement du BIOS. */
+  supportUrl?: string;
+  /** Dernier BIOS publié (relevé à la date « checked ») et les versions notables depuis la sortie de la carte. */
+  biosLatest?: { version: string; date: string; checked: string; history: { version: string; date: string; what: string }[] };
 }
 
 /** Familles de processeurs pour lesquelles une carte mère peut demander un BIOS plus récent. */
