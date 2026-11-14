@@ -5,6 +5,8 @@ import {
   type FpsTarget, type Goal, type NeedStatus, type Resolution, type Usage, type Verdict,
 } from "./goal";
 import { Icon, type IconName } from "../icons";
+import type { OptimizeResult } from "./optimizer";
+import { PlanSection } from "./PlanView";
 
 // ---------------------------------------------------------------------------
 // Assistant « Mon objectif »
@@ -165,7 +167,9 @@ export function GoalWizard({ report, goal, onDone, onSkip }: { report: Report; g
 const STATUS_ICON: Record<NeedStatus, IconName> = { ok: "check", limited: "alert", missing: "cross" };
 const FIX_LABEL: Record<string, string> = { gpu: "Cartes graphiques", cpu: "Processeurs", ram: "Mémoire", storage: "Stockage" };
 
-export function GoalDiagnostic({ goal, verdict, onEdit, onUpgrades }: { goal: Goal; verdict: Verdict; onEdit: () => void; onUpgrades: (tab?: string) => void }) {
+export function GoalDiagnostic({ goal, verdict, plan, onBudget, onEdit, onUpgrades }: {
+  goal: Goal; verdict: Verdict; plan?: OptimizeResult; onBudget: (b: number | null) => void; onEdit: () => void; onUpgrades: (tab?: string) => void;
+}) {
   return (
     <>
       <header className="page-head">
@@ -178,7 +182,9 @@ export function GoalDiagnostic({ goal, verdict, onEdit, onUpgrades }: { goal: Go
         </button>
       </header>
 
-      <VerdictBanner verdict={verdict} onUpgrades={() => onUpgrades(verdict.needs.find((n) => n.fix && n.status !== "ok")?.fix)} />
+      <VerdictBanner verdict={verdict} />
+
+      {plan && <PlanSection goal={goal} result={plan} onBudget={onBudget} onDetails={(tab) => onUpgrades(tab)} />}
 
       {verdict.fps && (
         <section className="panel fps-panel">

@@ -59,6 +59,21 @@ Au premier lancement, un assistant demande l'usage (bureautique, jeu, création,
 npx tsx scripts/test-goal.ts   # diagnostic de plusieurs objectifs sur des configs types
 ```
 
+## Plan d'évolution (optimiseur)
+
+`src/upgrade/optimizer.ts` teste toutes les combinaisons de propositions (carte graphique × processeur/plateforme × RAM × stockage), soit environ 8 000 en ≈ 30 ms. Il dédoublonne les pièces communes : une seule alimentation, recalculée pour le nouveau couple processeur + carte graphique ; pas de RAM en plus si la nouvelle plateforme en apporte déjà. Chaque combinaison reçoit un score face à l'objectif, avec les mêmes seuils que le diagnostic.
+
+Résultat, affiché dans « Mon objectif » (`src/upgrade/PlanView.tsx`) :
+
+- **le meilleur plan dans le budget** : le moins cher qui atteint l'objectif, sinon celui qui s'en approche le plus ;
+- **le coût pour atteindre complètement l'objectif**, avec un bouton pour ajuster le budget ;
+- **les paliers** : chaque palier fait nettement mieux que tous les plans moins chers ;
+- un **curseur de budget** qui recalcule le plan en direct.
+
+```bash
+npx tsx scripts/test-plan.ts   # plans et paliers pour plusieurs configs et objectifs
+```
+
 ## Catalogue téléchargeable
 
 `npm run catalog` exporte le catalogue dans `data/catalog.json`. Au démarrage, l'app télécharge ce fichier (`VITE_CATALOG_URL`) et l'utilise s'il est plus récent (`CATALOG_VERSION`). On peut donc ajouter des composants sans publier de nouvelle version de l'app.

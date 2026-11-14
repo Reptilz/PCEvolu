@@ -9,6 +9,8 @@ import { UpgradesView } from "./upgrade/UpgradesView";
 import { buildProfile, loadAnswers, type Answers } from "./upgrade/profile";
 import { assess, loadGoal, saveGoal, type Goal, type Verdict } from "./upgrade/goal";
 import { GoalDiagnostic, GoalWizard, VerdictBanner } from "./upgrade/GoalViews";
+import { proposeAll } from "./upgrade/engine";
+import { optimize } from "./upgrade/optimizer";
 import { loadPrices } from "./upgrade/prices";
 import { loadCatalog } from "./upgrade/catalog-remote";
 
@@ -76,8 +78,20 @@ export default function App() {
   }, []);
 
   const recos = useMemo(() => (report ? recommend(report, live) : []), [report, live]);
+  const profile = useMemo(() => (report ? buildProfile(report, answers) : undefined), [report, answers]);
+  const verdict = useMemo(() => (report && profile ? assess(goal, profile, report) : undefined), [report, profile, goal]);
+  // Plan d'évolution : toutes les combinaisons d'upgrades, recalculées quand l'objectif, le budget ou les prix changent.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const verdict = useMemo(() => (report ? assess(goal, buildProfile(report, answers), report) : undefined), [report, answers, goal, pricesVersion]);
+  const proposals = useMemo(() => (profile ? proposeAll(profile) : undefined), [profile, pricesVersion]);
+  const plan = useMemo(
+    () => (report && profile && proposals && goal.configured ? optimize(goal, profile, report, proposals) : undefined),
+    [report, profile, proposals, goal],
+  );
+  const setBudget = (budget: number | null) => {
+    const g = { ...goal, budget };
+    saveGoal(g);
+    setGoal(g);
+  };
 
   const finishWizard = (g: Goal) => {
     saveGoal(g);
@@ -146,7 +160,7 @@ export default function App() {
           <Overview report={report} live={live} recos={recos} go={setView} verdict={goal.configured ? verdict : undefined} onSetGoal={() => setWizardOpen(true)} />
         )}
         {report && !wizardOpen && view === "goal" && verdict && (
-          <GoalDiagnostic goal={goal} verdict={verdict} onEdit={() => setWizardOpen(true)} onUpgrades={openUpgrades} />
+          <GoalDiagnostic goal={goal} verdict={verdict} plan={plan} onBudget={setBudget} onEdit={() => setWizardOpen(true)} onUpgrades={openUpgrades} />
         )}
         {report && !wizardOpen && view === "improve" && <Improve recos={recos} go={setView} />}
         {report && !wizardOpen && view === "upgrades" && verdict && (

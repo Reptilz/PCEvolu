@@ -15,7 +15,7 @@ import { BOARDS, CASES, COOLERS, CPUS, FAN_KITS, GPUS, PSUS, RAM_KITS, SSDS, CHI
 // Outils communs
 // ---------------------------------------------------------------------------
 
-const price = (p: Part) => ("price" in p && p.price != null ? p.price : 0);
+export const price = (p: Part) => ("price" in p && p.price != null ? p.price : 0);
 const ceil50 = (w: number) => Math.ceil(w / 50) * 50;
 
 /** Puissance nécessaire d'après la consommation réelle (CPU en jeu + carte + reste du PC, +30 % de marge). */
@@ -54,7 +54,7 @@ const pcie8ViaAdapter = (g: GpuSpec) => (g.tbp > 300 ? 3 : 2);
  * Vérifie l'alimentation pour une config donnée et ajoute une alimentation si besoin.
  * Partagé entre les upgrades de carte graphique et de processeur.
  */
-function checkPower(p: Profile, cpuPowerW: number | undefined, gpu: GpuSpec | undefined, checks: Check[], additions: Addition[], cause: string) {
+export function checkPower(p: Profile, cpuPowerW: number | undefined, gpu: GpuSpec | undefined, checks: Check[], additions: Addition[], cause: string) {
   if (!gpu) {
     checks.push({ label: "Alimentation", status: "warn", detail: "Carte graphique actuelle non reconnue : vérifie que ton alimentation suffit." });
     return;
@@ -284,6 +284,13 @@ export function proposeCpus(p: Profile): Proposal[] {
         checks.push({ label: "BIOS", status: "warn", detail: "Certaines cartes en stock ont un BIOS trop ancien pour ce processeur : prends un modèle avec bouton de mise à jour du BIOS sans CPU." });
       }
       notes.push("Changer de carte mère peut demander de réactiver Windows (connecte ta licence à ton compte Microsoft avant).");
+      if (p.isOem) {
+        checks.push({
+          label: "PC de marque",
+          status: "warn",
+          detail: `Les PC ${p.manufacturer ?? "de marque"} utilisent souvent un boîtier, une alimentation et une façade propriétaires : une carte mère standard peut ne pas se fixer ni se brancher. Vérifie le format exact, ou prévois un nouveau boîtier et une alimentation.`,
+        });
+      }
       if (c.gen === "intel-13" || c.gen === "intel-14") notes.push("Intel 13e/14e gén. : installe le dernier BIOS (microcode à jour) dès le montage.");
     }
 
