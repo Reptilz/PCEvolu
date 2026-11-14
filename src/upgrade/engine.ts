@@ -58,6 +58,20 @@ const pcie8ViaAdapter = (g: GpuSpec) => (g.tbp > 450 ? 4 : g.tbp > 300 ? 3 : 2);
  * Vérifie l'alimentation pour une config donnée et ajoute une alimentation si besoin.
  * Partagé entre les upgrades de carte graphique et de processeur.
  */
+/**
+ * Modèles réels vérifiés pour les alimentations génériques (fiches Corsair et MSI, novembre 2026).
+ * Attention au nom : les Corsair RMe « 2023 » n'ont pas le câble 12V-2x6 natif, seuls les « 2025 » l'ont.
+ */
+const PSU_MODELS: Record<string, ModelPick[]> = {
+  "psu-650": [{ name: "Corsair RM650e (modèle 2025, réf. CP-9020302)", why: ["80+ Gold", "ATX 3.1", "câble 12V-2x6 natif"] }],
+  "psu-750": [{ name: "Corsair RM750e (modèle 2025, réf. CP-9020295)", why: ["80+ Gold", "ATX 3.1", "câble 12V-2x6 natif"] }],
+  "psu-850": [
+    { name: "Corsair RM850e (modèle 2025, réf. CP-9020296)", why: ["80+ Gold", "ATX 3.1", "câble 12V-2x6 natif"] },
+    { name: "MSI MAG A850GL PCIE5", why: ["80+ Gold", "1 connecteur 16 broches + 4 × 8 broches"], url: "https://www.msi.com/Power-Supply/MAG-A850GL-PCIE5/Specification" },
+  ],
+  "psu-1000": [{ name: "Corsair RM1000e (modèle 2025, réf. CP-9020297)", why: ["80+ Gold", "ATX 3.1", "câble 12V-2x6 natif"] }],
+};
+
 export function checkPower(p: Profile, cpuPowerW: number | undefined, gpu: GpuSpec | undefined, checks: Check[], additions: Addition[], cause: string) {
   if (!gpu) {
     checks.push({ label: "Alimentation", status: "warn", detail: "Carte graphique actuelle non reconnue : vérifie que ton alimentation suffit." });
@@ -73,11 +87,11 @@ export function checkPower(p: Profile, cpuPowerW: number | undefined, gpu: GpuSp
       // Le calcul réel passe, seule la marge très prudente du fabricant n'est pas atteinte.
       const psu = cheapestPsu(need, needs16, pcie8Needed(gpu));
       checks.push({ label: "Alimentation", status: "warn", detail: `Ta config consommera ≈ ${Math.round(real / 1.3 / 10) * 10} W en jeu : tes ${p.psuWatts} W suffisent si ton alim est de bonne qualité (80+ Bronze ou mieux, moins de 6-7 ans). Le fabricant conseille ${need} W par prudence.` });
-      if (psu) additions.push({ role: "recommended", part: psu, quantity: 1, reason: `Si ton alimentation est d'entrée de gamme ou ancienne (${need} W conseillés par le fabricant).` });
+      if (psu) additions.push({ role: "recommended", part: psu, quantity: 1, models: PSU_MODELS[psu.id], reason: `Si ton alimentation est d'entrée de gamme ou ancienne (${need} W conseillés par le fabricant).` });
     } else {
       const psu = cheapestPsu(need, needs16, pcie8Needed(gpu));
       checks.push({ label: "Alimentation", status: "fail", detail: `${need} W conseillés ${cause}, ton alimentation ne fait que ${p.psuWatts} W.` });
-      if (psu) additions.push({ role: "required", part: psu, quantity: 1, reason: `Ton alimentation de ${p.psuWatts} W est trop juste (${need} W conseillés).` });
+      if (psu) additions.push({ role: "required", part: psu, quantity: 1, models: PSU_MODELS[psu.id], reason: `Ton alimentation de ${p.psuWatts} W est trop juste (${need} W conseillés).` });
     }
   } else if (p.psuWatts >= need) {
     checks.push({ label: "Alimentation", status: "warn", detail: `${need} W conseillés. Ta config actuelle laisse supposer au moins ${p.psuWatts} W : confirme en lisant l'étiquette de l'alim.` });
@@ -86,7 +100,7 @@ export function checkPower(p: Profile, cpuPowerW: number | undefined, gpu: GpuSp
   } else {
     const psu = cheapestPsu(need, needs16, pcie8Needed(gpu));
     checks.push({ label: "Alimentation", status: "warn", detail: `${need} W conseillés ${cause}. Ton alimentation n'est pas renseignée : vu ta carte actuelle, elle fait peut-être moins (≈ ${p.psuWatts} W supposés).` });
-    if (psu) additions.push({ role: "verify", part: psu, quantity: 1, reason: `Nécessaire si ton alimentation fait moins de ${need} W (lis l'étiquette sur son flanc).` });
+    if (psu) additions.push({ role: "verify", part: psu, quantity: 1, models: PSU_MODELS[psu.id], reason: `Nécessaire si ton alimentation fait moins de ${need} W (lis l'étiquette sur son flanc).` });
   }
 }
 
@@ -103,7 +117,7 @@ function relevantSharing(p: Profile): string[] {
   return (p.board?.sharing ?? []).filter((s) => !/Ryzen (\d )?8\d00G|Ryzen 8000G/.test(s) || apu8000);
 }
 
-export function proposeGpus(p: Profile): Proposal[] {
+export function proposeGpus(p: Profile, cpuProposals: Proposal[] = []): Proposal[] {
   // Sur un portable, la puce graphique est soudée : rien à proposer.
   if (p.isLaptop) return [];
   const cur = p.gpu;
@@ -235,6 +249,7 @@ export function proposeGpus(p: Profile): Proposal[] {
     if (thick) checks.push(thick);
 
     // 6. Équilibre avec le processeur
+    let pairing: Proposal["pairing"];
     let gainPercent: number | undefined;
     let gainLabel: string | undefined;
     if (cur) {
@@ -249,7 +264,8 @@ export function proposeGpus(p: Profile): Proposal[] {
         const full = Math.round((g.perf / cur.perf - 1) * 100);
         if (!cur.integrated) gainLabel = `≈ +${gainPercent} % en jeu, plafonné par ton processeur (+${full} % avec un CPU plus récent)`;
         checks.push({ label: "Équilibre avec le processeur", status: "warn", detail: `Ton ${p.cpuDisplay} limitera cette carte : tu profiteras d'environ ${used} % de sa puissance en 1440p (moins en 1080p).` });
-        notes.push("Regarde l'onglet Processeur pour équilibrer la config.");
+        pairing = pairCpu(g, used, cpuProposals);
+        if (!pairing) notes.push("Regarde l'onglet Processeur pour équilibrer la config.");
       } else if (p.cpu) {
         checks.push({ label: "Équilibre avec le processeur", status: "ok", detail: `Ton ${p.cpuDisplay} peut exploiter cette carte.` });
       }
@@ -259,10 +275,26 @@ export function proposeGpus(p: Profile): Proposal[] {
 
     out.push(finalize({
       id: `gpu-${g.id}`, category: "gpu", title: g.name, main: g, mainQuantity: 1,
-      gainPercent, gainLabel, checks, additions, notes,
+      gainPercent, gainLabel, checks, additions, notes, pairing,
     }));
   }
   return highlight(out.sort((a, b) => a.total - b.total));
+}
+
+/**
+ * Processeur à associer à une carte graphique bridée : le moins cher (avec ce qu''il entraîne) qui l''exploite
+ * à 95 % au moins ; à défaut, celui qui l''exploite le mieux, s''il fait vraiment mieux que l''actuel.
+ */
+function pairCpu(g: GpuSpec, usedBefore: number, cpuProposals: Proposal[]): Proposal["pairing"] {
+  const usedWith = (c: CpuSpec) => Math.min(100, Math.round((c.gpuCeiling / g.perf) * 100));
+  const cpus = cpuProposals.filter((x) => x.main.kind === "cpu" && !x.checks.some((c) => c.status === "fail"));
+  const enough = cpus.filter((x) => usedWith(x.main as CpuSpec) >= 95).sort((a, b) => a.total - b.total)[0];
+  const best = enough ?? cpus.sort((a, b) => usedWith(b.main as CpuSpec) - usedWith(a.main as CpuSpec) || a.total - b.total)[0];
+  if (!best) return undefined;
+  const usedAfter = usedWith(best.main as CpuSpec);
+  if (usedAfter < usedBefore + 10) return undefined;
+  const required = best.additions.filter((a) => a.role === "required" && a.part.kind !== "psu").map((a) => a.part);
+  return { cpu: best.main, parts: required, extra: best.total, usedBefore, usedAfter };
 }
 
 // ---------------------------------------------------------------------------
@@ -691,7 +723,7 @@ function highlight(list: Proposal[]): Proposal[] {
 
 export function proposeAll(p: Profile): Record<Category, Proposal[]> {
   const cpu = proposeCpus(p);
-  return { gpu: proposeGpus(p), cpu, board: proposeBoards(cpu), ram: proposeRam(p), storage: proposeStorage(p) };
+  return { gpu: proposeGpus(p, cpu), cpu, board: proposeBoards(cpu), ram: proposeRam(p), storage: proposeStorage(p) };
 }
 
 // ---------------------------------------------------------------------------

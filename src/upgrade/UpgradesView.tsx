@@ -312,6 +312,32 @@ function ProposalRow({ p, impact }: { p: Proposal; impact?: Impact }) {
             ))}
           </ul>
           <CompatSummary checks={p.checks} />
+          {p.pairing && (
+            <section className="pairing">
+              <h4 className="pairing-title">Pour en profiter pleinement</h4>
+              <p className="pairing-text">
+                Ton processeur limite cette carte à ≈ {p.pairing.usedBefore} % de sa puissance. Avec un{" "}
+                <b>{p.pairing.cpu.name.replace(/^(AMD|Intel) /, "")}</b>
+                {p.pairing.parts.length
+                  ? ` (avec ${p.pairing.parts.map((x) => ({ board: "la carte mère", ram: "la mémoire", cooler: "le ventirad", psu: "l'alimentation" } as Record<string, string>)[x.kind] ?? kindLabel(x).toLowerCase()).join(", ").replace(/, ([^,]*)$/, " et $1")} qu'il demande)`
+                  : ""}
+                , elle serait exploitée à ≈ {p.pairing.usedAfter} %.
+              </p>
+              <ul className="pairing-parts">
+                {[p.pairing.cpu, ...p.pairing.parts].map((x) => (
+                  <li key={x.id}>
+                    <KindIcons parts={[x]} />
+                    <span>{x.name}</span>
+                    <span className="num">{price(x)} €</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="pairing-total">
+                Surcoût : <b className="num">{p.pairing.extra} €</b>, soit <b className="num">{p.total + p.pairing.extra} €</b> pour l'ensemble.
+                <span className="muted"> Mon plan recalcule l'alimentation et le budget pour la combinaison complète.</span>
+              </p>
+            </section>
+          )}
           {advised.length > 0 && (
             <details className="pd-advised">
               <summary>Conseillé en plus ({advised.length})</summary>

@@ -244,6 +244,11 @@ export interface Proposal {
   mainQuantity: number;
   /** Modèles réels conseillés quand la pièce principale est générique (carte mère). */
   mainModels?: ModelPick[];
+  /**
+   * Carte graphique bridée par le processeur actuel : le processeur conseillé pour en profiter,
+   * avec ce qu'il entraîne (carte mère, RAM…), le surcoût et la part de la carte exploitée avant / après.
+   */
+  pairing?: { cpu: Part; parts: Part[]; extra: number; usedBefore: number; usedAfter: number };
   gainLabel?: string;
   gainPercent?: number;
   checks: Check[];
