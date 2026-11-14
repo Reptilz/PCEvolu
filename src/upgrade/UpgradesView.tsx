@@ -1,3 +1,4 @@
+import { T } from "../glossary";
 import { useMemo, useState, type ReactNode } from "react";
 import type { Report } from "../types";
 import type { Category, Check, Part, Proposal } from "./types";
@@ -88,8 +89,8 @@ export function UpgradesView({
     <div className="up-page">
       <header className="gp-head">
         <div>
-          <h1>Upgrades</h1>
-          <p className="gp-goal">Toutes les pièces compatibles avec ton PC, vérifiées une par une.</p>
+          <h1>Toutes les pièces</h1>
+          <p className="gp-goal">Le catalogue complet des pièces compatibles avec ton PC, vérifiées une par une. Pour un conseil tout prêt, va dans Mon plan.</p>
         </div>
       </header>
 
@@ -215,7 +216,7 @@ export function CheckRow({ c }: { c: Check }) {
       <Icon name={icon} />
       <div>
         <div className="chk-label">{c.label}</div>
-        <div className="chk-detail">{c.detail}</div>
+        <div className="chk-detail"><T>{c.detail}</T></div>
       </div>
     </li>
   );
@@ -286,7 +287,7 @@ function ProposalRow({ p, impact }: { p: Proposal; impact?: Impact }) {
           {p.notes.length > 0 && (
             <ul className="notes">
               {p.notes.map((n, i) => (
-                <li key={i}>{n}</li>
+                <li key={i}><T>{n}</T></li>
               ))}
             </ul>
           )}

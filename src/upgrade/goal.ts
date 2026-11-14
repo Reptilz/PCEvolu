@@ -328,3 +328,12 @@ export function impactOf(goal: Goal, p: Profile, verdict: Verdict, main: { kind:
   }
   return { relevant: fixes.has(category), reachesGoal: fixes.has(category) };
 }
+
+/** La fluidité en un mot, pour lire un nombre d'images par seconde sans connaître le jargon. */
+export function fluidity(fps: number): string {
+  if (fps < 30) return "Saccadé";
+  if (fps < 55) return "Jouable";
+  if (fps < 90) return "Fluide";
+  if (fps < 140) return "Très fluide";
+  return "Ultra fluide";
+}

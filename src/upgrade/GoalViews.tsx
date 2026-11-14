@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { T } from "../glossary";
+import { useState, type ReactNode } from "react";
 import type { Report } from "../types";
 import {
-  FPS_LABEL, RES_LABEL, USAGE_LABEL, isGaming,
+  FPS_LABEL, RES_LABEL, USAGE_LABEL, fluidity, isGaming,
   type FpsTarget, type Goal, type NeedStatus, type Resolution, type Usage, type Verdict,
 } from "./goal";
 import { Icon, type IconName } from "../icons";
@@ -179,22 +180,26 @@ export function goalSentence(g: Goal): string {
 
 type GoalTab = "alternatives" | "tiers" | "diagnostic";
 
-export function GoalDiagnostic({ goal, verdict, plan, onBudget, onEdit, onUpgrades }: {
+export function GoalDiagnostic({ goal, verdict, plan, onBudget, onEdit, onUpgrades, byPart, next }: {
   goal: Goal; verdict: Verdict; plan?: OptimizeResult; onBudget: (b: number | null) => void; onEdit: () => void; onUpgrades: (tab?: string) => void;
+  /** Les achats pièce par pièce : besoins de l'objectif et options vérifiées. */
+  byPart?: ReactNode;
+  /** Bouton « Étape suivante ». */
+  next?: ReactNode;
 }) {
   const [tab, setTab] = useState<GoalTab>("alternatives");
   const after = plan?.best && !plan.current.reached ? plan.best.evaluation.fps : undefined;
   const tabs: { id: GoalTab; label: string; count?: number }[] = [
     { id: "alternatives", label: "Autres options", count: plan?.alternatives.length },
     { id: "tiers", label: "Selon le budget", count: plan?.tiers.length },
-    { id: "diagnostic", label: "Diagnostic détaillé" },
+    { id: "diagnostic", label: "Pièce par pièce" },
   ];
 
   return (
     <div className="goal-page">
       <header className="gp-head">
         <div>
-          <h1>Mon objectif</h1>
+          <h1>Mon plan</h1>
           <p className="gp-goal">{goalSentence(goal)}</p>
         </div>
         <button className="btn ghost" onClick={onEdit}>
@@ -225,8 +230,9 @@ export function GoalDiagnostic({ goal, verdict, plan, onBudget, onEdit, onUpgrad
       <div className="seg-panel">
         {tab === "alternatives" && plan && <Alternatives result={plan} goal={goal} onDetails={(t) => onUpgrades(t)} />}
         {tab === "tiers" && plan && <Tiers result={plan} goal={goal} onBudget={onBudget} onDetails={(t) => onUpgrades(t)} />}
-        {tab === "diagnostic" && <Diagnostic goal={goal} verdict={verdict} onUpgrades={onUpgrades} />}
+        {tab === "diagnostic" && <Diagnostic goal={goal} verdict={verdict} onUpgrades={onUpgrades} byPart={byPart} />}
       </div>
+      {next}
     </div>
   );
 }
@@ -244,22 +250,23 @@ function FpsGauge({ today, after, goal, limit }: { today: number; after?: number
       </div>
       <div className="gauge-legend">
         <span>
-          <b className="num">{today} i/s</b> aujourd'hui, limité par {limit === "gpu" ? "la carte graphique" : "le processeur"}
+          Aujourd'hui : <b>{fluidity(today).toLowerCase()}</b> <span className="num">(≈ {today} i/s)</span>, limité par{" "}
+          {limit === "gpu" ? "la carte graphique" : "le processeur"}
         </span>
         {after != null && after > today && (
           <span className="gauge-legend-after">
-            <b className="num">{after} i/s</b> avec le plan conseillé
+            Avec le plan : <b>{fluidity(after).toLowerCase()}</b> <span className="num">(≈ {after} i/s)</span>
           </span>
         )}
         <span className="gauge-legend-goal">
-          Objectif <b className="num">{goal} i/s</b>
+          Objectif : <b>{fluidity(goal).toLowerCase()}</b> <span className="num">({goal} i/s)</span>
         </span>
       </div>
     </div>
   );
 }
 
-function Diagnostic({ goal, verdict, onUpgrades }: { goal: Goal; verdict: Verdict; onUpgrades: (tab?: string) => void }) {
+function Diagnostic({ goal, verdict, onUpgrades, byPart }: { goal: Goal; verdict: Verdict; onUpgrades: (tab?: string) => void; byPart?: ReactNode }) {
   return (
     <>
       {verdict.fps && (
@@ -272,6 +279,7 @@ function Diagnostic({ goal, verdict, onUpgrades }: { goal: Goal; verdict: Verdic
           </p>
         </div>
       )}
+      {byPart ?? (
       <ul className="needs">
         {verdict.needs.map((n) => (
           <li key={n.id} className={`need n-${n.status}`}>
@@ -283,7 +291,7 @@ function Diagnostic({ goal, verdict, onUpgrades }: { goal: Goal; verdict: Verdic
                   {n.current}, objectif {n.target.charAt(0).toLowerCase() + n.target.slice(1)}
                 </span>
               </div>
-              <p className="muted small">{n.detail}</p>
+              <p className="muted small"><T>{n.detail}</T></p>
             </div>
             {n.fix && n.status !== "ok" && (
               <button className="link small" onClick={() => onUpgrades(n.fix)}>
@@ -293,6 +301,7 @@ function Diagnostic({ goal, verdict, onUpgrades }: { goal: Goal; verdict: Verdic
           </li>
         ))}
       </ul>
+      )}
     </>
   );
 }

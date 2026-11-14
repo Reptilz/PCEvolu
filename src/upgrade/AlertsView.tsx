@@ -5,7 +5,7 @@ import { Icon } from "../icons";
 
 const eur = (n: number) => `${n.toLocaleString("fr-FR", { maximumFractionDigits: n % 1 ? 2 : 0, minimumFractionDigits: n % 1 ? 2 : 0 })} €`;
 
-export function AlertsView() {
+export function AlertsView({ onPlan }: { onPlan?: () => void }) {
   const { alerts, setAlerts, open } = usePrices();
   const sorted = [...alerts].sort((a, b) => Number(isTriggered(b)) - Number(isTriggered(a)) || a.name.localeCompare(b.name));
   const remove = (id: string) => {
@@ -34,6 +34,11 @@ export function AlertsView() {
             Clique sur un prix, dans Upgrades ou Mon objectif, pour voir son évolution et créer une alerte. Tu peux aussi surveiller tout un plan d'un coup
             avec « Me prévenir si ces prix baissent ».
           </p>
+          {onPlan && (
+            <button className="btn al-empty-btn" onClick={onPlan}>
+              Aller à mon plan
+            </button>
+          )}
         </div>
       ) : (
         <ul className="al-list">

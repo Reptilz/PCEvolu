@@ -1,3 +1,4 @@
+import { T } from "../glossary";
 import { useState, type ReactNode } from "react";
 import type { Addition, Check, Part, Role } from "./types";
 import { CheckRow, MarketLine } from "./UpgradesView";
@@ -146,7 +147,7 @@ export function AdditionRow({ a }: { a: Addition }) {
       amount={price(a.part) * a.quantity}
       note={
         <span className={`pd-why role-${a.role}`}>
-          {ROLE_NOTE[a.role]} : {a.reason.charAt(0).toLowerCase() + a.reason.slice(1)}
+          {ROLE_NOTE[a.role]} : <T>{a.reason.charAt(0).toLowerCase() + a.reason.slice(1)}</T>
         </span>
       }
     />

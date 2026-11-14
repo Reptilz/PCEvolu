@@ -5,12 +5,13 @@ import { recommend, type Recommendation } from "./recommendations";
 import { demoMetrics, demoReport } from "./demo";
 import { clean, date, diskSize, gb, ghz, speed, uptime } from "./format";
 import { Icon, type IconName } from "./icons";
+import { T } from "./glossary";
 import { UpgradesView } from "./upgrade/UpgradesView";
 import { buildProfile, loadAnswers, type Answers } from "./upgrade/profile";
 import { assess, loadGoal, saveGoal, topOptions, type Goal, type Verdict } from "./upgrade/goal";
 
 type OptionList = ReturnType<typeof topOptions>;
-import { GoalDiagnostic, GoalWizard, goalSentence } from "./upgrade/GoalViews";
+import { GoalDiagnostic, GoalWizard } from "./upgrade/GoalViews";
 import { proposeAll } from "./upgrade/engine";
 import { optimize } from "./upgrade/optimizer";
 import { loadHistory, loadPrices } from "./upgrade/prices";
@@ -19,7 +20,7 @@ import { checkAlerts, isTriggered, loadAlerts, saveAlerts, type PriceAlert } fro
 import { PriceContext, PriceSheet, type SheetPart } from "./upgrade/PriceSheet";
 import { AlertsView } from "./upgrade/AlertsView";
 
-type View = "overview" | "goal" | "improve" | "upgrades" | "alerts" | "components";
+type View = "overview" | "goal" | "improve" | "upgrades" | "alerts";
 
 const inApp = isTauri();
 
@@ -125,6 +126,14 @@ export default function App() {
     setUpgradeTab(tab);
     setView("upgrades");
   };
+  /** Change de page ; « Mon plan » ouvre d'abord l'assistant si aucun objectif n'est défini. */
+  const go = (v: View) => {
+    if (v === "goal" && !goal.configured) return setWizardOpen(true);
+    setWizardOpen(false);
+    setView(v);
+    document.querySelector(".main")?.scrollTo({ top: 0 });
+  };
+  const freeCount = recos.filter((r) => !r.upgrade).length;
 
   return (
     <PriceContext.Provider value={{ open: setSheet, alerts, setAlerts }}>
@@ -140,25 +149,14 @@ export default function App() {
           </div>
         </div>
         <nav>
-          <NavItem
-            icon="grid"
-            label="Vue d'ensemble"
-            active={view === "overview" && !wizardOpen}
-            onClick={() => {
-              setWizardOpen(false);
-              setView("overview");
-            }}
-          />
-          <NavItem
-            icon="target"
-            label="Mon objectif"
-            active={view === "goal" || wizardOpen}
-            onClick={() => (goal.configured ? (setWizardOpen(false), setView("goal")) : setWizardOpen(true))}
-          />
-          <NavItem icon="spark" label="Améliorations" active={view === "improve"} onClick={() => setView("improve")} count={recos.length} />
-          <NavItem icon="cart" label="Upgrades" active={view === "upgrades"} onClick={() => setView("upgrades")} />
-          <NavItem icon="bell" label="Alertes prix" active={view === "alerts"} onClick={() => setView("alerts")} count={triggeredCount} />
-          <NavItem icon="chip" label="Composants" active={view === "components"} onClick={() => setView("components")} />
+          <div className="nav-group">1. Mon PC</div>
+          <NavItem icon="grid" label="Mon PC" sub="État et composants" active={view === "overview" && !wizardOpen} onClick={() => go("overview")} />
+          <div className="nav-group">2. L'améliorer</div>
+          <NavItem icon="spark" label="Réglages gratuits" sub="Sans rien acheter" active={view === "improve" && !wizardOpen} onClick={() => go("improve")} count={freeCount} />
+          <NavItem icon="target" label="Mon plan" sub="Quoi acheter, et pourquoi" active={view === "goal" || wizardOpen} onClick={() => go("goal")} />
+          <NavItem icon="cart" label="Toutes les pièces" sub="Catalogue compatible" active={view === "upgrades" && !wizardOpen} onClick={() => go("upgrades")} />
+          <div className="nav-group">3. Suivre</div>
+          <NavItem icon="bell" label="Alertes prix" sub="Le bon moment pour acheter" active={view === "alerts" && !wizardOpen} onClick={() => go("alerts")} count={triggeredCount} />
         </nav>
         <div className="side-foot">
           <button className="btn" onClick={scan} disabled={scanning}>
@@ -181,12 +179,32 @@ export default function App() {
         {!report && !error && <Loading />}
         {report && wizardOpen && <GoalWizard report={report} goal={goal} onDone={finishWizard} onSkip={() => setWizardOpen(false)} />}
         {report && !wizardOpen && view === "overview" && (
-          <Overview report={report} live={live} recos={recos} go={setView} verdict={goal.configured ? verdict : undefined} onSetGoal={() => setWizardOpen(true)} />
+          <Overview report={report} live={live} recos={recos} go={go} verdict={goal.configured ? verdict : undefined} onSetGoal={() => setWizardOpen(true)} />
         )}
         {report && !wizardOpen && view === "goal" && verdict && (
-          <GoalDiagnostic goal={goal} verdict={verdict} plan={plan} onBudget={setBudget} onEdit={() => setWizardOpen(true)} onUpgrades={openUpgrades} />
+          <GoalDiagnostic
+            goal={goal}
+            verdict={verdict}
+            plan={plan}
+            onBudget={setBudget}
+            onEdit={() => setWizardOpen(true)}
+            onUpgrades={openUpgrades}
+            byPart={<BuyList recos={recos} openTab={openUpgrades} options={options} goal={goal} verdict={verdict} />}
+            next={<NextStep hint="Pas pressé ? PCEvolu peut te prévenir quand ces pièces baissent." label="Étape suivante : mes alertes prix" onClick={() => go("alerts")} />}
+          />
         )}
-        {report && !wizardOpen && view === "improve" && <Improve recos={recos} openTab={openUpgrades} options={options} goal={goal} verdict={verdict} />}
+        {report && !wizardOpen && view === "improve" && (
+          <FreeView
+            recos={recos}
+            next={
+              <NextStep
+                hint={goal.configured ? "Ensuite, ce qu'il vaut la peine d'acheter pour ton objectif." : "Ensuite, dis à PCEvolu ce que tu veux faire de ton PC : il te dira quoi acheter."}
+                label={goal.configured ? "Étape suivante : mon plan" : "Étape suivante : définir mon objectif"}
+                onClick={() => go("goal")}
+              />
+            }
+          />
+        )}
         {report && !wizardOpen && view === "upgrades" && verdict && (
           <UpgradesView
             report={report}
@@ -199,8 +217,10 @@ export default function App() {
             onEditGoal={() => setWizardOpen(true)}
           />
         )}
-        {report && !wizardOpen && view === "components" && <Components report={report} live={live} />}
-        {!wizardOpen && view === "alerts" && <AlertsView />}
+        {report && !wizardOpen && view === "upgrades" && (
+          <NextStep hint="Une pièce te plaît mais tu préfères attendre ? Crée une alerte depuis son prix." label="Étape suivante : mes alertes prix" onClick={() => go("alerts")} />
+        )}
+        {!wizardOpen && view === "alerts" && <AlertsView onPlan={() => go("goal")} />}
       </main>
     </div>
       {sheet && <PriceSheet part={sheet} onClose={() => setSheet(undefined)} />}
@@ -208,11 +228,14 @@ export default function App() {
   );
 }
 
-function NavItem(p: { icon: IconName; label: string; active: boolean; onClick: () => void; count?: number }) {
+function NavItem(p: { icon: IconName; label: string; sub?: string; active: boolean; onClick: () => void; count?: number }) {
   return (
-    <button className={`nav ${p.active ? "on" : ""}`} onClick={p.onClick}>
+    <button className={`nav ${p.active ? "on" : ""}`} onClick={p.onClick} aria-current={p.active ? "page" : undefined}>
       <Icon name={p.icon} />
-      <span>{p.label}</span>
+      <span className="nav-text">
+        <span className="nav-label">{p.label}</span>
+        {p.sub && <span className="nav-sub">{p.sub}</span>}
+      </span>
       {!!p.count && <span className="count">{p.count}</span>}
     </button>
   );
@@ -241,6 +264,7 @@ function Overview({
   const ramPct = live?.ramUsedBytes && live.ramTotalBytes ? (live.ramUsedBytes / live.ramTotalBytes) * 100 : undefined;
   const diskPct = sys?.sizeBytes && sys.freeBytes != null ? ((sys.sizeBytes - sys.freeBytes) / sys.sizeBytes) * 100 : undefined;
   const score = healthScore(recos);
+  const freeCount = recos.filter((x) => !x.upgrade).length;
 
   return (
     <div className="ov-page">
@@ -310,11 +334,26 @@ function Overview({
             <Fact icon="screen" k="Écran" v={r.displays.map((d) => `${d.width}×${d.height} à ${d.currentHz} Hz`).join(", ") || "—"} />
             <Fact icon="board" k="Carte mère" v={clean(r.board.product)} />
           </ul>
-          <button className="link" onClick={() => go("components")}>
-            Voir le détail des composants
+          <button className="link" onClick={() => document.getElementById("fiche-technique")?.scrollIntoView({ behavior: "smooth" })}>
+            Voir la fiche technique complète
           </button>
         </section>
       </div>
+
+      <section className="ov-tech" id="fiche-technique">
+        <h2 className="imp-h">Fiche technique</h2>
+        <Components report={r} live={live} />
+      </section>
+
+      {verdict ? (
+        <NextStep
+          hint={freeCount ? `Commence par les ${freeCount} réglage${freeCount > 1 ? "s" : ""} gratuit${freeCount > 1 ? "s" : ""}, puis regarde ce qu'il vaut la peine d'acheter.` : undefined}
+          label={freeCount ? "Étape suivante : réglages gratuits" : "Étape suivante : mon plan"}
+          onClick={() => go(freeCount ? "improve" : "goal")}
+        />
+      ) : (
+        <NextStep label="Étape suivante : définir mon objectif" onClick={onSetGoal} />
+      )}
     </div>
   );
 }
@@ -358,18 +397,54 @@ function Fact({ icon, k, v }: { icon: IconName; k: string; v?: string }) {
 }
 
 // ---------------------------------------------------------------------------
-// Améliorations + liste d'upgrades
+// Réglages gratuits, et achats pièce par pièce (affichés dans « Mon plan »)
 // ---------------------------------------------------------------------------
 
-/** Onglet de l'écran Upgrades correspondant à une suggestion de l'onglet Améliorations. */
+/** Onglet de l'écran « Toutes les pièces » correspondant à une suggestion d'achat. */
 const UPGRADE_TAB: Record<string, string> = { "Mémoire vive": "ram", Stockage: "storage", "Carte graphique": "gpu", Processeur: "cpu" };
 
-function Improve({ recos, openTab, options, goal, verdict }: {
+/** Bouton « Étape suivante », en bas de chaque page : on sait toujours où aller ensuite. */
+function NextStep({ label, hint, onClick }: { label: string; hint?: string; onClick: () => void }) {
+  return (
+    <div className="next-step">
+      {hint && <p className="next-hint">{hint}</p>}
+      <button className="btn next-btn" onClick={onClick}>
+        {label}
+        <Icon name="chevron" className="next-ico" />
+      </button>
+    </div>
+  );
+}
+
+function FreeView({ recos, next }: { recos: Recommendation[]; next: ReactNode }) {
+  const free = recos.filter((r) => !r.upgrade);
+  return (
+    <div className="imp-page">
+      <header className="gp-head">
+        <div>
+          <h1>Réglages gratuits</h1>
+          <p className="gp-goal">Ce que tu peux améliorer tout de suite, sans rien acheter.</p>
+        </div>
+      </header>
+      {free.length === 0 ? (
+        <p className="muted">Rien à régler : ton PC est déjà bien configuré.</p>
+      ) : (
+        <ul className="imp-list">
+          {free.map((r) => (
+            <RecoLine key={r.id} r={r} detail />
+          ))}
+        </ul>
+      )}
+      {next}
+    </div>
+  );
+}
+
+/** Les achats pièce par pièce : ce qui bloque l'objectif, puis les suggestions générales, avec les options vérifiées. */
+function BuyList({ recos, openTab, options, goal, verdict }: {
   recos: Recommendation[]; openTab: (tab: string) => void; options?: Record<string, OptionList>; goal: Goal; verdict?: Verdict;
 }) {
   const upgrades = recos.filter((r) => r.upgrade);
-  const free = recos.filter((r) => !r.upgrade);
-  // Une seule ligne d'achat par composant : d'abord ce qui bloque l'objectif, puis les suggestions générales.
   type Buy = { id: string; tab: string; kind: string; title: string; why: string; price?: string; goal: boolean };
   const buys: Buy[] = [];
   if (goal.configured && verdict) {
@@ -388,83 +463,49 @@ function Improve({ recos, openTab, options, goal, verdict }: {
     }
     buys.push({ id: r.id, tab, kind: r.upgrade!.component, title: r.upgrade!.suggestion, why: r.detail, price: price(r.upgrade!.priceMin, r.upgrade!.priceMax), goal: false });
   }
-  const min = upgrades.reduce((s, r) => s + (r.upgrade?.priceMin ?? 0), 0);
-  const max = upgrades.reduce((s, r) => s + (r.upgrade?.priceMax ?? 0), 0);
+  if (buys.length === 0) return <p className="muted">Aucune pièce ne limite ton PC pour cet objectif.</p>;
 
   return (
-    <div className="imp-page">
-      <header className="gp-head">
-        <div>
-          <h1>Améliorations</h1>
-          <p className="gp-goal">D'abord ce qui est gratuit, ensuite ce qui vaut la peine d'être acheté.</p>
-        </div>
-      </header>
-
-      {recos.length === 0 && buys.length === 0 && <p className="muted">Rien à améliorer pour l'instant : ton PC est bien réglé.</p>}
-
-      {free.length > 0 && (
-        <section className="imp-sec">
-          <h2 className="imp-h">Gratuit, à faire maintenant</h2>
-          <ul className="imp-list">
-            {free.map((r) => (
-              <RecoLine key={r.id} r={r} detail />
-            ))}
-          </ul>
-        </section>
-      )}
-
-      {buys.length > 0 && (
-        <section className="imp-sec">
-          <h2 className="imp-h">À acheter</h2>
-          {goal.configured && <p className="imp-intro">Classé selon ton objectif : {goalSentence(goal).charAt(0).toLowerCase() + goalSentence(goal).slice(1)}.</p>}
-          <ul className="imp-buys">
-            {buys.map((b) => {
-              const opts = options?.[b.tab] ?? [];
-              return (
-                <li key={b.id} className="imp-buy">
-                  <div className="imp-buy-head">
-                    <span className="pd-kind">{b.kind}</span>
-                    <div>
-                      <div className="imp-buy-title">
-                        {b.title}
-                        {b.goal && <span className="row-flag">Bloque ton objectif</span>}
-                      </div>
-                      <p className="imp-why">{b.why}</p>
-                    </div>
-                    {b.price && <span className="pd-amount num">{b.price}</span>}
-                  </div>
-                  {opts.length > 0 ? (
-                    <ul className="imp-opts">
-                      {opts.map((o) => (
-                        <li key={o.proposal.id}>
-                          <button className="imp-opt" onClick={() => openTab(b.tab)}>
-                            <span className="imp-opt-name">{(o.proposal as unknown as { title: string }).title}</span>
-                            <span className="imp-opt-effect">
-                              {o.impact.reachesGoal ? "atteint ton objectif" : o.impact.label}
-                            </span>
-                            <span className="num">{o.proposal.total} €</span>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    b.goal && <p className="imp-why">Aucune pièce seule ne suffit dans ton budget : le plan de « Mon objectif » en combine plusieurs.</p>
-                  )}
-                  <button className="link" onClick={() => openTab(b.tab)}>
-                    Voir toutes les options compatibles
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-          {max > 0 && (
-            <p className="imp-total">
-              Tout faire coûterait environ <b className="num">{price(min, max)}</b>. Les prix détaillés et la compatibilité pièce par pièce sont dans Upgrades.
-            </p>
-          )}
-        </section>
-      )}
-    </div>
+    <ul className="imp-buys">
+      {buys.map((b) => {
+        const opts = options?.[b.tab] ?? [];
+        return (
+          <li key={b.id} className="imp-buy">
+            <div className="imp-buy-head">
+              <span className="pd-kind">{b.kind}</span>
+              <div>
+                <div className="imp-buy-title">
+                  <T>{b.title}</T>
+                  {b.goal && <span className="row-flag">Bloque ton objectif</span>}
+                </div>
+                <p className="imp-why">
+                  <T>{b.why}</T>
+                </p>
+              </div>
+              {b.price && <span className="pd-amount num">{b.price}</span>}
+            </div>
+            {opts.length > 0 ? (
+              <ul className="imp-opts">
+                {opts.map((o) => (
+                  <li key={o.proposal.id}>
+                    <button className="imp-opt" onClick={() => openTab(b.tab)}>
+                      <span className="imp-opt-name">{(o.proposal as unknown as { title: string }).title}</span>
+                      <span className="imp-opt-effect">{o.impact.reachesGoal ? "atteint ton objectif" : o.impact.label}</span>
+                      <span className="num">{o.proposal.total} €</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              b.goal && <p className="imp-why">Aucune pièce seule ne suffit dans ton budget : le plan conseillé en combine plusieurs.</p>
+            )}
+            <button className="link" onClick={() => openTab(b.tab)}>
+              Voir toutes les options compatibles
+            </button>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
@@ -476,8 +517,16 @@ function RecoLine({ r, detail }: { r: Recommendation; detail?: boolean }) {
     <li className={`imp-item l-${r.level}`}>
       <span className="imp-dot" aria-hidden />
       <div>
-        <div className="imp-title">{r.title}</div>
-        {detail ? <p className="imp-why">{r.detail}</p> : <div className="imp-tag">{r.tag.replace(/ · /g, ", ")}</div>}
+        <div className="imp-title">
+          <T>{r.title}</T>
+        </div>
+        {detail ? (
+          <p className="imp-why">
+            <T>{r.detail}</T>
+          </p>
+        ) : (
+          <div className="imp-tag">{r.tag.replace(/ · /g, ", ")}</div>
+        )}
       </div>
     </li>
   );
@@ -493,15 +542,10 @@ function Components({ report: r, live }: { report: Report; live?: Metrics }) {
 
   return (
     <>
-      <header className="gp-head">
-        <div>
-          <h1>Composants</h1>
-          <p className="gp-goal">
-            {r.system.isLaptop ? "PC portable" : "PC fixe"}
-            {r.system.manufacturer && !/to be filled|default/i.test(r.system.manufacturer) ? ` ${r.system.manufacturer.replace(/,? (Co\.,? )?(Ltd|Inc|Corp)\.?$/i, "")}` : ""}, tel que Windows le voit.
-          </p>
-        </div>
-      </header>
+      <p className="muted ov-tech-sub">
+        {r.system.isLaptop ? "PC portable" : "PC fixe"}
+        {r.system.manufacturer && !/to be filled|default/i.test(r.system.manufacturer) ? ` ${r.system.manufacturer.replace(/,? (Co\.,? )?(Ltd|Inc|Corp)\.?$/i, "")}` : ""}, tel que Windows le voit.
+      </p>
 
       <div className="grid">
         {r.cpus.map((c, i) => (
