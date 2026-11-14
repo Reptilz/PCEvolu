@@ -4,7 +4,8 @@ import type { Addition, Category, Check, Part, Proposal, Role } from "./types";
 import { buildProfile, missingAnswers, saveAnswers, type Answers, type Profile } from "./profile";
 import { proposeAll } from "./engine";
 import { CATALOG_DATE } from "./catalog";
-import { priceInfo, pricesFile } from "./prices";
+import { priceInfo, pricesFile, trendOf } from "./prices";
+import { usePrices } from "./PriceSheet";
 import { Icon, type IconName } from "../icons";
 import { goalSummary, impactOf, type Goal, type Impact, type Verdict } from "./goal";
 
@@ -342,17 +343,29 @@ function AdditionRow({ a }: { a: Addition }) {
 }
 
 /** « Médiane de 6 marchands · dès 549,99 € chez Cdiscount », ou « prix indicatif » sans relevé. */
-function MarketLine({ part }: { part: Part }) {
+export function MarketLine({ part }: { part: Part }) {
+  const { open, alerts } = usePrices();
   const info = priceInfo(part.id);
-  if (!info) return <div className="market muted small">Prix indicatif (pas encore relevé)</div>;
+  const watched = alerts.some((a) => a.id === part.id);
+  const sheet = () => open({ id: part.id, name: part.name, price: price(part) });
+  if (!info) {
+    return (
+      <button className="market muted small market-btn" onClick={sheet}>
+        Prix indicatif (pas encore relevé) · comparer les prix ↗
+      </button>
+    );
+  }
   const best = info.best?.[0];
+  const t = trendOf(part.id);
   const eur = (n: number) => n.toLocaleString("fr-FR", { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
   return (
-    <div className={`market small ${info.stale ? "stale" : ""}`}>
+    <button className={`market small market-btn ${info.stale ? "stale" : ""}`} onClick={sheet} title="Voir les offres, l'évolution du prix et créer une alerte">
       Médiane de {info.offers} marchands
       {best ? ` · dès ${eur(best.price)} € chez ${best.merchant}` : ""}
+      {t.change != null && t.change !== 0 ? ` · ${t.change < 0 ? "↘" : "↗"} ${t.change} %` : ""}
       {info.stale ? " · relevé ancien" : ""}
-    </div>
+      {watched ? " · 🔔" : ""} · voir les offres →
+    </button>
   );
 }
 

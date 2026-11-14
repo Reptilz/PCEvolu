@@ -389,3 +389,51 @@ dd { margin: 0; text-align: right; font-family: "Cascadia Mono", Consolas, monos
 .opt-title { font-weight: 600; }
 .reco.r-medium { border-left-color: var(--warn); }
 .brand-filter { display: flex; gap: 6px; margin: -4px 0 12px; flex-wrap: wrap; }
+
+/* ---------- Fiche prix ---------- */
+.market-btn { display: block; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; font: inherit; }
+.market-btn:hover { text-decoration: underline; }
+.sheet-backdrop { position: fixed; inset: 0; background: rgb(0 0 0 / 0.45); display: grid; place-items: center; z-index: 50; padding: 16px; }
+.sheet { width: min(560px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 22px 24px; box-shadow: 0 20px 60px rgb(0 0 0 / 0.35); }
+.sheet-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+.sheet-title { font-size: 20px; margin: 2px 0 0; text-transform: none; letter-spacing: 0; color: var(--text); }
+.icon-btn { border: 0; background: var(--panel-2); border-radius: 8px; width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; color: var(--muted); flex: none; }
+.icon-btn:hover { color: var(--text); }
+.sheet-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 6px; }
+.sheet-kpis > div { background: var(--panel-2); border-radius: 12px; padding: 10px 12px; }
+.sheet-big { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--accent-2); }
+.sheet-mid { font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.sheet-mid.down { color: var(--ok); }
+.sheet-mid.up { color: var(--bad); }
+.sheet-h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 18px 0 8px; }
+.spark { width: 100%; height: auto; background: var(--panel-2); border-radius: 12px; margin-top: 8px; }
+.spark-median { fill: none; stroke: var(--accent); stroke-width: 2.2; }
+.spark-best { fill: none; stroke: var(--accent-2); stroke-width: 1.6; stroke-dasharray: 4 4; }
+.spark-dot { fill: var(--accent); }
+.spark-label { fill: var(--muted); font-size: 10px; }
+.spark-empty { background: var(--panel-2); border-radius: 12px; padding: 14px; margin-top: 8px; }
+.offers { display: grid; gap: 6px; }
+.offer { display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: var(--panel-2); border-radius: 10px; }
+.offer-merchant { flex: 1; font-weight: 600; }
+.small-btn { padding: 5px 10px; font-size: 13px; }
+.btn.compare { width: 100%; margin-top: 12px; }
+.alert-form { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.alert-form input { width: 100px; font: inherit; color: var(--text); background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
+.alert-set { display: flex; align-items: center; gap: 10px; background: color-mix(in srgb, var(--ok) 10%, transparent); border-radius: 10px; padding: 10px 12px; }
+.alert-set > .icon { color: var(--ok); }
+.alert-set > span { flex: 1; }
+
+/* ---------- Alertes prix ---------- */
+.empty-alerts { display: flex; gap: 14px; align-items: flex-start; }
+.empty-alerts > .icon { width: 28px; height: 28px; color: var(--accent); }
+.empty-alerts p { margin: 4px 0 0; }
+.alert-row { display: flex; align-items: center; gap: 14px; background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.alert-row > .icon { color: var(--muted); }
+.alert-row.hit { border-left-color: var(--ok); }
+.alert-row.hit > .icon { color: var(--ok); }
+.alert-main { flex: 1; min-width: 0; }
+.alert-name { font-weight: 700; font-size: 15px; text-align: left; }
+.alert-price { text-align: right; }
+.alert-price .mono { font-size: 17px; font-weight: 700; }
+.cart-watch { padding-top: 10px; }
+.watch-btn { width: 100%; justify-content: center; }

@@ -1,10 +1,11 @@
 import { useState } from "react";
 import type { Addition, Check, Part } from "./types";
-import { CheckRow } from "./UpgradesView";
+import { CheckRow, MarketLine } from "./UpgradesView";
+import { usePrices } from "./PriceSheet";
+import { bestPriceOf, saveAlerts, suggestedTarget } from "./alerts";
 import { isGaming, type Goal } from "./goal";
 import { planTitle, type OptimizeResult, type Plan } from "./optimizer";
 import { price } from "./engine";
-import { priceInfo } from "./prices";
 import { Icon } from "../icons";
 
 /** Arrondit un coût au palier de budget supérieur (par 50 €). */
@@ -169,11 +170,10 @@ function PlanCard({ plan, goal, currentFps, recommended, onDetails }: { plan: Pl
                   </span>
                   <span className="mono">{price(it.main)} €</span>
                 </div>
+                <MarketLine part={it.main} />
                 <div className="small">
-                  <span className="muted">{priceInfo(it.main.id) ? `Prix du marché (${priceInfo(it.main.id)!.offers} marchands)` : "Prix indicatif"}</span>
-                  {" · "}
                   <button className="link small" onClick={() => onDetails(it.category)}>
-                    Voir la compatibilité
+                    Voir la compatibilité détaillée
                   </button>
                 </div>
               </li>
@@ -184,6 +184,9 @@ function PlanCard({ plan, goal, currentFps, recommended, onDetails }: { plan: Pl
             <li className="cart-total">
               <span>Total obligatoire</span>
               <span className="mono">{plan.cost} €</span>
+            </li>
+            <li className="cart-watch">
+              <WatchPlan plan={plan} />
             </li>
           </ul>
           </div>
@@ -222,6 +225,29 @@ function AltRow({ plan, goal, currentFps, onDetails }: { plan: Plan; goal: Goal;
       {ev.reached && <span className="tier-ok">✓ Objectif</span>}
       <span className="alt-cost mono">{plan.cost} €</span>
       <Icon name="chevron" className="chev" />
+    </button>
+  );
+}
+
+/** Crée d'un coup une alerte de prix pour chaque pièce du plan (5 % sous le meilleur prix actuel). */
+function WatchPlan({ plan }: { plan: Plan }) {
+  const { alerts, setAlerts } = usePrices();
+  const parts = [...plan.items.map((it) => it.main), ...plan.additions.filter((a) => a.role === "required").map((a) => a.part)];
+  const missing = parts.filter((p) => !alerts.some((a) => a.id === p.id));
+  if (missing.length === 0) return <span className="muted small">🔔 Tu surveilles déjà les prix de ce plan (onglet Alertes prix).</span>;
+  const watch = () => {
+    const now = new Date().toISOString();
+    const next = [
+      ...alerts,
+      ...missing.map((p) => ({ id: p.id, name: p.name, target: suggestedTarget(p.id, price(p)), startPrice: bestPriceOf(p.id) ?? price(p), createdAt: now })),
+    ];
+    saveAlerts(next);
+    setAlerts(next);
+  };
+  return (
+    <button className="btn watch-btn" onClick={watch}>
+      <Icon name="bell" /> Surveiller les prix de ce plan
+      <span className="muted small"> · alerte à −5 % sur {missing.length} pièce{missing.length > 1 ? "s" : ""}</span>
     </button>
   );
 }

@@ -23,7 +23,8 @@ export interface CatalogFile {
 }
 
 // import.meta.env n'existe que dans l'app (Vite) : absent quand le script d'export tourne sous Node.
-export const CATALOG_URL: string | null = import.meta.env?.VITE_CATALOG_URL ?? null;
+export const CATALOG_URL: string | null =
+  import.meta.env?.VITE_CATALOG_URL ?? "https://raw.githubusercontent.com/Reptilz/PCEvolu/main/data/catalog.json";
 const CACHE_KEY = "pcevolu.catalog.v1";
 
 /** Expression régulière → texte (pour le JSON), et inversement. */

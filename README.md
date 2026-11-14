@@ -90,6 +90,13 @@ npx tsx scripts/test-plan.ts     # plans et paliers pour plusieurs configs et ob
 npx tsx scripts/test-compat.ts   # cas pièges : PC sans carte graphique + CPU sans iGPU, plan avec nouvelle plateforme, SSD NVMe en trop, petit boîtier
 ```
 
+## Prix : liens d'achat, historique et alertes
+
+- **Données en ligne** : l'app télécharge `prices.json`, `catalog.json` et `price-history.json` depuis le dépôt public (`raw.githubusercontent.com/Reptilz/PCEvolu/main/data`). Si ces fichiers sont inaccessibles, elle se rabat sur le cache, puis sur la copie intégrée.
+- **Fiche prix** (`src/upgrade/PriceSheet.tsx`) : clic sur n'importe quel prix. Elle affiche le meilleur prix, la médiane, l'évolution, la courbe d'historique, les 3 meilleures offres (« Voir l'offre » ouvre le navigateur via `tauri-plugin-opener`) et un lien « Comparer sur Google Shopping ».
+- **Historique** (`data/price-history.json`, `scripts/history.ts`) : chaque relevé hebdomadaire ajoute un point (médiane, meilleur prix) par composant, sur 2 ans glissants.
+- **Alertes** (`src/upgrade/alerts.ts`, onglet « Alertes prix ») : « préviens-moi sous X € », ou « Surveiller les prix de ce plan » (seuil à −5 % pour chaque pièce). Les alertes sont vérifiées à chaque ouverture, avec une notification Windows (`tauri-plugin-notification`), une seule fois par prix.
+
 ## Catalogue téléchargeable
 
 `npm run catalog` exporte le catalogue dans `data/catalog.json`. Au démarrage, l'app télécharge ce fichier (`VITE_CATALOG_URL`) et l'utilise s'il est plus récent (`CATALOG_VERSION`). On peut donc ajouter des composants sans publier de nouvelle version de l'app.

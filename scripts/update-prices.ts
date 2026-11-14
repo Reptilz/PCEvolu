@@ -18,6 +18,7 @@ import { fileURLToPath } from "node:url";
 import { BOARDS, CASES, COOLERS, CPUS, FAN_KITS, GPUS, PSUS, RAM_KITS, SSDS } from "../src/upgrade/catalog";
 import type { PricesFile, PriceEntry } from "../src/upgrade/prices";
 import { CATEGORY_EXCLUDE, GLOBAL_EXCLUDE, MERCHANT_EXCLUDE, QUERIES } from "./price-queries";
+import { recordHistory } from "./history";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -283,6 +284,8 @@ async function main() {
   };
   mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, JSON.stringify(file, null, 2) + "\n", "utf8");
+  // L'historique n'est tenu que pour le vrai relevé (pas pour les tests avec --out ou --fixtures).
+  if (out === OUT && !fixtures) recordHistory(items, known);
   console.log(`\n${updated} prix mis à jour, ${failed} non mis à jour → ${out}`);
   // Échec seulement si rien n'a pu être relevé (clé invalide, quota épuisé…).
   if (updated === 0 && list.length > 0) process.exit(1);

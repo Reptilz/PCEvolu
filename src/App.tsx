@@ -13,10 +13,13 @@ type OptionList = ReturnType<typeof topOptions>;
 import { GoalDiagnostic, GoalWizard, VerdictBanner } from "./upgrade/GoalViews";
 import { proposeAll } from "./upgrade/engine";
 import { optimize } from "./upgrade/optimizer";
-import { loadPrices } from "./upgrade/prices";
+import { loadHistory, loadPrices } from "./upgrade/prices";
 import { loadCatalog } from "./upgrade/catalog-remote";
+import { checkAlerts, isTriggered, loadAlerts, saveAlerts, type PriceAlert } from "./upgrade/alerts";
+import { PriceContext, PriceSheet, type SheetPart } from "./upgrade/PriceSheet";
+import { AlertsView } from "./upgrade/AlertsView";
 
-type View = "overview" | "goal" | "improve" | "upgrades" | "components";
+type View = "overview" | "goal" | "improve" | "upgrades" | "alerts" | "components";
 
 const inApp = isTauri();
 
@@ -43,13 +46,23 @@ export default function App() {
   const [upgradeTab, setUpgradeTab] = useState<string>();
   // Incrémenté quand de nouveaux prix du marché sont appliqués, pour recalculer les propositions.
   const [pricesVersion, setPricesVersion] = useState(0);
+  const [alerts, setAlerts] = useState<PriceAlert[]>(loadAlerts);
+  const [sheet, setSheet] = useState<SheetPart>();
 
   useEffect(() => {
-    // Catalogue d'abord (il peut ajouter des composants), puis les prix du marché.
+    // Catalogue d'abord (il peut ajouter des composants), puis les prix du marché,
+    // puis l'historique et la vérification des alertes de prix.
     loadCatalog()
       .then(() => loadPrices())
-      .then(() => setPricesVersion((v) => v + 1));
+      .then(async () => {
+        setPricesVersion((v) => v + 1);
+        loadHistory().then(() => setPricesVersion((v) => v + 1));
+        const checked = await checkAlerts(loadAlerts());
+        saveAlerts(checked);
+        setAlerts(checked);
+      });
   }, []);
+  const triggeredCount = alerts.filter(isTriggered).length;
 
   const scan = useCallback(async () => {
     setScanning(true);
@@ -114,6 +127,7 @@ export default function App() {
   };
 
   return (
+    <PriceContext.Provider value={{ open: setSheet, alerts, setAlerts }}>
     <div className="app">
       <aside className="side">
         <div className="brand">
@@ -143,6 +157,7 @@ export default function App() {
           />
           <NavItem icon="spark" label="Améliorations" active={view === "improve"} onClick={() => setView("improve")} count={recos.length} />
           <NavItem icon="cart" label="Upgrades" active={view === "upgrades"} onClick={() => setView("upgrades")} />
+          <NavItem icon="bell" label="Alertes prix" active={view === "alerts"} onClick={() => setView("alerts")} count={triggeredCount} />
           <NavItem icon="chip" label="Composants" active={view === "components"} onClick={() => setView("components")} />
         </nav>
         <div className="side-foot">
@@ -185,8 +200,11 @@ export default function App() {
           />
         )}
         {report && !wizardOpen && view === "components" && <Components report={report} live={live} />}
+        {!wizardOpen && view === "alerts" && <AlertsView />}
       </main>
     </div>
+      {sheet && <PriceSheet part={sheet} onClose={() => setSheet(undefined)} />}
+    </PriceContext.Provider>
   );
 }
 

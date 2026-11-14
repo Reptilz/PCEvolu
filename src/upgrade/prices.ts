@@ -7,6 +7,7 @@
 //   4. les prix saisis dans le catalogue.
 
 import bundled from "../../data/prices.json";
+import bundledHistory from "../../data/price-history.json";
 import { BOARDS, CASES, COOLERS, CPUS, FAN_KITS, GPUS, PSUS, RAM_KITS, SSDS } from "./catalog";
 
 export interface PriceEntry {
@@ -34,7 +35,9 @@ export interface PricesFile {
  * À renseigner une fois le dépôt GitHub créé, par exemple :
  * https://raw.githubusercontent.com/<compte>/<depot>/main/data/prices.json
  */
-export const PRICES_URL: string | null = import.meta.env?.VITE_PRICES_URL ?? null;
+/** Données publiées par le relevé hebdomadaire dans le dépôt public. */
+export const DATA_BASE_URL = "https://raw.githubusercontent.com/Reptilz/PCEvolu/main/data";
+export const PRICES_URL: string | null = import.meta.env?.VITE_PRICES_URL ?? `${DATA_BASE_URL}/prices.json`;
 
 const CACHE_KEY = "pcevolu.prices.v1";
 /** Tous les composants du catalogue, relus à chaque fois (le catalogue peut avoir été remplacé par un plus récent). */
@@ -97,4 +100,50 @@ export async function loadPrices(): Promise<PricesFile | undefined> {
   } catch {
     return local; // hors ligne ou serveur indisponible : on garde les prix locaux
   }
+}
+
+// ---------------------------------------------------------------------------
+// Historique des prix (un point par relevé hebdomadaire)
+// ---------------------------------------------------------------------------
+
+/** [date AAAA-MM-JJ, médiane, meilleur prix] */
+export type HistoryPoint = [string, number, number];
+
+let history: Record<string, HistoryPoint[]> = ((bundledHistory as unknown as { items?: Record<string, HistoryPoint[]> }).items) ?? {};
+
+export const historyOf = (id: string): HistoryPoint[] => history[id] ?? [];
+
+/** Télécharge l'historique publié (sinon, celui inclus dans l'app). */
+export async function loadHistory(): Promise<void> {
+  try {
+    const res = await fetch(`${DATA_BASE_URL}/price-history.json`, { cache: "no-cache" });
+    if (!res.ok) return;
+    const j = await res.json();
+    if (j && typeof j.items === "object") history = j.items;
+  } catch {
+    /* hors ligne : historique intégré */
+  }
+}
+
+export interface Trend {
+  /** Évolution de la médiane depuis le relevé précédent, en %. */
+  change?: number;
+  /** Meilleur prix le plus bas jamais relevé. */
+  lowest?: number;
+  lowestDate?: string;
+  points: number;
+}
+
+export function trendOf(id: string): Trend {
+  const h = historyOf(id);
+  if (h.length === 0) return { points: 0 };
+  const last = h[h.length - 1];
+  const prev = h.length >= 2 ? h[h.length - 2] : undefined;
+  const low = h.reduce((a, p) => (p[2] < a[2] ? p : a), h[0]);
+  return {
+    change: prev ? Math.round(((last[1] - prev[1]) / prev[1]) * 1000) / 10 : undefined,
+    lowest: low[2],
+    lowestDate: low[0],
+    points: h.length,
+  };
 }

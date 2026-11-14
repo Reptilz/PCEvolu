@@ -15,6 +15,9 @@ fn main() {
     }
 
     tauri::Builder::default()
+        // Liens d'achat ouverts dans le navigateur, et alertes de prix en notification Windows.
+        .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_notification::init())
         .manage(live::LiveState::default())
         .invoke_handler(tauri::generate_handler![scan::scan, live::metrics])
         .run(tauri::generate_context!())
