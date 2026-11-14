@@ -7,7 +7,7 @@ import { bestPriceOf, saveAlerts, suggestedTarget } from "./alerts";
 import { isGaming, type Goal } from "./goal";
 import { planTitle, type OptimizeResult, type Plan } from "./optimizer";
 import { price } from "./engine";
-import { Icon, type IconName } from "../icons";
+import { BrandLogo, hasBrandLogo, Icon, type IconName } from "../icons";
 
 /** Arrondit un coût au palier de budget supérieur (par 50 €). */
 const roundBudget = (c: number) => Math.ceil(c / 50) * 50;
@@ -22,16 +22,20 @@ const KIND_ICON: Record<Part["kind"], IconName> = {
 };
 export const kindIcon = (p: Part): IconName => KIND_ICON[p.kind];
 
-/** Les icônes des pièces d'un achat, côte à côte (une par type de pièce). */
+const brandOfPart = (p: Part) => ("brand" in p ? (p.brand as string | undefined) : undefined);
+
+/** Les icônes des pièces d'un achat, côte à côte : le logo du fabricant quand on le connaît (NVIDIA, AMD, Intel), sinon le type de pièce. */
 export function KindIcons({ parts }: { parts: Part[] }) {
-  const kinds = [...new Set(parts.map((p) => p.kind))];
-  return (
-    <span className="kind-icons" aria-hidden>
-      {kinds.map((k) => (
-        <Icon key={k} name={KIND_ICON[k]} />
-      ))}
-    </span>
-  );
+  const seen = new Set<string>();
+  const marks: ReactNode[] = [];
+  for (const p of parts) {
+    const brand = brandOfPart(p);
+    const key = hasBrandLogo(brand) ? `${p.kind}-${brand}` : p.kind;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    marks.push(hasBrandLogo(brand) ? <BrandLogo key={key} brand={brand} /> : <Icon key={key} name={KIND_ICON[p.kind]} />);
+  }
+  return <span className="kind-icons">{marks}</span>;
 }
 
 // ---------------------------------------------------------------------------
@@ -146,7 +150,10 @@ export function ItemRow({ kind, part, amount, children, note }: { kind: string; 
         {kind}
       </span>
       <div className="pd-what">
-        <span className="pd-name">{part.name}</span>
+        <span className="pd-name">
+          <BrandLogo brand={brandOfPart(part)} className="pd-brand" />
+          {part.name}
+        </span>
         {note}
         <MarketLine part={part} />
         {children}

@@ -7,7 +7,7 @@ import { proposeAll } from "./engine";
 import { CATALOG_DATE } from "./catalog";
 import { priceInfo, pricesFile, trendOf } from "./prices";
 import { usePrices } from "./PriceSheet";
-import { Icon, type IconName } from "../icons";
+import { BrandLogo, Icon, type IconName } from "../icons";
 import { impactOf, type Goal, type Impact, type Verdict } from "./goal";
 import { AdditionRow, CompatSummary, ItemRow, KindIcons, kindLabel } from "./PlanView";
 import { goalSentence } from "./GoalViews";
@@ -134,6 +134,7 @@ export function UpgradesView({
             }}
           >
             {blocking(t.id) && <span className="tab-dot" title="Limite ton objectif" />}
+            <Icon name={t.icon} className="seg-ico" />
             {t.label}
             <span className="seg-count">{tabCount(t.id)}</span>
           </button>
@@ -147,6 +148,7 @@ export function UpgradesView({
           <span className="muted small">Marque</span>
           {["all", ...brands.sort()].map((b) => (
             <button key={b} className={`chip-btn ${brand === b ? "on" : ""}`} onClick={() => setBrand(b)}>
+              {b !== "all" && <BrandLogo brand={b} className="chip-logo" />}
               {b === "all" ? "Toutes" : b}
             </button>
           ))}

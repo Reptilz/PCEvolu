@@ -729,3 +729,11 @@ abbr.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px;
 .kind-icons .icon { width: 17px; height: 17px; }
 .rows.dim .kind-icons { color: var(--muted); }
 .pd-item { grid-template-columns: 156px 1fr auto; }
+/* Logos de marques et icônes d'onglets */
+.brand-logo { width: 18px; height: 18px; flex-shrink: 0; }
+.kind-icons { align-items: center; }
+.kind-icons .brand-logo { width: 19px; height: 19px; }
+.pd-name { display: inline-flex; align-items: center; gap: 8px; }
+.pd-brand { width: 18px; height: 18px; }
+.chip-logo { width: 15px; height: 15px; margin-right: 6px; vertical-align: -3px; }
+.seg-ico { width: 17px; height: 17px; opacity: 0.85; }
