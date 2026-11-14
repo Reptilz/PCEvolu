@@ -885,3 +885,5 @@ abbr.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px;
   .al-card-body { grid-template-columns: 1fr; }
 }
 .chk-source { margin-top: 3px; font-size: 12px; color: color-mix(in srgb, var(--muted) 80%, transparent); }
+
+.up-unsupported { padding: 12px 14px; border-radius: 10px; background: color-mix(in srgb, var(--warn) 12%, transparent); color: var(--text) !important; }

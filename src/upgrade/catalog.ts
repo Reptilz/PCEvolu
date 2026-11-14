@@ -11,10 +11,11 @@ import type {
 } from "./types";
 import { cpuFromName, purchasable } from "./cpudb";
 import { GPU_TABLE, findGpuSpec } from "./gpudb";
+import { findKnownBoard } from "./boards";
 
 export const CATALOG_DATE = "novembre 2026";
 /** Incrémenté à chaque mise à jour du catalogue (le catalogue téléchargé n'est pris que s'il est plus récent). */
-export const CATALOG_VERSION = 5;
+export const CATALOG_VERSION = 6;
 
 // ---------------------------------------------------------------------------
 // Chipsets : ce qui définit la compatibilité CPU / RAM / PCIe d'une carte mère
@@ -74,12 +75,15 @@ export const CHIPSETS: ChipsetSpec[] = [
   // AM5
   chip("A620", "AM5", ["DDR5"], 4, AM5_ALL, true, ["amd-zen5"]),
   chip("B650", "AM5", ["DDR5"], 4, AM5_ALL, true, ["amd-zen5"]),
+  chip("B650E", "AM5", ["DDR5"], 5, AM5_ALL, true, ["amd-zen5"]),
+  chip("X670E", "AM5", ["DDR5"], 5, AM5_ALL, true, ["amd-zen5"]),
   // Port graphique (tableau AMD) : X670 et B850 en PCIe 4.0 (5.0 en option sur certaines cartes ; seul le M.2 5.0 est obligatoire
   // sur B850), B840 en PCIe 4.0 (lignes du chipset en 3.0). X670E / X870 : 5.0.
   chip("X670", "AM5", ["DDR5"], 4, AM5_ALL, true, ["amd-zen5"]),
   chip("B840", "AM5", ["DDR5"], 4, AM5_ALL, true),
   chip("B850", "AM5", ["DDR5"], 4, AM5_ALL, true),
   chip("X870", "AM5", ["DDR5"], 5, AM5_ALL, true),
+  chip("X870E", "AM5", ["DDR5"], 5, AM5_ALL, true),
 ];
 
 // ---------------------------------------------------------------------------
@@ -154,11 +158,7 @@ function board(
 }
 
 export const BOARDS: BoardSpec[] = [
-  // Cartes déjà installées chez les utilisateurs (pour connaître leurs slots exacts)
-  board("msi-b460-torpedo", "MSI MAG B460 TORPEDO", "LGA1200", "B460", "ATX", "DDR4", { maxGb: 128, m2: 2, pcie: 3, match: /B460 TORPEDO/i }),
-  board("msi-b460m-pro", "MSI B460M PRO", "LGA1200", "B460", "mATX", "DDR4", { slots: 2, maxGb: 64, m2: 1, pcie: 3, match: /B460M[- ]PRO/i }),
-  board("msi-b450-tomahawk", "MSI B450 TOMAHAWK", "AM4", "B450", "ATX", "DDR4", { maxGb: 64, m2: 1, pcie: 3, match: /B450 TOMAHAWK/i }),
-  board("msi-b550-a-pro", "MSI B550-A PRO", "AM4", "B550", "ATX", "DDR4", { maxGb: 128, m2: 2, pcie: 4, match: /B550-A PRO/i }),
+  // Les cartes réellement installées sont reconnues grâce à la base de boards/ (73 modèles relevés chez les fabricants).
 
   // Proposées pour un changement de plateforme : génériques par chipset et format.
   // Les cartes d'un même chipset se valent pour la compatibilité ; le prix est la médiane du marché.
@@ -267,12 +267,31 @@ export const CASE_GPU_LENGTH: Record<string, number> = {
 export const findCpu = (name?: string): CpuSpec | undefined => cpuFromName(name);
 /** Carte graphique installée : table de référence, versions portables et estimation pour les modèles absents. */
 export const findGpu = (name?: string): GpuSpec | undefined => findGpuSpec(name);
-export const findBoard = (name?: string) => (name ? BOARDS.find((b) => b.match?.test(name)) : undefined);
+/** Carte mère installée : base des modèles réels (fiches fabricants), sinon rien (on raisonne alors par chipset). */
+export const findBoard = (name?: string) => findKnownBoard(name) ?? (name ? BOARDS.find((b) => b.match?.test(name)) : undefined);
 
 /** Chipset déduit du nom de la carte mère (« MAG B460 TORPEDO » → B460, « H81M-P33 » → H81). */
 export function findChipset(boardName?: string): ChipsetSpec | undefined {
-  const m = boardName?.toUpperCase().match(/\b([ABHQXZ]\d{2,3})(?:[EMI]|-|\b)/);
-  return m ? CHIPSETS.find((c) => c.chipset === m[1]) : undefined;
+  const m = boardName?.toUpperCase().match(/\b([ABHQXZ]\d{2,3})(E)?(?:[MI]|-|\b)/);
+  if (!m) return undefined;
+  // Variantes « E » (B650E, X670E, X870E) : port graphique en PCIe 5.0 ; sinon, le chipset de base.
+  return (m[2] && CHIPSETS.find((c) => c.chipset === m[1] + "E")) || CHIPSETS.find((c) => c.chipset === m[1]);
+}
+
+/**
+ * Plateformes que PCEvolu ne prend pas en charge (stations de travail, AMD AM3/FM2, Intel avant la 4e génération) :
+ * on le dit clairement au lieu de supposer.
+ */
+const UNSUPPORTED_PLATFORMS: [RegExp, string][] = [
+  [/\b(X79|X99|X299|C6\d\d|C2\d\d|W680|W790)\b/i, "station de travail Intel (LGA2011 / LGA2066 / Xeon)"],
+  [/\b(X399|TRX40|TRX50|WRX80|WRX90)\b/i, "AMD Threadripper"],
+  [/\b(970|990FX|990X|A88X|A78|A68H|A58)\b/i, "AMD AM3 / FM2 (avant Ryzen)"],
+  [/\b(H61|H67|P67|Z68|B75|H77|Z75|Z77|Q77)\b/i, "Intel 2e / 3e génération (LGA1155)"],
+];
+
+export function unsupportedPlatform(boardName?: string): string | undefined {
+  if (!boardName || findChipset(boardName)) return undefined;
+  return UNSUPPORTED_PLATFORMS.find(([re]) => re.test(boardName))?.[1];
 }
 
 /** PC de marque (Dell, HP, Lenovo…) : alimentation et carte mère souvent propriétaires. */

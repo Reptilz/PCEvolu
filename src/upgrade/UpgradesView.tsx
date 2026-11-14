@@ -114,6 +114,12 @@ export function UpgradesView({
             {showForm ? "Fermer" : missing > 0 ? "Renseigner ces infos" : "Modifier"}
           </button>
         </p>
+        {profile.unsupportedPlatform && (
+          <p className="up-unsupported">
+            Ta carte mère est une plateforme {profile.unsupportedPlatform} : PCEvolu ne connaît pas ses règles de compatibilité. Les processeurs
+            proposés passent tous par un changement de carte mère, et les autres pièces restent à vérifier sur la fiche de ta carte.
+          </p>
+        )}
         {showForm && (
           <div className="up-form">
             <Questionnaire a={answers} update={update} />

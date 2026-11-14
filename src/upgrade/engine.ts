@@ -6,7 +6,7 @@
 // à la proposition, puis on vérifie à son tour ce que ce nouveau composant implique.
 
 import type {
-  Addition, BoardSpec, Category, Check, CoolerSpec, CpuSpec, GpuSpec, Part, Proposal, PsuSpec, RamKit, Socket,
+  Addition, BiosFamily, BoardSpec, Category, Check, CoolerSpec, CpuSpec, GpuSpec, Part, Proposal, PsuSpec, RamKit, Socket,
 } from "./types";
 import type { Profile } from "./profile";
 import { BOARDS, CASES, COOLERS, CPUS, FAN_KITS, GPUS, PSUS, RAM_KITS, SSDS, CHIPSETS } from "./catalog";
@@ -93,6 +93,15 @@ export function checkPower(p: Profile, cpuPowerW: number | undefined, gpu: GpuSp
 // Cartes graphiques
 // ---------------------------------------------------------------------------
 
+/**
+ * Partages de lignes de la carte mère qui concernent ce PC : les notes propres aux Ryzen 8000G
+ * ne s'affichent qu'avec un Ryzen 8000G installé.
+ */
+function relevantSharing(p: Profile): string[] {
+  const apu8000 = /ryzen \d 8\d00g/i.test(p.cpu?.name ?? "");
+  return (p.board?.sharing ?? []).filter((s) => !/Ryzen (\d )?8\d00G|Ryzen 8000G/.test(s) || apu8000);
+}
+
 export function proposeGpus(p: Profile): Proposal[] {
   // Sur un portable, la puce graphique est soudée : rien à proposer.
   if (p.isLaptop) return [];
@@ -116,6 +125,12 @@ export function proposeGpus(p: Profile): Proposal[] {
       checks.push({ label: "Port PCIe", status: "ok", detail: `Fonctionne sur ton port PCIe ${p.pcieGen}.0 x16${p.pcieGen < 4 ? " avec une perte négligeable (1 à 3 %)" : ""}.` });
     } else {
       checks.push({ label: "Port PCIe", status: "ok", detail: "Toute carte mère avec un port PCIe x16 convient." });
+    }
+    // Partage du port graphique sur ta carte (ex. « utiliser le M2_2 fait passer le port en x8 »).
+    const gpuSharing = relevantSharing(p).filter((s) => /carte graphique/i.test(s));
+    if (gpuSharing.length) {
+      const last = checks[checks.length - 1];
+      checks[checks.length - 1] = { ...last, detail: `${last.detail} À savoir sur ta carte mère : ${gpuSharing.join(" ")}` };
     }
 
     // PC de marque : boîtier, alimentation et carte mère souvent propriétaires.
@@ -316,6 +331,57 @@ function sameMounting(a?: Socket, b?: Socket) {
   return groups.some((g) => g.includes(a) && g.includes(b));
 }
 
+/** Familles de BIOS d'un processeur, de la plus précise à la plus générale (ex. 5800X3D → zen3-x3d, puis zen3). */
+function biosFamilies(c: CpuSpec): BiosFamily[] {
+  const x3d = /x3d/i.test(c.name);
+  const apu = /\d{4}G\b/i.test(c.name);
+  switch (c.gen) {
+    // Les X3D ont leur propre BIOS minimum (souvent plus récent) : pas de repli sur la famille générale.
+    case "amd-zen3": return /5700x3d/i.test(c.name) ? ["amd-zen3-x3d-5700"] : x3d ? ["amd-zen3-x3d"] : ["amd-zen3"];
+    case "amd-zen4": return apu ? ["amd-zen4-apu"] : ["amd-zen4"];
+    case "amd-zen5": return x3d ? ["amd-zen5-x3d"] : ["amd-zen5"];
+    case "intel-10": return [];
+    default: return [c.gen as BiosFamily];
+  }
+}
+
+const frDate = (iso?: string) => (iso && !Number.isNaN(Date.parse(iso)) ? new Date(iso).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }) : "");
+
+/**
+ * BIOS nécessaire pour un processeur sur la carte mère actuelle.
+ * - carte connue : on compare la date du BIOS installé à celle du premier BIOS qui accepte ce processeur ;
+ * - sinon : règle du chipset (mise à jour conseillée par prudence).
+ */
+function biosCheck(p: Profile, c: CpuSpec): Check | undefined {
+  const fams = biosFamilies(c);
+  const known = p.board?.biosMin ? fams.map((f) => [f, p.board!.biosMin![f]] as const).find(([, v]) => v !== undefined) : undefined;
+  const flash = p.board?.biosFlashback
+    ? " Ta carte peut se mettre à jour sans processeur (bouton dédié)."
+    : " Fais-le avec ton processeur actuel, avant le changement : sans ce BIOS, le nouveau processeur ne démarrera pas.";
+  if (known) {
+    const min = known[1] as { version: string; date: string } | null;
+    if (min === null) return { label: "BIOS", status: "fail", detail: `Le fabricant de ta carte mère ne prend pas en charge ce processeur, même avec le dernier BIOS.` };
+    const installed = p.biosDate ? Date.parse(p.biosDate) : NaN;
+    const minDate = Date.parse(min.date);
+    // Les Ryzen 5000 sortis après les premiers (5500, 5600, 5700X…) demandent souvent un BIOS plus récent que le minimum « Ryzen 5000 ».
+    const lateZen3 = c.gen === "amd-zen3" && !/x3d/i.test(c.name) && /ryzen \d (5500|5600(?!x)|5700x)\b/i.test(c.name);
+    if (!Number.isNaN(installed) && !Number.isNaN(minDate) && installed >= minDate) {
+      return lateZen3
+        ? { label: "BIOS", status: "warn", detail: `Ton BIOS (${p.biosVersion ?? "installé"}, ${frDate(p.biosDate)}) prend en charge les premiers Ryzen 5000, mais ce modèle, sorti plus tard, demande parfois un BIOS plus récent : vérifie sa ligne dans la liste des processeurs compatibles de ta carte.` }
+        : { label: "BIOS", status: "ok", detail: `Ton BIOS (${p.biosVersion ?? "installé"}, ${frDate(p.biosDate)}) prend déjà en charge ce processeur (version ${min.version} ou plus récente, d'après le fabricant).` };
+    }
+    return {
+      label: "BIOS",
+      status: "warn",
+      detail: `Il faut le BIOS ${min.version}${frDate(min.date) ? ` (${frDate(min.date)})` : ""} ou plus récent${lateZen3 ? " (voire plus récent pour ce modèle)" : ""}${p.biosVersion ? `, tu as le ${p.biosVersion}${p.biosDate ? ` (${frDate(p.biosDate)})` : ""}` : ""}.${flash}`,
+    };
+  }
+  if (p.chipset?.biosUpdateFor?.includes(c.gen)) {
+    return { label: "BIOS", status: "warn", detail: `Une mise à jour du BIOS est probablement nécessaire${p.biosVersion ? ` (tu as le ${p.biosVersion}${p.biosDate ? `, ${frDate(p.biosDate)}` : ""})` : ""} : vérifie la version minimale dans la liste des processeurs compatibles de ta carte mère.${flash}` };
+  }
+  return undefined;
+}
+
 export function proposeCpus(p: Profile): Proposal[] {
   // Sur un portable, le processeur est soudé : rien à proposer.
   if (p.isLaptop) return [];
@@ -334,9 +400,8 @@ export function proposeCpus(p: Profile): Proposal[] {
 
     if (dropIn) {
       checks.push({ label: "Carte mère", status: "ok", detail: `Compatible avec ta ${p.boardName ?? "carte mère"} (socket ${c.socket}, chipset ${p.chipset!.chipset}).` });
-      if (p.chipset!.biosUpdateFor?.includes(c.gen)) {
-        checks.push({ label: "BIOS", status: "warn", detail: "Mets à jour le BIOS AVANT d'installer ce processeur, sinon le PC ne démarrera pas." });
-      }
+      const bios = biosCheck(p, c);
+      if (bios) checks.push(bios);
       if (c.ramMaxMts.DDR4 && p.ramMts && c.ramMaxMts.DDR4 > p.ramMts && p.ramPlatformMaxMts && p.ramPlatformMaxMts < c.ramMaxMts.DDR4) {
         notes.push(`Avec ce processeur, ta carte mère autorise la RAM jusqu'à ${c.ramMaxMts.DDR4} MT/s.`);
       }
@@ -550,7 +615,11 @@ function slotHint(slot?: string): string {
 export function proposeStorage(p: Profile): Proposal[] {
   const out: Proposal[] = [];
   const m2Free = p.m2Total != null ? p.m2Total - p.m2Used : undefined;
-  const gen = p.pcieGen ?? 3;
+  // Génération du prochain emplacement M.2 libre, quand on connaît la carte (ex. [4, 3] : le 2e est en PCIe 3.0).
+  const nextM2Gen = p.board?.m2Gens?.[p.m2Used];
+  const gen = nextM2Gen ?? p.pcieGen ?? 3;
+  // Partages de lignes connus pour cette carte (M.2 ↔ SATA, M.2 ↔ port PCIe).
+  const m2Sharing = relevantSharing(p).filter((s) => /m\.?2|m2/i.test(s));
 
   for (const s of SSDS) {
     const checks: Check[] = [];
@@ -573,14 +642,18 @@ export function proposeStorage(p: Profile): Proposal[] {
       } else if (m2Free <= 0) {
         continue; // pas de place : seules les options SATA restent proposées
       } else {
-        checks.push({ label: "Emplacement M.2", status: "ok", detail: `${m2Free} emplacement${m2Free > 1 ? "s" : ""} M.2 libre${m2Free > 1 ? "s" : ""} sur ${p.m2Total}.` });
+        checks.push({
+          label: "Emplacement M.2",
+          status: m2Sharing.length ? "warn" : "ok",
+          detail: `${m2Free} emplacement${m2Free > 1 ? "s" : ""} M.2 libre${m2Free > 1 ? "s" : ""} sur ${p.m2Total}${nextM2Gen ? ` (le prochain en PCIe ${nextM2Gen}.0)` : ""}.${m2Sharing.length ? ` À savoir sur ta carte mère : ${m2Sharing.join(" ")}` : ""}`,
+        });
       }
       if (s.iface === "NVMe4" && gen < 4) {
-        checks.push({ label: "Vitesse", status: "ok", detail: "SSD PCIe 4.0 sur ta plateforme PCIe 3.0 : il fonctionne, limité à ≈ 3 500 Mo/s. Inutile de payer plus cher pour un modèle haut de gamme." });
+        checks.push({ label: "Vitesse", status: "ok", detail: `SSD PCIe 4.0 sur ${nextM2Gen ? "un emplacement" : "ta plateforme"} PCIe 3.0 : il fonctionne, limité à ≈ 3 500 Mo/s. Inutile de payer plus cher pour un modèle haut de gamme.` });
       } else {
         checks.push({ label: "Vitesse", status: "ok", detail: s.iface === "NVMe3" ? "≈ 3 500 Mo/s, la pleine vitesse de ton port." : "≈ 7 000 Mo/s." });
       }
-      notes.push("Sur certaines cartes mères, le 2e emplacement M.2 désactive 1 ou 2 ports SATA : voir le manuel.");
+      if (!p.board?.sharing) notes.push("Sur certaines cartes mères, le 2e emplacement M.2 désactive 1 ou 2 ports SATA : voir le manuel.");
     }
     out.push(finalize({
       id: `ssd-${s.id}`, category: "storage", title: s.name, main: s, mainQuantity: 1,

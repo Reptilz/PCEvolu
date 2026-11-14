@@ -1,6 +1,6 @@
 {
- "version": 5,
- "generatedAt": "2026-11-14T22:42:39.691Z",
+ "version": 6,
+ "generatedAt": "2026-11-14T23:10:20.243Z",
  "chipsets": [
   {
    "chipset": "H81",
@@ -717,6 +717,38 @@
    ]
   },
   {
+   "chipset": "B650E",
+   "socket": "AM5",
+   "ramTypes": [
+    "DDR5"
+   ],
+   "pcieGpu": 5,
+   "cpuGens": [
+    "amd-zen4",
+    "amd-zen5"
+   ],
+   "ramOc": true,
+   "biosUpdateFor": [
+    "amd-zen5"
+   ]
+  },
+  {
+   "chipset": "X670E",
+   "socket": "AM5",
+   "ramTypes": [
+    "DDR5"
+   ],
+   "pcieGpu": 5,
+   "cpuGens": [
+    "amd-zen4",
+    "amd-zen5"
+   ],
+   "ramOc": true,
+   "biosUpdateFor": [
+    "amd-zen5"
+   ]
+  },
+  {
    "chipset": "X670",
    "socket": "AM5",
    "ramTypes": [
@@ -760,6 +792,19 @@
   },
   {
    "chipset": "X870",
+   "socket": "AM5",
+   "ramTypes": [
+    "DDR5"
+   ],
+   "pcieGpu": 5,
+   "cpuGens": [
+    "amd-zen4",
+    "amd-zen5"
+   ],
+   "ramOc": true
+  },
+  {
+   "chipset": "X870E",
    "socket": "AM5",
    "ramTypes": [
     "DDR5"
@@ -3315,78 +3360,6 @@
   }
  ],
  "boards": [
-  {
-   "kind": "board",
-   "id": "msi-b460-torpedo",
-   "name": "MSI MAG B460 TORPEDO",
-   "socket": "LGA1200",
-   "chipset": "B460",
-   "formFactor": "ATX",
-   "ramType": "DDR4",
-   "ramSlots": 4,
-   "maxRamGb": 128,
-   "m2Slots": 2,
-   "pcieGpu": 3,
-   "availability": null,
-   "match": {
-    "re": "B460 TORPEDO",
-    "flags": "i"
-   }
-  },
-  {
-   "kind": "board",
-   "id": "msi-b460m-pro",
-   "name": "MSI B460M PRO",
-   "socket": "LGA1200",
-   "chipset": "B460",
-   "formFactor": "mATX",
-   "ramType": "DDR4",
-   "ramSlots": 2,
-   "maxRamGb": 64,
-   "m2Slots": 1,
-   "pcieGpu": 3,
-   "availability": null,
-   "match": {
-    "re": "B460M[- ]PRO",
-    "flags": "i"
-   }
-  },
-  {
-   "kind": "board",
-   "id": "msi-b450-tomahawk",
-   "name": "MSI B450 TOMAHAWK",
-   "socket": "AM4",
-   "chipset": "B450",
-   "formFactor": "ATX",
-   "ramType": "DDR4",
-   "ramSlots": 4,
-   "maxRamGb": 64,
-   "m2Slots": 1,
-   "pcieGpu": 3,
-   "availability": null,
-   "match": {
-    "re": "B450 TOMAHAWK",
-    "flags": "i"
-   }
-  },
-  {
-   "kind": "board",
-   "id": "msi-b550-a-pro",
-   "name": "MSI B550-A PRO",
-   "socket": "AM4",
-   "chipset": "B550",
-   "formFactor": "ATX",
-   "ramType": "DDR4",
-   "ramSlots": 4,
-   "maxRamGb": 128,
-   "m2Slots": 2,
-   "pcieGpu": 4,
-   "availability": null,
-   "match": {
-    "re": "B550-A PRO",
-    "flags": "i"
-   }
-  },
   {
    "kind": "board",
    "id": "mb-b760-ddr4-atx",

@@ -154,8 +154,8 @@ const BOARDS: [string, string | undefined][] = [
   ["PRO B760M-A WIFI DDR4 (MS-7D99)", "B760"],
   ["ROG STRIX Z790-F GAMING WIFI", "Z790"],
   ["B650M DS3H", "B650"],
-  ["X670E AORUS MASTER", "X670"],
-  ["MAG X870E TOMAHAWK WIFI", "X870"],
+  ["X670E AORUS MASTER", "X670E"],
+  ["MAG X870E TOMAHAWK WIFI", "X870E"],
   ["0K240Y", undefined],
   ["To Be Filled By O.E.M.", undefined],
 ];

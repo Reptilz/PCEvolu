@@ -72,7 +72,23 @@ export interface BoardSpec {
   price?: number;
   note?: string;
   match?: RegExp;
+  /** Génération PCIe de chaque emplacement M.2 (ex. [4, 3]). */
+  m2Gens?: number[];
+  sata?: number;
+  /** Partages de lignes (« utiliser le 2e M.2 désactive SATA 5 et 6 »…). */
+  sharing?: string[];
+  /** Mise à jour du BIOS possible sans processeur (bouton dédié). */
+  biosFlashback?: boolean;
+  /** Premier BIOS qui accepte chaque famille de processeurs (null = jamais), clé = BiosFamily. */
+  biosMin?: Partial<Record<BiosFamily, { version: string; date: string } | null>>;
+  /** Fiche du fabricant de la carte mère. */
+  source?: string;
 }
+
+/** Familles de processeurs pour lesquelles une carte mère peut demander un BIOS plus récent. */
+export type BiosFamily =
+  | "amd-zen1" | "amd-zen1plus" | "amd-zen2" | "amd-zen3" | "amd-zen3-x3d" | "amd-zen3-x3d-5700" | "amd-zen4" | "amd-zen4-apu" | "amd-zen5" | "amd-zen5-x3d"
+  | "intel-11" | "intel-12" | "intel-13" | "intel-14" | "intel-ultra2";
 
 export type GpuPower = "none" | "1x6" | "1x8" | "8+6" | "2x8" | "3x8" | "12V-2x6";
 

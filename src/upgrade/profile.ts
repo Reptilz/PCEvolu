@@ -3,7 +3,7 @@
 
 import type { Report } from "../types";
 import type { BoardSpec, ChipsetSpec, CpuSpec, FormFactor, GpuSpec, RamType, Socket } from "./types";
-import { CASE_GPU_LENGTH, COOLER_CAPACITY, OEM_BRANDS, findBoard, findChipset, findCpu, findGpu } from "./catalog";
+import { CASE_GPU_LENGTH, COOLER_CAPACITY, OEM_BRANDS, findBoard, findChipset, findCpu, findGpu, unsupportedPlatform } from "./catalog";
 import { clean } from "../format";
 
 // ---------------------------------------------------------------------------
@@ -93,6 +93,11 @@ export interface Profile {
   /** Emplacement de la première barrette (ex. « ChannelA-DIMM1 »). */
   ramSlotName?: string;
 
+  /** Date et version du BIOS installé (lues par Windows). */
+  biosDate?: string;
+  biosVersion?: string;
+  /** Plateforme non prise en charge par PCEvolu (station de travail, AM3…), à signaler clairement. */
+  unsupportedPlatform?: string;
   /** Génération PCIe effective du port de la carte graphique. */
   pcieGen?: 3 | 4 | 5;
   m2Total?: number;
@@ -133,7 +138,7 @@ export function buildProfile(r: Report, a: Answers): Profile {
   const ramPlatformMaxMts = chipset && !chipset.ramOc ? cpuRamMax : cpuRamMax ? Math.max(cpuRamMax, 3600) : undefined;
 
   // Les processeurs Intel de 10e génération limitent le port graphique au PCIe 3.0, quelle que soit la carte mère.
-  let pcieGen = board?.pcieGpu ?? chipset?.pcieGpu;
+  let pcieGen = board?.pcieGpu || chipset?.pcieGpu;
   if (pcieGen && cpu?.gen === "intel-10") pcieGen = 3;
   if (pcieGen && (cpu?.gen === "amd-zen1" || cpu?.gen === "amd-zen1plus")) pcieGen = 3;
   // Ryzen 5 5500 et APU Ryzen 4000G / 5000G : port graphique limité au PCIe 3.0, même sur une carte B550.
@@ -166,14 +171,17 @@ export function buildProfile(r: Report, a: Answers): Profile {
     ramModules: mods.length,
     ramStickGb: mods[0]?.capacityBytes ? Math.round(mods[0].capacityBytes / GB) : undefined,
     ramTotalGb: Math.round(r.memory.totalBytes / GB),
-    ramSlots: board?.ramSlots ?? r.memory.slotsTotal ?? mods.length,
-    ramMaxGb: board?.maxRamGb ?? (r.memory.maxCapacityBytes ? Math.round(r.memory.maxCapacityBytes / GB) : undefined),
+    ramSlots: board?.ramSlots || r.memory.slotsTotal || mods.length,
+    ramMaxGb: board?.maxRamGb || (r.memory.maxCapacityBytes ? Math.round(r.memory.maxCapacityBytes / GB) : undefined),
     ramMts,
     ramPlatformMaxMts,
     ramPartNumber: mods[0]?.partNumber,
     ramSlotName: mods[0]?.slot,
     pcieGen,
-    m2Total: board?.m2Slots,
+    biosDate: r.board.biosDate,
+    biosVersion: r.board.biosVersion,
+    unsupportedPlatform: unsupportedPlatform(boardName),
+    m2Total: board?.m2Slots || undefined,
     m2Used: r.disks.filter((d) => d.bus === "NVMe").length,
     systemDiskFreeRatio: sys?.sizeBytes && sys.freeBytes != null ? sys.freeBytes / sys.sizeBytes : undefined,
     psuWatts,
