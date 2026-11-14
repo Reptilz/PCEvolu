@@ -272,14 +272,25 @@ function Diagnostic({ goal, verdict, onUpgrades, byPart }: { goal: Goal; verdict
   return (
     <>
       {verdict.fps && (
-        <div className="diag-fps">
-          <FpsBar label="Ta carte graphique permet" value={verdict.fps.gpuFps} target={goal.fps} limit={verdict.fps.limit === "gpu"} />
-          <FpsBar label="Ton processeur permet" value={verdict.fps.cpuFps} target={goal.fps} limit={verdict.fps.limit === "cpu"} />
-          <p className="muted small">
+        <section className="limiter">
+          <h3 className="limiter-title">Qui limite ton PC ?</h3>
+          <p className="limiter-sub">
             Le PC va à la vitesse du plus lent des deux, dans un jeu récent en qualité élevée. Les jeux compétitifs (Valorant, CS2, Fortnite en
             réglages bas) tournent bien plus vite.
           </p>
-        </div>
+          {(() => {
+            const max = Math.max(goal.fps * 1.35, verdict.fps.gpuFps * 1.08, verdict.fps.cpuFps * 1.08);
+            return (
+              <div className="limiter-bars">
+                <FpsBar icon="gpu" label="Carte graphique" value={verdict.fps.gpuFps} target={goal.fps} max={max} limit={verdict.fps.limit === "gpu"} />
+                <FpsBar icon="chip" label="Processeur" value={verdict.fps.cpuFps} target={goal.fps} max={max} limit={verdict.fps.limit === "cpu"} />
+                <div className="limiter-goal" style={{ left: `calc(var(--lim-label) + (100% - var(--lim-label) - var(--lim-value)) * ${goal.fps / max})` }}>
+                  <span>Objectif {goal.fps} i/s</span>
+                </div>
+              </div>
+            );
+          })()}
+        </section>
       )}
       {byPart ?? (
       <ul className="needs">
@@ -325,20 +336,25 @@ export function VerdictBanner({ verdict, onUpgrades, compact }: { verdict: Verdi
   );
 }
 
-function FpsBar({ label, value, target, limit }: { label: string; value: number; target: number; limit: boolean }) {
-  const max = Math.max(target * 1.6, value * 1.1);
+/** Une ligne « composant → ce qu'il permet », sur une échelle commune avec l'objectif. */
+function FpsBar({ icon, label, value, target, max, limit }: { icon: IconName; label: string; value: number; target: number; max: number; limit: boolean }) {
+  const state = value >= target ? "ok" : limit ? "limit" : "short";
   return (
-    <div className="fpsbar">
-      <div className="fpsbar-head">
+    <div className={`lim-row s-${state}`}>
+      <span className="lim-label">
+        <Icon name={icon} />
         <span>
-          {label} {limit && <em className="tag warn">facteur limitant</em>}
+          {label}
+          {limit && <span className="lim-flag">Le plus lent</span>}
         </span>
-        <b className="mono">≈ {value} i/s</b>
-      </div>
-      <div className="fpsbar-track">
-        <i style={{ width: `${(value / max) * 100}%`, background: value >= target ? "var(--ok)" : value >= target * 0.8 ? "var(--warn)" : "var(--bad)" }} />
-        <span className="fpsbar-target" style={{ left: `${(target / max) * 100}%` }} title={`Objectif ${target} i/s`} />
-      </div>
+      </span>
+      <span className="lim-track">
+        <i style={{ width: `${Math.min(100, (value / max) * 100)}%` }} />
+      </span>
+      <span className="lim-value">
+        <b>{fluidity(value)}</b>
+        <span className="num">≈ {value} i/s</span>
+      </span>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import type { Metrics, Report } from "./types";
 import { recommend, type Recommendation } from "./recommendations";
 import { demoMetrics, demoReport } from "./demo";
 import { clean, date, diskSize, gb, ghz, speed, uptime } from "./format";
-import { Icon, type IconName } from "./icons";
+import { BrandLogo, hasBrandLogo, Icon, type IconName } from "./icons";
 import { T } from "./glossary";
 import { UpgradesView } from "./upgrade/UpgradesView";
 import { buildProfile, loadAnswers, type Answers } from "./upgrade/profile";
@@ -466,48 +466,74 @@ function BuyList({ recos, openTab, options, goal, verdict }: {
   if (buys.length === 0) return <p className="muted">Aucune pièce ne limite ton PC pour cet objectif.</p>;
 
   return (
-    <ul className="imp-buys">
+    <div className="parts">
       {buys.map((b) => {
         const opts = options?.[b.tab] ?? [];
         return (
-          <li key={b.id} className="imp-buy">
-            <div className="imp-buy-head">
-              <span className="pd-kind">{b.kind}</span>
-              <div>
-                <div className="imp-buy-title">
-                  <T>{b.title}</T>
-                  {b.goal && <span className="row-flag">Bloque ton objectif</span>}
+          <section key={b.id} className={`part-card ${b.goal ? "blocking" : ""}`}>
+            <header className="part-head">
+              <span className="part-ico">
+                <Icon name={TAB_ICON[b.tab] ?? "spark"} />
+              </span>
+              <div className="part-main">
+                <div className="part-kind">
+                  {b.kind}
+                  {b.goal && <span className="part-flag">Bloque ton objectif</span>}
                 </div>
-                <p className="imp-why">
+                <div className="part-title">{b.title}</div>
+                <p className="part-why">
                   <T>{b.why}</T>
                 </p>
               </div>
-              {b.price && <span className="pd-amount num">{b.price}</span>}
-            </div>
+              {b.price && (
+                <span className="part-price">
+                  <span className="muted">Budget</span>
+                  <b className="num">{b.price}</b>
+                </span>
+              )}
+            </header>
+
             {opts.length > 0 ? (
-              <ul className="imp-opts">
-                {opts.map((o) => (
-                  <li key={o.proposal.id}>
-                    <button className="imp-opt" onClick={() => openTab(b.tab)}>
-                      <span className="imp-opt-name">{(o.proposal as unknown as { title: string }).title}</span>
-                      <span className="imp-opt-effect">{o.impact.reachesGoal ? "atteint ton objectif" : o.impact.label}</span>
-                      <span className="num">{o.proposal.total} €</span>
-                    </button>
-                  </li>
-                ))}
+              <ul className="part-opts">
+                {opts.map((o) => {
+                  const main = (o.proposal as unknown as { main: { brand?: string } }).main;
+                  return (
+                    <li key={o.proposal.id}>
+                      <button className="part-opt" onClick={() => openTab(b.tab)}>
+                        <span className="part-opt-name">
+                          {hasBrandLogo(main?.brand) ? <BrandLogo brand={main.brand} /> : <Icon name={TAB_ICON[b.tab] ?? "spark"} />}
+                          {(o.proposal as unknown as { title: string }).title}
+                        </span>
+                        <span className={`part-opt-effect ${o.impact.reachesGoal ? "ok" : ""}`}>
+                          {o.impact.reachesGoal ? "Atteint ton objectif" : o.impact.label}
+                        </span>
+                        <span className="part-opt-price num">{o.proposal.total} €</span>
+                      </button>
+                    </li>
+                  );
+                })}
               </ul>
             ) : (
-              b.goal && <p className="imp-why">Aucune pièce seule ne suffit dans ton budget : le plan conseillé en combine plusieurs.</p>
+              b.goal && (
+                <p className="part-none">
+                  Aucune pièce seule ne suffit dans ton budget : le plan conseillé, en haut de la page, en combine plusieurs.
+                </p>
+              )
             )}
-            <button className="link" onClick={() => openTab(b.tab)}>
-              Voir toutes les options compatibles
-            </button>
-          </li>
+
+            <footer className="part-foot">
+              <button className="link" onClick={() => openTab(b.tab)}>
+                Voir toutes les options compatibles
+              </button>
+            </footer>
+          </section>
         );
       })}
-    </ul>
+    </div>
   );
 }
+
+const TAB_ICON: Record<string, IconName> = { gpu: "gpu", cpu: "chip", ram: "ram", storage: "disk" };
 
 const price = (a?: number, b?: number) => (a == null ? "—" : a === b || b == null ? `${a} €` : `${a} à ${b} €`);
 
