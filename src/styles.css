@@ -737,3 +737,22 @@ abbr.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px;
 .pd-brand { width: 18px; height: 18px; }
 .chip-logo { width: 15px; height: 15px; margin-right: 6px; vertical-align: -3px; }
 .seg-ico { width: 17px; height: 17px; opacity: 0.85; }
+/* ---- Ligne dépliée : une carte bien distincte du reste de la liste ---- */
+.row { transition: background-color 0.15s; }
+.row.open {
+  margin: 10px -12px 14px;
+  border-radius: 16px;
+  border-bottom-color: transparent;
+  background: color-mix(in srgb, var(--accent) 5%, var(--panel));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+.row.open > .row-line { padding: 18px 18px 14px; border-radius: 16px 16px 0 0; }
+.row.open > .row-line:hover { background: transparent; }
+.row.open > .row-line .row-title { font-size: 16px; }
+.row.open > .row-detail { padding: 4px 18px 22px; border-top: 1px solid var(--line-soft); margin: 0 18px; padding-left: 0; padding-right: 0; }
+/* La ligne au-dessus d'une carte ouverte n'a plus besoin de son trait */
+.row:has(+ .row.open) { border-bottom-color: transparent; }
+/* Dans une carte ouverte, le titre et le prix sont déjà dans l'en-tête : pas de doublon */
+.row-detail .pd-top { display: none; }
+.row-detail .pd-sub { margin-top: 14px; }
+@media (prefers-reduced-motion: reduce) { .row { transition: none; } }
