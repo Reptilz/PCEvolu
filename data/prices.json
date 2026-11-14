@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-14T19:54:14.019Z",
+  "updatedAt": "2026-11-14T20:16:33.250Z",
   "currency": "EUR",
   "source": "Google Shopping France (via Serper.dev), médiane des marchands",
   "items": {
@@ -458,109 +458,6 @@
         }
       ]
     },
-    "msi-b550-a-pro": {
-      "price": 124,
-      "min": 115,
-      "max": 132,
-      "offers": 2,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
-      "best": [
-        {
-          "merchant": "Amazon.fr",
-          "price": 114.99,
-          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+B550-A+PRO&prds=localAnnotatedOfferId:1,catalogid:2131300993584190863,gpcid:6034794357284229804,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
-        {
-          "merchant": "LambdaTek",
-          "price": 132.3,
-          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+B550-A+PRO&prds=localAnnotatedOfferId:1,catalogid:10037429060888423206,gpcid:15188871337170764830,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        }
-      ]
-    },
-    "msi-b760-p-ddr5": {
-      "price": 147,
-      "min": 120,
-      "max": 174,
-      "offers": 2,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
-      "best": [
-        {
-          "merchant": "reichelt.com",
-          "price": 120,
-          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+PRO+B760-P+II+DDR5&prds=localAnnotatedOfferId:1,catalogid:11179616463896992786,gpcid:16980433012390831109,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
-        {
-          "merchant": "monsieurplus.com",
-          "price": 173.99
-        }
-      ]
-    },
-    "msi-b860-p": {
-      "price": 185,
-      "min": 160,
-      "max": 243,
-      "offers": 4,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
-      "best": [
-        {
-          "merchant": "Cdiscount",
-          "price": 159.99,
-          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+PRO+B860-P&prds=localAnnotatedOfferId:1,catalogid:7982297529312849605,gpcid:6963847260410394930,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
-        {
-          "merchant": "Amazon.fr",
-          "price": 164.9,
-          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+PRO+B860-P&prds=localAnnotatedOfferId:1,catalogid:15786609209703090668,gpcid:11815304042509474356,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
-        {
-          "merchant": "Microconcept",
-          "price": 204.9
-        }
-      ]
-    },
-    "asus-b860m-a": {
-      "price": 161,
-      "min": 160,
-      "max": 161,
-      "offers": 2,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
-      "best": [
-        {
-          "merchant": "Cdiscount",
-          "price": 159.96,
-          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+PRIME+B860M-A&prds=localAnnotatedOfferId:1,catalogid:604461448829273097,gpcid:2797385231888142508,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
-        {
-          "merchant": "Amazon.fr",
-          "price": 161.49,
-          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+PRIME+B860M-A&prds=localAnnotatedOfferId:1,catalogid:8740152100517555277,gpcid:11631824710229896479,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        }
-      ]
-    },
-    "gb-b850-eagle": {
-      "price": 206,
-      "min": 162,
-      "max": 250,
-      "offers": 5,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
-      "best": [
-        {
-          "merchant": "Amazon.fr",
-          "price": 161.9,
-          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+B850+EAGLE+WIFI6E&prds=localAnnotatedOfferId:1,catalogid:13011122354914573204,gpcid:12705921436066820857,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
-        {
-          "merchant": "Powerplanet",
-          "price": 169.54,
-          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+B850+EAGLE+WIFI6E&prds=localAnnotatedOfferId:1,catalogid:12299789727648618693,gpcid:1496863629078546820,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
-        {
-          "merchant": "Amazon.fr - Seller",
-          "price": 205.83,
-          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+B850+EAGLE+WIFI6E&prds=localAnnotatedOfferId:1,catalogid:12259125322941173699,gpcid:4596689869997249822,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        }
-      ]
-    },
     "d4-1x8-3200": {
       "price": 85,
       "min": 66,
@@ -789,77 +686,6 @@
         {
           "merchant": "Accessoires Asus",
           "price": 399
-        }
-      ]
-    },
-    "rm750e": {
-      "price": 132,
-      "min": 105,
-      "max": 157,
-      "offers": 7,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
-      "best": [
-        {
-          "merchant": "Amazon.fr",
-          "price": 104.99,
-          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+Corsair+RM750e&prds=localAnnotatedOfferId:1,catalogid:16096050233374872137,gpcid:12138686083705714131,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
-        {
-          "merchant": "DropReference",
-          "price": 109,
-          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+Corsair+RM750e&prds=localAnnotatedOfferId:1,catalogid:13982148149264420388,gpcid:18218239628424594741,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
-        {
-          "merchant": "Absolute Pc",
-          "price": 119.9,
-          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+Corsair+RM750e&prds=localAnnotatedOfferId:1,catalogid:1813240033072930958,gpcid:18369099834361769476,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        }
-      ]
-    },
-    "rm850e": {
-      "price": 125,
-      "min": 91,
-      "max": 167,
-      "offers": 7,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
-      "best": [
-        {
-          "merchant": "Alternate.fr",
-          "price": 90.9,
-          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+Corsair+RM850e&prds=localAnnotatedOfferId:1,catalogid:12193656225694654379,gpcid:4507174790959596644,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
-        {
-          "merchant": "Amazon.fr",
-          "price": 108.9,
-          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+Corsair+RM850e&prds=localAnnotatedOfferId:1,catalogid:448772683634615711,gpcid:10147273576035040021,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
-        {
-          "merchant": "F10.eu",
-          "price": 120.1,
-          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+Corsair+RM850e&prds=localAnnotatedOfferId:1,catalogid:15848571327793053471,gpcid:14727344152472163771,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        }
-      ]
-    },
-    "rm1000e": {
-      "price": 175,
-      "min": 101,
-      "max": 243,
-      "offers": 11,
-      "updatedAt": "2026-11-14T19:54:14.019Z",
-      "best": [
-        {
-          "merchant": "Alternate.fr",
-          "price": 100.9,
-          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+Corsair+RM1000e&prds=localAnnotatedOfferId:1,catalogid:7878962374802274336,gpcid:9832500246350423590,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
-        },
-        {
-          "merchant": "Nozzler",
-          "price": 107.04
-        },
-        {
-          "merchant": "DropReference",
-          "price": 125,
-          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+Corsair+RM1000e&prds=localAnnotatedOfferId:1,catalogid:15760374486163426446,gpcid:2403832176852571931,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         }
       ]
     },
@@ -1401,6 +1227,413 @@
           "merchant": "DropReference",
           "price": 499,
           "link": "https://www.google.com/search?ibp=oshop&q=processeur+AMD+Ryzen+7+5700X3D&prds=localAnnotatedOfferId:1,catalogid:4029977722873560320,gpcid:10801900234925807280,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b760-ddr4-atx": {
+      "price": 145,
+      "min": 121,
+      "max": 184,
+      "offers": 9,
+      "updatedAt": "2026-11-14T20:15:29.634Z",
+      "best": [
+        {
+          "merchant": "Powerplanet",
+          "price": 120.95,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B760+DDR4+ATX&prds=localAnnotatedOfferId:1,catalogid:8741798340118664197,gpcid:2304064626982789796,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "reichelt.com",
+          "price": 121,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B760+DDR4+ATX&prds=localAnnotatedOfferId:1,catalogid:16986951230107675535,gpcid:11866666886891360565,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "GreaTecno",
+          "price": 140.17,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B760+DDR4+ATX&prds=localAnnotatedOfferId:1,catalogid:3039880661207759488,gpcid:18341345339290704455,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b760-ddr4-matx": {
+      "price": 114,
+      "min": 75,
+      "max": 176,
+      "offers": 17,
+      "updatedAt": "2026-11-14T20:15:29.634Z",
+      "best": [
+        {
+          "merchant": "CSMobiles",
+          "price": 75,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B760M+DDR4+micro+ATX&prds=localAnnotatedOfferId:1,catalogid:18068837497784681517,gpcid:4478176513685324513,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Alternate.fr",
+          "price": 77.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B760M+DDR4+micro+ATX&prds=localAnnotatedOfferId:1,catalogid:9549639558283315007,gpcid:13818578288482269538,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 87.18,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B760M+DDR4+micro+ATX&prds=localAnnotatedOfferId:1,catalogid:10283494607322380839,gpcid:12495367340776308492,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b760-ddr5-atx": {
+      "price": 157,
+      "min": 105,
+      "max": 272,
+      "offers": 20,
+      "updatedAt": "2026-11-14T20:15:29.634Z",
+      "best": [
+        {
+          "merchant": "Microconcept",
+          "price": 104.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B760+DDR5+ATX&prds=localAnnotatedOfferId:1,catalogid:1535009231935579348,gpcid:13563651114506945029,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 110.78,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B760+DDR5+ATX&prds=localAnnotatedOfferId:1,catalogid:3955285439252718959,gpcid:11526189485397563946,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "joybuy.fr",
+          "price": 118.5,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B760+DDR5+ATX&prds=localAnnotatedOfferId:1,catalogid:13135782675878949525,gpcid:5297487325526400917,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b760-ddr5-matx": {
+      "price": 119,
+      "min": 75,
+      "max": 219,
+      "offers": 31,
+      "updatedAt": "2026-11-14T20:15:29.634Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 74.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B760M+DDR5+micro+ATX&prds=localAnnotatedOfferId:1,catalogid:9002829550053664380,gpcid:3846748288920076340,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 78.3,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B760M+DDR5+micro+ATX&prds=localAnnotatedOfferId:1,catalogid:9184902271076300261,gpcid:5236625230358633517,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Darty",
+          "price": 84.32,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B760M+DDR5+micro+ATX&prds=localAnnotatedOfferId:1,catalogid:10774596265883761295,gpcid:1675792908845645209,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b860-atx": {
+      "price": 164,
+      "min": 117,
+      "max": 275,
+      "offers": 29,
+      "updatedAt": "2026-11-14T20:15:29.634Z",
+      "best": [
+        {
+          "merchant": "PcComponentes FR",
+          "price": 116.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B860+ATX+LGA1851&prds=localAnnotatedOfferId:1,catalogid:314584272192638180,gpcid:2732561351512479922,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Microconcept",
+          "price": 119.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B860+ATX+LGA1851&prds=localAnnotatedOfferId:1,catalogid:15568468573542232741,gpcid:3017172386421894318,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Darty",
+          "price": 120.99,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B860+ATX+LGA1851&prds=localAnnotatedOfferId:1,catalogid:17050973805796539124,gpcid:1425519225991362583,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b860-matx": {
+      "price": 140,
+      "min": 98,
+      "max": 228,
+      "offers": 38,
+      "updatedAt": "2026-11-14T20:15:29.634Z",
+      "best": [
+        {
+          "merchant": "informaticabarata.com",
+          "price": 98.17,
+          "link": "https://www.google.com/search?ibp=oshop&q=LGA1851+ATX+B860M+micro+m%C3%A8re+carte&prds=localAnnotatedOfferId:1,catalogid:11859571258182613476,gpcid:8277362319220418509,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 101.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=LGA1851+ATX+B860M+micro+m%C3%A8re+carte&prds=localAnnotatedOfferId:1,catalogid:13264948890848935385,gpcid:11679009053718820478,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 108.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=LGA1851+ATX+B860M+micro+m%C3%A8re+carte&prds=localAnnotatedOfferId:1,catalogid:3864085177703109865,gpcid:15910041914179948504,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b550-atx": {
+      "price": 124,
+      "min": 83,
+      "max": 189,
+      "offers": 28,
+      "updatedAt": "2026-11-14T20:15:29.634Z",
+      "best": [
+        {
+          "merchant": "KultureGeek",
+          "price": 83.05,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B550+ATX+AM4&prds=localAnnotatedOfferId:1,catalogid:15578818881192464539,gpcid:10863394982921252798,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 93.99,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B550+ATX+AM4&prds=localAnnotatedOfferId:1,catalogid:17604016365112001473,gpcid:1562534670774918660,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "KultureGeek",
+          "price": 97.21,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B550+ATX+AM4&prds=localAnnotatedOfferId:1,catalogid:16650445272345533780,gpcid:9654622653449149850,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b550-matx": {
+      "price": 107,
+      "min": 66,
+      "max": 163,
+      "offers": 36,
+      "updatedAt": "2026-11-14T20:15:29.634Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 66.49,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B550M+micro+ATX+AM4&prds=localAnnotatedOfferId:1,catalogid:9774137989675382212,gpcid:4412211673125250976,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 73.44,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B550M+micro+ATX+AM4&prds=localAnnotatedOfferId:1,catalogid:11842558241165751256,gpcid:5735004269534998719,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 75.08,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B550M+micro+ATX+AM4&prds=localAnnotatedOfferId:1,catalogid:17978425672978555665,gpcid:16821555841496901439,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-a620-matx": {
+      "price": 99,
+      "min": 68,
+      "max": 142,
+      "offers": 22,
+      "updatedAt": "2026-11-14T20:15:29.634Z",
+      "best": [
+        {
+          "merchant": "achatmoinscher",
+          "price": 68.16,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+A620M+micro+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:15693051727023498813,gpcid:7807915582279777074,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Outlet PC FR",
+          "price": 69.99,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+A620M+micro+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:8470535227961470074,gpcid:730204018761846757,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 78.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+A620M+micro+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:2937949432601144219,gpcid:4766812147115781985,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b650-atx": {
+      "price": 152,
+      "min": 75,
+      "max": 225,
+      "offers": 21,
+      "updatedAt": "2026-11-14T20:15:29.634Z",
+      "best": [
+        {
+          "merchant": "PcComponentes FR",
+          "price": 75.06,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B650+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:8207345520146631429,gpcid:3734660529055035009,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 92.24,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B650+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:11930908297414941299,gpcid:14232813521626070653,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 123.06,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B650+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:14396612479283541073,gpcid:11804826197018464362,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b650-matx": {
+      "price": 148,
+      "min": 96,
+      "max": 286,
+      "offers": 31,
+      "updatedAt": "2026-11-14T20:15:29.634Z",
+      "best": [
+        {
+          "merchant": "Fnac",
+          "price": 95.85,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B650M+micro+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:11930908297414941299,gpcid:14232813521626070653,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 95.99,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B650M+micro+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:14836288025903154845,gpcid:11010803066073784907,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 97.18,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B650M+micro+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:2480542058848324729,gpcid:1569533907450200311,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b850-atx": {
+      "price": 190,
+      "min": 155,
+      "max": 308,
+      "offers": 37,
+      "updatedAt": "2026-11-14T20:15:29.634Z",
+      "best": [
+        {
+          "merchant": "achatmoinscher",
+          "price": 154.8,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B850+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:18245546648701009726,gpcid:3081727081118897489,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 156.28,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B850+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:10274457393250532546,gpcid:1851106662356997759,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 156.5,
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B850+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:8463191799662431597,gpcid:1639288624043276422,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "psu-550": {
+      "price": 48,
+      "min": 30,
+      "max": 86,
+      "offers": 22,
+      "updatedAt": "2026-11-14T20:16:33.250Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr",
+          "price": 30.15,
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+550W+80+Plus+Bronze+ATX&prds=localAnnotatedOfferId:1,catalogid:18409447325217336031,gpcid:4896769942895257857,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 30.32,
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+550W+80+Plus+Bronze+ATX&prds=localAnnotatedOfferId:1,catalogid:10942537078072005855,gpcid:7520606476152453046,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 33.32,
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+550W+80+Plus+Bronze+ATX&prds=localAnnotatedOfferId:1,catalogid:4726179425731105046,gpcid:1471426677285184878,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "psu-650": {
+      "price": 75,
+      "min": 48,
+      "max": 135,
+      "offers": 14,
+      "updatedAt": "2026-11-14T20:16:33.250Z",
+      "best": [
+        {
+          "merchant": "Carrefour",
+          "price": 47.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+650W+80+Plus+Gold+ATX+3.1+modulaire&prds=localAnnotatedOfferId:1,catalogid:6374859838626952829,gpcid:8548132555549347702,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "biteks.ro",
+          "price": 52.17
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 54.99,
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+650W+80+Plus+Gold+ATX+3.1+modulaire&prds=localAnnotatedOfferId:1,catalogid:2460469216853140863,gpcid:15327160021899094233,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "psu-750": {
+      "price": 90,
+      "min": 64,
+      "max": 167,
+      "offers": 24,
+      "updatedAt": "2026-11-14T20:16:33.250Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 63.99,
+          "link": "https://www.google.com/search?ibp=oshop&q=80+ATX+modulaire+alimentation+Plus+Gold+750W+PC+3.1&prds=localAnnotatedOfferId:1,catalogid:16659370434007482271,gpcid:4084628430428657792,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 64.99,
+          "link": "https://www.google.com/search?ibp=oshop&q=80+ATX+modulaire+alimentation+Plus+Gold+750W+PC+3.1&prds=localAnnotatedOfferId:1,catalogid:2844876279670550963,gpcid:9156213858191109876,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 67.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=80+ATX+modulaire+alimentation+Plus+Gold+750W+PC+3.1&prds=localAnnotatedOfferId:1,catalogid:12653954721089186526,gpcid:8854610819263553871,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "psu-850": {
+      "price": 101,
+      "min": 67,
+      "max": 140,
+      "offers": 21,
+      "updatedAt": "2026-11-14T20:16:33.250Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 67,
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+850W+80+Plus+Gold+ATX+3.1+modulaire&prds=localAnnotatedOfferId:1,catalogid:5320535990552331405,gpcid:4362011908012574393,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Fnac",
+          "price": 74.99,
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+850W+80+Plus+Gold+ATX+3.1+modulaire&prds=localAnnotatedOfferId:1,catalogid:630746470469503348,gpcid:4717444454117889588,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "123consommables.com",
+          "price": 78.99,
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+850W+80+Plus+Gold+ATX+3.1+modulaire&prds=localAnnotatedOfferId:1,catalogid:18140879976330852277,gpcid:15256375509264738223,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "psu-1000": {
+      "price": 134,
+      "min": 83,
+      "max": 175,
+      "offers": 18,
+      "updatedAt": "2026-11-14T20:16:33.250Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 82.75,
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+1000W+80+Plus+Gold+ATX+3.1+modulaire&prds=localAnnotatedOfferId:1,catalogid:8282392943795578613,gpcid:17975474829236911332,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Fnac.com",
+          "price": 89.99,
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+1000W+80+Plus+Gold+ATX+3.1+modulaire&prds=localAnnotatedOfferId:1,catalogid:1535394305634381658,gpcid:3942333898882812644,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "showroomprive.com",
+          "price": 91.9,
+          "link": "https://www.google.com/search?ibp=oshop&q=alimentation+PC+1000W+80+Plus+Gold+ATX+3.1+modulaire&prds=localAnnotatedOfferId:1,catalogid:661022957165116636,gpcid:12441983558304286454,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         }
       ]
     }

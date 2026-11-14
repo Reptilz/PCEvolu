@@ -223,6 +223,10 @@ async function main() {
   const now = new Date().toISOString();
   const items: Record<string, PriceEntry> = { ...(previous?.items ?? {}) };
 
+  // Les composants retirés du catalogue disparaissent aussi du fichier de prix.
+  const known = new Set(targets().map((t) => t.id));
+  for (const id of Object.keys(items)) if (!known.has(id)) delete items[id];
+
   const list = targets().filter((t) => !only || only.includes(t.id));
   const missing = list.filter((t) => !QUERIES[t.id]);
   if (missing.length) console.warn(`⚠ Sans requête définie (ignorés) : ${missing.map((t) => t.id).join(", ")}`);

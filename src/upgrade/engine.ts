@@ -348,6 +348,8 @@ function platformFor(c: CpuSpec, p: Profile): { board: BoardSpec; ram?: RamKit }
     if (!b.availability || !b.price || b.socket !== c.socket || !caseOk(b)) continue;
     const chip = CHIPSETS.find((x) => x.chipset === b.chipset);
     if (!chip?.cpuGens.includes(c.gen) || !c.ramMaxMts[b.ramType]) continue;
+    // Les cartes A620 ont un étage d'alimentation léger : réservées aux processeurs sobres.
+    if (b.chipset === "A620" && c.powerW > 120) continue;
     const reuse = b.ramType === p.ramType && p.ramModules > 0;
     const ram = reuse ? undefined : RAM_KITS.filter((k) => k.type === b.ramType && k.sticks === 2 && k.sticks * k.gbPerStick >= target).sort((x, y) => x.price - y.price)[0];
     if (!reuse && !ram) continue;

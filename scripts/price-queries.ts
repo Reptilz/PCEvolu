@@ -35,6 +35,12 @@ export const CATEGORY_EXCLUDE: Record<string, RegExp> = {
   case: /\bpc\b|ordinateur|panneau|filtre|support/,
 };
 
+/** Le nombre de watts, seul ou dans un nom de modèle (« 750 W », « RM750e », « A750GL »), mais pas dans 7500. */
+const watts = (w: number) => new RegExp(`(^|\\D)${w}(?!\\d)`);
+/** Gamme Gold : mentionnée, ou implicite dans les références courantes (750G, A750GL, P750GM, RM750e…). */
+const GOLD = /gold|\d{3,4} ?g[lmx]?\b|\brm\d{3,4}e\b|\bpq\d{3,4}m?\b/;
+const NOT_GOLD = /bronze|white plus|\bcx\d{3}|platinum|titanium|sfx|tfx/;
+
 export const QUERIES: Record<string, PriceQuery> = {
   // Cartes graphiques
   "rtx-5060": { q: "carte graphique GeForce RTX 5060 8 Go", must: [/rtx ?5060\b/], not: [/\bti\b/] },
@@ -77,16 +83,20 @@ export const QUERIES: Record<string, PriceQuery> = {
   "r7-7800x3d": { q: "processeur AMD Ryzen 7 7800X3D", must: [/7800x3d/] },
   "r7-9800x3d": { q: "processeur AMD Ryzen 7 9800X3D", must: [/9800x3d/] },
 
-  // Cartes mères
-  "msi-b550-a-pro": { q: "carte mère MSI B550-A PRO", must: [/b550-?a ?pro/] },
-  "msi-b760-p-ddr4": { q: "carte mère MSI PRO B760-P DDR4 II", must: [/b760-?p\b/, /ddr4|d4\b/] },
-  "asus-b760m-a-d4": { q: "carte mère ASUS PRIME B760M-A D4", must: [/b760m-?a/, /ddr4|\bd4\b/] },
-  "msi-b760-p-ddr5": { q: "carte mère MSI PRO B760-P II DDR5", must: [/b760-?p\b/], not: [/ddr4|\bd4\b|b760m/] },
-  "msi-b860-p": { q: "carte mère MSI PRO B860-P", must: [/b860-?p\b/] },
-  "asus-b860m-a": { q: "carte mère ASUS PRIME B860M-A", must: [/b860m-?a\b/] },
-  "msi-b650-p": { q: "carte mère MSI PRO B650-P WIFI", must: [/b650-?p\b/] },
-  "gb-b650m-ds3h": { q: "carte mère Gigabyte B650M DS3H", must: [/b650m ?ds3h/] },
-  "gb-b850-eagle": { q: "carte mère Gigabyte B850 EAGLE WIFI6E", must: [/b850 ?eagle/] },
+  // Cartes mères génériques par chipset et format. « B650 » sans suffixe = ATX ; « B650M » = micro-ATX.
+  // (\b exclut d'office B650M / B650E / B650I, puisque la lettre colle au numéro.)
+  "mb-b760-ddr4-atx": { q: "carte mère B760 DDR4 ATX", must: [/\bb760\b/, /ddr4|\bd4\b/], not: [/itx|mini/], generic: true },
+  "mb-b760-ddr4-matx": { q: "carte mère B760M DDR4 micro ATX", must: [/\bb760m\b/, /ddr4|\bd4\b/], generic: true },
+  "mb-b760-ddr5-atx": { q: "carte mère B760 DDR5 ATX", must: [/\bb760\b/], not: [/ddr4|\bd4\b|itx|mini/], generic: true },
+  "mb-b760-ddr5-matx": { q: "carte mère B760M DDR5 micro ATX", must: [/\bb760m\b/], not: [/ddr4|\bd4\b/], generic: true },
+  "mb-b860-atx": { q: "carte mère B860 ATX LGA1851", must: [/\bb860\b/], not: [/itx|mini/], generic: true },
+  "mb-b860-matx": { q: "carte mère B860M micro ATX LGA1851", must: [/\bb860m\b/], generic: true },
+  "mb-b550-atx": { q: "carte mère B550 ATX AM4", must: [/\bb550\b/], not: [/itx|mini/], generic: true },
+  "mb-b550-matx": { q: "carte mère B550M micro ATX AM4", must: [/\bb550m\b/], generic: true },
+  "mb-a620-matx": { q: "carte mère A620M micro ATX AM5", must: [/\ba620m?\b/], not: [/itx/], generic: true },
+  "mb-b650-atx": { q: "carte mère B650 ATX AM5", must: [/\bb650\b/], not: [/itx|mini/], generic: true },
+  "mb-b650-matx": { q: "carte mère B650M micro ATX AM5", must: [/\bb650m\b/], generic: true },
+  "mb-b850-atx": { q: "carte mère B850 ATX AM5", must: [/\bb850\b/], not: [/itx|mini/], generic: true },
 
   // Mémoire vive
   // La vitesse (3200…) est souvent absente des titres et change peu le prix : on exige la capacité et le type.
@@ -107,11 +117,13 @@ export const QUERIES: Record<string, PriceQuery> = {
   "sata-1tb": { q: "SSD SATA 2,5 pouces 1 To interne", must: [/\bsata\b|2[.,]5/, /\b1 ?t[ob]\b|1000 ?g[ob]?\b|960 ?g[ob]?\b/], not: [/nvme|\bhdd\b|disque dur (?!ssd)|7200|5400/], generic: true },
   "sata-2tb": { q: "SSD SATA 2,5 pouces 2 To interne", must: [/\bsata\b|2[.,]5/, /\b2 ?t[ob]\b|2000 ?g[ob]?\b|1920 ?g[ob]?\b/], not: [/nvme|\bhdd\b|disque dur (?!ssd)|7200|5400/], generic: true },
 
-  // Alimentations
-  rm650e: { q: "alimentation Corsair RM650e", must: [/rm650e/] },
-  rm750e: { q: "alimentation Corsair RM750e", must: [/rm750e/] },
-  rm850e: { q: "alimentation Corsair RM850e", must: [/rm850e/] },
-  rm1000e: { q: "alimentation Corsair RM1000e", must: [/rm1000e/] },
+  // Alimentations génériques par puissance. À partir de 650 W : gamme 80+ Gold (les modèles récents sont ATX 3.x).
+  // La puissance figure souvent dans le nom du modèle (RM750e, A750GL, PQ750G) plutôt qu'en « 750 W ».
+  "psu-550": { q: "alimentation PC 550W 80 Plus Bronze ATX", must: [/\b550 ?w/], not: [/sfx|tfx|flex|externe|adaptateur/], generic: true },
+  "psu-650": { q: "alimentation PC 650W 80 Plus Gold ATX 3.1 modulaire", must: [watts(650), GOLD], not: [NOT_GOLD], generic: true },
+  "psu-750": { q: "alimentation PC 750W 80 Plus Gold ATX 3.1 modulaire", must: [watts(750), GOLD], not: [NOT_GOLD], generic: true },
+  "psu-850": { q: "alimentation PC 850W 80 Plus Gold ATX 3.1 modulaire", must: [watts(850), GOLD], not: [NOT_GOLD], generic: true },
+  "psu-1000": { q: "alimentation PC 1000W 80 Plus Gold ATX 3.1 modulaire", must: [watts(1000), GOLD], not: [NOT_GOLD], generic: true },
 
   // Refroidissement
   "arctic-f36": { q: "ventirad Arctic Freezer 36", must: [/freezer 36/] },

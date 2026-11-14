@@ -98,6 +98,14 @@ Chaque ajout a un rôle : *obligatoire*, *à vérifier* (dépend d'une info non 
 3. une offre par marchand, élimination des prix aberrants, puis **médiane** (au moins 3 marchands, sinon le prix précédent est conservé) ;
 4. écrit `data/prices.json`.
 
+Les composants interchangeables sont relevés en **génériques**, avec une médiane sur de nombreux produits et marchands (option `generic`) :
+
+- **cartes mères** par chipset et format : B760 DDR4/DDR5, B860, B550, A620, B650 et B850, en ATX ou micro-ATX ;
+- **alimentations** par puissance (550 → 1 000 W, 80+ Gold à partir de 650 W) ;
+- **SSD** par type et capacité.
+
+Les processeurs et cartes graphiques restent relevés modèle par modèle. Les composants retirés du catalogue disparaissent du fichier de prix au relevé suivant.
+
 Le workflow `.github/workflows/prices.yml` le lance chaque lundi (et à la demande via « Run workflow ») et publie le fichier. L'app télécharge ce fichier au démarrage (`VITE_PRICES_URL` dans `.env`), avec repli sur le cache, puis sur la copie incluse à la compilation, puis sur les prix du catalogue.
 
 ```bash

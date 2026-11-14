@@ -1,6 +1,6 @@
 {
- "version": 2,
- "generatedAt": "2026-11-14T19:37:11.961Z",
+ "version": 3,
+ "generatedAt": "2026-11-14T20:16:51.701Z",
  "chipsets": [
   {
    "chipset": "H81",
@@ -3039,8 +3039,7 @@
    "maxRamGb": 128,
    "m2Slots": 2,
    "pcieGpu": 4,
-   "availability": "new",
-   "price": 115,
+   "availability": null,
    "match": {
     "re": "B550-A PRO",
     "flags": "i"
@@ -3048,8 +3047,8 @@
   },
   {
    "kind": "board",
-   "id": "msi-b760-p-ddr4",
-   "name": "MSI PRO B760-P DDR4 II",
+   "id": "mb-b760-ddr4-atx",
+   "name": "Carte mère B760 DDR4 ATX",
    "socket": "LGA1700",
    "chipset": "B760",
    "formFactor": "ATX",
@@ -3059,13 +3058,13 @@
    "m2Slots": 2,
    "pcieGpu": 4,
    "availability": "new",
-   "price": 125,
+   "price": 130,
    "note": "Garde ta RAM DDR4 actuelle."
   },
   {
    "kind": "board",
-   "id": "asus-b760m-a-d4",
-   "name": "ASUS PRIME B760M-A D4",
+   "id": "mb-b760-ddr4-matx",
+   "name": "Carte mère B760M DDR4 (micro-ATX)",
    "socket": "LGA1700",
    "chipset": "B760",
    "formFactor": "mATX",
@@ -3080,8 +3079,8 @@
   },
   {
    "kind": "board",
-   "id": "msi-b760-p-ddr5",
-   "name": "MSI PRO B760-P II (DDR5)",
+   "id": "mb-b760-ddr5-atx",
+   "name": "Carte mère B760 DDR5 ATX",
    "socket": "LGA1700",
    "chipset": "B760",
    "formFactor": "ATX",
@@ -3091,12 +3090,27 @@
    "m2Slots": 2,
    "pcieGpu": 4,
    "availability": "new",
-   "price": 145
+   "price": 150
   },
   {
    "kind": "board",
-   "id": "msi-b860-p",
-   "name": "MSI PRO B860-P",
+   "id": "mb-b760-ddr5-matx",
+   "name": "Carte mère B760M DDR5 (micro-ATX)",
+   "socket": "LGA1700",
+   "chipset": "B760",
+   "formFactor": "mATX",
+   "ramType": "DDR5",
+   "ramSlots": 4,
+   "maxRamGb": 192,
+   "m2Slots": 2,
+   "pcieGpu": 4,
+   "availability": "new",
+   "price": 130
+  },
+  {
+   "kind": "board",
+   "id": "mb-b860-atx",
+   "name": "Carte mère B860 ATX",
    "socket": "LGA1851",
    "chipset": "B860",
    "formFactor": "ATX",
@@ -3106,12 +3120,12 @@
    "m2Slots": 3,
    "pcieGpu": 5,
    "availability": "new",
-   "price": 165
+   "price": 185
   },
   {
    "kind": "board",
-   "id": "asus-b860m-a",
-   "name": "ASUS PRIME B860M-A",
+   "id": "mb-b860-matx",
+   "name": "Carte mère B860M (micro-ATX)",
    "socket": "LGA1851",
    "chipset": "B860",
    "formFactor": "mATX",
@@ -3121,12 +3135,58 @@
    "m2Slots": 2,
    "pcieGpu": 5,
    "availability": "new",
-   "price": 150
+   "price": 160
   },
   {
    "kind": "board",
-   "id": "msi-b650-p",
-   "name": "MSI PRO B650-P WIFI",
+   "id": "mb-b550-atx",
+   "name": "Carte mère B550 ATX",
+   "socket": "AM4",
+   "chipset": "B550",
+   "formFactor": "ATX",
+   "ramType": "DDR4",
+   "ramSlots": 4,
+   "maxRamGb": 128,
+   "m2Slots": 2,
+   "pcieGpu": 4,
+   "availability": "new",
+   "price": 125
+  },
+  {
+   "kind": "board",
+   "id": "mb-b550-matx",
+   "name": "Carte mère B550M (micro-ATX)",
+   "socket": "AM4",
+   "chipset": "B550",
+   "formFactor": "mATX",
+   "ramType": "DDR4",
+   "ramSlots": 4,
+   "maxRamGb": 128,
+   "m2Slots": 2,
+   "pcieGpu": 4,
+   "availability": "new",
+   "price": 105
+  },
+  {
+   "kind": "board",
+   "id": "mb-a620-matx",
+   "name": "Carte mère A620M (micro-ATX, entrée de gamme)",
+   "socket": "AM5",
+   "chipset": "A620",
+   "formFactor": "mATX",
+   "ramType": "DDR5",
+   "ramSlots": 2,
+   "maxRamGb": 96,
+   "m2Slots": 1,
+   "pcieGpu": 4,
+   "availability": "new",
+   "price": 100,
+   "note": "Entrée de gamme : 2 emplacements RAM, à réserver aux processeurs 65 W."
+  },
+  {
+   "kind": "board",
+   "id": "mb-b650-atx",
+   "name": "Carte mère B650 ATX",
    "socket": "AM5",
    "chipset": "B650",
    "formFactor": "ATX",
@@ -3136,13 +3196,13 @@
    "m2Slots": 2,
    "pcieGpu": 4,
    "availability": "new",
-   "price": 150,
-   "note": "Bouton Flash BIOS : mise à jour possible sans processeur."
+   "price": 160,
+   "note": "Choisis un modèle avec bouton de mise à jour du BIOS sans processeur."
   },
   {
    "kind": "board",
-   "id": "gb-b650m-ds3h",
-   "name": "Gigabyte B650M DS3H",
+   "id": "mb-b650-matx",
+   "name": "Carte mère B650M (micro-ATX)",
    "socket": "AM5",
    "chipset": "B650",
    "formFactor": "mATX",
@@ -3152,13 +3212,13 @@
    "m2Slots": 2,
    "pcieGpu": 4,
    "availability": "new",
-   "price": 125,
-   "note": "Q-Flash Plus : mise à jour du BIOS possible sans processeur."
+   "price": 130,
+   "note": "Choisis un modèle avec bouton de mise à jour du BIOS sans processeur."
   },
   {
    "kind": "board",
-   "id": "gb-b850-eagle",
-   "name": "Gigabyte B850 EAGLE WIFI6E",
+   "id": "mb-b850-atx",
+   "name": "Carte mère B850 ATX",
    "socket": "AM5",
    "chipset": "B850",
    "formFactor": "ATX",
@@ -3168,7 +3228,7 @@
    "m2Slots": 3,
    "pcieGpu": 5,
    "availability": "new",
-   "price": 180
+   "price": 200
   }
  ],
  "ram": [
@@ -3280,8 +3340,18 @@
  "psus": [
   {
    "kind": "psu",
-   "id": "rm650e",
-   "name": "Corsair RM650e (ATX 3.1, 80+ Gold)",
+   "id": "psu-550",
+   "name": "Alimentation 550 W 80+ Bronze (ex. be quiet! System Power, Corsair CX)",
+   "watts": 550,
+   "atx3": false,
+   "native12v2x6": false,
+   "pcie8pin": 2,
+   "price": 60
+  },
+  {
+   "kind": "psu",
+   "id": "psu-650",
+   "name": "Alimentation 650 W 80+ Gold ATX 3.1 (ex. Corsair RM650e, MSI MAG A650GL)",
    "watts": 650,
    "atx3": true,
    "native12v2x6": true,
@@ -3290,33 +3360,33 @@
   },
   {
    "kind": "psu",
-   "id": "rm750e",
-   "name": "Corsair RM750e (ATX 3.1, 80+ Gold)",
+   "id": "psu-750",
+   "name": "Alimentation 750 W 80+ Gold ATX 3.1 (ex. Corsair RM750e, be quiet! Pure Power 12)",
    "watts": 750,
    "atx3": true,
    "native12v2x6": true,
    "pcie8pin": 3,
-   "price": 105
+   "price": 110
   },
   {
    "kind": "psu",
-   "id": "rm850e",
-   "name": "Corsair RM850e (ATX 3.1, 80+ Gold)",
+   "id": "psu-850",
+   "name": "Alimentation 850 W 80+ Gold ATX 3.1 (ex. Corsair RM850e, MSI MAG A850GL)",
    "watts": 850,
    "atx3": true,
    "native12v2x6": true,
    "pcie8pin": 3,
-   "price": 125
+   "price": 130
   },
   {
    "kind": "psu",
-   "id": "rm1000e",
-   "name": "Corsair RM1000e (ATX 3.1, 80+ Gold)",
+   "id": "psu-1000",
+   "name": "Alimentation 1000 W 80+ Gold ATX 3.1 (ex. Corsair RM1000e, Seasonic Focus GX)",
    "watts": 1000,
    "atx3": true,
    "native12v2x6": true,
    "pcie8pin": 4,
-   "price": 165
+   "price": 170
   }
  ],
  "coolers": [

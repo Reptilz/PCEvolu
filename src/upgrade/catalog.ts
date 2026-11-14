@@ -14,7 +14,7 @@ import { GPU_TABLE, findGpuSpec } from "./gpudb";
 
 export const CATALOG_DATE = "novembre 2026";
 /** Incrémenté à chaque mise à jour du catalogue (le catalogue téléchargé n'est pris que s'il est plus récent). */
-export const CATALOG_VERSION = 2;
+export const CATALOG_VERSION = 3;
 
 // ---------------------------------------------------------------------------
 // Chipsets : ce qui définit la compatibilité CPU / RAM / PCIe d'une carte mère
@@ -142,16 +142,22 @@ export const BOARDS: BoardSpec[] = [
   board("msi-b460-torpedo", "MSI MAG B460 TORPEDO", "LGA1200", "B460", "ATX", "DDR4", { maxGb: 128, m2: 2, pcie: 3, match: /B460 TORPEDO/i }),
   board("msi-b460m-pro", "MSI B460M PRO", "LGA1200", "B460", "mATX", "DDR4", { slots: 2, maxGb: 64, m2: 1, pcie: 3, match: /B460M[- ]PRO/i }),
   board("msi-b450-tomahawk", "MSI B450 TOMAHAWK", "AM4", "B450", "ATX", "DDR4", { maxGb: 64, m2: 1, pcie: 3, match: /B450 TOMAHAWK/i }),
-  board("msi-b550-a-pro", "MSI B550-A PRO", "AM4", "B550", "ATX", "DDR4", { maxGb: 128, m2: 2, pcie: 4, avail: "new", price: 115, match: /B550-A PRO/i }),
-  // Proposées pour un changement de plateforme
-  board("msi-b760-p-ddr4", "MSI PRO B760-P DDR4 II", "LGA1700", "B760", "ATX", "DDR4", { maxGb: 128, m2: 2, pcie: 4, avail: "new", price: 125, note: "Garde ta RAM DDR4 actuelle." }),
-  board("asus-b760m-a-d4", "ASUS PRIME B760M-A D4", "LGA1700", "B760", "mATX", "DDR4", { maxGb: 128, m2: 2, pcie: 4, avail: "new", price: 115, note: "Garde ta RAM DDR4 actuelle." }),
-  board("msi-b760-p-ddr5", "MSI PRO B760-P II (DDR5)", "LGA1700", "B760", "ATX", "DDR5", { maxGb: 192, m2: 2, pcie: 4, avail: "new", price: 145 }),
-  board("msi-b860-p", "MSI PRO B860-P", "LGA1851", "B860", "ATX", "DDR5", { maxGb: 256, m2: 3, pcie: 5, avail: "new", price: 165 }),
-  board("asus-b860m-a", "ASUS PRIME B860M-A", "LGA1851", "B860", "mATX", "DDR5", { maxGb: 256, m2: 2, pcie: 5, avail: "new", price: 150 }),
-  board("msi-b650-p", "MSI PRO B650-P WIFI", "AM5", "B650", "ATX", "DDR5", { maxGb: 192, m2: 2, pcie: 4, avail: "new", price: 150, note: "Bouton Flash BIOS : mise à jour possible sans processeur." }),
-  board("gb-b650m-ds3h", "Gigabyte B650M DS3H", "AM5", "B650", "mATX", "DDR5", { maxGb: 192, m2: 2, pcie: 4, avail: "new", price: 125, note: "Q-Flash Plus : mise à jour du BIOS possible sans processeur." }),
-  board("gb-b850-eagle", "Gigabyte B850 EAGLE WIFI6E", "AM5", "B850", "ATX", "DDR5", { maxGb: 256, m2: 3, pcie: 5, avail: "new", price: 180 }),
+  board("msi-b550-a-pro", "MSI B550-A PRO", "AM4", "B550", "ATX", "DDR4", { maxGb: 128, m2: 2, pcie: 4, match: /B550-A PRO/i }),
+
+  // Proposées pour un changement de plateforme : génériques par chipset et format.
+  // Les cartes d'un même chipset se valent pour la compatibilité ; le prix est la médiane du marché.
+  board("mb-b760-ddr4-atx", "Carte mère B760 DDR4 ATX", "LGA1700", "B760", "ATX", "DDR4", { maxGb: 128, m2: 2, pcie: 4, avail: "new", price: 130, note: "Garde ta RAM DDR4 actuelle." }),
+  board("mb-b760-ddr4-matx", "Carte mère B760M DDR4 (micro-ATX)", "LGA1700", "B760", "mATX", "DDR4", { maxGb: 128, m2: 2, pcie: 4, avail: "new", price: 115, note: "Garde ta RAM DDR4 actuelle." }),
+  board("mb-b760-ddr5-atx", "Carte mère B760 DDR5 ATX", "LGA1700", "B760", "ATX", "DDR5", { maxGb: 192, m2: 2, pcie: 4, avail: "new", price: 150 }),
+  board("mb-b760-ddr5-matx", "Carte mère B760M DDR5 (micro-ATX)", "LGA1700", "B760", "mATX", "DDR5", { maxGb: 192, m2: 2, pcie: 4, avail: "new", price: 130 }),
+  board("mb-b860-atx", "Carte mère B860 ATX", "LGA1851", "B860", "ATX", "DDR5", { maxGb: 256, m2: 3, pcie: 5, avail: "new", price: 185 }),
+  board("mb-b860-matx", "Carte mère B860M (micro-ATX)", "LGA1851", "B860", "mATX", "DDR5", { maxGb: 256, m2: 2, pcie: 5, avail: "new", price: 160 }),
+  board("mb-b550-atx", "Carte mère B550 ATX", "AM4", "B550", "ATX", "DDR4", { maxGb: 128, m2: 2, pcie: 4, avail: "new", price: 125 }),
+  board("mb-b550-matx", "Carte mère B550M (micro-ATX)", "AM4", "B550", "mATX", "DDR4", { maxGb: 128, m2: 2, pcie: 4, avail: "new", price: 105 }),
+  board("mb-a620-matx", "Carte mère A620M (micro-ATX, entrée de gamme)", "AM5", "A620", "mATX", "DDR5", { slots: 2, maxGb: 96, m2: 1, pcie: 4, avail: "new", price: 100, note: "Entrée de gamme : 2 emplacements RAM, à réserver aux processeurs 65 W." }),
+  board("mb-b650-atx", "Carte mère B650 ATX", "AM5", "B650", "ATX", "DDR5", { maxGb: 192, m2: 2, pcie: 4, avail: "new", price: 160, note: "Choisis un modèle avec bouton de mise à jour du BIOS sans processeur." }),
+  board("mb-b650-matx", "Carte mère B650M (micro-ATX)", "AM5", "B650", "mATX", "DDR5", { maxGb: 192, m2: 2, pcie: 4, avail: "new", price: 130, note: "Choisis un modèle avec bouton de mise à jour du BIOS sans processeur." }),
+  board("mb-b850-atx", "Carte mère B850 ATX", "AM5", "B850", "ATX", "DDR5", { maxGb: 256, m2: 3, pcie: 5, avail: "new", price: 200 }),
 ];
 
 
@@ -186,11 +192,14 @@ export const SSDS: SsdSpec[] = [
 const psu = (id: string, name: string, watts: number, atx3: boolean, native12v2x6: boolean, pcie8pin: number, price: number): PsuSpec =>
   ({ kind: "psu", id, name, watts, atx3, native12v2x6, pcie8pin, price });
 
+// Génériques par puissance (prix = médiane du marché). À partir de 650 W : 80+ Gold, ATX 3.x,
+// câble 12V-2x6 natif pour les cartes graphiques récentes.
 export const PSUS: PsuSpec[] = [
-  psu("rm650e", "Corsair RM650e (ATX 3.1, 80+ Gold)", 650, true, true, 2, 90),
-  psu("rm750e", "Corsair RM750e (ATX 3.1, 80+ Gold)", 750, true, true, 3, 105),
-  psu("rm850e", "Corsair RM850e (ATX 3.1, 80+ Gold)", 850, true, true, 3, 125),
-  psu("rm1000e", "Corsair RM1000e (ATX 3.1, 80+ Gold)", 1000, true, true, 4, 165),
+  psu("psu-550", "Alimentation 550 W 80+ Bronze (ex. be quiet! System Power, Corsair CX)", 550, false, false, 2, 60),
+  psu("psu-650", "Alimentation 650 W 80+ Gold ATX 3.1 (ex. Corsair RM650e, MSI MAG A650GL)", 650, true, true, 2, 90),
+  psu("psu-750", "Alimentation 750 W 80+ Gold ATX 3.1 (ex. Corsair RM750e, be quiet! Pure Power 12)", 750, true, true, 3, 110),
+  psu("psu-850", "Alimentation 850 W 80+ Gold ATX 3.1 (ex. Corsair RM850e, MSI MAG A850GL)", 850, true, true, 3, 130),
+  psu("psu-1000", "Alimentation 1000 W 80+ Gold ATX 3.1 (ex. Corsair RM1000e, Seasonic Focus GX)", 1000, true, true, 4, 170),
 ];
 
 const cooler = (id: string, name: string, type: CoolerSpec["type"], sockets: Socket[], capacityW: number, price: number): CoolerSpec =>
