@@ -283,6 +283,16 @@ export function validatePlan(goal: Goal, p: Profile, plan: Plan): Check[] {
   return [...out.values()].sort((a, b) => RANK[a.status] - RANK[b.status]);
 }
 
+/**
+ * Plan à partir d'un choix fait par l'utilisateur (« Ma sélection ») : mêmes pièces à adapter et
+ * même vérification d'ensemble que les plans calculés.
+ */
+export function planFromChoice(goal: Goal, p: Profile, r: Report, choice: Partial<Record<Category, Proposal>>): Plan {
+  const plan = buildPlan(goal, p, currentState(p, r), choice);
+  plan.checks = validatePlan(goal, p, plan);
+  return plan;
+}
+
 export interface OptimizeResult {
   current: Evaluation;
   /** Meilleur plan dans le budget (undefined si aucun ne fait mieux que la config actuelle). */

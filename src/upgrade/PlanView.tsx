@@ -1,6 +1,7 @@
 import { T } from "../glossary";
 import { useState, type ReactNode } from "react";
-import type { Addition, Check, ModelPick, Part, Role } from "./types";
+import type { Addition, Check, ModelPick, Part, Proposal, Role } from "./types";
+import { slotOf, useSelection, type SlotCategory } from "./selection";
 import { CheckRow, MarketLine } from "./UpgradesView";
 import { usePrices } from "./PriceSheet";
 import { bestPriceOf, saveAlerts, suggestedTarget } from "./alerts";
@@ -87,7 +88,10 @@ export function RecommendedPlan({ goal, result, onBudget, onDetails }: {
 }
 
 /** Détail d'un plan : résultat, liste d'achat, compatibilité résumée (dépliable), surveillance des prix. */
-export function PlanDetail({ plan, goal, currentFps, onDetails }: { plan: Plan; goal: Goal; currentFps?: number; onDetails: (tab: string) => void }) {
+export function PlanDetail({ plan, goal, currentFps, onDetails, selectable = true }: { plan: Plan; goal: Goal; currentFps?: number; onDetails: (tab: string) => void; selectable?: boolean }) {
+  const sel = useSelection();
+  const chosen = (Object.entries(plan.choice) as [string, Proposal | undefined][]).every(([c, pr]) => !pr || sel.selection[c as SlotCategory] === slotOf(pr).id)
+    && Object.keys(sel.selection).length === Object.values(plan.choice).filter(Boolean).length;
   const ev = plan.evaluation;
   const extras = plan.additions.filter((a) => a.role !== "recommended");
   const advised = plan.additions.filter((a) => a.role === "recommended");
@@ -132,6 +136,22 @@ export function PlanDetail({ plan, goal, currentFps, onDetails }: { plan: Plan; 
       )}
 
       <div className="pd-actions">
+        {selectable &&
+          (chosen ? (
+            <button className="btn sel-add" onClick={sel.open}>
+              <Icon name="check" /> Plan choisi : voir ma sélection
+            </button>
+          ) : (
+            <button
+              className="btn primary sel-add"
+              onClick={() => {
+                sel.replace(plan.choice);
+                sel.open();
+              }}
+            >
+              <Icon name="cart" /> Choisir ce plan
+            </button>
+          ))}
         <WatchPlan plan={plan} />
         {plan.items[0] && (
           <button className="link small" onClick={() => onDetails(plan.items[0].category)}>
@@ -180,6 +200,35 @@ export function AdditionRow({ a }: { a: Addition }) {
     >
       {a.models?.length ? <ModelPicks models={a.models} /> : null}
     </ItemRow>
+  );
+}
+
+/** Ajoute une proposition à « Ma sélection », la remplace dans sa catégorie, ou indique qu'elle y est déjà. */
+export function SelectButton({ p }: { p: Proposal }) {
+  const { selection, add, remove, open } = useSelection();
+  const { slot, id } = slotOf(p);
+  const current = selection[slot];
+  if (current === id) {
+    return (
+      <div className="sel-state">
+        <span className="sel-in">
+          <Icon name="check" /> Dans ta sélection
+        </span>
+        <button className="link small" onClick={open}>
+          Voir ma sélection
+        </button>
+        <button className="link small sel-remove" onClick={() => remove(slot)}>
+          Retirer
+        </button>
+      </div>
+    );
+  }
+  const what = { gpu: "ta carte graphique", cpu: "ton processeur", ram: "ta mémoire", storage: "ton stockage" }[slot];
+  return (
+    <button className="btn sel-add" onClick={() => add(p)}>
+      <Icon name="cart" />
+      {current ? `Remplacer ${what} dans ma sélection` : "Ajouter à ma sélection"}
+    </button>
   );
 }
 

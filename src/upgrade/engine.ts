@@ -795,6 +795,7 @@ export function proposeBoards(cpuProposals: Proposal[]): Proposal[] {
     out.push(
       finalize({
         id: `board-${board.id}`,
+        sourceId: first.id,
         category: "board",
         title: `Passer en ${board.socket} : ${board.name.replace(/^Carte mère /, "")}`,
         main: board,

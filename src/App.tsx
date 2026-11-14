@@ -19,8 +19,10 @@ import { loadCatalog } from "./upgrade/catalog-remote";
 import { checkAlerts, isTriggered, loadAlerts, saveAlerts, type PriceAlert } from "./upgrade/alerts";
 import { PriceContext, PriceSheet, type SheetPart } from "./upgrade/PriceSheet";
 import { AlertsView } from "./upgrade/AlertsView";
+import { SelectionView } from "./upgrade/SelectionView";
+import { SelectionContext, loadSelection, saveSelection, slotOf, type Selection } from "./upgrade/selection";
 
-type View = "overview" | "goal" | "improve" | "upgrades" | "alerts";
+type View = "overview" | "goal" | "improve" | "upgrades" | "selection" | "alerts";
 
 const inApp = isTauri();
 
@@ -48,6 +50,11 @@ export default function App() {
   // Incrémenté quand de nouveaux prix du marché sont appliqués, pour recalculer les propositions.
   const [pricesVersion, setPricesVersion] = useState(0);
   const [alerts, setAlerts] = useState<PriceAlert[]>(loadAlerts);
+  const [selection, setSelection] = useState<Selection>(loadSelection);
+  const updateSelection = (s: Selection) => {
+    saveSelection(s);
+    setSelection(s);
+  };
   const [sheet, setSheet] = useState<SheetPart>();
 
   useEffect(() => {
@@ -137,6 +144,27 @@ export default function App() {
 
   return (
     <PriceContext.Provider value={{ open: setSheet, alerts, setAlerts }}>
+    <SelectionContext.Provider
+      value={{
+        selection,
+        add: (pr) => {
+          const { slot, id } = slotOf(pr);
+          updateSelection({ ...selection, [slot]: id });
+        },
+        remove: (slot) => {
+          const next = { ...selection };
+          delete next[slot];
+          updateSelection(next);
+        },
+        replace: (choice) => {
+          const next: Selection = {};
+          for (const pr of Object.values(choice)) if (pr) next[slotOf(pr).slot] = slotOf(pr).id;
+          updateSelection(next);
+        },
+        clear: () => updateSelection({}),
+        open: () => go("selection"),
+      }}
+    >
     <div className="app">
       <aside className="side">
         <div className="brand">
@@ -155,6 +183,7 @@ export default function App() {
           <NavItem icon="spark" label="Réglages gratuits" sub="Sans rien acheter" active={view === "improve" && !wizardOpen} onClick={() => go("improve")} count={freeCount} />
           <NavItem icon="target" label="Mon plan" sub="Quoi acheter, et pourquoi" active={view === "goal" || wizardOpen} onClick={() => go("goal")} />
           <NavItem icon="cart" label="Toutes les pièces" sub="Catalogue compatible" active={view === "upgrades" && !wizardOpen} onClick={() => go("upgrades")} />
+          <NavItem icon="check" label="Ma sélection" sub="Tes choix, vérifiés ensemble" active={view === "selection" && !wizardOpen} onClick={() => go("selection")} count={Object.keys(selection).length} />
           <div className="nav-group">3. Suivre</div>
           <NavItem icon="bell" label="Alertes prix" sub="Le bon moment pour acheter" active={view === "alerts" && !wizardOpen} onClick={() => go("alerts")} count={triggeredCount} />
         </nav>
@@ -205,6 +234,17 @@ export default function App() {
             }
           />
         )}
+        {report && !wizardOpen && view === "selection" && verdict && profile && proposals && (
+          <SelectionView
+            proposals={proposals}
+            report={report}
+            profile={profile}
+            goal={goal}
+            verdict={verdict}
+            onBrowse={(tab) => openUpgrades(tab)}
+            onPlan={() => go("goal")}
+          />
+        )}
         {report && !wizardOpen && view === "upgrades" && verdict && (
           <UpgradesView
             report={report}
@@ -224,6 +264,7 @@ export default function App() {
       </main>
     </div>
       {sheet && <PriceSheet part={sheet} onClose={() => setSheet(undefined)} />}
+    </SelectionContext.Provider>
     </PriceContext.Provider>
   );
 }

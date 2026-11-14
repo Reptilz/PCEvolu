@@ -244,6 +244,8 @@ export interface Proposal {
   mainQuantity: number;
   /** Modèles réels conseillés quand la pièce principale est générique (carte mère). */
   mainModels?: ModelPick[];
+  /** Onglet « Carte mère » : la proposition de processeur dont celle-ci est tirée. */
+  sourceId?: string;
   /**
    * Carte graphique bridée par le processeur actuel : le processeur conseillé pour en profiter,
    * avec ce qu'il entraîne (carte mère, RAM…), le surcoût et la part de la carte exploitée avant / après.

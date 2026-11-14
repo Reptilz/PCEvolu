@@ -909,3 +909,35 @@ span.picks-name { color: var(--text); cursor: default; }
 .pairing-parts .kind-icons { margin-right: 0; }
 .pairing-total { margin: 0; font-size: 14px; line-height: 1.55; }
 .pairing-total .muted { display: block; font-size: 13px; }
+/* ---- Ma sélection ---- */
+.sel-bar { display: flex; justify-content: flex-end; margin: 4px 0 10px; }
+.sel-add { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
+.sel-add .icon { width: 17px; height: 17px; }
+.sel-state { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.sel-in { display: inline-flex; align-items: center; gap: 6px; color: var(--ok); font-weight: 600; font-size: 14px; }
+.sel-in .icon { width: 16px; height: 16px; }
+.sel-remove { color: var(--muted) !important; }
+.sel-page { max-width: 1000px; }
+.sel-answer { padding: 24px 28px; border-radius: 18px; background: var(--panel); }
+.sel-answer .answer-title { margin-bottom: 8px; font-size: 22px; }
+.sel-answer .answer-sub b { color: var(--text); }
+.sel-list { list-style: none; margin: 0 0 18px; padding: 0; }
+.sel-item { display: grid; grid-template-columns: 150px minmax(0, 1fr) auto auto; gap: 16px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line-soft); }
+.sel-item:first-child { border-top: 0; }
+.sel-item.empty { grid-template-columns: 150px 1fr auto; }
+.sel-kind { color: var(--muted); font-size: 13px; }
+.sel-name { font-weight: 600; min-width: 0; }
+.sel-price { font-weight: 650; white-space: nowrap; }
+.sel-actions { display: flex; gap: 14px; }
+.sel-pairing { margin-bottom: 24px; }
+.sel-detail-title { margin-top: 32px; }
+.sel-detail { padding: 22px 26px; border-radius: 18px; background: var(--panel); }
+.sel-clear { margin-top: 16px; }
+.sel-empty { padding: 28px 30px; border-radius: 18px; background: var(--panel); max-width: 70ch; }
+.sel-empty-title { font-weight: 650; font-size: 17px; margin: 0 0 6px; }
+.sel-empty-actions { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.pd-actions .sel-add { margin-right: 6px; }
+@media (max-width: 900px) {
+  .sel-item, .sel-item.empty { grid-template-columns: 1fr auto; }
+  .sel-kind { grid-column: 1 / -1; }
+}

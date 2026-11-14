@@ -9,7 +9,7 @@ import { priceInfo, pricesFile, trendOf } from "./prices";
 import { PriceNotice, usePrices } from "./PriceSheet";
 import { BrandLogo, Icon, type IconName } from "../icons";
 import { impactOf, type Goal, type Impact, type Verdict } from "./goal";
-import { AdditionRow, CompatSummary, ItemRow, KindIcons, ModelPicks, kindLabel } from "./PlanView";
+import { AdditionRow, CompatSummary, ItemRow, KindIcons, ModelPicks, SelectButton, kindLabel } from "./PlanView";
 import { goalSentence } from "./GoalViews";
 
 const TABS: { id: Category; label: string; icon: IconName }[] = [
@@ -303,6 +303,9 @@ function ProposalRow({ p, impact }: { p: Proposal; impact?: Impact }) {
       </button>
       {open && (
         <div className="row-detail pd">
+          <div className="sel-bar">
+            <SelectButton p={p} />
+          </div>
           <ul className="pd-items">
             <ItemRow kind={kindLabel(p.main)} part={p.main} amount={price(p.main) * p.mainQuantity}>
               {p.mainModels?.length ? <ModelPicks models={p.mainModels} /> : null}
