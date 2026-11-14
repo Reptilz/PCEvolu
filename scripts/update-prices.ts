@@ -1,4 +1,4 @@
-// Relevé quotidien des prix (Google Shopping France via Serper.dev).
+// Relevé hebdomadaire des prix (Google Shopping France via Serper.dev).
 //
 // Pour chaque composant proposé à l'achat dans le catalogue :
 //   1. une recherche Google Shopping (France) ;

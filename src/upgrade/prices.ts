@@ -1,4 +1,4 @@
-// Prix du marché : relevés chaque jour par scripts/update-prices.ts et publiés dans data/prices.json.
+// Prix du marché : relevés chaque semaine par scripts/update-prices.ts et publiés dans data/prices.json.
 //
 // Ordre de priorité dans l'app :
 //   1. le fichier téléchargé au démarrage (PRICES_URL) ;

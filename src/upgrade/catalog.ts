@@ -3,7 +3,7 @@
 // - Processeurs : décodés depuis leur nom (cpudb.ts), seuls ceux proposés à l'achat sont listés ici.
 // - Cartes graphiques : table de référence 2016 → 2026 (gpudb.ts).
 // - Les indices de performance sont des ordres de grandeur, pas des benchmarks précis.
-// - Les prix sont indicatifs : ils sont remplacés chaque jour par le relevé du marché (data/prices.json).
+// - Les prix sont indicatifs : ils sont remplacés chaque semaine par le relevé du marché (data/prices.json).
 
 import type {
   BoardSpec, CaseSpec, ChipsetSpec, CoolerSpec, CpuGen, CpuSpec, FanKit, GpuSpec,

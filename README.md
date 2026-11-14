@@ -60,16 +60,16 @@ Pour chaque composant candidat, le moteur vérifie les contraintes face à la co
 
 Chaque ajout a un rôle : *obligatoire*, *à vérifier* (dépend d'une info non détectable), ou *conseillé*.
 
-## Prix du marché (relevé quotidien)
+## Prix du marché (relevé hebdomadaire)
 
-`scripts/update-prices.ts` relève chaque jour le prix des composants proposés à l'achat :
+`scripts/update-prices.ts` relève chaque semaine le prix des composants proposés à l'achat :
 
 1. recherche Google Shopping France via [Serper.dev](https://serper.dev) (requêtes et filtres dans `scripts/price-queries.ts`) ;
 2. ne garde que les offres dont le titre correspond au composant (exclut variantes, PC complets, occasion, accessoires…) ;
 3. une offre par marchand, élimination des prix aberrants, puis **médiane** (au moins 3 marchands, sinon le prix précédent est conservé) ;
 4. écrit `data/prices.json`.
 
-Le workflow `.github/workflows/prices.yml` le lance chaque nuit et publie le fichier. L'app télécharge ce fichier au démarrage (`VITE_PRICES_URL` dans `.env`), avec repli sur le cache, puis sur la copie incluse à la compilation, puis sur les prix du catalogue.
+Le workflow `.github/workflows/prices.yml` le lance chaque lundi (et à la demande via « Run workflow ») et publie le fichier. L'app télécharge ce fichier au démarrage (`VITE_PRICES_URL` dans `.env`), avec repli sur le cache, puis sur la copie incluse à la compilation, puis sur les prix du catalogue.
 
 ```bash
 npm run prices -- --fixtures scripts/fixtures --out test.json   # test hors ligne, sans clé

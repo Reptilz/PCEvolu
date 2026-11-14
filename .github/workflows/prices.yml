@@ -1,5 +1,5 @@
-# Relevé quotidien des prix des composants.
-# Lance scripts/update-prices.ts chaque nuit et publie data/prices.json dans le dépôt.
+# Relevé hebdomadaire des prix des composants.
+# Lance scripts/update-prices.ts chaque lundi et publie data/prices.json dans le dépôt.
 #
 # Prérequis (une seule fois) : Settings > Secrets and variables > Actions > New repository secret
 #   Nom : SERPER_API_KEY   Valeur : ta clé d'API Serper.dev
@@ -8,7 +8,7 @@ name: Relevé des prix
 
 on:
   schedule:
-    - cron: "30 3 * * *" # chaque jour à 3 h 30 UTC
+    - cron: "30 3 * * 1" # chaque lundi à 3 h 30 UTC (≈ 65 recherches Serper par semaine)
   workflow_dispatch: # bouton « Run workflow » pour lancer un relevé à la main
 
 permissions:

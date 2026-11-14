@@ -115,7 +115,7 @@ function toSpec(r: Row, brand: GpuSpec["brand"], extra: Partial<GpuSpec> = {}): 
   return { kind: "gpu", id, name, brand, vramGb, tbp, psuRec, power, lengthMm, pcieLanes, perf, match, availability: null, ...extra };
 }
 
-/** Cartes proposées à l'achat (prix indicatif, remplacé chaque jour par le relevé). */
+/** Cartes proposées à l'achat (prix indicatif, remplacé chaque semaine par le relevé). */
 const FOR_SALE: Record<string, { price: number; availability: Availability }> = {
   "rtx-5050": { price: 330, availability: "new" },
   "rtx-5060": { price: 500, availability: "new" },
