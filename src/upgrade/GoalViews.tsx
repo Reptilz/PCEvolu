@@ -1,12 +1,12 @@
 import { useState } from "react";
 import type { Report } from "../types";
 import {
-  FPS_LABEL, RES_LABEL, USAGE_LABEL, goalSummary, isGaming,
+  FPS_LABEL, RES_LABEL, USAGE_LABEL, isGaming,
   type FpsTarget, type Goal, type NeedStatus, type Resolution, type Usage, type Verdict,
 } from "./goal";
 import { Icon, type IconName } from "../icons";
 import type { OptimizeResult } from "./optimizer";
-import { PlanSection } from "./PlanView";
+import { Alternatives, RecommendedPlan, Tiers } from "./PlanView";
 
 // ---------------------------------------------------------------------------
 // Assistant « Mon objectif »
@@ -167,61 +167,132 @@ export function GoalWizard({ report, goal, onDone, onSkip }: { report: Report; g
 const STATUS_ICON: Record<NeedStatus, IconName> = { ok: "check", limited: "alert", missing: "cross" };
 const FIX_LABEL: Record<string, string> = { gpu: "Cartes graphiques", cpu: "Processeurs", ram: "Mémoire", storage: "Stockage" };
 
+/** Phrase d'objectif : « Jeu en 2K à 100 i/s, budget 900 € ». */
+export function goalSentence(g: Goal): string {
+  const budget = g.budget == null ? "sans limite de budget" : `budget ${g.budget} €`;
+  if (isGaming(g.usage)) {
+    const what = g.usage === "streaming" ? "Jeu et streaming" : "Jeu";
+    return `${what} en ${RES_LABEL[g.resolution].split(" (")[0]} à ${g.fps} i/s, ${budget}`;
+  }
+  return `${USAGE_LABEL[g.usage]}, ${budget}`;
+}
+
+type GoalTab = "alternatives" | "tiers" | "diagnostic";
+
 export function GoalDiagnostic({ goal, verdict, plan, onBudget, onEdit, onUpgrades }: {
   goal: Goal; verdict: Verdict; plan?: OptimizeResult; onBudget: (b: number | null) => void; onEdit: () => void; onUpgrades: (tab?: string) => void;
 }) {
+  const [tab, setTab] = useState<GoalTab>("alternatives");
+  const after = plan?.best && !plan.current.reached ? plan.best.evaluation.fps : undefined;
+  const tabs: { id: GoalTab; label: string; count?: number }[] = [
+    { id: "alternatives", label: "Autres options", count: plan?.alternatives.length },
+    { id: "tiers", label: "Selon le budget", count: plan?.tiers.length },
+    { id: "diagnostic", label: "Diagnostic détaillé" },
+  ];
+
   return (
-    <>
-      <header className="page-head">
+    <div className="goal-page">
+      <header className="gp-head">
         <div>
           <h1>Mon objectif</h1>
-          <div className="muted">{goalSummary(goal)}</div>
+          <p className="gp-goal">{goalSentence(goal)}</p>
         </div>
-        <button className="btn" onClick={onEdit}>
+        <button className="btn ghost" onClick={onEdit}>
           Modifier
         </button>
       </header>
 
-      <VerdictBanner verdict={verdict} />
+      <section className={`answer a-${verdict.level}`}>
+        <p className="answer-title">{verdict.title}</p>
+        {verdict.fps ? (
+          <FpsGauge today={verdict.fps.fps} after={after} goal={goal.fps} limit={verdict.fps.limit} />
+        ) : (
+          <p className="answer-sub">{verdict.summary}</p>
+        )}
+      </section>
 
-      {plan && <PlanSection goal={goal} result={plan} onBudget={onBudget} onDetails={(tab) => onUpgrades(tab)} />}
+      {plan && <RecommendedPlan goal={goal} result={plan} onBudget={onBudget} onDetails={(t) => onUpgrades(t)} />}
 
+      <div className="seg" role="tablist">
+        {tabs.map((t) => (
+          <button key={t.id} role="tab" aria-selected={tab === t.id} className={tab === t.id ? "on" : ""} onClick={() => setTab(t.id)}>
+            {t.label}
+            {t.count ? <span className="seg-count">{t.count}</span> : null}
+          </button>
+        ))}
+      </div>
+
+      <div className="seg-panel">
+        {tab === "alternatives" && plan && <Alternatives result={plan} goal={goal} onDetails={(t) => onUpgrades(t)} />}
+        {tab === "tiers" && plan && <Tiers result={plan} goal={goal} onBudget={onBudget} onDetails={(t) => onUpgrades(t)} />}
+        {tab === "diagnostic" && <Diagnostic goal={goal} verdict={verdict} onUpgrades={onUpgrades} />}
+      </div>
+    </div>
+  );
+}
+
+/** La jauge d'images par seconde : aujourd'hui, avec le plan conseillé, et l'objectif. */
+function FpsGauge({ today, after, goal, limit }: { today: number; after?: number; goal: number; limit: "gpu" | "cpu" }) {
+  const max = Math.max(goal * 1.25, (after ?? 0) * 1.08, today * 1.1);
+  const pct = (v: number) => `${Math.min(100, (v / max) * 100)}%`;
+  return (
+    <div className="gauge">
+      <div className="gauge-track">
+        {after != null && after > today && <i className="gauge-after" style={{ width: pct(after) }} />}
+        <i className="gauge-today" style={{ width: pct(today) }} />
+        <span className="gauge-goal" style={{ left: pct(goal) }} />
+      </div>
+      <div className="gauge-legend">
+        <span>
+          <b className="num">{today} i/s</b> aujourd'hui, limité par {limit === "gpu" ? "la carte graphique" : "le processeur"}
+        </span>
+        {after != null && after > today && (
+          <span className="gauge-legend-after">
+            <b className="num">{after} i/s</b> avec le plan conseillé
+          </span>
+        )}
+        <span className="gauge-legend-goal">
+          Objectif <b className="num">{goal} i/s</b>
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function Diagnostic({ goal, verdict, onUpgrades }: { goal: Goal; verdict: Verdict; onUpgrades: (tab?: string) => void }) {
+  return (
+    <>
       {verdict.fps && (
-        <section className="panel fps-panel">
-          <h2>Images par seconde estimées</h2>
+        <div className="diag-fps">
           <FpsBar label="Ta carte graphique permet" value={verdict.fps.gpuFps} target={goal.fps} limit={verdict.fps.limit === "gpu"} />
           <FpsBar label="Ton processeur permet" value={verdict.fps.cpuFps} target={goal.fps} limit={verdict.fps.limit === "cpu"} />
-          <p className="muted small note">
-            Le PC va à la vitesse du plus lent des deux : ≈ <b>{verdict.fps.fps} i/s</b> en {RES_LABEL[goal.resolution]}, dans un jeu récent en qualité
-            élevée. Les jeux compétitifs (Valorant, CS2, Fortnite en réglages bas) tournent bien plus vite.
+          <p className="muted small">
+            Le PC va à la vitesse du plus lent des deux, dans un jeu récent en qualité élevée. Les jeux compétitifs (Valorant, CS2, Fortnite en
+            réglages bas) tournent bien plus vite.
           </p>
-        </section>
-      )}
-
-      <section>
-        <h2 className="section">Point par point</h2>
-        <div className="needs">
-          {verdict.needs.map((n) => (
-            <div key={n.id} className={`need n-${n.status}`}>
-              <Icon name={STATUS_ICON[n.status]} />
-              <div className="need-main">
-                <div className="need-head">
-                  <b>{n.label}</b>
-                  <span className="muted small">
-                    {n.current} · objectif : {n.target}
-                  </span>
-                </div>
-                <div className="muted small">{n.detail}</div>
-              </div>
-              {n.fix && n.status !== "ok" && (
-                <button className="link" onClick={() => onUpgrades(n.fix)}>
-                  {FIX_LABEL[n.fix]} →
-                </button>
-              )}
-            </div>
-          ))}
         </div>
-      </section>
+      )}
+      <ul className="needs">
+        {verdict.needs.map((n) => (
+          <li key={n.id} className={`need n-${n.status}`}>
+            <Icon name={STATUS_ICON[n.status]} />
+            <div className="need-main">
+              <div className="need-head">
+                <b>{n.label}</b>
+                <span className="muted">
+                  {n.current}, objectif {n.target.charAt(0).toLowerCase() + n.target.slice(1)}
+                </span>
+              </div>
+              <p className="muted small">{n.detail}</p>
+            </div>
+            {n.fix && n.status !== "ok" && (
+              <button className="link small" onClick={() => onUpgrades(n.fix)}>
+                Voir les {FIX_LABEL[n.fix].toLowerCase()}
+              </button>
+            )}
+          </li>
+        ))}
+      </ul>
     </>
   );
 }

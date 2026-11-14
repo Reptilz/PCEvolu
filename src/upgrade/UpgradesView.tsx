@@ -1,13 +1,15 @@
 import { useMemo, useState, type ReactNode } from "react";
 import type { Report } from "../types";
-import type { Addition, Category, Check, Part, Proposal, Role } from "./types";
+import type { Category, Check, Part, Proposal } from "./types";
 import { buildProfile, missingAnswers, saveAnswers, type Answers, type Profile } from "./profile";
 import { proposeAll } from "./engine";
 import { CATALOG_DATE } from "./catalog";
 import { priceInfo, pricesFile, trendOf } from "./prices";
 import { usePrices } from "./PriceSheet";
 import { Icon, type IconName } from "../icons";
-import { goalSummary, impactOf, type Goal, type Impact, type Verdict } from "./goal";
+import { impactOf, type Goal, type Impact, type Verdict } from "./goal";
+import { AdditionRow, CompatSummary, ItemRow, kindLabel } from "./PlanView";
+import { goalSentence } from "./GoalViews";
 
 const TABS: { id: Category; label: string; icon: IconName }[] = [
   { id: "gpu", label: "Carte graphique", icon: "gpu" },
@@ -31,7 +33,7 @@ export function UpgradesView({
   // Onglet de départ : celui demandé, sinon le premier composant qui bloque l'objectif.
   const firstFix = verdict.needs.find((n) => n.fix && n.status !== "ok")?.fix;
   const [tab, setTab] = useState<Category>(() => (initialTab as Category) ?? firstFix ?? "gpu");
-  const [showForm, setShowForm] = useState(() => missingAnswers(answers) > 0);
+  const [showForm, setShowForm] = useState(false);
   const [showOver, setShowOver] = useState(false);
   const [brand, setBrand] = useState<string>("all");
   const profile = useMemo(() => buildProfile(report, answers), [report, answers]);
@@ -70,117 +72,123 @@ export function UpgradesView({
     setAnswers(next);
   };
 
+  const tabCount = (id: Category) => all[id].length;
+  const blocking = (id: Category) => verdict.needs.some((n) => n.fix === id && n.status !== "ok");
+  const advice = !goal.configured
+    ? undefined
+    : tabNeed
+      ? cheapestGoal
+        ? `${tabNeed.detail} La solution la moins chère pour atteindre ton objectif coûte ${cheapestGoal.p.total} €${goal.budget != null && cheapestGoal.p.total > goal.budget ? `, au-delà de ton budget de ${goal.budget} €` : ""}.`
+        : `${tabNeed.detail} Aucune pièce de cet onglet ne suffit seule : le plan combiné de « Mon objectif » associe plusieurs pièces.`
+      : verdict.level === "ok"
+        ? "Ton PC atteint déjà ton objectif : tout ce qui suit est du bonus."
+        : "Cette pièce ne limite pas ton objectif. Les onglets marqués d'un point sont prioritaires.";
+
   return (
-    <>
-      <header className="page-head">
+    <div className="up-page">
+      <header className="gp-head">
         <div>
-          <h1>Upgrades compatibles</h1>
-          <div className="muted">Chaque proposition est vérifiée face à ta config, avec les composants à ajouter si besoin.</div>
+          <h1>Upgrades</h1>
+          <p className="gp-goal">Toutes les pièces compatibles avec ton PC, vérifiées une par une.</p>
         </div>
       </header>
 
-      <div className="goal-bar">
-        <Icon name="target" />
-        <span>
-          Objectif : <b>{goal.configured ? goalSummary(goal) : "non défini"}</b>
-          {verdict.fps && goal.configured && <span className="muted"> · aujourd'hui ≈ {verdict.fps.fps} i/s</span>}
-        </span>
-        <button className="link" onClick={onEditGoal}>
-          {goal.configured ? "Modifier" : "Définir"}
-        </button>
+      <div className="up-context">
+        <p>
+          {goal.configured ? (
+            <>
+              Objectif : {goalSentence(goal).charAt(0).toLowerCase() + goalSentence(goal).slice(1)}
+              {verdict.fps ? `, avec environ ${verdict.fps.fps} i/s aujourd'hui` : ""}.{" "}
+            </>
+          ) : (
+            "Aucun objectif défini : les propositions ne sont pas classées selon ton usage. "
+          )}
+          <button className="link" onClick={onEditGoal}>
+            {goal.configured ? "Modifier l'objectif" : "Définir mon objectif"}
+          </button>
+        </p>
+        <p>
+          <ProfileSentence p={profile} answers={answers} missing={missing} />{" "}
+          <button className="link" onClick={() => setShowForm(!showForm)}>
+            {showForm ? "Fermer" : missing > 0 ? "Renseigner ces infos" : "Modifier"}
+          </button>
+        </p>
+        {showForm && (
+          <div className="up-form">
+            <Questionnaire a={answers} update={update} />
+          </div>
+        )}
       </div>
 
-      <section className="panel q-panel">
-        <div className="panel-head">
-          <h2>Ce que PCEvolu ne peut pas détecter</h2>
-          <button className="link" onClick={() => setShowForm(!showForm)}>
-            {showForm ? "Masquer" : missing > 0 ? `Compléter (${missing} à renseigner)` : "Modifier"}
-          </button>
-        </div>
-        {!showForm && <ProfileSummary p={profile} answers={answers} />}
-        {showForm && <Questionnaire a={answers} update={update} />}
-      </section>
-
-      <div className="tabs">
+      <div className="seg up-seg" role="tablist">
         {TABS.map((t) => (
           <button
             key={t.id}
-            className={`tab ${tab === t.id ? "on" : ""}`}
+            role="tab"
+            aria-selected={tab === t.id}
+            className={tab === t.id ? "on" : ""}
             onClick={() => {
               setTab(t.id);
               setBrand("all");
             }}
           >
-            <Icon name={t.icon} />
+            {blocking(t.id) && <span className="tab-dot" title="Limite ton objectif" />}
             {t.label}
-            {verdict.needs.some((n) => n.fix === t.id && n.status !== "ok") && <span className="tab-dot" title="Limite ton objectif" />}
-            <span className="tab-count">{all[t.id].length}</span>
+            <span className="seg-count">{tabCount(t.id)}</span>
           </button>
         ))}
       </div>
 
-      {goal.configured && all[tab].length > 0 && (
-        <div className={`tab-advice ${tabNeed ? "need" : ""}`}>
-          {tabNeed
-            ? cheapestGoal
-              ? `${tabNeed.label} : ${tabNeed.detail} La solution la moins chère pour atteindre ton objectif coûte ${cheapestGoal.p.total} €${goal.budget != null && cheapestGoal.p.total > goal.budget ? `, au-delà de ton budget de ${goal.budget} €` : ""}.`
-              : `${tabNeed.label} : ${tabNeed.detail} Aucune proposition de cet onglet ne suffit seule : regarde aussi les autres onglets.`
-            : verdict.level === "ok"
-              ? "Ton PC atteint déjà ton objectif : ces upgrades sont du bonus."
-              : "Ce composant ne limite pas ton objectif : priorité aux onglets marqués d'un point."}
-        </div>
-      )}
+      {advice && all[tab].length > 0 && <p className={`up-advice ${tabNeed ? "need" : ""}`}>{advice}</p>}
 
       {brands.length > 1 && (
         <div className="brand-filter">
-          {["all", ...brands.sort()].map((b) => {
-            const n = b === "all" ? scored.length : scored.filter((s) => brandOf(s) === b).length;
-            return (
-              <button key={b} className={`chip-btn ${brand === b ? "on" : ""}`} onClick={() => setBrand(b)}>
-                {b === "all" ? "Toutes les marques" : b} ({n})
-              </button>
-            );
-          })}
+          <span className="muted small">Marque</span>
+          {["all", ...brands.sort()].map((b) => (
+            <button key={b} className={`chip-btn ${brand === b ? "on" : ""}`} onClick={() => setBrand(b)}>
+              {b === "all" ? "Toutes" : b}
+            </button>
+          ))}
         </div>
       )}
 
       {all[tab].length === 0 ? (
-        <div className="panel muted">{emptyMessage(tab, profile)}</div>
+        <p className="up-empty">{emptyMessage(tab, profile)}</p>
       ) : (
         <>
-          {inBudget.length === 0 && goal.budget != null && (
-            <div className="panel muted">Aucune proposition de cet onglet ne rentre dans ton budget de {goal.budget} €.</div>
-          )}
-          <div className="stack">
+          {inBudget.length === 0 && goal.budget != null && <p className="up-empty">Rien dans cet onglet ne rentre dans ton budget de {goal.budget} €.</p>}
+          <ul className="rows">
             {inBudget.map((s) => (
-              <ProposalCard key={s.p.id} p={s.p} impact={goal.configured ? s.impact : undefined} />
+              <ProposalRow key={s.p.id} p={s.p} impact={goal.configured ? s.impact : undefined} />
             ))}
-          </div>
+          </ul>
           {over.length > 0 && (
             <div className="over-budget">
               <button className="link" onClick={() => setShowOver(!showOver)}>
-                {showOver ? "Masquer" : "Voir"} les {over.length} proposition{over.length > 1 ? "s" : ""} au-delà de ton budget
+                {showOver ? "Masquer" : "Afficher"} {over.length === 1 ? "la proposition" : `les ${over.length} propositions`} au-delà de ton budget
               </button>
               {showOver && (
-                <div className="stack dim">
+                <ul className="rows dim">
                   {over.map((s) => (
-                    <ProposalCard key={s.p.id} p={s.p} impact={goal.configured ? s.impact : undefined} />
+                    <ProposalRow key={s.p.id} p={s.p} impact={goal.configured ? s.impact : undefined} />
                   ))}
-                </div>
+                </ul>
               )}
             </div>
           )}
         </>
       )}
-      <p className="muted small note">
+      <p className="muted small up-foot">
         {marketCount > 0
-          ? `Prix du marché relevés le ${new Date(market!.updatedAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })} : médiane des marchands sur Google Shopping (${marketCount} composants). Les autres prix sont indicatifs (${CATALOG_DATE}).`
+          ? `Prix du marché relevés le ${new Date(market!.updatedAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })} sur Google Shopping (médiane des marchands, ${marketCount} composants). Les autres prix sont indicatifs (${CATALOG_DATE}).`
           : `Prix indicatifs (${CATALOG_DATE}).`}{" "}
-        Indices de performance approximatifs. Vérifie toujours la fiche du modèle exact avant d'acheter.
+        Les performances sont des ordres de grandeur : vérifie toujours la fiche du modèle exact avant d'acheter.
       </p>
-    </>
+    </div>
   );
 }
+
+
 
 function emptyMessage(tab: Category, p: Profile) {
   if (p.isLaptop && (tab === "gpu" || tab === "cpu"))
@@ -199,119 +207,6 @@ function emptyMessage(tab: Category, p: Profile) {
 // Carte de proposition
 // ---------------------------------------------------------------------------
 
-const ROLE: Record<Role, { title: string; cls: string }> = {
-  required: { title: "À ajouter obligatoirement", cls: "req" },
-  verify: { title: "Probablement nécessaire, à vérifier", cls: "ver" },
-  recommended: { title: "Conseillé", cls: "rec" },
-};
-
-/** Quantité de RAM après une proposition (ajout ou remplacement). */
-function ramAfter(p: Proposal, currentGb: number): number | undefined {
-  if (p.main.kind !== "ram") return undefined;
-  const kitGb = p.main.sticks * p.main.gbPerStick;
-  return p.id.startsWith("ram-add") ? currentGb + kitGb : kitGb;
-}
-
-function ProposalCard({ p, impact }: { p: Proposal; impact?: Impact }) {
-  const [open, setOpen] = useState(false);
-  const required = p.additions.filter((a) => a.role === "required");
-  const fails = p.checks.filter((c) => c.status === "fail").length;
-  const warns = p.checks.filter((c) => c.status === "warn").length;
-  const status = required.length > 0 ? "needs" : fails > 0 ? "fail" : warns > 0 ? "warn" : "ok";
-  const statusLabel = {
-    ok: "Compatible tel quel",
-    warn: `Compatible · ${warns} point${warns > 1 ? "s" : ""} à vérifier`,
-    needs: `Nécessite ${required.length} composant${required.length > 1 ? "s" : ""} en plus`,
-    fail: "Incompatible",
-  }[status];
-
-  return (
-    <div className={`prop st-${status}`}>
-      <div className="prop-head" onClick={() => setOpen(!open)}>
-        <div className="prop-main">
-          <div className="prop-tags">
-            {impact?.reachesGoal && <span className="prop-goal">✓ Atteint ton objectif</span>}
-            {impact && !impact.relevant && !impact.reachesGoal && <span className="prop-useless">Peu utile pour ton objectif</span>}
-            {p.highlight && <span className="prop-hl">{p.highlight}</span>}
-          </div>
-          <div className="prop-title">{p.title}</div>
-          <div className="prop-meta">
-            <span className={`prop-status s-${status}`}>{statusLabel}</span>
-            {(impact?.label ?? p.gainLabel) && <span className="prop-gain">{impact?.label ?? p.gainLabel}</span>}
-          </div>
-        </div>
-        <div className="prop-price">
-          <div className="prop-total">{p.total} €</div>
-          <div className="muted small">
-            {p.total !== price(p.main) * p.mainQuantity
-              ? `dont ${price(p.main) * p.mainQuantity} € pour le composant`
-              : priceInfo(p.main.id)
-                ? "prix du marché"
-                : "prix indicatif"}
-          </div>
-          {p.totalIfVerify > p.total && <div className="muted small">jusqu'à {p.totalIfVerify} € selon vérifications</div>}
-        </div>
-        <Icon name="chevron" className={`chev ${open ? "open" : ""}`} />
-      </div>
-
-      {required.length > 0 && !open && (
-        <div className="prop-req-inline">
-          + {required.map((a) => partName(a.part)).join(" · ")}
-        </div>
-      )}
-
-      {open && (
-        <div className="prop-body">
-          <div className="prop-cols">
-            <div>
-              <h3>Compatibilité avec ta config</h3>
-              <ul className="checks">
-                {p.checks.map((c, i) => (
-                  <CheckRow key={i} c={c} />
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h3>Liste d'achat</h3>
-              <ul className="cart">
-                <li className="cart-main">
-                  <div className="cart-line">
-                    <span>{partName(p.main)}</span>
-                    <span className="mono">{price(p.main)} €</span>
-                  </div>
-                  <MarketLine part={p.main} />
-                </li>
-                {(["required", "verify", "recommended"] as Role[]).map((role) => {
-                  const items = p.additions.filter((a) => a.role === role);
-                  if (items.length === 0) return null;
-                  return (
-                    <li key={role} className="cart-group">
-                      <div className={`cart-role r-${ROLE[role].cls}`}>{ROLE[role].title}</div>
-                      {items.map((a, i) => (
-                        <AdditionRow key={i} a={a} />
-                      ))}
-                    </li>
-                  );
-                })}
-                <li className="cart-total">
-                  <span>Total obligatoire</span>
-                  <span className="mono">{p.total} €</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          {p.notes.length > 0 && (
-            <ul className="notes">
-              {p.notes.map((n, i) => (
-                <li key={i}>{n}</li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
 
 export function CheckRow({ c }: { c: Check }) {
   const icon = c.status === "ok" ? "check" : c.status === "warn" ? "alert" : c.status === "fixed" ? "refresh" : "cross";
@@ -326,21 +221,81 @@ export function CheckRow({ c }: { c: Check }) {
   );
 }
 
-function AdditionRow({ a }: { a: Addition }) {
+/** Quantité de RAM après une proposition (ajout ou remplacement). */
+function ramAfter(p: Proposal, currentGb: number): number | undefined {
+  if (p.main.kind !== "ram") return undefined;
+  const kitGb = p.main.sticks * p.main.gbPerStick;
+  return p.id.startsWith("ram-add") ? currentGb + kitGb : kitGb;
+}
+
+/** Une proposition : une ligne (titre, effet, compatibilité, prix), le détail s'ouvre au clic. */
+function ProposalRow({ p, impact }: { p: Proposal; impact?: Impact }) {
+  const [open, setOpen] = useState(false);
+  const required = p.additions.filter((a) => a.role === "required");
+  const extras = p.additions.filter((a) => a.role !== "recommended");
+  const advised = p.additions.filter((a) => a.role === "recommended");
+  const warns = p.checks.filter((c) => c.status === "warn").length;
+  const fails = p.checks.filter((c) => c.status === "fail").length;
+  const compat = required.length
+    ? `avec ${required.map((a) => kindLabel(a.part).toLowerCase()).join(" et ")} en plus`
+    : fails
+      ? "incompatible"
+      : warns
+        ? `compatible, ${warns} point${warns > 1 ? "s" : ""} à vérifier`
+        : "compatible tel quel";
+  const effect = impact?.label ?? p.gainLabel;
+  const flag = impact?.reachesGoal ? "Atteint ton objectif" : impact && !impact.relevant ? "Peu utile pour ton objectif" : p.highlight;
+
   return (
-    <div className="cart-add">
-      <div className="cart-line">
-        <span>
-          {a.quantity > 1 ? `${a.quantity} × ` : ""}
-          {partName(a.part)}
+    <li className={`row prop-row ${open ? "open" : ""}`}>
+      <button className="row-line" onClick={() => setOpen(!open)} aria-expanded={open}>
+        <span className="row-main">
+          <span className="row-title">
+            {p.title}
+            {flag && <span className={`row-flag ${impact?.reachesGoal ? "ok" : impact && !impact.relevant ? "dim" : ""}`}>{flag}</span>}
+          </span>
+          <span className="row-sub">
+            {effect ? `${effect.charAt(0).toUpperCase()}${effect.slice(1)}, ` : ""}
+            {compat}.
+          </span>
         </span>
-        <span className="mono">{price(a.part) * a.quantity} €</span>
-      </div>
-      <div className="muted small">{a.reason}</div>
-      <MarketLine part={a.part} />
-    </div>
+        <span className="row-price num">
+          {p.total} €{p.totalIfVerify > p.total && <span className="row-price-max">jusqu'à {p.totalIfVerify} €</span>}
+        </span>
+        <Icon name="chevron" className={`chev ${open ? "open" : ""}`} />
+      </button>
+      {open && (
+        <div className="row-detail pd">
+          <ul className="pd-items">
+            <ItemRow kind={kindLabel(p.main)} part={p.main} amount={price(p.main) * p.mainQuantity} />
+            {extras.map((a, i) => (
+              <AdditionRow key={i} a={a} />
+            ))}
+          </ul>
+          <CompatSummary checks={p.checks} />
+          {advised.length > 0 && (
+            <details className="pd-advised">
+              <summary>Conseillé en plus ({advised.length})</summary>
+              <ul className="pd-items">
+                {advised.map((a, i) => (
+                  <AdditionRow key={i} a={a} />
+                ))}
+              </ul>
+            </details>
+          )}
+          {p.notes.length > 0 && (
+            <ul className="notes">
+              {p.notes.map((n, i) => (
+                <li key={i}>{n}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+    </li>
   );
 }
+
 
 /** « Médiane de 6 marchands · dès 549,99 € chez Cdiscount », ou « prix indicatif » sans relevé. */
 export function MarketLine({ part }: { part: Part }) {
@@ -351,57 +306,49 @@ export function MarketLine({ part }: { part: Part }) {
   if (!info) {
     return (
       <button className="market muted small market-btn" onClick={sheet}>
-        Prix indicatif (pas encore relevé) · comparer les prix ↗
+        Prix indicatif, pas encore relevé. Comparer les prix
       </button>
     );
   }
   const best = info.best?.[0];
   const t = trendOf(part.id);
   const eur = (n: number) => n.toLocaleString("fr-FR", { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
+  const trend = t.change != null && t.change !== 0 ? `, ${t.change < 0 ? "en baisse" : "en hausse"} de ${Math.abs(t.change)} %` : "";
   return (
     <button className={`market small market-btn ${info.stale ? "stale" : ""}`} onClick={sheet} title="Voir les offres, l'évolution du prix et créer une alerte">
-      Médiane de {info.offers} marchands
-      {best ? ` · dès ${eur(best.price)} € chez ${best.merchant}` : ""}
-      {t.change != null && t.change !== 0 ? ` · ${t.change < 0 ? "↘" : "↗"} ${t.change} %` : ""}
-      {info.stale ? " · relevé ancien" : ""}
-      {watched ? " · 🔔" : ""} · voir les offres →
+      {best ? `Dès ${eur(best.price)} € chez ${best.merchant}` : `Prix médian de ${info.offers} marchands`}
+      {trend}
+      {info.stale ? " (relevé ancien)" : ""}
+      {watched ? ", prix surveillé" : ""}. <u>Voir les offres</u>
     </button>
   );
 }
 
 const price = (p: Part) => ("price" in p && p.price != null ? p.price : 0);
 
-function partName(p: Part): string {
-  const label: Record<Part["kind"], string> = {
-    cpu: "Processeur", board: "Carte mère", gpu: "Carte graphique", ram: "RAM", ssd: "SSD",
-    psu: "Alimentation", cooler: "Ventirad", fans: "Ventilateurs", case: "Boîtier",
-  };
-  return `${label[p.kind]} · ${p.name}`;
-}
-
 // ---------------------------------------------------------------------------
 // Questionnaire et résumé
 // ---------------------------------------------------------------------------
 
-function ProfileSummary({ p, answers }: { p: Profile; answers: Answers }) {
-  const items: [string, string, boolean][] = [
-    ["Plateforme", [p.socket, p.chipset?.chipset, p.ramType, p.pcieGen ? `PCIe ${p.pcieGen}.0` : undefined].filter(Boolean).join(" · ") || "Non reconnue", !!p.chipset],
-    ["Alimentation", p.psuKnown ? `${p.psuWatts} W` : `Inconnue (≈ ${p.psuWatts} W supposés)`, p.psuKnown],
-    ["Boîtier", p.gpuMaxMm ? `Carte graphique jusqu'à ${p.gpuMaxMm} mm` : "Inconnu", p.gpuMaxMm != null],
-    ["Ventilateurs", answers.caseFans != null ? (answers.caseFans >= 3 ? "3 ou plus" : String(answers.caseFans)) : "Inconnu", answers.caseFans != null],
-    ["Ventirad", COOLER_LABEL[answers.cooler], answers.cooler !== "unknown"],
+/** Ce que PCEvolu ne peut pas lire, résumé en une phrase. */
+function ProfileSentence({ p, answers, missing }: { p: Profile; answers: Answers; missing: number }) {
+  if (missing >= 3) {
+    return (
+      <span>
+        PCEvolu ne peut pas lire ton alimentation, ton boîtier ni ton refroidissement : les pièces qui en dépendent sont marquées « à vérifier ».
+      </span>
+    );
+  }
+  const parts = [
+    p.psuKnown ? `alimentation ${p.psuWatts} W` : "alimentation inconnue",
+    p.gpuMaxMm ? `cartes graphiques jusqu'à ${p.gpuMaxMm} mm` : "taille du boîtier inconnue",
+    answers.caseFans != null ? `${answers.caseFans >= 3 ? "3 ventilateurs ou plus" : `${answers.caseFans} ventilateur${answers.caseFans > 1 ? "s" : ""}`}` : "ventilateurs inconnus",
+    answers.cooler !== "unknown" ? COOLER_LABEL[answers.cooler].toLowerCase() : "ventirad inconnu",
   ];
-  return (
-    <div className="summary">
-      {items.map(([k, v, ok]) => (
-        <div key={k} className={`sum-item ${ok ? "" : "unknown"}`}>
-          <div className="muted small">{k}</div>
-          <div>{v}</div>
-        </div>
-      ))}
-    </div>
-  );
+  return <span>Ta config : {parts.join(", ")}.</span>;
 }
+
+
 
 const COOLER_LABEL: Record<Answers["cooler"], string> = {
   stock: "Ventirad d'origine (livré avec le CPU)",

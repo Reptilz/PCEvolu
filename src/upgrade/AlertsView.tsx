@@ -16,61 +16,57 @@ export function AlertsView() {
   const updated = pricesFile()?.updatedAt;
 
   return (
-    <>
-      <header className="page-head">
+    <div className="al-page">
+      <header className="gp-head">
         <div>
           <h1>Alertes prix</h1>
-          <div className="muted">
-            Les prix sont relevés chaque lundi{updated ? ` (dernier relevé le ${new Date(updated).toLocaleDateString("fr-FR", { day: "numeric", month: "long" })})` : ""}.
-            PCEvolu vérifie tes alertes à chaque ouverture.
-          </div>
+          <p className="gp-goal">
+            Les prix sont relevés chaque lundi{updated ? `, le dernier le ${new Date(updated).toLocaleDateString("fr-FR", { day: "numeric", month: "long" })}` : ""}. PCEvolu
+            vérifie tes alertes à chaque ouverture.
+          </p>
         </div>
       </header>
 
       {alerts.length === 0 ? (
-        <div className="panel empty-alerts">
-          <Icon name="bell" />
-          <div>
-            <b>Aucune alerte pour l'instant.</b>
-            <p className="muted">
-              Clique sur un prix (dans Upgrades, Mon objectif ou Améliorations) pour voir son évolution et créer une alerte. Tu peux aussi surveiller tout un
-              plan d'un coup avec le bouton « Surveiller les prix de ce plan ».
-            </p>
-          </div>
+        <div className="al-empty">
+          <p className="al-empty-title">Aucune alerte pour l'instant.</p>
+          <p className="muted">
+            Clique sur un prix, dans Upgrades ou Mon objectif, pour voir son évolution et créer une alerte. Tu peux aussi surveiller tout un plan d'un coup
+            avec « Me prévenir si ces prix baissent ».
+          </p>
         </div>
       ) : (
-        <div className="stack">
+        <ul className="al-list">
           {sorted.map((a) => {
             const now = bestPriceOf(a.id);
             const hit = isTriggered(a);
             const t = trendOf(a.id);
             const diff = a.startPrice && now ? Math.round(((now - a.startPrice) / a.startPrice) * 100) : undefined;
+            const meta = [
+              `Seuil ${eur(a.target)}`,
+              a.startPrice ? `${eur(a.startPrice)} à la création${diff ? ` (${diff > 0 ? "+" : ""}${diff} % depuis)` : ""}` : "",
+              t.change ? `${t.change > 0 ? "+" : ""}${t.change} % cette semaine` : "",
+            ].filter(Boolean);
             return (
-              <div key={a.id} className={`alert-row ${hit ? "hit" : ""}`}>
-                <Icon name={hit ? "check" : "bell"} />
-                <div className="alert-main">
-                  <button className="link alert-name" onClick={() => open({ id: a.id, name: a.name, price: now })}>
+              <li key={a.id} className={`al-row ${hit ? "hit" : ""}`}>
+                <div className="al-main">
+                  <button className="al-name" onClick={() => open({ id: a.id, name: a.name, price: now })}>
                     {a.name}
                   </button>
-                  <div className="muted small">
-                    Seuil : {eur(a.target)}
-                    {a.startPrice ? ` · ${eur(a.startPrice)} à la création` : ""}
-                    {diff != null && diff !== 0 ? ` (${diff > 0 ? "+" : ""}${diff} % depuis)` : ""}
-                    {t.change != null ? ` · ${t.change < 0 ? "↘" : t.change > 0 ? "↗" : "→"} ${t.change} % cette semaine` : ""}
-                  </div>
+                  <div className="al-meta">{meta.join(", ")}.</div>
                 </div>
-                <div className="alert-price">
-                  <div className="mono">{now != null ? eur(now) : "—"}</div>
-                  <div className={`small ${hit ? "ok-text" : "muted"}`}>{hit ? "Seuil atteint !" : now != null ? `encore ${eur(Math.max(0, now - a.target))}` : "pas de prix"}</div>
+                <div className="al-price">
+                  <div className="num">{now != null ? eur(now) : "—"}</div>
+                  <div className={hit ? "ok-text" : "muted"}>{hit ? "Seuil atteint" : now != null ? `encore ${eur(Math.max(0, now - a.target))}` : "pas de prix"}</div>
                 </div>
                 <button className="icon-btn" onClick={() => remove(a.id)} aria-label="Supprimer l'alerte" title="Supprimer l'alerte">
                   <Icon name="cross" />
                 </button>
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       )}
-    </>
+    </div>
   );
 }

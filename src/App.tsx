@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { invoke, isTauri } from "@tauri-apps/api/core";
 import type { Metrics, Report } from "./types";
 import { recommend, type Recommendation } from "./recommendations";
@@ -7,10 +7,10 @@ import { clean, date, diskSize, gb, ghz, speed, uptime } from "./format";
 import { Icon, type IconName } from "./icons";
 import { UpgradesView } from "./upgrade/UpgradesView";
 import { buildProfile, loadAnswers, type Answers } from "./upgrade/profile";
-import { assess, goalSummary, loadGoal, saveGoal, topOptions, type Goal, type Verdict } from "./upgrade/goal";
+import { assess, loadGoal, saveGoal, topOptions, type Goal, type Verdict } from "./upgrade/goal";
 
 type OptionList = ReturnType<typeof topOptions>;
-import { GoalDiagnostic, GoalWizard, VerdictBanner } from "./upgrade/GoalViews";
+import { GoalDiagnostic, GoalWizard, goalSentence } from "./upgrade/GoalViews";
 import { proposeAll } from "./upgrade/engine";
 import { optimize } from "./upgrade/optimizer";
 import { loadHistory, loadPrices } from "./upgrade/prices";
@@ -243,73 +243,79 @@ function Overview({
   const score = healthScore(recos);
 
   return (
-    <>
-      <header className="page-head">
+    <div className="ov-page">
+      <header className="gp-head">
         <div>
           <h1>{clean(r.board.product) || r.system.model || "Mon PC"}</h1>
-          <div className="muted">
-            {r.os.name} · build {r.os.build} · allumé depuis {uptime(live?.uptimeSecs)}
-          </div>
+          <p className="gp-goal">
+            {r.os.name} (build {r.os.build}), allumé depuis {uptime(live?.uptimeSecs)}.
+          </p>
         </div>
-        <div className={`score s-${score.level}`}>
-          <div className="score-val">{score.value}</div>
-          <div className="score-lbl">{score.label}</div>
+        <div className={`ov-score s-${score.level}`} title="Note calculée à partir des améliorations restantes">
+          <span className="num">{score.value}</span>
+          <span>{score.label}</span>
         </div>
       </header>
 
       {verdict ? (
-        <div className="overview-goal" onClick={() => go("goal")} role="button">
-          <VerdictBanner verdict={verdict} compact />
-        </div>
+        <section className="answer ov-answer">
+          <h2 className="answer-title">{verdict.title}</h2>
+          <p className="ov-answer-sub">{verdict.summary}</p>
+          <button className="btn primary" onClick={() => go("goal")}>
+            Voir mon plan
+          </button>
+        </section>
       ) : (
-        <div className="verdict v-limited compact goal-cta">
-          <Icon name="target" />
-          <div className="verdict-text">
-            <b>Dis-nous ce que tu veux faire de ton PC</b>
-            <span>Jeu, bureautique, création… et ton budget : PCEvolu te dira si ton PC suffit et quoi améliorer en priorité.</span>
-          </div>
+        <section className="answer ov-answer">
+          <h2 className="answer-title">Dis-nous ce que tu veux faire de ton PC</h2>
+          <p className="ov-answer-sub">Jeu, bureautique, création, et ton budget : PCEvolu te dit si ton PC suffit et quoi améliorer en priorité.</p>
           <button className="btn primary" onClick={onSetGoal}>
             Définir mon objectif
           </button>
-        </div>
+        </section>
       )}
 
       <section className="kpis">
         <Kpi label="Processeur" value={live?.cpuPercent} unit="%" sub={clean(cpu?.name)} />
-        <Kpi label="Mémoire" value={ramPct} unit="%" sub={`${gb(live?.ramUsedBytes, 1)} / ${gb(r.memory.totalBytes)}`} warnAt={85} />
-        <Kpi label="Carte graphique" value={live?.gpu?.usagePercent} unit="%" sub={live?.gpu?.tempC != null ? `${Math.round(live.gpu.tempC)} °C · ${clean(gpu?.name)}` : clean(gpu?.name)} accent="var(--nv)" />
+        <Kpi label="Mémoire" value={ramPct} unit="%" sub={`${gb(live?.ramUsedBytes, 1)} sur ${gb(r.memory.totalBytes)}`} warnAt={85} />
+        <Kpi label="Carte graphique" value={live?.gpu?.usagePercent} unit="%" sub={live?.gpu?.tempC != null ? `${clean(gpu?.name)}, ${Math.round(live.gpu.tempC)} °C` : clean(gpu?.name)} accent="var(--nv)" />
         <Kpi label={`Disque ${sys?.letter ?? ""}`} value={diskPct} unit="%" sub={`${gb(sys?.freeBytes)} libres`} warnAt={85} />
       </section>
 
-      <section className="split">
-        <div className="panel">
-          <div className="panel-head">
-            <h2>Priorités</h2>
-            <button className="link" onClick={() => go("improve")}>
-              Tout voir
-            </button>
-          </div>
+      <div className="ov-split">
+        <section>
+          <h2 className="imp-h">À faire en priorité</h2>
           {recos.length === 0 ? (
-            <div className="all-good">
-              <Icon name="check" /> Rien à signaler : ton PC est bien configuré.
-            </div>
+            <p className="muted">Rien à signaler : ton PC est bien configuré.</p>
           ) : (
-            recos.slice(0, 3).map((x) => <RecoCard key={x.id} r={x} compact />)
+            <>
+              <ul className="imp-list">
+                {recos.slice(0, 3).map((x) => (
+                  <RecoLine key={x.id} r={x} />
+                ))}
+              </ul>
+              <button className="link" onClick={() => go("improve")}>
+                {recos.length > 3 ? `Voir les ${recos.length} améliorations` : "Voir le détail et ce qu'il faut acheter"}
+              </button>
+            </>
           )}
-        </div>
-        <div className="panel">
-          <h2>En bref</h2>
+        </section>
+        <section>
+          <h2 className="imp-h">Ton PC</h2>
           <ul className="facts">
-            <Fact icon="chip" k="Processeur" v={`${clean(cpu?.name)} · ${cpu?.cores ?? "?"}C/${cpu?.threads ?? "?"}T`} />
-            <Fact icon="gpu" k="Carte graphique" v={`${clean(gpu?.name)} · ${gb(gpu?.vramBytes)}`} />
-            <Fact icon="ram" k="Mémoire" v={`${gb(r.memory.totalBytes)} ${r.memory.modules[0]?.kind ?? ""} · ${r.memory.modules.length}/${r.memory.slotsTotal ?? "?"} emplacements`} />
-            <Fact icon="disk" k="Stockage" v={r.disks.map((d) => `${diskSize(d.sizeBytes)} ${d.media} ${d.bus}`).join(" + ") || "—"} />
+            <Fact icon="chip" k="Processeur" v={`${clean(cpu?.name)}, ${cpu?.cores ?? "?"} cœurs`} />
+            <Fact icon="gpu" k="Carte graphique" v={`${clean(gpu?.name)}, ${gb(gpu?.vramBytes)}`} />
+            <Fact icon="ram" k="Mémoire" v={`${gb(r.memory.totalBytes)} ${r.memory.modules[0]?.kind ?? ""}, ${r.memory.modules.length} barrette${r.memory.modules.length > 1 ? "s" : ""} sur ${r.memory.slotsTotal ?? "?"}`} />
+            <Fact icon="disk" k="Stockage" v={r.disks.map((d) => `${diskSize(d.sizeBytes)} ${d.media}`).join(" + ") || "—"} />
             <Fact icon="screen" k="Écran" v={r.displays.map((d) => `${d.width}×${d.height} à ${d.currentHz} Hz`).join(", ") || "—"} />
             <Fact icon="board" k="Carte mère" v={clean(r.board.product)} />
           </ul>
-        </div>
-      </section>
-    </>
+          <button className="link" onClick={() => go("components")}>
+            Voir le détail des composants
+          </button>
+        </section>
+      </div>
+    </div>
   );
 }
 
@@ -362,166 +368,118 @@ function Improve({ recos, openTab, options, goal, verdict }: {
   recos: Recommendation[]; openTab: (tab: string) => void; options?: Record<string, OptionList>; goal: Goal; verdict?: Verdict;
 }) {
   const upgrades = recos.filter((r) => r.upgrade);
-  // Composants qui bloquent l'objectif et qui ne sont pas déjà couverts par une suggestion ci-dessous.
-  const covered = new Set(upgrades.map((r) => UPGRADE_TAB[r.upgrade!.component]));
-  const goalNeeds = (goal.configured && verdict ? verdict.needs.filter((n) => n.fix && n.status !== "ok" && !covered.has(n.fix)) : [])
-    .filter((n, i, all) => all.findIndex((m) => m.fix === n.fix) === i); // un seul bloc par composant (ex. carte graphique + VRAM)
+  const free = recos.filter((r) => !r.upgrade);
+  // Une seule ligne d'achat par composant : d'abord ce qui bloque l'objectif, puis les suggestions générales.
+  type Buy = { id: string; tab: string; kind: string; title: string; why: string; price?: string; goal: boolean };
+  const buys: Buy[] = [];
+  if (goal.configured && verdict) {
+    for (const n of verdict.needs) {
+      if (!n.fix || n.status === "ok" || buys.some((b) => b.tab === n.fix)) continue;
+      const kind = upgrades.find((u) => UPGRADE_TAB[u.upgrade!.component] === n.fix)?.upgrade!.component ?? n.label;
+      buys.push({ id: n.id, tab: n.fix, kind, title: `${n.current}, il faudrait ${n.target.charAt(0).toLowerCase()}${n.target.slice(1)}`, why: n.detail, goal: true });
+    }
+  }
+  for (const r of upgrades) {
+    const tab = UPGRADE_TAB[r.upgrade!.component] ?? "gpu";
+    const existing = buys.find((b) => b.tab === tab);
+    if (existing) {
+      existing.price ??= price(r.upgrade!.priceMin, r.upgrade!.priceMax);
+      continue;
+    }
+    buys.push({ id: r.id, tab, kind: r.upgrade!.component, title: r.upgrade!.suggestion, why: r.detail, price: price(r.upgrade!.priceMin, r.upgrade!.priceMax), goal: false });
+  }
   const min = upgrades.reduce((s, r) => s + (r.upgrade?.priceMin ?? 0), 0);
   const max = upgrades.reduce((s, r) => s + (r.upgrade?.priceMax ?? 0), 0);
-  const free = recos.filter((r) => !r.upgrade);
 
   return (
-    <>
-      <header className="page-head">
+    <div className="imp-page">
+      <header className="gp-head">
         <div>
           <h1>Améliorations</h1>
-          <div className="muted">Classées de la plus utile à la moins urgente</div>
+          <p className="gp-goal">D'abord ce qui est gratuit, ensuite ce qui vaut la peine d'être acheté.</p>
         </div>
       </header>
 
-      {recos.length === 0 && (
-        <div className="panel all-good">
-          <Icon name="check" /> Rien à améliorer pour l'instant.
-        </div>
-      )}
-
-      {goalNeeds.length > 0 && (
-        <section>
-          <h2 className="section">Pour atteindre ton objectif · {goalSummary(goal)}</h2>
-          <div className="stack">
-            {goalNeeds.map((n) => {
-              const opts = options?.[n.fix!] ?? [];
-              return (
-                <div key={n.id} className={`reco ${n.status === "missing" ? "r-high" : "r-medium"}`}>
-                  <div className="reco-tag">{n.label}</div>
-                  <div className="reco-title">
-                    {n.current} · objectif : {n.target}
-                  </div>
-                  <p className="reco-detail">{n.detail}</p>
-                  {opts.length > 0 ? (
-                    <div className="opts" style={{ marginTop: 10 }}>
-                      {opts.map((o) => (
-                        <button key={o.proposal.id} className="opt" onClick={() => openTab(n.fix!)}>
-                          <span className="opt-title">{(o.proposal as unknown as { title: string }).title}</span>
-                          <span className="mono">{o.proposal.total} €</span>
-                          {o.impact.label && <span className="muted small">{o.impact.label}</span>}
-                          {o.impact.reachesGoal && <span className="tier-ok">✓ Objectif</span>}
-                        </button>
-                      ))}
-                      <button className="link small" onClick={() => openTab(n.fix!)}>
-                        Toutes les options →
-                      </button>
-                    </div>
-                  ) : (
-                    <p className="muted small">Aucune option seule dans ton budget : regarde le plan combiné dans « Mon objectif ».</p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      )}
+      {recos.length === 0 && buys.length === 0 && <p className="muted">Rien à améliorer pour l'instant : ton PC est bien réglé.</p>}
 
       {free.length > 0 && (
-        <section>
-          <h2 className="section">Réglages et entretien · gratuits</h2>
-          <div className="stack">
+        <section className="imp-sec">
+          <h2 className="imp-h">Gratuit, à faire maintenant</h2>
+          <ul className="imp-list">
             {free.map((r) => (
-              <RecoCard key={r.id} r={r} />
+              <RecoLine key={r.id} r={r} detail />
             ))}
-          </div>
+          </ul>
         </section>
       )}
 
-      {upgrades.length > 0 && (
-        <section>
-          <h2 className="section">Liste d'upgrades</h2>
-          <div className="panel">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Composant</th>
-                  <th>Suggestion</th>
-                  <th>Pourquoi</th>
-                  <th className="num">Prix indicatif</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {upgrades.map((r) => {
-                  const tab = UPGRADE_TAB[r.upgrade!.component] ?? "gpu";
-                  const opts = options?.[tab] ?? [];
-                  return (
-                    <Fragment key={r.id}>
-                      <tr>
-                        <td>
-                          <span className={`pill p-${r.level}`}>{r.upgrade!.component}</span>
-                        </td>
-                        <td className="strong">{r.upgrade!.suggestion}</td>
-                        <td className="muted">{r.title}</td>
-                        <td className="num mono">{price(r.upgrade!.priceMin, r.upgrade!.priceMax)}</td>
-                        <td className="num">
-                          <button className="link small" onClick={() => openTab(tab)}>
-                            Toutes les options →
+      {buys.length > 0 && (
+        <section className="imp-sec">
+          <h2 className="imp-h">À acheter</h2>
+          {goal.configured && <p className="imp-intro">Classé selon ton objectif : {goalSentence(goal).charAt(0).toLowerCase() + goalSentence(goal).slice(1)}.</p>}
+          <ul className="imp-buys">
+            {buys.map((b) => {
+              const opts = options?.[b.tab] ?? [];
+              return (
+                <li key={b.id} className="imp-buy">
+                  <div className="imp-buy-head">
+                    <span className="pd-kind">{b.kind}</span>
+                    <div>
+                      <div className="imp-buy-title">
+                        {b.title}
+                        {b.goal && <span className="row-flag">Bloque ton objectif</span>}
+                      </div>
+                      <p className="imp-why">{b.why}</p>
+                    </div>
+                    {b.price && <span className="pd-amount num">{b.price}</span>}
+                  </div>
+                  {opts.length > 0 ? (
+                    <ul className="imp-opts">
+                      {opts.map((o) => (
+                        <li key={o.proposal.id}>
+                          <button className="imp-opt" onClick={() => openTab(b.tab)}>
+                            <span className="imp-opt-name">{(o.proposal as unknown as { title: string }).title}</span>
+                            <span className="imp-opt-effect">
+                              {o.impact.reachesGoal ? "atteint ton objectif" : o.impact.label}
+                            </span>
+                            <span className="num">{o.proposal.total} €</span>
                           </button>
-                        </td>
-                      </tr>
-                      {opts.length > 0 && (
-                        <tr className="opts-row">
-                          <td colSpan={5}>
-                            <div className="opts-head muted small">
-                              Options vérifiées avec ta config{goal.configured ? ` · ${goalSummary(goal)}` : ""}
-                            </div>
-                            <div className="opts">
-                              {opts.map((o) => (
-                                <button key={o.proposal.id} className="opt" onClick={() => openTab(tab)}>
-                                  <span className="opt-title">{(o.proposal as unknown as { title: string }).title}</span>
-                                  <span className="mono">{o.proposal.total} €</span>
-                                  {o.impact.label && <span className="muted small">{o.impact.label}</span>}
-                                  {o.impact.reachesGoal && <span className="tier-ok">✓ Objectif</span>}
-                                </button>
-                              ))}
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </Fragment>
-                  );
-                })}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td colSpan={3}>Budget total estimé</td>
-                  <td className="num mono">{price(min, max)}</td>
-                  <td></td>
-                </tr>
-              </tfoot>
-            </table>
-            <p className="muted small note">
-              Ces suggestions sont des pistes rapides avec un prix moyen. Les options compatibles, vérifiées pièce par pièce face à ta config (alimentation,
-              carte mère, boîtier, ventirad…), sont dans l'onglet Upgrades.
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    b.goal && <p className="imp-why">Aucune pièce seule ne suffit dans ton budget : le plan de « Mon objectif » en combine plusieurs.</p>
+                  )}
+                  <button className="link" onClick={() => openTab(b.tab)}>
+                    Voir toutes les options compatibles
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          {max > 0 && (
+            <p className="imp-total">
+              Tout faire coûterait environ <b className="num">{price(min, max)}</b>. Les prix détaillés et la compatibilité pièce par pièce sont dans Upgrades.
             </p>
-          </div>
-          <div className="stack" style={{ marginTop: 12 }}>
-            {upgrades.map((r) => (
-              <RecoCard key={r.id} r={r} />
-            ))}
-          </div>
+          )}
         </section>
       )}
-    </>
+    </div>
   );
 }
 
-const price = (a?: number, b?: number) => (a == null ? "—" : a === b || b == null ? `${a} €` : `${a} – ${b} €`);
+const price = (a?: number, b?: number) => (a == null ? "—" : a === b || b == null ? `${a} €` : `${a} à ${b} €`);
 
-function RecoCard({ r, compact }: { r: Recommendation; compact?: boolean }) {
+/** Une amélioration en une ligne : titre, et le détail si demandé. */
+function RecoLine({ r, detail }: { r: Recommendation; detail?: boolean }) {
   return (
-    <div className={`reco r-${r.level} ${compact ? "compact" : ""}`}>
-      <div className="reco-tag">{r.tag}</div>
-      <div className="reco-title">{r.title}</div>
-      {!compact && <p className="reco-detail">{r.detail}</p>}
-    </div>
+    <li className={`imp-item l-${r.level}`}>
+      <span className="imp-dot" aria-hidden />
+      <div>
+        <div className="imp-title">{r.title}</div>
+        {detail ? <p className="imp-why">{r.detail}</p> : <div className="imp-tag">{r.tag.replace(/ · /g, ", ")}</div>}
+      </div>
+    </li>
   );
 }
 
@@ -535,12 +493,13 @@ function Components({ report: r, live }: { report: Report; live?: Metrics }) {
 
   return (
     <>
-      <header className="page-head">
+      <header className="gp-head">
         <div>
           <h1>Composants</h1>
-          <div className="muted">
-            {r.system.manufacturer} · {r.system.isLaptop ? "PC portable" : "PC fixe"}
-          </div>
+          <p className="gp-goal">
+            {r.system.isLaptop ? "PC portable" : "PC fixe"}
+            {r.system.manufacturer && !/to be filled|default/i.test(r.system.manufacturer) ? ` ${r.system.manufacturer.replace(/,? (Co\.,? )?(Ltd|Inc|Corp)\.?$/i, "")}` : ""}, tel que Windows le voit.
+          </p>
         </div>
       </header>
 
@@ -590,7 +549,7 @@ function Components({ report: r, live }: { report: Report; live?: Metrics }) {
         <Card icon="board" cat="Carte mère" name={clean(r.board.product)}>
           <Row k="Fabricant" v={r.board.manufacturer?.replace(" Co., Ltd.", "")} />
           <Row k="Révision" v={r.board.version} />
-          <Row k="BIOS" v={`${r.board.biosVersion ?? "?"} · ${date(r.board.biosDate)}`} />
+          <Row k="BIOS" v={`${r.board.biosVersion ?? "?"}, du ${date(r.board.biosDate)}`} />
           <Row k="Éditeur du BIOS" v={r.board.biosVendor} />
         </Card>
 
@@ -639,7 +598,7 @@ function Components({ report: r, live }: { report: Report; live?: Metrics }) {
         <Card icon="wifi" cat="Réseau" name={clean(r.network.find((n) => n.connected)?.description) || "Cartes réseau"}>
           {r.network.length === 0 && <Row k="Cartes physiques" v="Aucune détectée" />}
           {r.network.map((n) => (
-            <Row key={n.name} k={`${n.wireless ? "Wi-Fi" : "Ethernet"} · ${n.name ?? ""}`} v={n.connected ? speed(n.speedBps) : "Déconnecté"} badge={n.connected ? "ok" : undefined} />
+            <Row key={n.name} k={`${n.wireless ? "Wi-Fi" : "Ethernet"} (${n.name ?? ""})`} v={n.connected ? speed(n.speedBps) : "Déconnecté"} badge={n.connected ? "ok" : undefined} />
           ))}
         </Card>
 
@@ -680,7 +639,7 @@ function Row({ k, v, badge }: { k: string; v?: string; badge?: "ok" | "warn" | "
       <dt>{k}</dt>
       <dd>
         {v || "—"}
-        {badge && <span className={`badge b-${badge}`}>{label[badge]}</span>}
+        {badge && badge !== "ok" && <span className={`badge b-${badge}`}>{label[badge]}</span>}
       </dd>
     </>
   );

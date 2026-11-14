@@ -1,5 +1,5 @@
-import { useState } from "react";
-import type { Addition, Check, Part } from "./types";
+import { useState, type ReactNode } from "react";
+import type { Addition, Check, Part, Role } from "./types";
 import { CheckRow, MarketLine } from "./UpgradesView";
 import { usePrices } from "./PriceSheet";
 import { bestPriceOf, saveAlerts, suggestedTarget } from "./alerts";
@@ -11,7 +11,17 @@ import { Icon } from "../icons";
 /** Arrondit un coût au palier de budget supérieur (par 50 €). */
 const roundBudget = (c: number) => Math.ceil(c / 50) * 50;
 
-export function PlanSection({ goal, result, onBudget, onDetails }: {
+const KIND: Record<Part["kind"], string> = {
+  cpu: "Processeur", board: "Carte mère", gpu: "Carte graphique", ram: "Mémoire", ssd: "Stockage",
+  psu: "Alimentation", cooler: "Ventirad", fans: "Ventilateurs", case: "Boîtier",
+};
+export const kindLabel = (p: Part) => KIND[p.kind];
+
+// ---------------------------------------------------------------------------
+// Le plan conseillé (bloc principal de « Mon objectif »)
+// ---------------------------------------------------------------------------
+
+export function RecommendedPlan({ goal, result, onBudget, onDetails }: {
   goal: Goal;
   result: OptimizeResult;
   onBudget: (b: number | null) => void;
@@ -21,211 +31,159 @@ export function PlanSection({ goal, result, onBudget, onDetails }: {
   const reachTooExpensive = cheapestReach && goal.budget != null && cheapestReach.cost > goal.budget;
 
   return (
-    <section className="plan">
-      <div className="plan-head">
-        <h2>Mon plan d'évolution</h2>
+    <section className="rec">
+      <div className="rec-head">
+        <h2>{current.reached ? "Rien à acheter" : best?.evaluation.reached ? "Le plan conseillé" : "Le mieux dans ton budget"}</h2>
         <BudgetSlider value={goal.budget} onChange={onBudget} />
       </div>
 
       {current.reached ? (
-        <div className="plan-empty ok">
-          <Icon name="check" />
-          <div>
-            <b>Ton PC atteint déjà ton objectif : aucune dépense nécessaire.</b>
-            <span className="muted">{tiers.length > 0 ? "Si tu veux aller plus loin, voici ce que chaque budget apporte :" : "Rien d'utile à ajouter pour cet usage."}</span>
-          </div>
-        </div>
+        <p className="rec-empty">
+          Ton PC atteint déjà ton objectif. {tiers.length > 0 ? "Les onglets ci-dessous montrent ce qu'un budget apporterait en plus." : ""}
+        </p>
       ) : best ? (
-        <PlanCard plan={best} goal={goal} currentFps={current.fps} recommended onDetails={onDetails} />
+        <PlanDetail plan={best} goal={goal} currentFps={current.fps} onDetails={onDetails} />
       ) : (
-        <div className="plan-empty">
-          <Icon name="alert" />
-          <div>
-            <b>Aucune amélioration utile dans ce budget.</b>
-            {tiers[0] && <span className="muted">Le premier pas coûte {tiers[0].cost} € : {planTitle(tiers[0])}.</span>}
-          </div>
-        </div>
+        <p className="rec-empty">
+          Rien d'utile dans ce budget.{tiers[0] ? ` Le premier pas coûte ${tiers[0].cost} € (${planTitle(tiers[0])}).` : ""}
+        </p>
       )}
 
       {!current.reached && reachTooExpensive && (
-        <div className="plan-reach">
-          <span>
-            Pour atteindre complètement ton objectif, compte <b>≈ {cheapestReach.cost} €</b> : {planTitle(cheapestReach)}.
-          </span>
-          <button className="btn" onClick={() => onBudget(roundBudget(cheapestReach.cost))}>
-            Passer à {roundBudget(cheapestReach.cost)} €
+        <p className="rec-reach">
+          Pour atteindre complètement ton objectif, il faut compter {cheapestReach.cost} € ({planTitle(cheapestReach)}).{" "}
+          <button className="link" onClick={() => onBudget(roundBudget(cheapestReach.cost))}>
+            Passer le budget à {roundBudget(cheapestReach.cost)} €
           </button>
-        </div>
+        </p>
       )}
       {!current.reached && !cheapestReach && (
-        <div className="plan-reach">
-          <span>Aucune combinaison du catalogue n'atteint complètement cet objectif : l'app te propose ce qui s'en approche le plus.</span>
-        </div>
-      )}
-
-      {result.alternatives.length > 0 && (
-        <>
-          <h3 className="tiers-title">
-            {current.reached ? "Pour aller plus loin, dans ton budget" : "Autres options dans ton budget"} ({result.alternatives.length})
-          </h3>
-          <div className="alts">
-            {result.alternatives.map((a, i) => (
-              <AltRow key={i} plan={a} goal={goal} currentFps={current.fps} onDetails={onDetails} />
-            ))}
-          </div>
-        </>
-      )}
-
-      {tiers.length > 0 && (
-        <>
-          <h3 className="tiers-title">Ce que chaque budget apporte</h3>
-          <ol className="tiers">
-            {tiers.map((t, i) => {
-              const inBudget = goal.budget == null || t.cost <= goal.budget;
-              const isBest = best === t;
-              return (
-                <li key={i} className={`tier ${inBudget ? "" : "over"} ${isBest ? "best" : ""}`}>
-                  <div className="tier-cost mono">{t.cost} €</div>
-                  <div className="tier-main">
-                    <div className="tier-title">{planTitle(t)}</div>
-                    <div className="muted small">
-                      {t.evaluation.fps != null && current.fps != null
-                        ? t.evaluation.fps > current.fps
-                          ? `≈ ${current.fps} → ${t.evaluation.fps} i/s`
-                          : `≈ ${current.fps} i/s inchangés (${t.evaluation.limit === "gpu" ? "la carte graphique limite encore" : "le processeur limite encore"}), mais un frein en moins pour la suite`
-                        : `${Math.round(Math.min(t.evaluation.score, 1) * 100)} % de l'objectif`}
-                      {t.additions.some((a) => a.role === "required") &&
-                        ` · avec ${t.additions.filter((a) => a.role === "required").map((a) => kindLabel(a.part)).join(", ")}`}
-                    </div>
-                  </div>
-                  {t.evaluation.reached && <span className="tier-ok">✓ Objectif</span>}
-                  {!inBudget && (
-                    <button className="link" onClick={() => onBudget(roundBudget(t.cost))}>
-                      Budget {roundBudget(t.cost)} €
-                    </button>
-                  )}
-                </li>
-              );
-            })}
-          </ol>
-        </>
+        <p className="rec-reach">Aucune combinaison du catalogue n'atteint complètement cet objectif : voici ce qui s'en approche le plus.</p>
       )}
     </section>
   );
 }
 
-function PlanCard({ plan, goal, currentFps, recommended, onDetails }: { plan: Plan; goal: Goal; currentFps?: number; recommended?: boolean; onDetails: (tab: string) => void }) {
-  const [open, setOpen] = useState(true);
+/** Détail d'un plan : résultat, liste d'achat, compatibilité résumée (dépliable), surveillance des prix. */
+export function PlanDetail({ plan, goal, currentFps, onDetails }: { plan: Plan; goal: Goal; currentFps?: number; onDetails: (tab: string) => void }) {
   const ev = plan.evaluation;
-  const req = plan.additions.filter((a) => a.role === "required");
-  const ver = plan.additions.filter((a) => a.role === "verify");
-  const rec = plan.additions.filter((a) => a.role === "recommended");
+  const extras = plan.additions.filter((a) => a.role !== "recommended");
+  const advised = plan.additions.filter((a) => a.role === "recommended");
 
   return (
-    <div className={`plan-card ${ev.reached ? "reached" : ""}`}>
-      <div className="plan-card-head" onClick={() => setOpen(!open)}>
-        <div>
-          {recommended && <div className="prop-hl">{ev.reached ? "Le moins cher pour atteindre ton objectif" : "Le meilleur dans ton budget"}</div>}
-          <div className="plan-title">{planTitle(plan)}</div>
-          <div className="plan-result">
-            {isGaming(goal.usage) && ev.fps != null ? (
-              <>
-                ≈ {currentFps} → <b>{ev.fps} i/s</b> {ev.reached ? <span className="ok-text">✓ objectif {goal.fps} i/s atteint</span> : <span className="muted">sur {goal.fps} i/s visés</span>}
-              </>
-            ) : ev.reached ? (
-              <span className="ok-text">✓ Objectif atteint</span>
-            ) : (
-              <span className="muted">{Math.round(Math.min(ev.score, 1) * 100)} % de l'objectif</span>
-            )}
-          </div>
-        </div>
-        <div className="prop-price">
-          <div className="prop-total">{plan.cost} €</div>
-          {plan.costIfVerify > plan.cost && <div className="muted small">jusqu'à {plan.costIfVerify} € selon vérifications</div>}
-        </div>
-        <Icon name="chevron" className={`chev ${open ? "open" : ""}`} />
+    <div className="pd">
+      <div className="pd-top">
+        <div className="pd-title">{planTitle(plan)}</div>
+        <div className="pd-price">{plan.cost} €</div>
       </div>
+      <p className="pd-sub">
+        {isGaming(goal.usage) && ev.fps != null && currentFps != null
+          ? ev.reached
+            ? `Environ ${ev.fps} i/s au lieu de ${currentFps} : ton objectif de ${goal.fps} i/s est atteint.`
+            : `Environ ${ev.fps} i/s au lieu de ${currentFps}, pour un objectif de ${goal.fps} i/s.`
+          : ev.reached
+            ? "Ton objectif est atteint."
+            : `Ton PC atteindrait ${Math.round(Math.min(ev.score, 1) * 100)} % de l'objectif.`}
+        {plan.costIfVerify > plan.cost && ` Jusqu'à ${plan.costIfVerify} € si les pièces à vérifier sont nécessaires.`}
+      </p>
 
-      {open && (
-        <div className="plan-body plan-cols">
-          {plan.checks && (
-            <div>
-              <h3>Compatibilité de ta config après ce plan</h3>
-              <p className="muted small plan-check-sum">{checkSummary(plan.checks)}</p>
-              <ul className="checks">
-                {plan.checks.map((c, i) => (
-                  <CheckRow key={i} c={c} />
-                ))}
-              </ul>
-            </div>
-          )}
-          <div>
-          <h3>Liste d'achat</h3>
-          <ul className="cart">
-            {plan.items.map((it) => (
-              <li key={it.id} className="cart-main">
-                <div className="cart-line">
-                  <span>
-                    {kindLabel(it.main)} · {it.main.name}
-                  </span>
-                  <span className="mono">{price(it.main)} €</span>
-                </div>
-                <MarketLine part={it.main} />
-                <div className="small">
-                  <button className="link small" onClick={() => onDetails(it.category)}>
-                    Voir la compatibilité détaillée
-                  </button>
-                </div>
-              </li>
+      <ul className="pd-items">
+        {plan.items.map((it) => (
+          <ItemRow key={it.id} kind={kindLabel(it.main)} part={it.main} amount={price(it.main) * it.mainQuantity} />
+        ))}
+        {extras.map((a, i) => (
+          <AdditionRow key={i} a={a} />
+        ))}
+      </ul>
+
+      {plan.checks && <CompatSummary checks={plan.checks} />}
+
+      {advised.length > 0 && (
+        <details className="pd-advised">
+          <summary>Conseillé en plus ({advised.length})</summary>
+          <ul className="pd-items">
+            {advised.map((a, i) => (
+              <AdditionRow key={i} a={a} />
             ))}
-            <AddGroup title="À ajouter obligatoirement" cls="r-req" items={req} />
-            <AddGroup title="Probablement nécessaire, à vérifier" cls="r-ver" items={ver} />
-            <AddGroup title="Conseillé" cls="r-rec" items={rec} />
-            <li className="cart-total">
-              <span>Total obligatoire</span>
-              <span className="mono">{plan.cost} €</span>
-            </li>
-            <li className="cart-watch">
-              <WatchPlan plan={plan} />
-            </li>
           </ul>
-          </div>
-        </div>
+        </details>
       )}
+
+      <div className="pd-actions">
+        <WatchPlan plan={plan} />
+        {plan.items[0] && (
+          <button className="link small" onClick={() => onDetails(plan.items[0].category)}>
+            Explorer toutes les options compatibles
+          </button>
+        )}
+      </div>
     </div>
   );
 }
 
-/** Une option alternative, repliée : titre, résultat, prix ; dépliée : la carte complète avec sa compatibilité. */
-function AltRow({ plan, goal, currentFps, onDetails }: { plan: Plan; goal: Goal; currentFps?: number; onDetails: (tab: string) => void }) {
-  const [open, setOpen] = useState(false);
-  const ev = plan.evaluation;
-  const warns = (plan.checks ?? []).filter((c) => c.status === "warn").length;
-  const req = plan.additions.filter((a) => a.role === "required");
-  if (open) {
-    return (
-      <div className="alt-open">
-        <PlanCard plan={plan} goal={goal} currentFps={currentFps} onDetails={onDetails} />
-        <button className="link small" onClick={() => setOpen(false)}>
-          Replier
-        </button>
-      </div>
-    );
-  }
+export function ItemRow({ kind, part, amount, children, note }: { kind: string; part: Part; amount: number; children?: ReactNode; note?: ReactNode }) {
   return (
-    <button className="alt" onClick={() => setOpen(true)}>
-      <div className="alt-main">
-        <div className="alt-title">{planTitle(plan)}</div>
-        <div className="muted small">
-          {ev.fps != null && currentFps != null ? `≈ ${currentFps} → ${ev.fps} i/s` : `${Math.round(Math.min(ev.score, 1) * 100)} % de l'objectif`}
-          {req.length > 0 && ` · avec ${req.map((a) => kindLabel(a.part).toLowerCase()).join(", ")}`}
-          {warns > 0 && ` · ${warns} point${warns > 1 ? "s" : ""} à vérifier`}
-        </div>
+    <li className="pd-item">
+      <span className="pd-kind">{kind}</span>
+      <div className="pd-what">
+        <span className="pd-name">{part.name}</span>
+        {note}
+        <MarketLine part={part} />
+        {children}
       </div>
-      {ev.reached && <span className="tier-ok">✓ Objectif</span>}
-      <span className="alt-cost mono">{plan.cost} €</span>
-      <Icon name="chevron" className="chev" />
-    </button>
+      <span className="pd-amount num">{amount} €</span>
+    </li>
+  );
+}
+
+const ROLE_NOTE: Record<Role, string> = { required: "Obligatoire", verify: "À vérifier", recommended: "Conseillé" };
+
+export function AdditionRow({ a }: { a: Addition }) {
+  return (
+    <ItemRow
+      kind={kindLabel(a.part)}
+      part={a.part}
+      amount={price(a.part) * a.quantity}
+      note={
+        <span className={`pd-why role-${a.role}`}>
+          {ROLE_NOTE[a.role]} : {a.reason.charAt(0).toLowerCase() + a.reason.slice(1)}
+        </span>
+      }
+    />
+  );
+}
+
+/** Une ligne de synthèse ; la liste complète des contrôles s'ouvre à la demande. */
+export function CompatSummary({ checks }: { checks: Check[] }) {
+  const [open, setOpen] = useState(false);
+  const n = (s: string) => checks.filter((c) => c.status === s).length;
+  const warn = n("warn");
+  const fail = n("fail");
+  const fixed = n("fixed");
+  const sentence = fail
+    ? `${fail} problème${fail > 1 ? "s" : ""} de compatibilité`
+    : `Compatible avec ta config${warn ? `, ${warn} point${warn > 1 ? "s" : ""} à vérifier toi-même` : ""}`;
+  return (
+    <div className={`compat ${fail ? "bad" : warn ? "warn" : "ok"}`}>
+      <button className="compat-line" onClick={() => setOpen(!open)} aria-expanded={open}>
+        <Icon name={fail ? "cross" : warn ? "alert" : "check"} />
+        <span>
+          {sentence}
+          <span className="muted">
+            {" "}
+            ({checks.length} points contrôlés{fixed ? `, dont ${fixed} réglé${fixed > 1 ? "s" : ""} par les pièces ajoutées` : ""})
+          </span>
+        </span>
+        <Icon name="chevron" className={`chev ${open ? "open" : ""}`} />
+      </button>
+      {open && (
+        <ul className="checks compat-list">
+          {checks.map((c, i) => (
+            <CheckRow key={i} c={c} />
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
 
@@ -234,7 +192,7 @@ function WatchPlan({ plan }: { plan: Plan }) {
   const { alerts, setAlerts } = usePrices();
   const parts = [...plan.items.map((it) => it.main), ...plan.additions.filter((a) => a.role === "required").map((a) => a.part)];
   const missing = parts.filter((p) => !alerts.some((a) => a.id === p.id));
-  if (missing.length === 0) return <span className="muted small">🔔 Tu surveilles déjà les prix de ce plan (onglet Alertes prix).</span>;
+  if (missing.length === 0) return <p className="pd-watch muted small">Tu surveilles déjà les prix de ce plan (onglet Alertes prix).</p>;
   const watch = () => {
     const now = new Date().toISOString();
     const next = [
@@ -245,55 +203,99 @@ function WatchPlan({ plan }: { plan: Plan }) {
     setAlerts(next);
   };
   return (
-    <button className="btn watch-btn" onClick={watch}>
-      <Icon name="bell" /> Surveiller les prix de ce plan
-      <span className="muted small"> · alerte à −5 % sur {missing.length} pièce{missing.length > 1 ? "s" : ""}</span>
-    </button>
+    <div className="pd-watch">
+      <button className="btn" onClick={watch}>
+        <Icon name="bell" /> Me prévenir si ces prix baissent
+      </button>
+      <span className="muted small">Une alerte à −5 % sur {missing.length === 1 ? "la pièce" : `chacune des ${missing.length} pièces`}.</span>
+    </div>
   );
 }
 
-function AddGroup({ title, cls, items }: { title: string; cls: string; items: Addition[] }) {
-  if (items.length === 0) return null;
+// ---------------------------------------------------------------------------
+// Autres options et paliers (onglets sous le plan conseillé)
+// ---------------------------------------------------------------------------
+
+export function Alternatives({ result, goal, onDetails }: { result: OptimizeResult; goal: Goal; onDetails: (tab: string) => void }) {
+  const { alternatives, current } = result;
+  if (alternatives.length === 0) return <p className="muted">Pas d'autre option pertinente dans ce budget.</p>;
   return (
-    <li className="cart-group">
-      <div className={`cart-role ${cls}`}>{title}</div>
-      {items.map((a, i) => (
-        <div key={i} className="cart-add">
-          <div className="cart-line">
-            <span>
-              {kindLabel(a.part)} · {a.part.name}
-            </span>
-            <span className="mono">{price(a.part) * a.quantity} €</span>
-          </div>
-          <div className="muted small">{a.reason}</div>
-        </div>
+    <ul className="rows">
+      {alternatives.map((a, i) => (
+        <PlanRow key={i} plan={a} goal={goal} currentFps={current.fps} onDetails={onDetails} />
       ))}
+    </ul>
+  );
+}
+
+export function Tiers({ result, goal, onBudget, onDetails }: { result: OptimizeResult; goal: Goal; onBudget: (b: number | null) => void; onDetails: (tab: string) => void }) {
+  const { tiers, current } = result;
+  if (tiers.length === 0) return <p className="muted">Aucune amélioration utile trouvée pour cet objectif.</p>;
+  return (
+    <>
+      <p className="muted tab-intro">Chaque ligne fait nettement mieux que toutes celles qui coûtent moins cher.</p>
+      <ul className="rows">
+        {tiers.map((t, i) => (
+          <PlanRow
+            key={i}
+            plan={t}
+            goal={goal}
+            currentFps={current.fps}
+            onDetails={onDetails}
+            action={
+              goal.budget != null && t.cost > goal.budget ? (
+                <button className="link small" onClick={() => onBudget(roundBudget(t.cost))}>
+                  Budget {roundBudget(t.cost)} €
+                </button>
+              ) : undefined
+            }
+          />
+        ))}
+      </ul>
+    </>
+  );
+}
+
+/** Ligne repliée (titre, effet, prix) ; un clic déplie le détail complet du plan. */
+function PlanRow({ plan, goal, currentFps, onDetails, action }: { plan: Plan; goal: Goal; currentFps?: number; onDetails: (tab: string) => void; action?: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const ev = plan.evaluation;
+  const effect =
+    ev.fps != null && currentFps != null
+      ? ev.fps > currentFps
+        ? `${currentFps} → ${ev.fps} i/s`
+        : `${currentFps} i/s, un frein en moins`
+      : `${Math.round(Math.min(ev.score, 1) * 100)} % de l'objectif`;
+  return (
+    <li className={`row ${open ? "open" : ""}`}>
+      <button className="row-line" onClick={() => setOpen(!open)} aria-expanded={open}>
+        <span className="row-title">{planTitle(plan)}</span>
+        <span className="row-effect">
+          {effect}
+          {ev.reached && <span className="row-ok">, objectif atteint</span>}
+        </span>
+        <span className="row-price num">{plan.cost} €</span>
+        <Icon name="chevron" className={`chev ${open ? "open" : ""}`} />
+      </button>
+      {action && !open && <div className="row-action">{action}</div>}
+      {open && (
+        <div className="row-detail">
+          <PlanDetail plan={plan} goal={goal} currentFps={currentFps} onDetails={onDetails} />
+        </div>
+      )}
     </li>
   );
 }
 
-/** « 9 points vérifiés · 2 réglés par les pièces ajoutées · 3 à vérifier toi-même » */
-function checkSummary(checks: Check[]): string {
-  const n = (s: string) => checks.filter((c) => c.status === s).length;
-  const parts = [`${checks.length} points vérifiés sur la config finale`];
-  if (n("fixed")) parts.push(`${n("fixed")} réglé${n("fixed") > 1 ? "s" : ""} par les pièces ajoutées`);
-  if (n("warn")) parts.push(`${n("warn")} à vérifier toi-même`);
-  if (n("fail")) parts.push(`${n("fail")} problème${n("fail") > 1 ? "s" : ""}`);
-  return parts.join(" · ");
-}
-
-const KIND: Record<Part["kind"], string> = {
-  cpu: "Processeur", board: "Carte mère", gpu: "Carte graphique", ram: "RAM", ssd: "SSD",
-  psu: "Alimentation", cooler: "Ventirad", fans: "Ventilateurs", case: "Boîtier",
-};
-const kindLabel = (p: Part) => KIND[p.kind];
+// ---------------------------------------------------------------------------
 
 export function BudgetSlider({ value, onChange }: { value: number | null; onChange: (b: number | null) => void }) {
   const [local, setLocal] = useState<number>(value ?? 3000);
   return (
     <div className="budget-inline">
-      <span className="muted small">Budget</span>
+      <label htmlFor="budget-range">Budget</label>
       <input
+        id="budget-range"
         type="range"
         min={0}
         max={3000}
@@ -304,7 +306,7 @@ export function BudgetSlider({ value, onChange }: { value: number | null; onChan
           onChange(Number(e.target.value));
         }}
       />
-      <b className="mono">{value == null ? "libre" : `${value} €`}</b>
+      <b className="num">{value == null ? "libre" : `${value} €`}</b>
       <button className="link small" onClick={() => onChange(value == null ? local : null)}>
         {value == null ? "Fixer" : "Sans limite"}
       </button>
