@@ -1,0 +1,51 @@
+# Relevé quotidien des prix des composants.
+# Lance scripts/update-prices.ts chaque nuit et publie data/prices.json dans le dépôt.
+#
+# Prérequis (une seule fois) : Settings > Secrets and variables > Actions > New repository secret
+#   Nom : SERPER_API_KEY   Valeur : ta clé d'API Serper.dev
+
+name: Relevé des prix
+
+on:
+  schedule:
+    - cron: "30 3 * * *" # chaque jour à 3 h 30 UTC
+  workflow_dispatch: # bouton « Run workflow » pour lancer un relevé à la main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prices
+  cancel-in-progress: false
+
+jobs:
+  prices:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Installer les dépendances
+        run: npm ci --no-audit --no-fund
+
+      - name: Relever les prix
+        run: npm run prices
+        env:
+          SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
+
+      - name: Publier data/prices.json
+        run: |
+          git config user.name "pcevolu-prices[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/prices.json
+          if git diff --cached --quiet; then
+            echo "Aucun changement de prix."
+          else
+            git commit -m "Prix du $(date -u +%F)"
+            git push
+          fi

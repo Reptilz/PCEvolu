@@ -1,0 +1,4 @@
+# Les fichiers de compilation Rust pèsent plusieurs Go : on les garde hors de OneDrive
+# pour ne pas saturer la synchronisation.
+[build]
+target-dir = "C:/Users/Vaeli/AppData/Local/PCEvolu-build/target"

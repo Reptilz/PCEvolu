@@ -1,0 +1,5 @@
+# Fins de ligne LF dans le dépôt (le relevé de prix tourne sous Linux sur GitHub).
+* text=auto eol=lf
+*.png binary
+*.ico binary
+*.icns binary

@@ -1,0 +1,17 @@
+{
+  "shopping": [
+    { "title": "MSI GeForce RTX 5070 VENTUS 2X OC 12G", "source": "LDLC", "price": "579,95 €", "link": "https://example.com/1" },
+    { "title": "ASUS Dual GeForce RTX 5070 12 Go GDDR7", "source": "Amazon.fr", "price": "559,99 €", "link": "https://example.com/2" },
+    { "title": "Gigabyte GeForce RTX 5070 WINDFORCE OC SFF 12G", "source": "Materiel.net", "price": "569,90 €", "link": "https://example.com/3" },
+    { "title": "PNY GeForce RTX 5070 12GB OC Dual Fan", "source": "Cdiscount", "price": "549,99 €", "link": "https://example.com/4" },
+    { "title": "Zotac Gaming GeForce RTX 5070 Twin Edge 12 Go", "source": "Rue du Commerce", "price": "564,00 €", "link": "https://example.com/5" },
+    { "title": "ASUS Dual GeForce RTX 5070 12 Go GDDR7 OC", "source": "Amazon.fr", "price": "589,99 €", "link": "https://example.com/6" },
+    { "title": "MSI GeForce RTX 5070 Ti VENTUS 3X OC 16G", "source": "LDLC", "price": "829,95 €", "link": "https://example.com/7" },
+    { "title": "PC Gamer Ryzen 7 7800X3D RTX 5070 32 Go", "source": "Materiel.net", "price": "1 599,90 €", "link": "https://example.com/8" },
+    { "title": "PC Portable Gamer RTX 5070 Laptop 16 pouces", "source": "Fnac", "price": "1 799,99 €", "link": "https://example.com/9" },
+    { "title": "MSI GeForce RTX 5070 12G - reconditionné", "source": "Back Market", "price": "469,00 €", "link": "https://example.com/10" },
+    { "title": "EK-Quantum Vector² waterblock RTX 5070", "source": "Caseking", "price": "189,90 €", "link": "https://example.com/11" },
+    { "title": "Palit GeForce RTX 5070 GamingPro 12 Go", "source": "Boulanger", "price": "799,00 €", "link": "https://example.com/12" },
+    { "title": "Inno3D GeForce RTX 5070 Twin X2 12GB", "source": "Alternate.fr", "price": "€554.90", "link": "https://example.com/13" }
+  ]
+}

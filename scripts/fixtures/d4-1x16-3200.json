@@ -1,0 +1,11 @@
+{
+  "shopping": [
+    { "title": "Crucial 16 Go DDR4 3200 MHz CL22 (CT16G4DFRA32A)", "source": "Amazon.fr", "price": "44,99 €" },
+    { "title": "Kingston FURY Beast 16 Go DDR4 3200 MHz CL16", "source": "LDLC", "price": "49,95 €" },
+    { "title": "Corsair Vengeance LPX 16 Go (1x16Go) DDR4 3200 MHz", "source": "Materiel.net", "price": "47,90 €" },
+    { "title": "Corsair Vengeance LPX 32 Go (2 x 16 Go) DDR4 3200 MHz", "source": "LDLC", "price": "89,95 €" },
+    { "title": "Crucial 16 Go DDR4 3200 SO-DIMM portable", "source": "Cdiscount", "price": "41,99 €" },
+    { "title": "G.Skill Aegis 16 Go DDR4 3200 MHz CL16", "source": "Rue du Commerce", "price": "46,50 €" },
+    { "title": "Kit mémoire 16 Go (2x8 Go) DDR4 3200", "source": "Amazon.fr", "price": "52,00 €" }
+  ]
+}

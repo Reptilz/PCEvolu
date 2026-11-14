@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mon PC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f5f7; --panel:#ffffff; --panel-2:#f0f2f5; --text:#14171c; --muted:#5d6673; --line:#e1e4e9;
+  --accent:#2f6bff; --ok:#15935a; --warn:#c77700; --bad:#d23b3b;
+  --nv:#5b9a00; --intel:#0068b5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1014; --panel:#161a21; --panel-2:#1d222b; --text:#e8ebf0; --muted:#8a93a1; --line:#262c37;
+    --accent:#6f9bff; --ok:#3ccf8e; --warn:#f2a93b; --bad:#ff6b6b; --nv:#86c440; --intel:#4ea3ff;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1014; --panel:#161a21; --panel-2:#1d222b; --text:#e8ebf0; --muted:#8a93a1; --line:#262c37;
+  --accent:#6f9bff; --ok:#3ccf8e; --warn:#f2a93b; --bad:#ff6b6b; --nv:#86c440; --intel:#4ea3ff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:32px 16px 64px}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:28px}
+h1{font-size:28px;margin:0;letter-spacing:-.02em}
+.sub{color:var(--muted);margin-top:4px}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--muted)}
+.chip b{color:var(--text);font-weight:600}
+
+.score{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+.kpi .l{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.kpi .v{font-size:26px;font-weight:700;margin-top:4px}
+.kpi .v small{font-size:14px;color:var(--muted);font-weight:500}
+.bar{height:6px;background:var(--panel-2);border-radius:99px;overflow:hidden;margin-top:10px}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+
+h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:32px 0 12px;font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;position:relative;overflow:hidden}
+.card .top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.ico{width:40px;height:40px;border-radius:10px;background:var(--panel-2);display:grid;place-items:center;flex:none}
+.ico svg{width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.card .cat{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.card .name{font-weight:600;font-size:16px;line-height:1.3}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:14px}
+dt{color:var(--muted)}
+dd{margin:0;text-align:right;font-family:"JetBrains Mono",monospace;font-size:13px}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;margin-left:6px;vertical-align:1px}
+.b-ok{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.b-warn{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.b-bad{background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)}
+
+.slots{display:flex;gap:8px;margin-top:14px}
+.slot{flex:1;height:44px;border-radius:6px;border:1.5px dashed var(--line);display:grid;place-items:center;font-size:11px;color:var(--muted)}
+.slot.on{border:1.5px solid var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--text);font-weight:600}
+
+.recos{display:grid;gap:10px}
+.reco{display:flex;gap:14px;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:12px;padding:16px 18px}
+.reco.hi{border-left-color:var(--bad)}
+.reco.lo{border-left-color:var(--ok)}
+.reco .n{font-weight:700;color:var(--muted);font-family:"JetBrains Mono",monospace}
+.reco h3{margin:0 0 4px;font-size:15px}
+.reco p{margin:0;color:var(--muted);font-size:14px}
+.reco .tag{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+
+.list{list-style:none;margin:0;padding:0;font-size:14px}
+.list li{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-top:1px solid var(--line)}
+.list li:first-child{border-top:0}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;background:var(--muted)}
+.dot.up{background:var(--ok)}
+footer{margin-top:40px;color:var(--muted);font-size:13px}
+@media (max-width:760px){.score{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <h1>Mon PC</h1>
+    <div class="sub">Tour MSI · Windows 11 Famille (build 26300) · analyse du 14/11/2026</div>
+  </div>
+  <div class="chips">
+    <span class="chip">Allumé depuis <b>3 j 16 h</b></span>
+    <span class="chip">Architecture <b>x64</b></span>
+    <span class="chip">Profil <b>Gaming / bureautique</b></span>
+  </div>
+</header>
+
+<section class="score">
+  <div class="kpi"><div class="l">Charge CPU</div><div class="v">43<small> %</small></div><div class="bar"><i style="width:43%"></i></div></div>
+  <div class="kpi"><div class="l">RAM utilisée</div><div class="v">11,1<small> / 16 Go</small></div><div class="bar"><i style="width:70%;background:var(--warn)"></i></div></div>
+  <div class="kpi"><div class="l">GPU · temp.</div><div class="v">44<small> °C · 42 %</small></div><div class="bar"><i style="width:42%;background:var(--nv)"></i></div></div>
+  <div class="kpi"><div class="l">SSD C: occupé</div><div class="v">467<small> / 990 Go</small></div><div class="bar"><i style="width:47%"></i></div></div>
+</section>
+
+<h2>À améliorer</h2>
+<div class="recos">
+  <div class="reco hi"><span class="n">01</span><div>
+    <div class="tag" style="color:var(--bad)">Gain immédiat · gratuit</div>
+    <h3>L'écran tourne à 59 Hz au lieu de 144 Hz</h3>
+    <p>L'AOC Q27G2WG4 est un écran 144 Hz, mais Windows l'affiche à 59 Hz. Va dans Paramètres › Affichage › Affichage avancé › Fréquence d'actualisation, et choisis 144 Hz. Utilise un câble DisplayPort branché sur la carte graphique.</p>
+  </div></div>
+  <div class="reco"><span class="n">02</span><div>
+    <div class="tag" style="color:var(--warn)">Gain important · environ 35 à 50 €</div>
+    <h3>Une seule barrette de RAM (single channel)</h3>
+    <p>Une seule barrette de 16 Go est installée, sur 4 emplacements. Ajouter une seconde barrette identique (Crucial 16 Go DDR4-2666) active le dual channel : de meilleures performances en jeu et plus de marge, car 70 % de la mémoire est déjà utilisée.</p>
+  </div></div>
+  <div class="reco lo"><span class="n">03</span><div>
+    <div class="tag" style="color:var(--ok)">Facultatif</div>
+    <h3>BIOS d'octobre 2020 (version A.10)</h3>
+    <p>Ton BIOS a 6 ans. Une version plus récente peut exister sur le site MSI pour la MAG B460 TORPEDO. Ne le mets à jour que si tu as un problème : l'opération comporte un petit risque.</p>
+  </div></div>
+</div>
+
+<h2>Composants</h2>
+<div class="grid">
+
+  <div class="card">
+    <div class="top"><div class="ico"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg></div>
+      <div><div class="cat">Processeur</div><div class="name">Intel Core i5-10600KF</div></div></div>
+    <dl>
+      <dt>Cœurs / threads</dt><dd>6 / 12</dd>
+      <dt>Fréquence de base</dt><dd>4,10 GHz</dd>
+      <dt>Turbo max</dt><dd>4,80 GHz</dd>
+      <dt>Cache L2 / L3</dt><dd>1,5 Mo / 12 Mo</dd>
+      <dt>Génération</dt><dd>10e (Comet Lake)</dd>
+      <dt>Graphique intégré</dt><dd>Aucun (KF)</dd>
+      <dt>Virtualisation</dt><dd>Activée <span class="badge b-ok">OK</span></dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <div class="top"><div class="ico"><svg viewBox="0 0 24 24" style="stroke:var(--nv)"><rect x="2" y="7" width="20" height="10" rx="2"/><circle cx="9" cy="12" r="2.5"/><circle cx="16" cy="12" r="2.5"/><path d="M4 17v3M7 17v2"/></svg></div>
+      <div><div class="cat">Carte graphique</div><div class="name">NVIDIA GeForce RTX 3060 Ti</div></div></div>
+    <dl>
+      <dt>Mémoire vidéo</dt><dd>8 Go GDDR6</dd>
+      <dt>VRAM utilisée</dt><dd>618 Mo</dd>
+      <dt>Température</dt><dd>44 °C <span class="badge b-ok">Normal</span></dd>
+      <dt>Consommation</dt><dd>16,7 W</dd>
+      <dt>Pilote</dt><dd>621.14</dd>
+      <dt>Ray tracing / DLSS</dt><dd>Oui</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <div class="top"><div class="ico"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="9" rx="1"/><path d="M6 10v3M10 10v3M14 10v3M18 10v3M4 16v3M20 16v3"/></svg></div>
+      <div><div class="cat">Mémoire vive</div><div class="name">16 Go DDR4 Crucial</div></div></div>
+    <dl>
+      <dt>Référence</dt><dd>CT16G4DFS8266</dd>
+      <dt>Vitesse</dt><dd>2666 MT/s</dd>
+      <dt>Mode</dt><dd>Single channel <span class="badge b-warn">À améliorer</span></dd>
+      <dt>Maximum supporté</dt><dd>64 Go</dd>
+    </dl>
+    <div class="slots">
+      <div class="slot on">A1 · 16 Go</div><div class="slot">A2</div><div class="slot">B1</div><div class="slot">B2</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="top"><div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7" y="7" width="5" height="5"/><path d="M15 7h2M15 10h2M7 15h10M7 18h6"/></svg></div>
+      <div><div class="cat">Carte mère</div><div class="name">MSI MAG B460 TORPEDO</div></div></div>
+    <dl>
+      <dt>Chipset</dt><dd>Intel B460</dd>
+      <dt>Socket</dt><dd>LGA 1200</dd>
+      <dt>Révision</dt><dd>2.0</dd>
+      <dt>BIOS</dt><dd>AMI A.10 · 10/2020</dd>
+      <dt>Overclocking</dt><dd>Non (chipset B)</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <div class="top"><div class="ico"><svg viewBox="0 0 24 24"><rect x="2" y="8" width="20" height="8" rx="1.5"/><path d="M6 12h6M16 12h.01M19 12h.01"/></svg></div>
+      <div><div class="cat">Stockage</div><div class="name">KIOXIA EXCERIA SSD 1 To</div></div></div>
+    <dl>
+      <dt>Type</dt><dd>SSD NVMe (M.2)</dd>
+      <dt>Capacité</dt><dd>1 000 Go</dd>
+      <dt>Volume C: (NTFS)</dt><dd>523 Go libres</dd>
+      <dt>État</dt><dd>Sain <span class="badge b-ok">OK</span></dd>
+    </dl>
+    <div class="bar" style="margin-top:14px"><i style="width:47%"></i></div>
+  </div>
+
+  <div class="card">
+    <div class="top"><div class="ico"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+      <div><div class="cat">Écran</div><div class="name">AOC Q27G2WG4 · 27"</div></div></div>
+    <dl>
+      <dt>Résolution</dt><dd>2560 × 1440</dd>
+      <dt>Fréquence actuelle</dt><dd>59 Hz <span class="badge b-bad">Trop bas</span></dd>
+      <dt>Fréquence max</dt><dd>144 Hz</dd>
+      <dt>Fabrication</dt><dd>2021</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <div class="top"><div class="ico"><svg viewBox="0 0 24 24"><path d="M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M2 9a14 14 0 0 1 20 0"/><circle cx="12" cy="19.5" r="1"/></svg></div>
+      <div><div class="cat">Réseau</div><div class="name">Realtek PCIe 2.5GbE</div></div></div>
+    <ul class="list">
+      <li><span><span class="dot up"></span>Ethernet 2 (Realtek)</span><span class="mono">1 Gbps</span></li>
+      <li><span><span class="dot"></span>OpenVPN TAP</span><span class="mono" style="color:var(--muted)">déconnecté</span></li>
+      <li><span><span class="dot"></span>OpenVPN DCO</span><span class="mono" style="color:var(--muted)">déconnecté</span></li>
+    </ul>
+    <p style="font-size:13px;color:var(--muted);margin:10px 0 0">La carte supporte 2,5 Gbps. Le lien à 1 Gbps vient de la box ou du switch, c'est normal.</p>
+  </div>
+
+  <div class="card">
+    <div class="top"><div class="ico"><svg viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2" y="14" width="5" height="7" rx="1.5"/><rect x="17" y="14" width="5" height="7" rx="1.5"/></svg></div>
+      <div><div class="cat">Audio</div><div class="name">Corsair VOID ELITE Wireless</div></div></div>
+    <ul class="list">
+      <li><span>Casque Corsair VOID ELITE</span><span class="mono">sans fil</span></li>
+      <li><span>NVIDIA High Definition Audio</span><span class="mono">HDMI/DP</span></li>
+      <li><span>NVIDIA Virtual Audio</span><span class="mono">virtuel</span></li>
+      <li><span>Audio HD (carte mère)</span><span class="mono">jack</span></li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>Données lues sur la machine via Windows (WMI) et nvidia-smi. Les valeurs de charge sont un instantané au moment de l'analyse.</footer>
+</div>
+</body>
+</html>
