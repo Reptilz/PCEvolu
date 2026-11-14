@@ -10,6 +10,7 @@ import { price } from "./engine";
 import { useSelection, type SlotCategory } from "./selection";
 import { KindIcons, PlanDetail, kindLabel } from "./PlanView";
 import { PriceNotice } from "./PriceSheet";
+import { Icon } from "../icons";
 
 const SLOTS: { slot: SlotCategory; label: string; add: string }[] = [
   { slot: "gpu", label: "Carte graphique", add: "une carte graphique" },
@@ -143,8 +144,8 @@ export function SelectionView({ proposals, report, profile, goal, verdict, onBro
                 <button className="link small" onClick={() => onBrowse(slot)}>
                   Changer
                 </button>
-                <button className="link small sel-remove" onClick={() => remove(slot)}>
-                  Retirer
+                <button className="icon-btn" onClick={() => remove(slot)} aria-label={`Retirer ${it.main.name} de ma sélection`} title="Retirer de ma sélection">
+                  <Icon name="cross" />
                 </button>
               </span>
             </li>
