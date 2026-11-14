@@ -17,7 +17,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { BOARDS, CASES, COOLERS, CPUS, FAN_KITS, GPUS, PSUS, RAM_KITS, SSDS } from "../src/upgrade/catalog";
 import type { PricesFile, PriceEntry } from "../src/upgrade/prices";
-import { CATEGORY_EXCLUDE, GLOBAL_EXCLUDE, QUERIES } from "./price-queries";
+import { CATEGORY_EXCLUDE, GLOBAL_EXCLUDE, MERCHANT_EXCLUDE, QUERIES } from "./price-queries";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -76,7 +76,7 @@ interface ShoppingItem {
   price?: string;
 }
 
-async function search(q: string, id: string, fixtures?: string): Promise<ShoppingItem[]> {
+async function search(q: string, id: string, fixtures?: string, dump?: string): Promise<ShoppingItem[]> {
   if (fixtures) {
     const f = join(fixtures, `${id}.json`);
     return existsSync(f) ? (JSON.parse(readFileSync(f, "utf8")).shopping ?? []) : [];
@@ -90,6 +90,11 @@ async function search(q: string, id: string, fixtures?: string): Promise<Shoppin
   });
   if (!res.ok) throw new Error(`Serper ${res.status} : ${await res.text()}`);
   const json = (await res.json()) as { shopping?: ShoppingItem[] };
+  if (dump) {
+    // Réponses brutes, réutilisables ensuite comme fixtures de test.
+    mkdirSync(dump, { recursive: true });
+    writeFileSync(join(dump, `${id}.json`), JSON.stringify(json, null, 2), "utf8");
+  }
   return json.shopping ?? [];
 }
 
@@ -98,7 +103,14 @@ async function search(q: string, id: string, fixtures?: string): Promise<Shoppin
 // ---------------------------------------------------------------------------
 
 export const normalize = (s: string) =>
-  s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[  ]/g, " ").replace(/\s+/g, " ");
+  s
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[  ]/g, " ")
+    .replace(/[×✕]/g, "x")
+    .replace(/[’']/g, "'")
+    .replace(/\s+/g, " ");
 
 /** "1 099,99 €", "€1,099.99", "559,99 €" → nombre. */
 export function parsePrice(raw?: string): number | undefined {
@@ -137,31 +149,44 @@ export interface Offer {
   link?: string;
 }
 
-export function selectOffers(t: Target, items: ShoppingItem[]): { kept: Offer[]; rejected: number } {
+/** Raison du rejet d'une offre, ou null si elle est retenue. */
+function rejectReason(t: Target, title: string, merchant: string, price: number | undefined): string | null {
   const query = QUERIES[t.id];
   const catEx = CATEGORY_EXCLUDE[t.category];
+  if (price == null) return "prix illisible";
+  const missing = query.must.find((r) => !r.test(title));
+  if (missing) return `manque ${missing}`;
+  const excluded = (query.not ?? []).find((r) => r.test(title));
+  if (excluded) return `variante ${excluded}`;
+  if (GLOBAL_EXCLUDE.test(title)) return "occasion / lot";
+  if (MERCHANT_EXCLUDE.test(merchant)) return "vendeur d'occasion";
+  if (catEx?.test(title)) return "hors catégorie";
+  // Garde-fou bas : écarte les accessoires (stickers, câbles…) qui reprennent le nom du produit.
+  // Pas de limite haute : les prix peuvent tripler en pénurie (RAM 2026) ; les PC complets sont
+  // déjà exclus par le titre, et les prix aberrants par la méthode de Tukey.
+  if (price < t.ref * 0.35) return `prix trop bas (réf. ${t.ref} €)`;
+  return null;
+}
+
+export function selectOffers(t: Target, items: ShoppingItem[], explain = false): { kept: Offer[]; rejected: number } {
   const byMerchant = new Map<string, Offer>();
   let rejected = 0;
 
   for (const it of items) {
     const title = normalize(it.title ?? "");
+    const merchantName = normalize(it.source ?? "");
     const price = parsePrice(it.price);
-    const ok =
-      price != null &&
-      query.must.every((r) => r.test(title)) &&
-      !(query.not ?? []).some((r) => r.test(title)) &&
-      !GLOBAL_EXCLUDE.test(title) &&
-      !(catEx && catEx.test(title)) &&
-      // Garde-fou : on écarte les prix sans rapport avec le composant (accessoire, lot, PC complet…).
-      price >= t.ref * 0.4 &&
-      price <= t.ref * 2.5;
-    if (!ok) {
+    const reason = rejectReason(t, title, merchantName, price);
+    if (explain) console.log(`   ${reason ? "✗" : "✓"} ${String(price ?? "?").padStart(8)} € | ${(it.source ?? "?").slice(0, 18).padEnd(18)} | ${(it.title ?? "").slice(0, 80)}${reason ? `  ← ${reason}` : ""}`);
+    if (reason) {
       rejected++;
       continue;
     }
     const merchant = (it.source ?? "?").trim();
-    const prev = byMerchant.get(merchant.toLowerCase());
-    if (!prev || price! < prev.price) byMerchant.set(merchant.toLowerCase(), { merchant, price: price!, title: it.title ?? "", link: it.link });
+    // Une offre par marchand ; pour une requête générique, une par marchand ET par produit.
+    const key = merchant.toLowerCase() + (QUERIES[t.id].generic ? `|${title}` : "");
+    const prev = byMerchant.get(key);
+    if (!prev || price! < prev.price) byMerchant.set(key, { merchant, price: price!, title: it.title ?? "", link: it.link });
   }
 
   let kept = [...byMerchant.values()];
@@ -191,6 +216,8 @@ async function main() {
   const fixtures = arg("--fixtures");
   const only = arg("--only")?.split(",");
   const out = arg("--out") ?? OUT;
+  const dump = arg("--dump");
+  const explain = args.includes("--explain");
 
   const previous: PricesFile | undefined = existsSync(out) ? JSON.parse(readFileSync(out, "utf8")) : undefined;
   const now = new Date().toISOString();
@@ -203,10 +230,16 @@ async function main() {
   let updated = 0;
   let failed = 0;
   for (const t of list.filter((x) => QUERIES[x.id])) {
+    // Référence du garde-fou : le dernier prix du marché connu, plus fiable que le catalogue.
+    const prev = items[t.id];
+    if (prev && !prev.stale) t.ref = prev.price;
     try {
-      const results = await search(QUERIES[t.id].q, t.id, fixtures);
-      const { kept, rejected } = selectOffers(t, results);
-      if (kept.length < MIN_OFFERS) {
+      const results = await search(QUERIES[t.id].q, t.id, fixtures, dump);
+      if (explain) console.log(`\n${t.id} — « ${QUERIES[t.id].q} »`);
+      const { kept, rejected } = selectOffers(t, results, explain);
+      // Les cartes mères ont moins de vendeurs : 2 offres au titre exact suffisent.
+      const minOffers = t.category === "board" ? 2 : MIN_OFFERS;
+      if (kept.length < minOffers) {
         // Pas assez d'offres fiables : on garde le dernier prix connu, marqué comme ancien.
         if (items[t.id]) items[t.id] = { ...items[t.id], stale: true };
         console.log(`· ${t.id.padEnd(18)} ${kept.length} offre(s) fiable(s) sur ${results.length} : prix précédent conservé`);
@@ -223,7 +256,11 @@ async function main() {
         best: kept.slice(0, 3).map((o) => ({ merchant: o.merchant, price: Math.round(o.price * 100) / 100, link: o.link })),
       };
       updated++;
-      console.log(`✓ ${t.id.padEnd(18)} ${String(med).padStart(5)} €  (médiane de ${kept.length} offres, ${rejected} écartées, réf. ${t.ref} €)`);
+      const drift = Math.abs(med / t.ref - 1);
+      console.log(
+        `✓ ${t.id.padEnd(18)} ${String(med).padStart(5)} €  (médiane de ${kept.length} offres, ${rejected} écartées, réf. ${t.ref} €)` +
+          (drift > 0.5 ? `  ⚠ écart de ${Math.round(drift * 100)} % avec la référence` : ""),
+      );
     } catch (e) {
       failed++;
       if (items[t.id]) items[t.id] = { ...items[t.id], stale: true };

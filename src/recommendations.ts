@@ -3,6 +3,16 @@
 
 import type { Metrics, Report } from "./types";
 import { gb, yearsSince } from "./format";
+import { RAM_KITS, SSDS } from "./upgrade/catalog";
+import { priceInfo } from "./upgrade/prices";
+
+/** Fourchette de prix d'un composant du catalogue : min/max du marché si relevés, sinon son prix. */
+function range(id: string, fallback: { min: number; max: number }) {
+  const info = priceInfo(id);
+  if (info) return { min: info.min, max: info.max };
+  const part = [...RAM_KITS, ...SSDS].find((p) => p.id === id);
+  return part ? { min: part.price, max: part.price } : fallback;
+}
 
 export type Level = "high" | "medium" | "low";
 
@@ -73,7 +83,7 @@ export function recommend(r: Report, live?: Metrics): Recommendation[] {
       tag: "Confort",
       title: `Seulement ${gb(total)} de RAM`,
       detail: "Aujourd'hui, 16 Go est le minimum confortable pour le jeu et le multitâche, et 32 Go pour la création (vidéo, 3D).",
-      upgrade: { component: "Mémoire vive", suggestion: "Kit 2 × 8 Go ou 2 × 16 Go, même type que l'actuel", priceMin: 35, priceMax: 90 },
+      upgrade: { component: "Mémoire vive", suggestion: "Kit 2 × 8 Go ou 2 × 16 Go, même type que l'actuel", ...ramKitRange() },
     });
   }
   const used = live?.ramUsedBytes;
@@ -97,7 +107,7 @@ export function recommend(r: Report, live?: Metrics): Recommendation[] {
         tag: "Urgent",
         title: `Le disque ${d.name ?? ""} signale un problème de santé`,
         detail: "Sauvegarde tes fichiers importants dès maintenant, puis prévois de remplacer ce disque.",
-        upgrade: { component: "Stockage", suggestion: "SSD NVMe 1 To de remplacement", priceMin: 55, priceMax: 90 },
+        upgrade: { component: "Stockage", suggestion: "SSD NVMe 1 To de remplacement", ...ssdRange("nvme-1tb") },
       });
     }
   }
@@ -108,7 +118,7 @@ export function recommend(r: Report, live?: Metrics): Recommendation[] {
       tag: "Gain énorme",
       title: "Windows tourne sur un disque dur mécanique",
       detail: "Passer à un SSD est l'upgrade le plus visible : démarrage en quelques secondes, logiciels et jeux qui s'ouvrent beaucoup plus vite.",
-      upgrade: { component: "Stockage", suggestion: "SSD 1 To (NVMe si la carte mère a un port M.2, sinon SATA)", priceMin: 50, priceMax: 90 },
+      upgrade: { component: "Stockage", suggestion: "SSD 1 To (NVMe si la carte mère a un port M.2, sinon SATA)", ...ssdRange("sata-1tb", "nvme-1tb") },
     });
   }
   for (const v of r.volumes) {
@@ -121,7 +131,7 @@ export function recommend(r: Report, live?: Metrics): Recommendation[] {
         tag: "Espace disque",
         title: `Le lecteur ${v.letter} est presque plein (${gb(v.freeBytes)} libres)`,
         detail: "En dessous de 15 % d'espace libre, Windows et les mises à jour ralentissent. Fais le ménage ou ajoute un second SSD pour tes jeux.",
-        upgrade: { component: "Stockage", suggestion: "Second SSD NVMe 1 To pour les jeux et les fichiers", priceMin: 50, priceMax: 90 },
+        upgrade: { component: "Stockage", suggestion: "Second SSD NVMe 1 To pour les jeux et les fichiers", ...ssdRange("nvme-1tb") },
       });
     }
   }
@@ -179,10 +189,22 @@ export function recommend(r: Report, live?: Metrics): Recommendation[] {
   return out.sort((a, b) => order[a.level] - order[b.level]);
 }
 
+/** Prix d'une barrette seule de même capacité et même type (prix du marché si relevé). */
 function priceRam(bytes?: number, kind?: string) {
-  const g = (bytes ?? 0) / GB;
-  const ddr5 = kind === "DDR5";
-  if (g >= 32) return ddr5 ? { min: 80, max: 120 } : { min: 60, max: 90 };
-  if (g >= 16) return ddr5 ? { min: 45, max: 70 } : { min: 30, max: 50 };
-  return { min: 15, max: 30 };
+  const g = Math.round((bytes ?? 0) / GB);
+  const kit = RAM_KITS.find((k) => k.type === kind && k.sticks === 1 && k.gbPerStick === g);
+  return kit ? range(kit.id, { min: kit.price, max: kit.price }) : { min: 30, max: 150 };
+}
+
+/** Fourchette couvrant un ou plusieurs SSD du catalogue. */
+function ssdRange(...ids: string[]) {
+  const r = ids.map((id) => range(id, { min: 60, max: 200 }));
+  return { priceMin: Math.min(...r.map((x) => x.min)), priceMax: Math.max(...r.map((x) => x.max)) };
+}
+
+/** Fourchette d'un kit 2 × 8 Go à 2 × 16 Go DDR4 (la RAM actuelle est presque toujours en DDR4 quand elle est sous 16 Go). */
+function ramKitRange() {
+  const a = range("d4-2x8-3200", { min: 50, max: 200 });
+  const b = range("d4-2x16-3200", { min: 85, max: 300 });
+  return { priceMin: a.min, priceMax: b.max };
 }

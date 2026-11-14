@@ -430,7 +430,7 @@ export function proposeStorage(p: Profile): Proposal[] {
         checks.push({ label: "Emplacement M.2", status: "ok", detail: `${m2Free} emplacement${m2Free > 1 ? "s" : ""} M.2 libre${m2Free > 1 ? "s" : ""} sur ${p.m2Total}.` });
       }
       if (s.iface === "NVMe4" && gen < 4) {
-        checks.push({ label: "Vitesse", status: "warn", detail: "SSD PCIe 4.0 sur une plateforme PCIe 3.0 : il fonctionnera, mais limité à ≈ 3 500 Mo/s. Un modèle PCIe 3.0 suffit." });
+        checks.push({ label: "Vitesse", status: "ok", detail: "SSD PCIe 4.0 sur ta plateforme PCIe 3.0 : il fonctionne, limité à ≈ 3 500 Mo/s. Inutile de payer plus cher pour un modèle haut de gamme." });
       } else {
         checks.push({ label: "Vitesse", status: "ok", detail: s.iface === "NVMe3" ? "≈ 3 500 Mo/s, la pleine vitesse de ton port." : "≈ 7 000 Mo/s." });
       }

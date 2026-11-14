@@ -134,7 +134,7 @@ export const BOARDS: BoardSpec[] = [
   // Proposées pour un changement de plateforme
   board("msi-b760-p-ddr4", "MSI PRO B760-P DDR4 II", "LGA1700", "B760", "ATX", "DDR4", { maxGb: 128, m2: 2, pcie: 4, avail: "new", price: 125, note: "Garde ta RAM DDR4 actuelle." }),
   board("asus-b760m-a-d4", "ASUS PRIME B760M-A D4", "LGA1700", "B760", "mATX", "DDR4", { maxGb: 128, m2: 2, pcie: 4, avail: "new", price: 115, note: "Garde ta RAM DDR4 actuelle." }),
-  board("msi-b760-p-ddr5", "MSI PRO B760-P WIFI DDR5", "LGA1700", "B760", "ATX", "DDR5", { maxGb: 192, m2: 2, pcie: 4, avail: "new", price: 145 }),
+  board("msi-b760-p-ddr5", "MSI PRO B760-P II (DDR5)", "LGA1700", "B760", "ATX", "DDR5", { maxGb: 192, m2: 2, pcie: 4, avail: "new", price: 145 }),
   board("msi-b860-p", "MSI PRO B860-P", "LGA1851", "B860", "ATX", "DDR5", { maxGb: 256, m2: 3, pcie: 5, avail: "new", price: 165 }),
   board("asus-b860m-a", "ASUS PRIME B860M-A", "LGA1851", "B860", "mATX", "DDR5", { maxGb: 256, m2: 2, pcie: 5, avail: "new", price: 150 }),
   board("msi-b650-p", "MSI PRO B650-P WIFI", "AM5", "B650", "ATX", "DDR5", { maxGb: 192, m2: 2, pcie: 4, avail: "new", price: 150, note: "Bouton Flash BIOS : mise à jour possible sans processeur." }),
@@ -209,13 +209,13 @@ export const RAM_KITS: RamKit[] = [
 
 const ssd = (id: string, name: string, iface: SsdSpec["iface"], tb: number, price: number): SsdSpec => ({ kind: "ssd", id, name, iface, tb, price });
 
+// Les SSD sont interchangeables : on raisonne par type et capacité (prix = médiane du marché),
+// avec des exemples de modèles. Les SSD PCIe 3.0 ont quasiment disparu du neuf : le NVMe courant est en PCIe 4.0.
 export const SSDS: SsdSpec[] = [
-  ssd("nvme4-1tb", "WD Black SN7100 1 To (NVMe PCIe 4.0)", "NVMe4", 1, 85),
-  ssd("nvme4-2tb", "WD Black SN7100 2 To (NVMe PCIe 4.0)", "NVMe4", 2, 150),
-  ssd("nvme3-1tb", "Crucial P3 1 To (NVMe PCIe 3.0)", "NVMe3", 1, 70),
-  ssd("nvme3-2tb", "Crucial P3 2 To (NVMe PCIe 3.0)", "NVMe3", 2, 125),
-  ssd("sata-1tb", "Crucial MX500 1 To (SATA)", "SATA", 1, 75),
-  ssd("sata-2tb", "Crucial MX500 2 To (SATA)", "SATA", 2, 135),
+  ssd("nvme-1tb", "SSD NVMe M.2 1 To (ex. Kingston NV3, WD SN7100)", "NVMe4", 1, 170),
+  ssd("nvme-2tb", "SSD NVMe M.2 2 To (ex. Kingston NV3, WD SN7100)", "NVMe4", 2, 300),
+  ssd("sata-1tb", "SSD SATA 2,5\" 1 To (ex. Crucial MX500)", "SATA", 1, 150),
+  ssd("sata-2tb", "SSD SATA 2,5\" 2 To (ex. Crucial MX500)", "SATA", 2, 280),
 ];
 
 const psu = (id: string, name: string, watts: number, atx3: boolean, native12v2x6: boolean, pcie8pin: number, price: number): PsuSpec =>

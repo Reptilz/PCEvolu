@@ -8,19 +8,28 @@ export interface PriceQuery {
   q: string;
   must: RegExp[];
   not?: RegExp[];
+  /**
+   * Requête générique (plusieurs produits différents, ex. « SSD NVMe 1 To ») :
+   * on garde une offre par produit et par marchand, au lieu d'une seule par marchand.
+   */
+  generic?: boolean;
 }
 
-/** Exclusions communes à toutes les catégories. */
-export const GLOBAL_EXCLUDE = /reconditionn|occasion|d'occasion|seconde main|refurbished|remis a neuf|pieces detachees/;
+/** Exclusions communes à toutes les catégories (occasion, reconditionné, lots « A + B »). */
+export const GLOBAL_EXCLUDE =
+  /reconditionn|occasion|seconde main|refurb|renewed|ricondizionat|remis a neuf|pieces detachees|\bvends\b|\s\+\s/;
+
+/** Vendeurs d'occasion ou de reconditionné : leurs offres ne reflètent pas le prix du neuf. */
+export const MERCHANT_EXCLUDE = /leboncoin|beebs|back ?market|ebay|vinted|factorefurb|renewtech|label emmaus|easycash|cash converters/;
 
 /** Exclusions par catégorie (PC complets, accessoires…). */
 export const CATEGORY_EXCLUDE: Record<string, RegExp> = {
   gpu: /\bpc\b|ordinateur|laptop|portable|waterblock|water block|backplate|support|cable|riser|station/,
   cpu: /\bpc\b|ordinateur|laptop|portable|ventirad|refroidiss|cooler|carte mere|motherboard|\bkit\b|bundle|pack/,
   board: /\bpc\b|ordinateur|\bkit\b|bundle|pack|processeur inclus/,
-  ram: /so-?dimm|portable|laptop|notebook|\bpc\b|ordinateur/,
+  ram: /so-?dimm|portable|laptop|notebook|\bpc gamer\b|serveur|server/,
   ssd: /\bpc\b|ordinateur|laptop|portable|externe|boitier|enclosure|adaptateur/,
-  psu: /\bpc\b|ordinateur|cable|rallonge|sleeve/,
+  psu: /\bpc\b|ordinateur|cable|rallonge|sleeve|boitier/,
   cooler: /\bpc\b|ordinateur|pate thermique|kit de fixation|bracket/,
   fans: /\bpc\b|ordinateur/,
   case: /\bpc\b|ordinateur|panneau|filtre|support/,
@@ -29,11 +38,12 @@ export const CATEGORY_EXCLUDE: Record<string, RegExp> = {
 export const QUERIES: Record<string, PriceQuery> = {
   // Cartes graphiques
   "rtx-5060": { q: "carte graphique GeForce RTX 5060 8 Go", must: [/rtx ?5060\b/], not: [/\bti\b/] },
-  "rtx-5060ti-16": { q: "carte graphique GeForce RTX 5060 Ti 16 Go", must: [/rtx ?5060 ?ti/, /16 ?g[ob]/] },
+  // La capacité manque souvent dans les titres : on exclut les versions 8 Go au lieu d'exiger « 16 Go ».
+  "rtx-5060ti-16": { q: "carte graphique GeForce RTX 5060 Ti 16 Go", must: [/rtx ?5060 ?ti/], not: [/\b8 ?g[ob]?\b/] },
   "rtx-5070": { q: "carte graphique GeForce RTX 5070 12 Go", must: [/rtx ?5070\b/], not: [/\bti\b/] },
   "rtx-5070ti": { q: "carte graphique GeForce RTX 5070 Ti 16 Go", must: [/rtx ?5070 ?ti/] },
   "rtx-5080": { q: "carte graphique GeForce RTX 5080 16 Go", must: [/rtx ?5080\b/] },
-  "rx-9060xt-16": { q: "carte graphique Radeon RX 9060 XT 16 Go", must: [/9060 ?xt/, /16 ?g[ob]/] },
+  "rx-9060xt-16": { q: "carte graphique Radeon RX 9060 XT 16 Go", must: [/9060 ?xt/], not: [/\b8 ?g[ob]?\b/] },
   "rx-9070": { q: "carte graphique Radeon RX 9070 16 Go", must: [/rx ?9070\b/], not: [/\bxt\b/, /\bgre\b/] },
   "rx-9070xt": { q: "carte graphique Radeon RX 9070 XT 16 Go", must: [/9070 ?xt/] },
 
@@ -55,7 +65,7 @@ export const QUERIES: Record<string, PriceQuery> = {
   "msi-b550-a-pro": { q: "carte mère MSI B550-A PRO", must: [/b550-?a ?pro/] },
   "msi-b760-p-ddr4": { q: "carte mère MSI PRO B760-P DDR4 II", must: [/b760-?p\b/, /ddr4|d4\b/] },
   "asus-b760m-a-d4": { q: "carte mère ASUS PRIME B760M-A D4", must: [/b760m-?a/, /ddr4|\bd4\b/] },
-  "msi-b760-p-ddr5": { q: "carte mère MSI PRO B760-P WIFI DDR5", must: [/b760-?p\b/, /wi-?fi/], not: [/ddr4|\bd4\b/] },
+  "msi-b760-p-ddr5": { q: "carte mère MSI PRO B760-P II DDR5", must: [/b760-?p\b/], not: [/ddr4|\bd4\b|b760m/] },
   "msi-b860-p": { q: "carte mère MSI PRO B860-P", must: [/b860-?p\b/] },
   "asus-b860m-a": { q: "carte mère ASUS PRIME B860M-A", must: [/b860m-?a\b/] },
   "msi-b650-p": { q: "carte mère MSI PRO B650-P WIFI", must: [/b650-?p\b/] },
@@ -63,21 +73,23 @@ export const QUERIES: Record<string, PriceQuery> = {
   "gb-b850-eagle": { q: "carte mère Gigabyte B850 EAGLE WIFI6E", must: [/b850 ?eagle/] },
 
   // Mémoire vive
-  "d4-1x8-3200": { q: "barrette mémoire 8 Go DDR4 3200 MHz", must: [/\b8 ?g[ob]\b/, /ddr4/, /3200/], not: [/2 ?x|x ?2|\bkit\b|16 ?g[ob]|32 ?g[ob]/] },
-  "d4-1x16-3200": { q: "barrette mémoire 16 Go DDR4 3200 MHz", must: [/\b16 ?g[ob]\b/, /ddr4/, /3200/], not: [/2 ?x|x ?2|\bkit\b|32 ?g[ob]/] },
-  "d4-2x8-3200": { q: "kit mémoire 16 Go 2x8 Go DDR4 3200 CL16", must: [/2 ?x ?8/, /ddr4/, /3200/] },
-  "d4-2x16-3200": { q: "kit mémoire 32 Go 2x16 Go DDR4 3200 CL16", must: [/2 ?x ?16/, /ddr4/, /3200/] },
-  "d4-2x32-3200": { q: "kit mémoire 64 Go 2x32 Go DDR4 3200", must: [/2 ?x ?32/, /ddr4/, /3200/] },
-  "d5-2x16-6000": { q: "kit mémoire 32 Go 2x16 Go DDR5 6000 CL30", must: [/2 ?x ?16/, /ddr5/, /6000/] },
-  "d5-2x32-6000": { q: "kit mémoire 64 Go 2x32 Go DDR5 6000 CL30", must: [/2 ?x ?32/, /ddr5/, /6000/] },
+  // La vitesse (3200…) est souvent absente des titres et change peu le prix : on exige la capacité et le type.
+  // On écarte les modules de serveur (ECC/RDIMM) et les références constructeur (Dell, Lenovo…), plus chers.
+  "d4-1x8-3200": { q: "barrette mémoire 8 Go DDR4 3200 MHz", must: [/\b8 ?g[ob]\b/, /ddr4/], not: [/\d ?x ?\d|\bkit\b|16 ?g[ob]|32 ?g[ob]|\becc\b|rdimm|dell|lenovo|\bhp\b|asus/] },
+  "d4-1x16-3200": { q: "barrette mémoire 16 Go DDR4 3200 MHz", must: [/\b16 ?g[ob]\b/, /ddr4/], not: [/\d ?x ?\d|\bkit\b|32 ?g[ob]|\becc\b|rdimm|dell|lenovo|\bhp\b|asus/] },
+  "d4-2x8-3200": { q: "kit mémoire 16 Go 2x8 Go DDR4 3200 CL16", must: [/2 ?x ?8/, /ddr4/] },
+  "d4-2x16-3200": { q: "kit mémoire 32 Go 2x16 Go DDR4 3200 CL16", must: [/2 ?x ?16/, /ddr4/] },
+  "d4-2x32-3200": { q: "kit mémoire 64 Go 2x32 Go DDR4 3200", must: [/2 ?x ?32|\b64 ?g[ob]\b/, /ddr4/], not: [/128 ?g[ob]|\b4 ?x/] },
+  // En DDR5, « 32 Go » désigne presque toujours un kit 2 × 16 Go (référence en « M2 » chez Corsair).
+  "d5-2x16-6000": { q: "kit mémoire 32 Go 2x16 Go DDR5 6000 CL30", must: [/2 ?x ?16|\b32 ?g[ob]\b/, /ddr5/], not: [/64 ?g[ob]|1 ?x ?32|\b4 ?x/] },
+  "d5-2x32-6000": { q: "kit mémoire 64 Go 2x32 Go DDR5 6000 CL30", must: [/2 ?x ?32|\b64 ?g[ob]\b/, /ddr5/], not: [/128 ?g[ob]|\b4 ?x/] },
 
   // Stockage
-  "nvme4-1tb": { q: "SSD WD Black SN7100 1 To", must: [/sn7100/, /\b1 ?t[ob]\b|1000 ?go/] },
-  "nvme4-2tb": { q: "SSD WD Black SN7100 2 To", must: [/sn7100/, /\b2 ?t[ob]\b|2000 ?go/] },
-  "nvme3-1tb": { q: "SSD Crucial P3 1 To NVMe", must: [/\bp3\b/, /\b1 ?t[ob]\b|1000 ?go/], not: [/p3 ?plus/] },
-  "nvme3-2tb": { q: "SSD Crucial P3 2 To NVMe", must: [/\bp3\b/, /\b2 ?t[ob]\b|2000 ?go/], not: [/p3 ?plus/] },
-  "sata-1tb": { q: "SSD Crucial MX500 1 To SATA", must: [/mx500/, /\b1 ?t[ob]\b|1000 ?go/] },
-  "sata-2tb": { q: "SSD Crucial MX500 2 To SATA", must: [/mx500/, /\b2 ?t[ob]\b|2000 ?go/] },
+  // Requêtes génériques par type et capacité (les SSD sont interchangeables).
+  "nvme-1tb": { q: "SSD NVMe M.2 1 To PCIe 4.0 interne", must: [/nvme|m\.?2/, /\b1 ?t[ob]\b|1000 ?g[ob]?\b/], not: [/\bsata\b|2230|2242|heatsink|dissipateur/], generic: true },
+  "nvme-2tb": { q: "SSD NVMe M.2 2 To PCIe 4.0 interne", must: [/nvme|m\.?2/, /\b2 ?t[ob]\b|2000 ?g[ob]?\b/], not: [/\bsata\b|2230|2242|heatsink|dissipateur/], generic: true },
+  "sata-1tb": { q: "SSD SATA 2,5 pouces 1 To interne", must: [/\bsata\b|2[.,]5/, /\b1 ?t[ob]\b|1000 ?g[ob]?\b|960 ?g[ob]?\b/], not: [/nvme|\bhdd\b|disque dur (?!ssd)|7200|5400/], generic: true },
+  "sata-2tb": { q: "SSD SATA 2,5 pouces 2 To interne", must: [/\bsata\b|2[.,]5/, /\b2 ?t[ob]\b|2000 ?g[ob]?\b|1920 ?g[ob]?\b/], not: [/nvme|\bhdd\b|disque dur (?!ssd)|7200|5400/], generic: true },
 
   // Alimentations
   rm650e: { q: "alimentation Corsair RM650e", must: [/rm650e/] },
