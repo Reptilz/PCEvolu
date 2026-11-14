@@ -5,6 +5,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { historyOf, priceInfo, pricesFile, trendOf, type HistoryPoint } from "./prices";
 import { bestPriceOf, saveAlerts, suggestedTarget, type PriceAlert } from "./alerts";
 import { openUrl, shoppingSearchUrl } from "../platform";
+import { isTrustedMerchant, offerLink } from "./merchants";
 import { Icon } from "../icons";
 
 export interface SheetPart {
@@ -33,7 +34,14 @@ export function PriceSheet({ part, onClose }: { part: SheetPart; onClose: () => 
   const best = bestPriceOf(part.id) ?? part.price;
   const alert = alerts.find((a) => a.id === part.id);
   const [target, setTarget] = useState<number>(() => alert?.target ?? suggestedTarget(part.id, part.price ?? 0));
-  const query = part.name.replace(/\s*\(.*?\)\s*/g, " ").trim();
+  // Recherche chez le marchand : nom sans les exemples entre parenthèses ; pour les cartes graphiques,
+  // sans la quantité de mémoire (« 12 Go »), qui réduit inutilement les résultats.
+  const isGpu = /^(rtx|gtx|rx|arc|vega)-/.test(part.id);
+  const query = part.name
+    .replace(/\s*\(.*?\)\s*/g, " ")
+    .replace(isGpu ? /\b\d+ ?Go\b/ : /$^/, "")
+    .replace(/\s+/g, " ")
+    .trim();
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -93,20 +101,35 @@ export function PriceSheet({ part, onClose }: { part: SheetPart; onClose: () => 
 
             <h3 className="sheet-h3">Meilleures offres</h3>
             <div className="offers">
-              {(info.best ?? []).map((o, i) => (
-                <div key={i} className="offer">
-                  <span className="offer-merchant">{o.merchant}</span>
-                  <span className="mono">{eur(o.price)}</span>
-                  {o.link ? (
-                    <button className="btn small-btn" onClick={() => openUrl(o.link!)}>
-                      Voir l'offre ↗
-                    </button>
-                  ) : (
-                    <span className="muted small">lien indisponible</span>
-                  )}
-                </div>
-              ))}
+              {[...(info.best ?? [])]
+                .sort((a, b) => a.price - b.price)
+                .map((o, i) => {
+                  const link = offerLink(o.merchant, query, o.title, o.link);
+                  const trusted = isTrustedMerchant(o.merchant);
+                  return (
+                    <div key={i} className="offer">
+                      <div className="offer-main">
+                        <span className="offer-merchant">
+                          {o.merchant}
+                          {trusted && <span className="tag">grande enseigne</span>}
+                        </span>
+                        {o.title && <span className="muted small offer-title">{o.title}</span>}
+                      </div>
+                      <span className="mono">{eur(o.price)}</span>
+                      {link ? (
+                        <button className={`btn small-btn ${link.direct ? "" : "ghost"}`} onClick={() => openUrl(link.url)} title={link.url}>
+                          {link.label} ↗
+                        </button>
+                      ) : (
+                        <span className="muted small">lien indisponible</span>
+                      )}
+                    </div>
+                  );
+                })}
             </div>
+            <p className="muted small">
+              Les liens ouvrent le site du marchand. Les prix peuvent avoir changé depuis le relevé : vérifie le prix et le modèle exact sur la page.
+            </p>
           </>
         ) : (
           <p className="muted">Ce composant n'a pas encore de prix relevé : le prix affiché ({part.price ? eur(part.price) : "—"}) est indicatif.</p>

@@ -414,7 +414,7 @@ dd { margin: 0; text-align: right; font-family: "Cascadia Mono", Consolas, monos
 .spark-empty { background: var(--panel-2); border-radius: 12px; padding: 14px; margin-top: 8px; }
 .offers { display: grid; gap: 6px; }
 .offer { display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: var(--panel-2); border-radius: 10px; }
-.offer-merchant { flex: 1; font-weight: 600; }
+
 .small-btn { padding: 5px 10px; font-size: 13px; }
 .btn.compare { width: 100%; margin-top: 12px; }
 .alert-form { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -437,3 +437,8 @@ dd { margin: 0; text-align: right; font-family: "Cascadia Mono", Consolas, monos
 .alert-price .mono { font-size: 17px; font-weight: 700; }
 .cart-watch { padding-top: 10px; }
 .watch-btn { width: 100%; justify-content: center; }
+
+.offer-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.offer-merchant { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.offer-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.offer .btn.ghost { color: var(--muted); }

@@ -19,6 +19,18 @@ import { BOARDS, CASES, COOLERS, CPUS, FAN_KITS, GPUS, PSUS, RAM_KITS, SSDS } fr
 import type { PricesFile, PriceEntry } from "../src/upgrade/prices";
 import { CATEGORY_EXCLUDE, GLOBAL_EXCLUDE, MERCHANT_EXCLUDE, QUERIES } from "./price-queries";
 import { recordHistory } from "./history";
+import { isTrustedMerchant } from "../src/upgrade/merchants";
+
+/** Les 3 offres les moins chères, plus les 2 moins chères chez de grandes enseignes (si elles n'y sont pas déjà). */
+function bestOffers(kept: Offer[], med: number) {
+  const pick = kept.slice(0, 3);
+  for (const o of kept) {
+    if (pick.length >= 5) break;
+    // Grande enseigne ajoutée seulement si son prix reste raisonnable (≤ médiane + 30 %).
+    if (!pick.includes(o) && o.price <= med * 1.3 && isTrustedMerchant(o.merchant) && pick.filter((p) => isTrustedMerchant(p.merchant)).length < 2) pick.push(o);
+  }
+  return pick.map((o) => ({ merchant: o.merchant, price: Math.round(o.price * 100) / 100, title: o.title, link: o.link }));
+}
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -259,7 +271,7 @@ async function main() {
         max: Math.round(kept[kept.length - 1].price),
         offers: kept.length,
         updatedAt: now,
-        best: kept.slice(0, 3).map((o) => ({ merchant: o.merchant, price: Math.round(o.price * 100) / 100, link: o.link })),
+        best: bestOffers(kept, med),
       };
       updated++;
       const drift = Math.abs(med / t.ref - 1);

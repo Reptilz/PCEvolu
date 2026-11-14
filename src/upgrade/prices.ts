@@ -19,7 +19,8 @@ export interface PriceEntry {
   updatedAt: string;
   /** true si le dernier relevé a échoué et que ce prix est celui d'un relevé précédent. */
   stale?: boolean;
-  best?: { merchant: string; price: number; link?: string }[];
+  /** Meilleures offres : les 3 moins chères + les 2 moins chères chez de grandes enseignes. */
+  best?: { merchant: string; price: number; title?: string; link?: string }[];
 }
 
 export interface PricesFile {
