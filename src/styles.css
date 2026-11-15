@@ -1077,3 +1077,13 @@ span.picks-name { color: var(--text); cursor: default; }
 .report-done p { margin: 6px 0 0; }
 .report-ctx-h { margin-top: 10px; font-weight: 600; color: var(--text); }
 .report-context ul { max-height: 160px; }
+
+/* Bannière de mise à jour */
+.update-banner { display: flex; align-items: center; gap: 14px; padding: 12px 14px 12px 16px; margin: -8px 0 28px; border-radius: 12px;
+  background: color-mix(in srgb, var(--accent) 12%, var(--panel)); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); }
+.update-banner > svg { flex: none; width: 20px; height: 20px; color: var(--accent); }
+.update-banner.error { background: color-mix(in srgb, var(--warn) 12%, var(--panel)); border-color: color-mix(in srgb, var(--warn) 35%, transparent); }
+.update-banner.error > svg { color: var(--warn); }
+.update-text { flex: 1; line-height: 1.45; }
+.update-bar { display: block; height: 4px; margin-top: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.update-bar i { display: block; height: 100%; background: var(--accent); transition: width .2s; }

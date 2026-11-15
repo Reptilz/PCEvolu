@@ -23,6 +23,7 @@ import { SelectionView } from "./upgrade/SelectionView";
 import { OptimizeView } from "./upgrade/OptimizeView";
 import { AdviceNotice, ReportButton } from "./upgrade/PriceSheet";
 import { ReportDialog } from "./ReportDialog";
+import { UpdateBanner } from "./UpdateBanner";
 import { pcSummary } from "./report";
 import { SelectionContext, loadSelection, saveSelection, slotOf, type Selection } from "./upgrade/selection";
 
@@ -234,6 +235,7 @@ export default function App() {
       </aside>
 
       <main className="main">
+        <UpdateBanner />
         {error && (
           <div className="error">
             <b>L'analyse a échoué.</b> {error}

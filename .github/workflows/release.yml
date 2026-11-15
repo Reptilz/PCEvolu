@@ -1,0 +1,72 @@
+# Publication d'une nouvelle version de PCEvolu.
+# Pousser une étiquette « v0.3.0 » (même numéro que dans tauri.conf.json) compile les installateurs 64 et 32 bits,
+# les signe et les publie dans une Release GitHub avec latest.json : les apps installées proposent alors la mise à jour.
+#
+# Prérequis (une seule fois) : Settings > Secrets and variables > Actions > New repository secret
+#   Nom : TAURI_SIGNING_PRIVATE_KEY   Valeur : le contenu du fichier %USERPROFILE%\.tauri\pcevolu-updater.key
+
+name: Publication
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    strategy:
+      fail-fast: true
+      # L'une après l'autre : la seconde complète la Release et le latest.json créés par la première.
+      max-parallel: 1
+      matrix:
+        include:
+          - target: x86_64-pc-windows-msvc
+            args: ""
+          - target: i686-pc-windows-msvc
+            args: "--target i686-pc-windows-msvc"
+    runs-on: windows-latest
+    timeout-minutes: 45
+    env:
+      # Remplace le dossier de compilation propre au PC de développement (src-tauri/.cargo/config.toml).
+      CARGO_TARGET_DIR: ${{ github.workspace }}/src-tauri/target
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+          key: ${{ matrix.target }}
+
+      - name: Installer les dépendances
+        run: npm ci --no-audit --no-fund
+
+      - name: Compiler, signer et publier
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ""
+        with:
+          tagName: v__VERSION__
+          releaseName: PCEvolu v__VERSION__
+          releaseBody: |
+            Nouvelle version de PCEvolu.
+            - Windows 64 bits (presque tous les PC) : PCEvolu_x.y.z_x64-setup.exe
+            - Windows 32 bits : PCEvolu_x.y.z_x86-setup.exe
+            Si PCEvolu est déjà installé, il propose la mise à jour tout seul au lancement.
+          releaseDraft: false
+          prerelease: false
+          updaterJsonPreferNsis: true
+          args: ${{ matrix.args }}

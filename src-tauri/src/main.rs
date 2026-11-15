@@ -23,6 +23,9 @@ fn main() {
         // Liens d'achat ouverts dans le navigateur, et alertes de prix en notification Windows.
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_notification::init())
+        // Mises à jour : vérifiées au lancement sur les Releases GitHub (latest.json), signées avec la clé de PCEvolu.
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
         .manage(live::LiveState::default())
         .invoke_handler(tauri::generate_handler![scan::scan, live::metrics, optimize::optimize_scan, optimize::set_startup_enabled, optimize::open_system, optimize::end_process])
         .run(tauri::generate_context!())

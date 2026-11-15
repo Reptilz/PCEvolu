@@ -1,6 +1,6 @@
 [package]
 name = "pcevolu"
-version = "0.2.1"
+version = "0.3.0"
 description = "PCEvolu : analyse et améliore ton PC"
 edition = "2021"
 
@@ -17,6 +17,8 @@ sysinfo = "0.40.3"
 windows = { version = "0.62.2", features = ["Win32_Graphics_Gdi", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging"] }
 tauri-plugin-opener = "2"
 tauri-plugin-notification = "2"
+tauri-plugin-updater = "2"
+tauri-plugin-process = "2"
 
 [profile.release]
 codegen-units = 1
