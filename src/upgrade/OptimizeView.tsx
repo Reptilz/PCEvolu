@@ -17,6 +17,8 @@ interface ProcessGroup {
   cpuPercent: number;
   memoryBytes: number;
   exe?: string;
+  /** Élément de Windows ou de PCEvolu : pas de bouton « Fermer ». */
+  protected?: boolean;
 }
 interface Tweaks {
   powerPlanGuid?: string;
@@ -135,9 +137,9 @@ const DEMO: OptimizeReport = {
   processes: [
     { name: "chrome", count: 28, cpuPercent: 3.2, memoryBytes: 4.2 * 1024 ** 3 },
     { name: "Discord", count: 6, cpuPercent: 0.2, memoryBytes: 750 * 1024 ** 2 },
-    { name: "msedgewebview2", count: 10, cpuPercent: 0.1, memoryBytes: 820 * 1024 ** 2 },
-    { name: "explorer", count: 1, cpuPercent: 0.1, memoryBytes: 420 * 1024 ** 2 },
-    { name: "svchost", count: 80, cpuPercent: 0.3, memoryBytes: 210 * 1024 ** 2 },
+    { name: "msedgewebview2", count: 10, cpuPercent: 0.1, memoryBytes: 820 * 1024 ** 2, protected: true },
+    { name: "explorer", count: 1, cpuPercent: 0.1, memoryBytes: 420 * 1024 ** 2, protected: true },
+    { name: "svchost", count: 80, cpuPercent: 0.3, memoryBytes: 210 * 1024 ** 2, protected: true },
   ],
   tweaks: { powerPlanGuid: "381b4222-f694-41f0-9685-ff5bb260df2e", powerPlanName: "Équilibré", gameMode: true, hags: null, tempBytes: 2.4 * 1024 ** 3 },
   ramTotalBytes: 16 * 1024 ** 3,
@@ -151,6 +153,10 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
   const [toggleError, setToggleError] = useState<string>();
   const [sort, setSort] = useState<"memory" | "cpu">("memory");
   const [showAllProc, setShowAllProc] = useState(false);
+  const [tab, setTab] = useState<"startup" | "running" | "tweaks">("startup");
+  const [confirmKill, setConfirmKill] = useState<string>();
+  const [killing, setKilling] = useState<string>();
+  const [killMsg, setKillMsg] = useState<{ ok: boolean; text: string }>();
   const app = isTauri();
 
   const load = async () => {
@@ -170,6 +176,7 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
   }, []);
 
   const open = (target: string) => {
+    setToggleError(undefined);
     if (app) invoke("open_system", { target }).catch((e) => setToggleError(String(e)));
   };
   const toggle = async (item: StartupItem) => {
@@ -180,6 +187,30 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
       setData((d) => d && { ...d, startup: d.startup.map((s) => (s === item ? { ...s, enabled: !s.enabled } : s)) });
     } catch (e) {
       setToggleError(String(e));
+    }
+  };
+
+  const endProcess = async (p: ProcessGroup) => {
+    setConfirmKill(undefined);
+    setKillMsg(undefined);
+    if (!app) {
+      setData((d) => d && { ...d, processes: d.processes.filter((x) => x.name !== p.name) });
+      setKillMsg({ ok: true, text: `${p.name} fermé (aperçu : rien n'a été fermé pour de vrai).` });
+      return;
+    }
+    setKilling(p.name);
+    try {
+      const n = await invoke<number>("end_process", { name: p.name });
+      setKillMsg({ ok: true, text: `${p.name} fermé${n > 1 ? ` (${n} processus)` : ""}.` });
+      setData((d) => d && { ...d, processes: d.processes.filter((x) => x.name !== p.name) });
+      // Relecture complète un peu plus tard : mémoire libérée et éventuels processus relancés.
+      setTimeout(() => {
+        invoke<OptimizeReport>("optimize_scan").then(setData).catch(() => {});
+      }, 1500);
+    } catch (e) {
+      setKillMsg({ ok: false, text: String(e) });
+    } finally {
+      setKilling(undefined);
     }
   };
 
@@ -236,6 +267,20 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
             </p>
           </section>
 
+          <div className="seg opt-tabs" role="tablist" aria-label="Sections">
+            <button role="tab" aria-selected={tab === "startup"} className={tab === "startup" ? "on" : ""} onClick={() => setTab("startup")}>
+              Au démarrage de Windows <span className="opt-count">{enabled.length}</span>
+            </button>
+            <button role="tab" aria-selected={tab === "running"} className={tab === "running" ? "on" : ""} onClick={() => setTab("running")}>
+              En cours d'exécution <span className="opt-count">{data.processes.length}</span>
+            </button>
+            <button role="tab" aria-selected={tab === "tweaks"} className={tab === "tweaks" ? "on" : ""} onClick={() => setTab("tweaks")}>
+              Réglages Windows
+            </button>
+          </div>
+          {toggleError && <p className="opt-error opt-tab-error">{toggleError}</p>}
+
+          {tab === "startup" && (
           <section className="opt-sec">
             <div className="opt-sec-head">
               <h3 className="imp-h">Au démarrage de Windows</h3>
@@ -247,7 +292,6 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
               Désactiver un programme l'empêche seulement de se lancer tout seul : il reste installé et tu peux toujours l'ouvrir. Tu peux le réactiver
               ici à tout moment.
             </p>
-            {toggleError && <p className="opt-error">{toggleError}</p>}
             <ul className="opt-list">
               {startup.map(({ s, k }) => (
                 <li key={`${s.location}-${s.name}`} className={`opt-item ${s.enabled ? "" : "off"}`}>
@@ -279,7 +323,9 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
               ))}
             </ul>
           </section>
+          )}
 
+          {tab === "running" && (
           <section className="opt-sec">
             <div className="opt-sec-head">
               <h3 className="imp-h">En cours d'exécution</h3>
@@ -293,23 +339,25 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
               </div>
             </div>
             <p className="opt-intro">
-              Les programmes ouverts, regroupés par nom. Pour en fermer un, passe par le Gestionnaire des tâches : PCEvolu ne ferme rien lui-même, pour
-              ne pas risquer d'arrêter un élément de Windows.{" "}
+              Les programmes ouverts, regroupés par nom. « Fermer » arrête toutes ses fenêtres d'un coup, comme « Fin de tâche » : le travail non
+              enregistré est perdu. Les éléments de Windows ne peuvent pas être fermés d'ici.{" "}
               <button className="link" onClick={() => open("taskmgr")}>
                 Ouvrir le Gestionnaire des tâches
               </button>
             </p>
+            {killMsg && <p className={killMsg.ok ? "opt-ok" : "opt-error"}>{killMsg.text}</p>}
             <table className="opt-table">
               <thead>
                 <tr>
                   <th>Programme</th>
                   <th className="num">Processeur</th>
                   <th className="num">Mémoire</th>
+                  <th aria-label="Action" />
                 </tr>
               </thead>
               <tbody>
                 {procs.map((p) => (
-                  <tr key={p.name}>
+                  <tr key={p.name} className={confirmKill === p.name ? "confirming" : ""}>
                     <td>
                       <span className="opt-pname">
                         <BrandLogo brand={p.name} />
@@ -320,6 +368,29 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
                     </td>
                     <td className="num">{p.cpuPercent < 0.1 ? "< 0,1 %" : `${p.cpuPercent.toLocaleString("fr-FR", { maximumFractionDigits: 1 })} %`}</td>
                     <td className="num">{mb(p.memoryBytes)}</td>
+                    <td className="opt-act">
+                      {p.protected ? (
+                        <span className="muted small" title="Élément de Windows (ou de PCEvolu) : le fermer pourrait bloquer le PC.">
+                          Protégé
+                        </span>
+                      ) : confirmKill === p.name ? (
+                        <span className="opt-confirm">
+                          <span className="small">
+                            Fermer{p.count > 1 ? ` (${p.count} processus)` : ""} ?
+                          </span>
+                          <button className="btn danger sm" onClick={() => endProcess(p)}>
+                            Oui, fermer
+                          </button>
+                          <button className="link small" onClick={() => setConfirmKill(undefined)}>
+                            Annuler
+                          </button>
+                        </span>
+                      ) : (
+                        <button className="btn ghost sm" onClick={() => setConfirmKill(p.name)} disabled={killing === p.name}>
+                          {killing === p.name ? "Fermeture…" : "Fermer"}
+                        </button>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -330,7 +401,9 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
               </button>
             )}
           </section>
+          )}
 
+          {tab === "tweaks" && (
           <section className="opt-sec">
             <h3 className="imp-h">Réglages de Windows pour le jeu</h3>
             <ul className="opt-tweaks">
@@ -369,6 +442,7 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
               />
             </ul>
           </section>
+          )}
         </>
       )}
       {loading && !data && <p className="muted">Lecture en cours…</p>}

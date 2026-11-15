@@ -994,3 +994,17 @@ span.picks-name { color: var(--text); cursor: default; }
 .opt-tweak.neutral > .icon { color: var(--accent); }
 .opt-tweak-title { font-weight: 600; }
 @media (prefers-reduced-motion: reduce) { .switch, .switch i { transition: none; } }
+/* Optimiser : onglets et fermeture des programmes */
+.seg.opt-tabs { margin: 28px 0 0; flex-wrap: wrap; }
+.seg.opt-tabs button { display: inline-flex; align-items: center; gap: 8px; }
+.opt-count { font-size: 12px; min-width: 20px; padding: 1px 6px; border-radius: 999px; background: var(--line-soft); color: var(--muted); text-align: center; }
+.seg.opt-tabs button.on .opt-count { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); }
+.opt-tabs + .opt-sec { margin-top: 24px; }
+.opt-ok { padding: 10px 12px; border-radius: 10px; background: color-mix(in srgb, var(--ok) 12%, transparent); font-size: 14px; }
+.opt-table td.opt-act { text-align: right; white-space: nowrap; padding-left: 16px; vertical-align: middle; }
+.opt-table tr.confirming td { background: color-mix(in srgb, var(--bad) 6%, transparent); }
+.opt-confirm { display: inline-flex; align-items: center; gap: 10px; }
+.btn.sm { padding: 5px 12px; font-size: 13px; border-radius: 8px; }
+.btn.danger { background: var(--bad); border-color: var(--bad); color: #fff; }
+.btn.danger:hover { filter: brightness(1.08); }
+.opt-tab-error { margin: 16px 0 0; }

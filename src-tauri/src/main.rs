@@ -24,7 +24,7 @@ fn main() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_notification::init())
         .manage(live::LiveState::default())
-        .invoke_handler(tauri::generate_handler![scan::scan, live::metrics, optimize::optimize_scan, optimize::set_startup_enabled, optimize::open_system])
+        .invoke_handler(tauri::generate_handler![scan::scan, live::metrics, optimize::optimize_scan, optimize::set_startup_enabled, optimize::open_system, optimize::end_process])
         .run(tauri::generate_context!())
         .expect("erreur au lancement de PCEvolu");
 }

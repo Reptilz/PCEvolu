@@ -39,6 +39,8 @@ pub struct ProcessGroup {
     pub cpu_percent: f32,
     pub memory_bytes: u64,
     pub exe: Option<String>,
+    /// Fermeture refusée (élément de Windows ou de PCEvolu).
+    pub protected: bool,
 }
 
 #[derive(Serialize, Default)]
@@ -180,6 +182,7 @@ fn processes() -> (Vec<ProcessGroup>, u64, u64) {
             cpu_percent: 0.0,
             memory_bytes: 0,
             exe: p.exe().map(|e| e.to_string_lossy().into_owned()),
+            protected: is_protected(&name),
         });
         g.count += 1;
         g.cpu_percent += p.cpu_usage() / cores;
@@ -253,20 +256,98 @@ fn dir_size(dir: &PathBuf, depth: u32) -> u64 {
 /// Ouvre un écran de Windows (liste fermée : pas de commande arbitraire).
 #[tauri::command]
 pub fn open_system(target: String) -> Result<(), String> {
-    let arg = match target.as_str() {
-        "taskmgr" => {
-            return std::process::Command::new("taskmgr").spawn().map(|_| ()).map_err(|e| e.to_string());
-        }
-        "startup" => "ms-settings:startupapps",
-        "gamemode" => "ms-settings:gaming-gamemode",
-        "graphics" => "ms-settings:display-advancedgraphics",
-        "power" => "ms-settings:powersleep",
-        "storage" => "ms-settings:storagesense",
+    let temp;
+    // Pour chaque écran : le lien Paramètres, puis l'outil classique équivalent quand il existe, et enfin le chemin
+    // à suivre à la main. Sur certains PC, Windows refuse d'ouvrir les liens ms-settings: (erreur 0xD0000034).
+    let (attempts, manual): (Vec<Vec<&str>>, &str) = match target.as_str() {
+        "taskmgr" => (vec![vec!["taskmgr"]], "Ctrl + Maj + Échap"),
+        "startup" => (vec![vec!["ms-settings:startupapps"], vec!["taskmgr", "/0", "/startup"]], "Paramètres > Applications > Démarrage"),
+        "gamemode" => (vec![vec!["ms-settings:gaming-gamemode"]], "Paramètres > Jeux > Mode Jeu"),
+        "graphics" => (vec![vec!["ms-settings:display-advancedgraphics"]], "Paramètres > Système > Écran > Graphiques"),
+        "power" => (vec![vec!["ms-settings:powersleep"], vec!["control.exe", "powercfg.cpl"]], "Paramètres > Système > Alimentation"),
+        "storage" => (vec![vec!["ms-settings:storagesense"], vec!["cleanmgr.exe"]], "Paramètres > Système > Stockage"),
         "temp" => {
-            let dir = std::env::var("TEMP").map_err(|e| e.to_string())?;
-            return std::process::Command::new("explorer").arg(dir).spawn().map(|_| ()).map_err(|e| e.to_string());
+            temp = std::env::var("TEMP").map_err(|e| e.to_string())?;
+            (vec![vec![temp.as_str()]], "%TEMP%")
         }
         _ => return Err("Écran inconnu.".into()),
     };
-    std::process::Command::new("explorer").arg(arg).spawn().map(|_| ()).map_err(|e| e.to_string())
+    for args in attempts {
+        let params = args[1..].join(" ");
+        if shell_open(args[0], &params) {
+            return Ok(());
+        }
+    }
+    Err(format!("Windows n'a pas voulu ouvrir ce réglage. Tu le trouveras ici : {manual}."))
+}
+
+/// Ouvre un fichier, un programme ou un lien comme un double-clic (ShellExecuteEx), sans afficher la boîte
+/// d'erreur de Windows en cas d'échec : on renvoie simplement false pour essayer la solution suivante.
+fn shell_open(file: &str, params: &str) -> bool {
+    use windows::core::PCWSTR;
+    use windows::Win32::UI::Shell::{ShellExecuteExW, SEE_MASK_FLAG_NO_UI, SEE_MASK_NOASYNC, SHELLEXECUTEINFOW};
+    use windows::Win32::UI::WindowsAndMessaging::SW_SHOWNORMAL;
+    let wide = |s: &str| s.encode_utf16().chain(std::iter::once(0)).collect::<Vec<u16>>();
+    let f = wide(file);
+    let p = wide(params);
+    let mut info = SHELLEXECUTEINFOW {
+        cbSize: std::mem::size_of::<SHELLEXECUTEINFOW>() as u32,
+        fMask: SEE_MASK_FLAG_NO_UI | SEE_MASK_NOASYNC,
+        lpFile: PCWSTR(f.as_ptr()),
+        lpParameters: if params.is_empty() { PCWSTR::null() } else { PCWSTR(p.as_ptr()) },
+        nShow: SW_SHOWNORMAL.0,
+        ..Default::default()
+    };
+    unsafe { ShellExecuteExW(&mut info).is_ok() }
+}
+
+/// Processus qu'on ne ferme jamais : Windows en dépend (fermer l'un d'eux peut figer ou redémarrer le PC),
+/// ou PCEvolu lui-même (son interface tourne dans WebView2).
+const PROTECTED: &[&str] = &[
+    "system", "registry", "memory compression", "smss", "csrss", "wininit", "winlogon", "services", "lsass", "lsaiso",
+    "svchost", "dwm", "explorer", "fontdrvhost", "sihost", "taskhostw", "ctfmon", "spoolsv", "audiodg", "conhost",
+    "runtimebroker", "startmenuexperiencehost", "shellexperiencehost", "searchhost", "searchindexer", "textinputhost",
+    "msmpeng", "nissrv", "securityhealthservice", "securityhealthsystray", "smartscreen", "wudfhost", "dllhost",
+    "msedgewebview2", "pcevolu",
+];
+
+pub fn is_protected(name: &str) -> bool {
+    let n = name.to_lowercase();
+    let n = n.trim_end_matches(".exe");
+    PROTECTED.contains(&n)
+}
+
+/// Ferme tous les processus portant ce nom (comme « Fin de tâche » du Gestionnaire des tâches).
+/// Renvoie le nombre de processus fermés. Les processus protégés sont refusés.
+#[tauri::command]
+pub fn end_process(name: String) -> Result<u32, String> {
+    use sysinfo::{ProcessRefreshKind, ProcessesToUpdate, RefreshKind, System};
+    if is_protected(&name) {
+        return Err(format!("{name} fait partie de Windows (ou de PCEvolu) : le fermer pourrait bloquer le PC."));
+    }
+    let mut sys = System::new_with_specifics(RefreshKind::nothing().with_processes(ProcessRefreshKind::nothing()))
+        .map_err(|e| e.to_string())?;
+    sys.refresh_processes(ProcessesToUpdate::All, true);
+    let target = name.to_lowercase();
+    let me = std::process::id();
+    let mut closed = 0u32;
+    let mut refused = 0u32;
+    for (pid, p) in sys.processes() {
+        let n = p.name().to_string_lossy().to_lowercase();
+        if n.trim_end_matches(".exe") != target || pid.as_u32() == me {
+            continue;
+        }
+        if p.kill() {
+            closed += 1;
+        } else {
+            refused += 1;
+        }
+    }
+    if closed == 0 && refused > 0 {
+        return Err(format!("Windows a refusé de fermer {name} : il tourne probablement avec les droits administrateur. Passe par le Gestionnaire des tâches."));
+    }
+    if closed == 0 {
+        return Err(format!("{name} n'est plus en cours d'exécution."));
+    }
+    Ok(closed)
 }
