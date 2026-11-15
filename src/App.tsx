@@ -21,7 +21,7 @@ import { PriceContext, PriceSheet, type SheetPart } from "./upgrade/PriceSheet";
 import { AlertsView } from "./upgrade/AlertsView";
 import { SelectionView } from "./upgrade/SelectionView";
 import { OptimizeView } from "./upgrade/OptimizeView";
-import { AdviceNotice } from "./upgrade/PriceSheet";
+import { AdviceNotice, ReportButton } from "./upgrade/PriceSheet";
 import { SelectionContext, loadSelection, saveSelection, slotOf, type Selection } from "./upgrade/selection";
 
 type View = "overview" | "goal" | "improve" | "upgrades" | "selection" | "alerts" | "optimize";
@@ -87,9 +87,30 @@ export default function App() {
     }
   }, []);
 
+  // Premier lancement : écran d'accueil avec un seul bouton « Lancer l'analyse », sans le menu.
+  // Ensuite, l'analyse se lance d'elle-même à chaque ouverture.
+  const [welcome, setWelcome] = useState<"intro" | "scanning" | "done">(() => {
+    try {
+      return localStorage.getItem(WELCOME_KEY) ? "done" : "intro";
+    } catch {
+      return "done";
+    }
+  });
+  const startFirstScan = async () => {
+    setWelcome("scanning");
+    await scan();
+    try {
+      localStorage.setItem(WELCOME_KEY, "1");
+    } catch {
+      /* stockage indisponible : l'accueil reviendra au prochain lancement */
+    }
+    setWelcome("done");
+  };
+
   useEffect(() => {
-    scan();
-  }, [scan]);
+    if (welcome === "done") scan();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     let alive = true;
@@ -143,6 +164,8 @@ export default function App() {
     document.querySelector(".main")?.scrollTo({ top: 0 });
   };
   const freeCount = recos.filter((r) => !r.upgrade).length;
+
+  if (welcome !== "done") return <Welcome scanning={welcome === "scanning"} onStart={startFirstScan} />;
 
   return (
     <PriceContext.Provider value={{ open: setSheet, alerts, setAlerts }}>
@@ -200,6 +223,13 @@ export default function App() {
             {scannedAt ? `Dernière analyse à ${scannedAt.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}` : " "}
             {!inApp && <div className="demo-flag">Mode démo (navigateur)</div>}
           </div>
+          <ReportButton
+            topic={`page ${VIEW_LABEL[view]}`}
+            details={[
+              `Page : ${VIEW_LABEL[view]}`,
+              ...(report ? [`Processeur : ${report.cpus[0]?.name ?? "?"}`, `Carte graphique : ${report.gpus[0]?.name ?? "?"}`] : []),
+            ]}
+          />
         </div>
       </aside>
 
@@ -284,6 +314,64 @@ function NavItem(p: { icon: IconName; label: string; sub?: string; active: boole
       </span>
       {!!p.count && <span className="count">{p.count}</span>}
     </button>
+  );
+}
+
+const WELCOME_KEY = "pcevolu.welcomed.v1";
+
+const VIEW_LABEL: Record<View, string> = {
+  overview: "Mon PC",
+  improve: "Réglages gratuits",
+  goal: "Mon plan",
+  upgrades: "Toutes les pièces",
+  selection: "Ma sélection",
+  alerts: "Alertes prix",
+  optimize: "Optimiser",
+};
+
+/** Accueil du premier lancement : ce que fait PCEvolu, et un seul bouton. */
+function Welcome({ scanning, onStart }: { scanning: boolean; onStart: () => void }) {
+  return (
+    <div className="welcome">
+      <div className="welcome-inner">
+        <div className="logo welcome-logo">
+          <Icon name="up" />
+        </div>
+        <h1>Bienvenue dans PCEvolu</h1>
+        <p className="welcome-lead">
+          PCEvolu regarde ce qu'il y a dans ton PC, te dit ce qu'il vaut pour ce que tu veux en faire, et ce qu'il vaut la peine de changer, au bon
+          prix.
+        </p>
+        <ul className="welcome-steps">
+          <li>
+            <Icon name="grid" />
+            <span>
+              <b>L'analyse</b> lit tes composants : processeur, carte graphique, mémoire, disques, écrans.
+            </span>
+          </li>
+          <li>
+            <Icon name="target" />
+            <span>
+              <b>Ton objectif</b> : jouer, créer, travailler. Trois questions, et PCEvolu te fait un plan.
+            </span>
+          </li>
+          <li>
+            <Icon name="check" />
+            <span>
+              <b>Rien ne quitte ton PC</b> : l'analyse se fait sur place et ne modifie rien.
+            </span>
+          </li>
+        </ul>
+        <button className={`welcome-orb ${scanning ? "busy" : ""}`} onClick={onStart} disabled={scanning} autoFocus>
+          <span className="welcome-orb-ring" aria-hidden />
+          <Icon name={scanning ? "refresh" : "speed"} className={scanning ? "spin" : ""} />
+          <span className="welcome-orb-label">{scanning ? "Analyse…" : "Lancer l'analyse"}</span>
+        </button>
+        <p className="muted small welcome-hint">
+          {scanning ? "Lecture du processeur, de la mémoire, des disques et des écrans." : "Quelques secondes suffisent."}
+        </p>
+      </div>
+    </div>
   );
 }
 

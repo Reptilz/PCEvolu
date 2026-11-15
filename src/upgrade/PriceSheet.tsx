@@ -5,6 +5,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { historyOf, priceInfo, pricesFile, trendOf, type HistoryPoint } from "./prices";
 import { bestPriceOf, saveAlerts, suggestedTarget, type PriceAlert } from "./alerts";
 import { openUrl, shoppingSearchUrl } from "../platform";
+import { reportProblem } from "../report";
 import { isTrustedMerchant, offerLink } from "./merchants";
 import { Icon } from "../icons";
 
@@ -140,6 +141,17 @@ export function PriceSheet({ part, onClose }: { part: SheetPart; onClose: () => 
         <button className="btn compare" onClick={() => openUrl(shoppingSearchUrl(query))}>
           Comparer tous les prix sur Google Shopping ↗
         </button>
+        <p className="muted small report-line">
+          Un prix, une offre ou un modèle te semble faux ?{" "}
+          <ReportButton
+            topic={`prix de ${part.name}`}
+            details={[
+              `Composant : ${part.name} (${part.id})`,
+              info ? `Meilleur prix affiché : ${eur(best ?? info.min)} ; médiane : ${eur(info.price)} ; relevé du ${day(info.updatedAt)}` : "Pas de prix relevé",
+              ...(info?.best ?? []).map((o) => `Offre : ${o.merchant}, ${eur(o.price)}${o.title ? `, « ${o.title} »` : ""}`),
+            ]}
+          />
+        </p>
 
         <h3 className="sheet-h3">Alerte de prix</h3>
         {alert ? (
@@ -199,8 +211,17 @@ export function AdviceNotice() {
       <b>Des conseils, pas une garantie.</b> Les compatibilités, performances et prix sont calculés à partir de ce que Windows lit sur ton PC, de tes
       réponses et des fiches des fabricants. Malgré nos vérifications, une erreur reste possible : donnée incomplète ou mal lue, fiche modifiée depuis,
       modèle différent de celui décrit. Avant d'acheter, vérifie la fiche du modèle exact et la compatibilité auprès du fabricant ou du vendeur : le choix
-      final t'appartient.
+      final t'appartient. Tu as repéré une erreur ? <ReportButton topic="conseil ou compatibilité" />
     </p>
+  );
+}
+
+/** Lien « Signaler une erreur » : ouvre un email pré-rempli avec le contexte. */
+export function ReportButton({ topic, details, label = "Signaler une erreur" }: { topic: string; details?: string[]; label?: string }) {
+  return (
+    <button className="link report-link" onClick={() => reportProblem({ topic, details })}>
+      <Icon name="alert" /> {label}
+    </button>
   );
 }
 
