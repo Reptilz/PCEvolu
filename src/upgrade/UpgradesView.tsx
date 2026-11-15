@@ -46,6 +46,8 @@ export function UpgradesView({
   const market = pricesFile();
   const marketCount = market ? Object.keys(market.items).length : 0;
   const missing = missingAnswers(answers);
+  // Le budget ne s'applique qu'une fois l'objectif défini : avant, le budget par défaut n'a pas été choisi par l'utilisateur.
+  const budget = goal.configured ? goal.budget : null;
 
   // Chaque proposition est évaluée face à l'objectif : gain réel, objectif atteint, budget.
   const scored: Scored[] = useMemo(
@@ -57,9 +59,9 @@ export function UpgradesView({
           tab === "board"
             ? impactOf(goal, profile, verdict, (p.additions.find((a) => a.part.kind === "cpu")?.part ?? p.main) as never, "cpu")
             : impactOf(goal, profile, verdict, p.main as never, tab, ramAfter(p, profile.ramTotalGb)),
-        inBudget: goal.budget == null || p.total <= goal.budget,
+        inBudget: budget == null || p.total <= budget,
       })),
-    [all, tab, goal, profile, verdict],
+    [all, tab, goal, profile, verdict, budget],
   );
   // Ordre : dans le budget d'abord ; puis celles qui atteignent l'objectif ; puis celles qui aident ; puis le prix.
   const rank = (s: Scored) => (s.impact.reachesGoal ? 0 : s.impact.relevant ? 1 : 2);
@@ -79,15 +81,16 @@ export function UpgradesView({
     setAnswers(next);
   };
 
-  const tabCount = (id: Category) => all[id].length;
+  // Compteurs : pièces compatibles avec ce PC ; une fois le budget choisi, seulement celles qui y rentrent.
+  const tabCount = (id: Category) => (budget == null ? all[id].length : all[id].filter((p) => p.total <= budget).length);
   const blocking = (id: Category) => verdict.needs.some((n) => n.fix === id && n.status !== "ok");
   const advice = !goal.configured
     ? undefined
     : tabNeed
       ? cheapestGoal
         ? tr(
-            `${tabNeed.detail} La solution la moins chère pour atteindre ton objectif coûte ${cheapestGoal.p.total} €${goal.budget != null && cheapestGoal.p.total > goal.budget ? `, au-delà de ton budget de ${goal.budget} €` : ""}.`,
-            `${tabNeed.detail} The cheapest way to reach your goal costs ${euros(cheapestGoal.p.total)}${goal.budget != null && cheapestGoal.p.total > goal.budget ? `, over your budget of ${euros(goal.budget)}` : ""}.`,
+            `${tabNeed.detail} La solution la moins chère pour atteindre ton objectif coûte ${cheapestGoal.p.total} €${budget != null && cheapestGoal.p.total > budget ? `, au-delà de ton budget de ${budget} €` : ""}.`,
+            `${tabNeed.detail} The cheapest way to reach your goal costs ${euros(cheapestGoal.p.total)}${budget != null && cheapestGoal.p.total > budget ? `, over your budget of ${euros(budget)}` : ""}.`,
           )
         : tr(
             `${tabNeed.detail} Aucune pièce de cet onglet ne suffit seule : le plan combiné de « Mon objectif » associe plusieurs pièces.`,
@@ -184,7 +187,7 @@ export function UpgradesView({
         <p className="up-empty">{emptyMessage(tab, profile)}</p>
       ) : (
         <>
-          {inBudget.length === 0 && goal.budget != null && <p className="up-empty">{tr(`Rien dans cet onglet ne rentre dans ton budget de ${goal.budget} €.`, `Nothing in this tab fits your budget of ${euros(goal.budget)}.`)}</p>}
+          {inBudget.length === 0 && budget != null && <p className="up-empty">{tr(`Rien dans cet onglet ne rentre dans ton budget de ${budget} €.`, `Nothing in this tab fits your budget of ${euros(budget)}.`)}</p>}
           <ul className="rows">
             {inBudget.map((s) => (
               <ProposalRow key={s.p.id} p={s.p} impact={goal.configured ? s.impact : undefined} />
