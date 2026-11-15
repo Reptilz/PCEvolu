@@ -59,12 +59,6 @@ function General() {
           <option value="fr">Français</option>
           <option value="en">English</option>
         </select>
-        {settings.lang === "en" && (
-          <p className="muted small set-note">
-            The English version is in progress: the menus and settings are translated, and the other pages switch to English as their translation is
-            completed. Untranslated text stays in French.
-          </p>
-        )}
       </section>
 
       <section className="set-sec">
@@ -293,7 +287,7 @@ function About() {
         </div>
       </section>
       <section className="set-sec about-author">
-        <span className="muted">{tr("Développé par", "Developed by")}</span>{" "}
+        <span className="muted">{tr("Conçu et développé par", "Designed and developed by")}</span>{" "}
         <button className="link" onClick={() => openUrl(LINKEDIN)} title="LinkedIn">
           Jordan Morlet ↗
         </button>
