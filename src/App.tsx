@@ -22,6 +22,8 @@ import { AlertsView } from "./upgrade/AlertsView";
 import { SelectionView } from "./upgrade/SelectionView";
 import { OptimizeView } from "./upgrade/OptimizeView";
 import { AdviceNotice, ReportButton } from "./upgrade/PriceSheet";
+import { ReportDialog } from "./ReportDialog";
+import { pcSummary } from "./report";
 import { SelectionContext, loadSelection, saveSelection, slotOf, type Selection } from "./upgrade/selection";
 
 type View = "overview" | "goal" | "improve" | "upgrades" | "selection" | "alerts" | "optimize";
@@ -225,10 +227,8 @@ export default function App() {
           </div>
           <ReportButton
             topic={`page ${VIEW_LABEL[view]}`}
-            details={[
-              `Page : ${VIEW_LABEL[view]}`,
-              ...(report ? [`Processeur : ${report.cpus[0]?.name ?? "?"}`, `Carte graphique : ${report.gpus[0]?.name ?? "?"}`] : []),
-            ]}
+            kind={view === "overview" ? "composant" : "autre"}
+            details={[`Page : ${VIEW_LABEL[view]}`]}
           />
         </div>
       </aside>
@@ -299,6 +299,7 @@ export default function App() {
       </main>
     </div>
       {sheet && <PriceSheet part={sheet} onClose={() => setSheet(undefined)} />}
+      <ReportDialog pc={pcSummary(report)} />
     </SelectionContext.Provider>
     </PriceContext.Provider>
   );

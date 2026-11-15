@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { historyOf, priceInfo, pricesFile, trendOf, type HistoryPoint } from "./prices";
 import { bestPriceOf, saveAlerts, suggestedTarget, type PriceAlert } from "./alerts";
 import { openUrl, shoppingSearchUrl } from "../platform";
-import { reportProblem } from "../report";
+import { openReport, type ReportKind } from "../report";
 import { isTrustedMerchant, offerLink } from "./merchants";
 import { Icon } from "../icons";
 
@@ -145,6 +145,7 @@ export function PriceSheet({ part, onClose }: { part: SheetPart; onClose: () => 
           Un prix, une offre ou un modèle te semble faux ?{" "}
           <ReportButton
             topic={`prix de ${part.name}`}
+            kind="prix"
             details={[
               `Composant : ${part.name} (${part.id})`,
               info ? `Meilleur prix affiché : ${eur(best ?? info.min)} ; médiane : ${eur(info.price)} ; relevé du ${day(info.updatedAt)}` : "Pas de prix relevé",
@@ -211,15 +212,15 @@ export function AdviceNotice() {
       <b>Des conseils, pas une garantie.</b> Les compatibilités, performances et prix sont calculés à partir de ce que Windows lit sur ton PC, de tes
       réponses et des fiches des fabricants. Malgré nos vérifications, une erreur reste possible : donnée incomplète ou mal lue, fiche modifiée depuis,
       modèle différent de celui décrit. Avant d'acheter, vérifie la fiche du modèle exact et la compatibilité auprès du fabricant ou du vendeur : le choix
-      final t'appartient. Tu as repéré une erreur ? <ReportButton topic="conseil ou compatibilité" />
+      final t'appartient. Tu as repéré une erreur ? <ReportButton topic="conseil ou compatibilité" kind="compatibilite" />
     </p>
   );
 }
 
 /** Lien « Signaler une erreur » : ouvre un email pré-rempli avec le contexte. */
-export function ReportButton({ topic, details, label = "Signaler une erreur" }: { topic: string; details?: string[]; label?: string }) {
+export function ReportButton({ topic, details, kind, label = "Signaler une erreur" }: { topic: string; details?: string[]; kind?: ReportKind; label?: string }) {
   return (
-    <button className="link report-link" onClick={() => reportProblem({ topic, details })}>
+    <button className="link report-link" onClick={() => openReport({ topic, details, kind })}>
       <Icon name="alert" /> {label}
     </button>
   );
