@@ -917,6 +917,7 @@ abbr.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px;
 span.picks-name { color: var(--text); cursor: default; }
 .picks-name:hover { text-decoration: underline; }
 .picks-why { color: var(--muted); font-size: 13px; }
+.picks-price { color: var(--text); font-weight: 600; margin-right: 8px; font-variant-numeric: tabular-nums; }
 @media (max-width: 900px) { .picks li { grid-template-columns: 16px 1fr; } .picks-why { grid-column: 2; } }
 /* Processeur conseillé pour une carte graphique bridée */
 .pairing { margin-top: 16px; padding: 16px 18px; border-radius: 12px; background: color-mix(in srgb, var(--accent) 8%, var(--panel-2)); }

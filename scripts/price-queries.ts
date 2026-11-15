@@ -1,3 +1,5 @@
+import { BOARD_MODELS } from "../src/upgrade/catalog";
+
 // Requêtes Google Shopping et filtres pour chaque composant proposé à l'achat.
 //
 // `must` : expressions qui doivent toutes apparaître dans le titre de l'offre.
@@ -281,4 +283,48 @@ export const QUERIES: Record<string, PriceQuery> = {
   "hdd-1tb": { q: "disque dur interne 3,5 pouces 1 To SATA 7200", must: [/disque dur|\bhdd\b|barracuda|wd blue|seagate|toshiba/, /\b1 ?t[ob]\b|1000 ?g[ob]?\b/, /3[.,]5/], not: [/ssd|externe|portable|2[.,]5/], generic: true },
   "hdd-6tb": { q: "disque dur interne 3,5 pouces 6 To SATA", must: [/disque dur|\bhdd\b|barracuda|ironwolf|wd red|seagate|toshiba/, /\b6 ?t[ob]\b|6000 ?g[ob]?\b/, /3[.,]5/], not: [/ssd|externe|portable|2[.,]5/], generic: true },
   "hdd-16tb": { q: "disque dur interne 3,5 pouces 16 To SATA", must: [/disque dur|\bhdd\b|ironwolf|wd red|exos|seagate|toshiba|ultrastar/, /\b16 ?t[ob]\b|16000 ?g[ob]?\b/, /3[.,]5/], not: [/ssd|externe|portable|2[.,]5/], generic: true },
+  // Plateformes ajoutées (novembre 2026, 3)
+  "mb-b650e-atx": { q: "carte mère B650E ATX AM5", must: [/\bb650e\b/], not: [/itx|mini|micro|m-?atx|\bb650e?m/], generic: true },
+  "mb-x670-atx": { q: "carte mère X670 ATX AM5", must: [/\bx670\b/], not: [/itx|mini|micro|m-?atx|x670e/], generic: true },
+  "mb-x670e-atx": { q: "carte mère X670E ATX AM5", must: [/\bx670e\b/], not: [/itx|mini|micro|m-?atx/], generic: true },
+  "mb-b840-atx": { q: "carte mère B840 ATX AM5", must: [/\bb840\b/], not: [/itx|mini|micro|m-?atx|\bb840m/], generic: true },
+  "mb-b840-matx": { q: "carte mère B840M micro ATX AM5", must: [/\bb840m\b/], not: [/itx/], generic: true },
+  "mb-h810-matx": { q: "carte mère H810M micro ATX LGA1851", must: [/\bh810m?\b/], not: [/itx/], generic: true },
+  "mb-b550-itx": { q: "carte mère B550 mini ITX AM4", must: [/\bb550i?\b|\bb550-i\b/, /itx|\bb550-?i\b/], generic: true },
+  "mb-b650-itx": { q: "carte mère B650 mini ITX AM5", must: [/\bb650e?-?i\b|\bb650e?\b/, /itx|\bb650e?-?i\b/], generic: true },
+  "mb-b850-itx": { q: "carte mère B850 mini ITX AM5", must: [/\bb850-?i\b|\bb850\b/, /itx|\bb850-?i\b/], generic: true },
+  "mb-x870-itx": { q: "carte mère X870 mini ITX AM5", must: [/\bx870e?-?i\b|\bx870e?\b/, /itx|\bx870e?-?i\b/], generic: true },
+  "mb-b760-ddr5-itx": { q: "carte mère B760 mini ITX DDR5", must: [/\bb760-?i\b|\bb760\b/, /itx|\bb760-?i\b/], not: [/ddr4|\bd4\b/], generic: true },
+  "mb-z790-itx": { q: "carte mère Z790 mini ITX", must: [/\bz790-?i\b|\bz790\b/, /itx|\bz790-?i\b/], not: [/ddr4|\bd4\b/], generic: true },
+  "mb-b860-itx": { q: "carte mère B860 mini ITX", must: [/\bb860-?i\b|\bb860\b/, /itx|\bb860-?i\b/], generic: true },
+  // Kits de marque (novembre 2026, 3)
+  "k-gs-ripv-d4-2x16-3600": { q: "G.Skill Ripjaws V 32 Go 2x16 Go DDR4 3600", must: [/ripjaws v\b/, /2 ?x ?16|\b32 ?g[ob]\b/, /ddr4/, /3600/], not: [/\b64 ?g[ob]\b|1 ?x ?32|\b4 ?x/] },
+  "k-gs-tzneo-d4-2x16-3600": { q: "G.Skill Trident Z Neo 32 Go 2x16 Go DDR4 3600", must: [/trident z neo/, /2 ?x ?16|\b32 ?g[ob]\b/, /ddr4/, /3600/], not: [/\b64 ?g[ob]\b|1 ?x ?32|\b4 ?x/] },
+  "k-cor-veng-d5-2x16-6000": { q: "Corsair Vengeance 32 Go 2x16 Go DDR5 6000", must: [/vengeance\b/, /2 ?x ?16|\b32 ?g[ob]\b/, /ddr5/, /6000/], not: [/rgb|lpx|\b64 ?g[ob]\b|1 ?x ?32|\b4 ?x/] },
+  "k-cor-vengrgb-d5-2x16-6000": { q: "Corsair Vengeance RGB 32 Go 2x16 Go DDR5 6000", must: [/vengeance rgb/, /2 ?x ?16|\b32 ?g[ob]\b/, /ddr5/, /6000/], not: [/rgb pro|\b64 ?g[ob]\b|1 ?x ?32|\b4 ?x/] },
+  "k-gs-flare-d5-2x16-6000": { q: "G.Skill Flare X5 32 Go 2x16 Go DDR5 6000", must: [/flare x5/, /2 ?x ?16|\b32 ?g[ob]\b/, /ddr5/, /6000/], not: [/\b64 ?g[ob]\b|1 ?x ?32|\b4 ?x/] },
+  "k-gs-tz5neo-d5-2x16-6000": { q: "G.Skill Trident Z5 Neo RGB 32 Go 2x16 Go DDR5 6000", must: [/trident z5 neo/, /2 ?x ?16|\b32 ?g[ob]\b/, /ddr5/, /6000/], not: [/\b64 ?g[ob]\b|1 ?x ?32|\b4 ?x/] },
+  "k-cru-prooc-d5-2x16-6000": { q: "Crucial Pro Overclocking 32 Go 2x16 Go DDR5 6000", must: [/crucial pro/, /overclock|\boc\b|6000/, /2 ?x ?16|\b32 ?g[ob]\b/, /ddr5/, /6000/], not: [/\b64 ?g[ob]\b|1 ?x ?32|\b4 ?x/] },
+  "k-pat-venom-d5-2x16-6000": { q: "Patriot Viper Venom 32 Go 2x16 Go DDR5 6000", must: [/viper venom/, /2 ?x ?16|\b32 ?g[ob]\b/, /ddr5/, /6000/], not: [/\b64 ?g[ob]\b|1 ?x ?32|\b4 ?x/] },
 };
+
+// Modèles réels de cartes mères (onglet « Carte mère ») : une requête par modèle, construite depuis son nom.
+// Chaque mot du nom doit figurer dans l'offre ; les variantes voisines (Wi-Fi, II, MAX, V2, DDR4) sont écartées.
+const esc = (w: string) => w.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
+const B = String.raw`\b`;
+for (const b of BOARD_MODELS) {
+  const n = b.name.toLowerCase();
+  const words = n.replace(/^(msi|asus|gigabyte|asrock)\s+/, "").split(/\s+/);
+  const must = words.map((w) => {
+    const core = /^wifi/.test(w) ? w.replace(/^wifi/, "wi-?fi ?") : esc(w).replace(/-/g, "[- ]?");
+    return new RegExp(`${B}${core}${B}`);
+  });
+  const not: string[] = ["itx"];
+  if (!/wifi|\bax\b/.test(n)) not.push("wi-?fi", `${B}ax${B}`);
+  if (!/\bii\b/.test(n)) not.push(`${B}ii${B}`);
+  if (!/\bmax\b/.test(n)) not.push(`${B}max${B}`);
+  if (!/\bv2\b/.test(n)) not.push(`${B}v2${B}`);
+  if (!/\bplus\b/.test(n)) not.push(`${B}plus${B}`);
+  if (b.ramType === "DDR5" && b.socket === "LGA1700") not.push("ddr4", `${B}d4${B}`);
+  QUERIES[b.id] = { q: `carte mère ${b.name}`, must, not: [new RegExp(not.join("|"))] };
+}

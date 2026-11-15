@@ -138,6 +138,8 @@ export interface RamKit {
   gbPerStick: number;
   mts: number;
   price: number;
+  /** Gamme du fabricant pour un kit de marque (ex. « Kingston FURY Beast ») ; absente pour un kit générique. */
+  series?: string;
 }
 
 export interface SsdSpec {
@@ -232,6 +234,8 @@ export interface ModelPick {
   name: string;
   why: string[];
   url?: string;
+  /** Prix relevé pour ce modèle précis (onglet « Carte mère »). */
+  price?: number;
 }
 
 export type Category = "gpu" | "cpu" | "board" | "ram" | "storage";

@@ -11,7 +11,7 @@ import type {
 } from "./types";
 import { cpuFromName, purchasable } from "./cpudb";
 import { GPU_TABLE, findGpuSpec } from "./gpudb";
-import { findKnownBoard } from "./boards";
+import { KNOWN_BOARDS, findKnownBoard } from "./boards";
 import { tr } from "../settings";
 
 /** Date du catalogue en français (gardé pour compatibilité) ; à l'affichage, préférer catalogDate(). */
@@ -19,7 +19,7 @@ export const CATALOG_DATE = "novembre 2026";
 /** Date du catalogue dans la langue choisie. */
 export const catalogDate = () => tr(CATALOG_DATE, "November 2026");
 /** Incrémenté à chaque mise à jour du catalogue (le catalogue téléchargé n'est pris que s'il est plus récent). */
-export const CATALOG_VERSION = 7;
+export const CATALOG_VERSION = 8;
 
 // ---------------------------------------------------------------------------
 // Chipsets : ce qui définit la compatibilité CPU / RAM / PCIe d'une carte mère
@@ -230,15 +230,65 @@ export const BOARDS: BoardSpec[] = [
   board("mb-a520-matx", "Carte mère A520M (micro-ATX, entrée de gamme)", "AM4", "A520", "mATX", "DDR4", { slots: 2, maxGb: 64, m2: 1, pcie: 3, avail: "new", price: 76, note: "Entrée de gamme : 2 emplacements RAM, à réserver aux processeurs 65 W." }),
   board("mb-x570-atx", "Carte mère X570 ATX", "AM4", "X570", "ATX", "DDR4", { maxGb: 128, m2: 2, pcie: 4, avail: "new", price: 180 }),
   board("mb-x870e-atx", "Carte mère X870E ATX", "AM5", "X870E", "ATX", "DDR5", { maxGb: 256, m2: 4, pcie: 5, avail: "new", price: 443 }),
+  // Catalogue étendu (novembre 2026, 3) : tous les chipsets vendus neufs, et le format mini-ITX.
+  board("mb-b650e-atx", "Carte mère B650E ATX", "AM5", "B650E", "ATX", "DDR5", { maxGb: 192, m2: 3, pcie: 5, avail: "new", price: 230 }),
+  board("mb-x670-atx", "Carte mère X670 ATX", "AM5", "X670", "ATX", "DDR5", { maxGb: 192, m2: 3, pcie: 4, avail: "new", price: 220 }),
+  board("mb-x670e-atx", "Carte mère X670E ATX", "AM5", "X670E", "ATX", "DDR5", { maxGb: 192, m2: 4, pcie: 5, avail: "new", price: 280 }),
+  board("mb-b840-atx", "Carte mère B840 ATX", "AM5", "B840", "ATX", "DDR5", { maxGb: 256, m2: 2, pcie: 4, avail: "new", price: 140 }),
+  board("mb-b840-matx", "Carte mère B840M (micro-ATX)", "AM5", "B840", "mATX", "DDR5", { maxGb: 256, m2: 2, pcie: 4, avail: "new", price: 115 }),
+  board("mb-h810-matx", "Carte mère H810M (micro-ATX, entrée de gamme)", "LGA1851", "H810", "mATX", "DDR5", { slots: 2, maxGb: 128, m2: 1, pcie: 4, avail: "new", price: 110, note: "Entrée de gamme : 2 emplacements RAM, à réserver aux processeurs 65 W." }),
+  board("mb-b550-itx", "Carte mère B550 mini-ITX", "AM4", "B550", "ITX", "DDR4", { slots: 2, maxGb: 64, m2: 2, pcie: 4, avail: "new", price: 170, note: "Format mini-ITX : 2 emplacements RAM, pour les petits boîtiers." }),
+  board("mb-b650-itx", "Carte mère B650 mini-ITX", "AM5", "B650", "ITX", "DDR5", { slots: 2, maxGb: 96, m2: 2, pcie: 4, avail: "new", price: 220, note: "Format mini-ITX : 2 emplacements RAM, pour les petits boîtiers." }),
+  board("mb-b850-itx", "Carte mère B850 mini-ITX", "AM5", "B850", "ITX", "DDR5", { slots: 2, maxGb: 128, m2: 2, pcie: 4, avail: "new", price: 240, note: "Format mini-ITX : 2 emplacements RAM, pour les petits boîtiers." }),
+  board("mb-x870-itx", "Carte mère X870 mini-ITX", "AM5", "X870", "ITX", "DDR5", { slots: 2, maxGb: 128, m2: 2, pcie: 5, avail: "new", price: 330, note: "Format mini-ITX : 2 emplacements RAM, pour les petits boîtiers." }),
+  board("mb-b760-ddr5-itx", "Carte mère B760 DDR5 mini-ITX", "LGA1700", "B760", "ITX", "DDR5", { slots: 2, maxGb: 96, m2: 2, pcie: 4, avail: "new", price: 180, note: "Format mini-ITX : 2 emplacements RAM, pour les petits boîtiers." }),
+  board("mb-z790-itx", "Carte mère Z790 mini-ITX", "LGA1700", "Z790", "ITX", "DDR5", { slots: 2, maxGb: 96, m2: 2, pcie: 5, avail: "new", price: 300, note: "Format mini-ITX : 2 emplacements RAM, pour les petits boîtiers." }),
+  board("mb-b860-itx", "Carte mère B860 mini-ITX", "LGA1851", "B860", "ITX", "DDR5", { slots: 2, maxGb: 128, m2: 2, pcie: 5, avail: "new", price: 230, note: "Format mini-ITX : 2 emplacements RAM, pour les petits boîtiers." }),
 ];
+
+/**
+ * Prix de référence des modèles réels de la base (novembre 2026), remplacés par le relevé.
+ * Seuls les modèles d'un chipset vendu neuf sont proposés à l'achat.
+ */
+const MODEL_PRICES: Record<string, number> = {
+  "MSI B550-A PRO": 120, "MSI MAG B550 TOMAHAWK": 150, "ASUS TUF GAMING B550-PLUS": 140, "ASUS ROG STRIX B550-F GAMING": 180,
+  "Gigabyte B550 AORUS ELITE V2": 140, "Gigabyte B550 GAMING X V2": 115, "MSI B550M PRO-VDH WIFI": 115, "ASUS PRIME B550M-A": 105,
+  "Gigabyte B550M DS3H": 90, "MSI A520M-A PRO": 70, "MSI MAG X570 TOMAHAWK WIFI": 190, "ASUS TUF GAMING X570-PLUS": 180,
+  "Gigabyte X570 AORUS ELITE": 180,
+  "MSI PRO B650-P WIFI": 160, "MSI MAG B650 TOMAHAWK WIFI": 200, "ASUS TUF GAMING B650-PLUS WIFI": 190, "Gigabyte B650 AORUS ELITE AX V2": 190,
+  "Gigabyte B650 EAGLE AX": 160, "MSI PRO B650M-A WIFI": 150, "ASUS PRIME B650M-A II": 140, "Gigabyte B650M DS3H": 120,
+  "ASRock B650M Pro RS WiFi": 140, "MSI PRO A620M-E": 80, "Gigabyte A620M H": 85, "MSI MAG X670E TOMAHAWK WIFI": 270,
+  "MSI MAG B850 TOMAHAWK MAX WIFI": 240, "ASUS TUF GAMING B850-PLUS WIFI": 220, "Gigabyte B850 AORUS ELITE WIFI7": 230, "ASRock B850 Pro RS": 170,
+  "MSI MAG X870 TOMAHAWK WIFI": 290, "ASUS TUF GAMING X870-PLUS WIFI": 280, "MSI B840 GAMING PLUS WIFI": 150,
+  "ASUS ROG STRIX B650E-F GAMING WIFI": 260, "ASUS PRIME X670-P": 220, "Gigabyte X870E AORUS ELITE WIFI7": 380,
+  "MSI PRO B760-P DDR4": 130, "MSI PRO B760-P DDR4 II": 130, "MSI MAG B760 TOMAHAWK WIFI DDR4": 180, "ASUS PRIME B760-PLUS D4": 135,
+  "ASUS TUF GAMING B760-PLUS WIFI D4": 180, "Gigabyte B760 GAMING X DDR4": 140, "Gigabyte B760 GAMING X AX DDR4": 160,
+  "MSI PRO B760-P WIFI": 160, "MSI PRO B760-P II": 140, "MSI MAG B760 TOMAHAWK WIFI": 190, "ASUS PRIME B760-PLUS": 145,
+  "ASUS TUF GAMING B760-PLUS WIFI": 190, "Gigabyte B760 GAMING X": 150, "Gigabyte B760 GAMING X AX": 170,
+  "MSI PRO B760M-A WIFI": 150, "ASRock B760M Pro RS": 120, "Gigabyte B760M DS3H": 115, "MSI PRO B760M-A DDR4": 125,
+  "ASRock B760M Pro RS/D4": 115, "Gigabyte B760M DS3H DDR4": 110, "MSI PRO Z790-P WIFI": 220, "ASUS TUF GAMING Z790-PLUS WIFI": 260,
+  "MSI PRO Z790-P WIFI DDR4": 210, "ASUS TUF GAMING Z790-PLUS WIFI D4": 250, "Gigabyte H610M S2H DDR4": 85, "Gigabyte H610M S2H": 85,
+  "MSI PRO B860-P": 170, "ASUS PRIME B860-PLUS WIFI": 190, "Gigabyte B860 EAGLE WIFI6E": 180, "MSI MAG Z890 TOMAHAWK WIFI": 320,
+};
+
+/** Modèles réels proposés à l'achat (onglet « Carte mère »), chacun avec son propre prix relevé. */
+export const BOARD_MODELS: BoardSpec[] = KNOWN_BOARDS.filter((b) => MODEL_PRICES[b.name] != null).map((b) => ({
+  ...b,
+  availability: "new" as const,
+  price: MODEL_PRICES[b.name],
+}));
 
 
 // ---------------------------------------------------------------------------
 // RAM, stockage, alimentations, refroidissement, boîtiers
 // ---------------------------------------------------------------------------
 
-const ram = (id: string, name: string, type: RamKit["type"], sticks: number, gbPerStick: number, mts: number, price: number): RamKit =>
-  ({ kind: "ram", id, name, type, sticks, gbPerStick, mts, price });
+const ram = (id: string, name: string, type: RamKit["type"], sticks: number, gbPerStick: number, mts: number, price: number, series?: string): RamKit =>
+  ({ kind: "ram", id, name, type, sticks, gbPerStick, mts, price, ...(series ? { series } : {}) });
+
+/** Kit de marque (2 barrettes) : la gamme apparaît dans le titre de la proposition. */
+const kit = (id: string, series: string, type: RamKit["type"], gbPerStick: number, mts: number, cl: number, price: number): RamKit =>
+  ram(id, `${series} 2 × ${gbPerStick} Go ${type}-${mts} CL${cl}`, type, 2, gbPerStick, mts, price, series);
 
 export const RAM_KITS: RamKit[] = [
   ram("d4-1x8-3200", "Crucial 8 Go DDR4-3200", "DDR4", 1, 8, 3200, 25),
@@ -262,7 +312,40 @@ export const RAM_KITS: RamKit[] = [
   ram("d5-1x8-5600", "Barrette 8 Go DDR5-5600", "DDR5", 1, 8, 5600, 174),
   ram("d5-2x16-6400", "Kit 2 × 16 Go DDR5-6400 CL32", "DDR5", 2, 16, 6400, 610),
   ram("d5-2x64-5600", "Kit 2 × 64 Go DDR5-5600", "DDR5", 2, 64, 5600, 2869),
+  // Kits de marque (novembre 2026, 3) : seuls ceux dont le prix se relève de façon fiable sur Google Shopping.
+  kit("k-gs-ripv-d4-2x16-3600", "G.Skill Ripjaws V", "DDR4", 16, 3600, 18, 340),
+  kit("k-gs-tzneo-d4-2x16-3600", "G.Skill Trident Z Neo", "DDR4", 16, 3600, 16, 380),
+  kit("k-cor-veng-d5-2x16-6000", "Corsair Vengeance", "DDR5", 16, 6000, 30, 640),
+  kit("k-cor-vengrgb-d5-2x16-6000", "Corsair Vengeance RGB", "DDR5", 16, 6000, 30, 720),
+  kit("k-gs-flare-d5-2x16-6000", "G.Skill Flare X5", "DDR5", 16, 6000, 30, 640),
+  kit("k-gs-tz5neo-d5-2x16-6000", "G.Skill Trident Z5 Neo RGB", "DDR5", 16, 6000, 30, 720),
+  kit("k-cru-prooc-d5-2x16-6000", "Crucial Pro Overclocking", "DDR5", 16, 6000, 36, 640),
+  kit("k-pat-venom-d5-2x16-6000", "Patriot Viper Venom", "DDR5", 16, 6000, 30, 640),
 ];
+
+/**
+ * Gammes courantes, proposées comme modèles sur les kits génériques : à capacité et vitesse égales, elles se valent
+ * en usage. Leur prix exact se relève mal (titres d'annonces tronqués), d'où le prix de la catégorie.
+ */
+export const ramSeries = (type: RamKit["type"]): { name: string; why: string[] }[] => ({
+  DDR3: [],
+  DDR4: [
+    { name: "Kingston FURY Beast", why: [tr("ex-HyperX Fury", "formerly HyperX Fury"), tr("dissipateur bas, passe sous tous les ventirads", "low heatsink, fits under any CPU cooler")] },
+    { name: "Corsair Vengeance LPX", why: [tr("profil bas", "low profile"), tr("très répandue", "very common")] },
+    { name: "G.Skill Ripjaws V", why: [tr("bon rapport qualité/prix", "good value")] },
+    { name: "Crucial Pro", why: [tr("sobre, sans éclairage", "plain, no lighting")] },
+    { name: "Kingston FURY Renegade", why: [tr("ex-HyperX Predator", "formerly HyperX Predator"), tr("haut de gamme", "high-end")] },
+    { name: "Corsair Vengeance RGB Pro", why: [tr("éclairage RGB", "RGB lighting")] },
+  ],
+  DDR5: [
+    { name: "Kingston FURY Beast", why: [tr("ex-HyperX Fury", "formerly HyperX Fury"), tr("profils Intel XMP et AMD EXPO", "Intel XMP and AMD EXPO profiles")] },
+    { name: "Corsair Vengeance", why: [tr("très répandue", "very common")] },
+    { name: "G.Skill Flare X5", why: [tr("pensée pour AMD (EXPO)", "designed for AMD (EXPO)"), tr("profil bas", "low profile")] },
+    { name: "Crucial Pro", why: [tr("sobre, sans éclairage", "plain, no lighting")] },
+    { name: "TeamGroup T-Force Delta RGB", why: [tr("éclairage RGB", "RGB lighting")] },
+    { name: "Kingston FURY Renegade", why: [tr("ex-HyperX Predator", "formerly HyperX Predator"), tr("haut de gamme", "high-end")] },
+  ],
+})[type];
 
 const ssd = (id: string, name: string, iface: SsdSpec["iface"], tb: number, price: number): SsdSpec => ({ kind: "ssd", id, name, iface, tb, price });
 

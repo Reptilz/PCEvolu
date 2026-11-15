@@ -15,7 +15,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { BOARDS, CASES, COOLERS, CPUS, FAN_KITS, GPUS, PSUS, RAM_KITS, SSDS } from "../src/upgrade/catalog";
+import { BOARDS, BOARD_MODELS, CASES, COOLERS, CPUS, FAN_KITS, GPUS, PSUS, RAM_KITS, SSDS } from "../src/upgrade/catalog";
 import type { PricesFile, PriceEntry } from "../src/upgrade/prices";
 import { CATEGORY_EXCLUDE, FOREIGN_EXCLUDE, GLOBAL_EXCLUDE, MERCHANT_EXCLUDE, QUERIES } from "./price-queries";
 import { recordHistory } from "./history";
@@ -69,6 +69,7 @@ function targets(): Target[] {
   add("gpu", GPUS);
   add("cpu", CPUS);
   add("board", BOARDS);
+  add("board", BOARD_MODELS);
   add("ram", RAM_KITS.map((k) => ({ ...k, availability: "new" })));
   add("ssd", SSDS.map((k) => ({ ...k, availability: "new" })));
   add("psu", PSUS.map((k) => ({ ...k, availability: "new" })));

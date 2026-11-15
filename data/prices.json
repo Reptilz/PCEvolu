@@ -4961,6 +4961,1311 @@
           "link": "https://www.google.com/search?ibp=oshop&q=disque+dur+interne+3%2C5+pouces+16+To+SATA&prds=localAnnotatedOfferId:1,catalogid:15513363787540426245,gpcid:95016066324545272,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
         }
       ]
+    },
+    "k-gs-ripv-d4-2x16-3600": {
+      "price": 299,
+      "min": 286,
+      "max": 350,
+      "offers": 3,
+      "updatedAt": "2026-11-15T22:18:04.947Z",
+      "best": [
+        {
+          "merchant": "DropReference",
+          "price": 286,
+          "title": "G.Skill F4-3600C14D-32GVK Ripjaws V 32 Go 2 x 16 Go DDR4 3600 MHz",
+          "link": "https://www.google.com/search?ibp=oshop&q=G.Skill+Ripjaws+V+32+Go+2x16+Go+DDR4+3600&prds=localAnnotatedOfferId:1,catalogid:17147937315417321380,gpcid:824087848537596011,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 299.09,
+          "title": "G.SKILL Ripjaws V 32Go DDR4 3600MHz CL16 UDIMM",
+          "link": "https://www.google.com/search?ibp=oshop&q=G.Skill+Ripjaws+V+32+Go+2x16+Go+DDR4+3600&prds=localAnnotatedOfferId:1,catalogid:14795519555224302573,gpcid:16429540962227549024,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Electronica Barata",
+          "price": 349.5,
+          "title": "Memoria Ram G.Skill Ddr4 3600 32gb C16 Ripjaws V K2 2x16 Gb Black 1,35v 16-19-19-39"
+        }
+      ]
+    },
+    "k-gs-tzneo-d4-2x16-3600": {
+      "price": 343,
+      "min": 300,
+      "max": 380,
+      "offers": 4,
+      "updatedAt": "2026-11-15T22:18:04.947Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 300.24,
+          "title": "G.Skill 32 Go de Trident Z Neo DDR4 3600MHz PC4-28800 CL18 RGB Double Channel Kit (2X 16Go)"
+        },
+        {
+          "merchant": "F10.eu",
+          "price": 320.3,
+          "title": "Mémoire vive 32GB DDR4 3600MHz G.Skill Trident Z Neo (F4-3600C18D-32GTZN) (2x16GB KIT)"
+        },
+        {
+          "merchant": "OReol",
+          "price": 366,
+          "title": "G.Skill Trident Z Neo 32 Go DDR4 3600 MHz CL16",
+          "link": "https://www.google.com/search?ibp=oshop&q=G.Skill+Trident+Z+Neo+32+Go+2x16+Go+DDR4+3600&prds=localAnnotatedOfferId:1,catalogid:7490140412053202393,gpcid:9806133601747179107,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "k-cor-veng-d5-2x16-6000": {
+      "price": 640,
+      "min": 550,
+      "max": 733,
+      "offers": 5,
+      "updatedAt": "2026-11-15T22:18:04.947Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 549.99,
+          "title": "DDR5 Corsair Vengeance 32 Go 6000 MHz",
+          "link": "https://www.google.com/search?ibp=oshop&q=2x16+6000+Vengeance+Corsair+Go+Go+DDR5+32&prds=localAnnotatedOfferId:1,catalogid:6465352394164465731,gpcid:6534635661642013092,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "KultureGeek",
+          "price": 599.99,
+          "title": "Corsair Kit Mémoire Vengeance 32 Go DDR5 cmk32gx5m2b6000z38",
+          "link": "https://www.google.com/search?ibp=oshop&q=2x16+6000+Vengeance+Corsair+Go+Go+DDR5+32&prds=localAnnotatedOfferId:1,catalogid:1937016186172429575,gpcid:16867792565621310205,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Pixel 404 - Informatique & Gaming",
+          "price": 639.9,
+          "title": "Kit RAM Corsair Vengeance DDR5 32 Go 6000MHz | Pixel 404"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 733.09,
+          "title": "Corsair Vengeance DDR5 32 Go 6000 MHz CL30 cmk32gx5m2b6000z30w",
+          "link": "https://www.google.com/search?ibp=oshop&q=2x16+6000+Vengeance+Corsair+Go+Go+DDR5+32&prds=localAnnotatedOfferId:1,catalogid:2093417145096650678,gpcid:10231098017287674227,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "k-cor-vengrgb-d5-2x16-6000": {
+      "price": 602,
+      "min": 574,
+      "max": 938,
+      "offers": 5,
+      "updatedAt": "2026-11-15T22:18:04.947Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr",
+          "price": 573.99,
+          "title": "CORSAIR VENGEANCE RGB RS DDR5 32GB 16GB x 2 Supports up to 6000MHz AMD",
+          "link": "https://www.google.com/search?ibp=oshop&q=Corsair+Vengeance+RGB+32+Go+2x16+Go+DDR5+6000&prds=localAnnotatedOfferId:1,catalogid:10118106949765971705,gpcid:10776170454861200944,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 574.99,
+          "title": "Corsair Vengeance RGB DDR5 32 Go 6000 MHz",
+          "link": "https://www.google.com/search?ibp=oshop&q=Corsair+Vengeance+RGB+32+Go+2x16+Go+DDR5+6000&prds=localAnnotatedOfferId:1,catalogid:9669885587359298690,gpcid:11360688729652979442,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Dotiri",
+          "price": 601.99,
+          "title": "Corsair Vengeance RGB DDR5 32 Go 6000 MHz CL36",
+          "link": "https://www.google.com/search?ibp=oshop&q=Corsair+Vengeance+RGB+32+Go+2x16+Go+DDR5+6000&prds=localAnnotatedOfferId:1,catalogid:13915321229830132100,gpcid:13042291781753621060,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "k-gs-flare-d5-2x16-6000": {
+      "price": 693,
+      "min": 606,
+      "max": 952,
+      "offers": 4,
+      "updatedAt": "2026-11-15T22:18:04.947Z",
+      "best": [
+        {
+          "merchant": "DropReference",
+          "price": 606,
+          "title": "G.SKILL Flare X5 32 Go DDR5 6000 MHz CL36 UDIMM",
+          "link": "https://www.google.com/search?ibp=oshop&q=G.Skill+Flare+X5+32+Go+2x16+Go+DDR5+6000&prds=localAnnotatedOfferId:1,catalogid:5045735939044762493,gpcid:5267379566740649234,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "GreaTecno",
+          "price": 667.72,
+          "title": "Kit 2 RAM Mémoire G.Skill Flare X5 F5-6000J3038F16GH2-FX5 32GB 2x16GB DDR5 6000MHz CL30 AMD EXPO Intel",
+          "link": "https://www.google.com/search?ibp=oshop&q=G.Skill+Flare+X5+32+Go+2x16+Go+DDR5+6000&prds=localAnnotatedOfferId:1,catalogid:16779731540573233379,gpcid:9135428300384445282,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 717.72,
+          "title": "G.Skill Série Flare X5 (AMD Expo) 32 Go (2 x 16 Go) 288 broches SDRAM DDR5 6000 CL30-38-38-96 1,35 V Mémoire Double canal pour ordinateur de bureau F5"
+        }
+      ]
+    },
+    "k-gs-tz5neo-d5-2x16-6000": {
+      "price": 752,
+      "min": 723,
+      "max": 881,
+      "offers": 3,
+      "updatedAt": "2026-11-15T22:18:04.947Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 723.14,
+          "title": "Mémoire RAM DDR5 G.Skill Trident Z5 Neo RGB 32 Go 6000 CL30",
+          "link": "https://www.google.com/search?ibp=oshop&q=G.Skill+Trident+Z5+Neo+RGB+32+Go+2x16+Go+DDR5+6000&prds=localAnnotatedOfferId:1,catalogid:6011607527509117858,gpcid:5883367654682261416,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "F10.eu",
+          "price": 751.7,
+          "title": "Mémoire vive 32GB DDR5 6000MHz G.Skill Trident Z5 Neo RGB (F5-6000J3238F16GX2-TZ5NR) (2x16GB KIT)"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 881.14,
+          "title": "G.SKILL Trident Z5 Neo RGB Series DDR5 RAM (AMD EXPO) 32 Go (2 x 16 Go) jusqu'à 6000 MT/s* CL28-36-36-96 1,40 V mémoire U-DIMM pour ordinateur de"
+        }
+      ]
+    },
+    "k-cru-prooc-d5-2x16-6000": {
+      "price": 525,
+      "min": 500,
+      "max": 659,
+      "offers": 4,
+      "updatedAt": "2026-11-15T22:18:04.947Z",
+      "best": [
+        {
+          "merchant": "Land pc",
+          "price": 499.99,
+          "title": "Crucial Pro RAM DDR5 32Go Kit (2x16Go) 6000MHz CL36 - Overclocking Gaming"
+        },
+        {
+          "merchant": "DSGate",
+          "price": 499.99,
+          "title": "RAM DDR5 32 Go (2x16) 6000 MHz CL36 Crucial Pro | DSGate"
+        },
+        {
+          "merchant": "DropReference",
+          "price": 550,
+          "title": "Crucial Pro OC 32GB 2x16GB DDR5 6000MHz CL36 White"
+        }
+      ]
+    },
+    "k-pat-venom-d5-2x16-6000": {
+      "price": 604,
+      "min": 458,
+      "max": 634,
+      "offers": 3,
+      "updatedAt": "2026-11-15T22:18:04.947Z",
+      "best": [
+        {
+          "merchant": "DropReference",
+          "price": 458,
+          "title": "Patriot Viper Venom Amd Expo DDR5 32gb 6000mhz Cl36",
+          "link": "https://www.google.com/search?ibp=oshop&q=Patriot+Viper+Venom+32+Go+2x16+Go+DDR5+6000&prds=localAnnotatedOfferId:1,catalogid:9367968718548158593,gpcid:2487185692191469630,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Galaxus",
+          "price": 603.61,
+          "title": "Patriot Viper Venom DDR5 32gb 6000mhz CL28 AMD EXPO",
+          "link": "https://www.google.com/search?ibp=oshop&q=Patriot+Viper+Venom+32+Go+2x16+Go+DDR5+6000&prds=localAnnotatedOfferId:1,catalogid:4216450752221269898,gpcid:2707117767980274989,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Trippodo Shop",
+          "price": 633.99,
+          "title": "Patriot Viper Venom AMD DDR5 RGB 32GB 6000 MHz CL28 UDIMM Kit",
+          "link": "https://www.google.com/search?ibp=oshop&q=Patriot+Viper+Venom+32+Go+2x16+Go+DDR5+6000&prds=localAnnotatedOfferId:1,catalogid:9583976715871658643,gpcid:4255918244161927240,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-msib550mprovdhwifi": {
+      "price": 150,
+      "min": 131,
+      "max": 183,
+      "offers": 3,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr",
+          "price": 130.97,
+          "title": "Carte mère MSI B550M PRO-VDH WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+B550M+PRO-VDH+WIFI&prds=localAnnotatedOfferId:1,catalogid:6696513538955089173,gpcid:12950780597727165287,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Darty",
+          "price": 149.98,
+          "title": "MSI B550M PRO-VDH WIFI carte mère AMD B550 Emplacement AM4 micro ATX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+B550M+PRO-VDH+WIFI&prds=localAnnotatedOfferId:1,catalogid:6570033278353063559,gpcid:17928931786543991067,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 183,
+          "title": "Carte mère MSI B550M PRO-VDH WIFI AMD B550 Socket AM4 4xDDR4 SDRAM 128 Go Micro ATX"
+        }
+      ]
+    },
+    "db-msia520mapro": {
+      "price": 62,
+      "min": 40,
+      "max": 66,
+      "offers": 3,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Mon7up",
+          "price": 40,
+          "title": "MSI A520M-A Pro Carte-mère Micro-ATX, AM4"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 62.13,
+          "title": "Carte mère MSI A520M-A PRO",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+A520M-A+PRO&prds=localAnnotatedOfferId:1,catalogid:220459385357343571,gpcid:1690229298349078525,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 66.15,
+          "title": "MSI A520M-A PRO AM4 Micro-ATX Motherboard CPU Socket AMD microATX Chipset A520",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+A520M-A+PRO&prds=localAnnotatedOfferId:1,catalogid:10573738668821039880,gpcid:5191100996085981358,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-asustufgamingb550plus": {
+      "price": 139,
+      "min": 102,
+      "max": 195,
+      "offers": 3,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "achatmoinscher",
+          "price": 101.99,
+          "title": "Asus TUF B550-PLUS Gaming",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+TUF+GAMING+B550-PLUS&prds=localAnnotatedOfferId:1,catalogid:14342241906866676525,gpcid:14742042359279299774,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 138.58,
+          "title": "Asus TUF Gaming B550-PLUS AMD B550",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+TUF+GAMING+B550-PLUS&prds=localAnnotatedOfferId:1,catalogid:1141250787888600409,gpcid:14092302335434019979,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 194.93,
+          "title": "Asus TUF GAMING B550-PLUS",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+TUF+GAMING+B550-PLUS&prds=localAnnotatedOfferId:1,catalogid:8827016690140826893,gpcid:10320458999243062351,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-asusrogstrixb550fgaming": {
+      "price": 175,
+      "min": 173,
+      "max": 188,
+      "offers": 3,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 172.99,
+          "title": "ASUS ROG STRIX B550 F GAMING",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+ROG+STRIX+B550-F+GAMING&prds=localAnnotatedOfferId:1,catalogid:12993626877598863053,gpcid:17573640423038933654,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Darty",
+          "price": 174.99,
+          "title": "ASUS ROG STRIX B550-F Gaming",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+ROG+STRIX+B550-F+GAMING&prds=localAnnotatedOfferId:1,catalogid:16191107746235147014,gpcid:14405709028438606772,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Tech-discount",
+          "price": 187.9,
+          "title": "ASUS ROG STRIX B550-F GAMING",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+ROG+STRIX+B550-F+GAMING&prds=localAnnotatedOfferId:1,catalogid:8992669374477977730,gpcid:9708903470230472630,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-asusprimeb550ma": {
+      "price": 101,
+      "min": 75,
+      "max": 155,
+      "offers": 4,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Offtek Mémoire",
+          "price": 74.88,
+          "title": "PRIME B550M-A AC 288 Pin 1.2v DDR4 PC4-25600 Non-ECC Dimm 8Go Module"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 100.9,
+          "title": "ASUS PRIME B550M-A",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+PRIME+B550M-A&prds=localAnnotatedOfferId:1,catalogid:10271750837265436884,gpcid:13618971415427103336,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Fnac",
+          "price": 101,
+          "title": "ASUS Prime B550M-A/CSM",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+PRIME+B550M-A&prds=localAnnotatedOfferId:1,catalogid:17743918205505349831,gpcid:7315868544698029650,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-asustufgamingx570plus": {
+      "price": 165,
+      "min": 159,
+      "max": 170,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 159.49,
+          "title": "Asus Carte Mère Gaming Tuf Gaming X570 Plus (Wi Fi) Amd Am4 Ryzen 3000 (Pcie 4.0 M.2 12+2 Dr. Mos Ddr4 Lan Hdmi Dp Cfx Usb 3.2 Gen 2"
+        },
+        {
+          "merchant": "KultureGeek",
+          "price": 169.99,
+          "title": "ASUS TUF Gaming X570-Plus",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+TUF+GAMING+X570-PLUS&prds=localAnnotatedOfferId:1,catalogid:12278108491241052103,gpcid:829590117324802314,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-gigabyteb550mds3h": {
+      "price": 102,
+      "min": 82,
+      "max": 142,
+      "offers": 4,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 81.61,
+          "title": "Carte mère Gigabyte B550M DS3H R2",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+B550M+DS3H&prds=localAnnotatedOfferId:1,catalogid:3856378153668465353,gpcid:964918601343003553,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 102,
+          "title": "Gigabyte B550M DS3H AC",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+B550M+DS3H&prds=localAnnotatedOfferId:1,catalogid:2258936970410184012,gpcid:8985586088903595472,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "DropReference",
+          "price": 102,
+          "title": "Carte Mere GIGABYTE B550M DS3H",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+B550M+DS3H&prds=localAnnotatedOfferId:1,catalogid:2759621354636768026,gpcid:11940008615127826241,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-gigabyteb550gamingxv2": {
+      "price": 115,
+      "min": 115,
+      "max": 196,
+      "offers": 3,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr",
+          "price": 114.99,
+          "title": "Gigabyte B550 gaming X V2",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+B550+GAMING+X+V2&prds=localAnnotatedOfferId:1,catalogid:399074941718286559,gpcid:3541812504822123465,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Galaxus",
+          "price": 114.99,
+          "title": "Gigabyte b550 gaming x v2 AM4 ATX Motherboard CPU Socket AMD",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+B550+GAMING+X+V2&prds=localAnnotatedOfferId:1,catalogid:934610095924488621,gpcid:16043353275045867882,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Darty",
+          "price": 195.99,
+          "title": "Gigabyte Carte mère B550 gaming x V2 amd B550 AM4 atx DDR4 Carte mère"
+        }
+      ]
+    },
+    "db-msimagb650tomahawkwifi": {
+      "price": 294,
+      "min": 272,
+      "max": 316,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 272,
+          "title": "MSI MAG B650 Tomahawk WIFI AM5 ATX Motherboard CPU Socket AMD",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+MAG+B650+TOMAHAWK+WIFI&prds=localAnnotatedOfferId:1,catalogid:13021329310523282359,gpcid:4973416350023265459,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 316.36,
+          "title": "MSI mag B650 Tomahawk wifi",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+MAG+B650+TOMAHAWK+WIFI&prds=localAnnotatedOfferId:1,catalogid:680314521002509048,gpcid:6014325147287472428,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-msiprob650mawifi": {
+      "price": 253,
+      "min": 158,
+      "max": 269,
+      "offers": 3,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "PcComponentes FR",
+          "price": 157.69,
+          "title": "MSI PRO B650M-A WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+PRO+B650M-A+WIFI&prds=localAnnotatedOfferId:1,catalogid:7887597625184627518,gpcid:7787692205278598076,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Leroy Merlin France",
+          "price": 252.72,
+          "title": "Carte mere - MSI - PRO B650M-A WIFI"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 269,
+          "title": "Carte mère Msi Pro B650m A Wifi Amd B650 Socket Am5 4Xddr5 Sdram 256 Go Micro Atx"
+        }
+      ]
+    },
+    "db-msiproa620me": {
+      "price": 80,
+      "min": 70,
+      "max": 91,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Outlet PC FR",
+          "price": 69.99,
+          "title": "MSI PRO A620M-E Carte mère AMD A620 Emplacement AM5 micro ATX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+PRO+A620M-E&prds=localAnnotatedOfferId:1,catalogid:8470535227961470074,gpcid:730204018761846757,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "DropReference",
+          "price": 91,
+          "title": "Carte mère MSI PRO A620M-E",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+PRO+A620M-E&prds=localAnnotatedOfferId:1,catalogid:2528794594709297913,gpcid:3221546385088743728,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-msib840gamingpluswifi": {
+      "price": 164,
+      "min": 140,
+      "max": 187,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr",
+          "price": 140.03,
+          "title": "Carte mère MSI B840 GAMING PLUS WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+B840+GAMING+PLUS+WIFI&prds=localAnnotatedOfferId:1,catalogid:10489631004571797077,gpcid:5576178912543940581,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Luna-Time FR",
+          "price": 187.23,
+          "title": "Carte mère MSI B840 Gaming PLUS WIFI B840GPW",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+B840+GAMING+PLUS+WIFI&prds=localAnnotatedOfferId:1,catalogid:17400261141754451644,gpcid:13642506437361641667,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-asusrogstrixb650efgamingwifi": {
+      "price": 321,
+      "min": 280,
+      "max": 362,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 279.99,
+          "title": "ASUS ROG STRIX B650E-F GAMING WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+ROG+STRIX+B650E-F+GAMING+WIFI&prds=localAnnotatedOfferId:1,catalogid:14444163490899779297,gpcid:15491681299446466736,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 362.44,
+          "title": "ASUS ROG STRIX B650E-F GAMING WIFI AMD B650 Emplacement AM5 ATX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+ROG+STRIX+B650E-F+GAMING+WIFI&prds=localAnnotatedOfferId:1,catalogid:10951793724633066317,gpcid:16926762982934178023,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-asustufgamingb850pluswifi": {
+      "price": 227,
+      "min": 227,
+      "max": 227,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 226.98,
+          "title": "ASUS TUF GAMING B850-PLUS WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+TUF+GAMING+B850-PLUS+WIFI&prds=localAnnotatedOfferId:1,catalogid:9408809605695834567,gpcid:24551567814450208,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Pixmania",
+          "price": 226.99,
+          "title": "Carte mère ASUS TUF GAMING B850-PLUS WIFI AMD AM5 B850 ATX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+TUF+GAMING+B850-PLUS+WIFI&prds=localAnnotatedOfferId:1,catalogid:15979049879118423814,gpcid:13260229305241256329,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-asustufgamingx870pluswifi": {
+      "price": 291,
+      "min": 285,
+      "max": 297,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "achatmoinscher",
+          "price": 285.26,
+          "title": "Carte mère ASUS TUF GAMING X870-PLUS WIFI AMD AM5 X870 ATX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+TUF+GAMING+X870-PLUS+WIFI&prds=localAnnotatedOfferId:1,catalogid:18150490571205349571,gpcid:14630838974937669674,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 296.63,
+          "title": "ASUS TUF GAMING X870 PLUS WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+TUF+GAMING+X870-PLUS+WIFI&prds=localAnnotatedOfferId:1,catalogid:11364192812640655530,gpcid:967200660062927739,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-gigabyteb650eagleax": {
+      "price": 127,
+      "min": 110,
+      "max": 145,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Mon7up",
+          "price": 110,
+          "title": "Carte mère Gigabyte b650 eagle ax pour processeur amd"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 144.99,
+          "title": "Carte mère Gigabyte B650 EAGLE AX AM5",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+B650+EAGLE+AX&prds=localAnnotatedOfferId:1,catalogid:11504756110278421429,gpcid:1688940266043038573,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-gigabyteb850aoruselitewifi7": {
+      "price": 205,
+      "min": 185,
+      "max": 220,
+      "offers": 3,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 185.45,
+          "title": "Carte mère Gigabyte B850 AORUS ELITE WIFI7",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+B850+AORUS+ELITE+WIFI7&prds=localAnnotatedOfferId:1,catalogid:11662951504766082849,gpcid:10407039077094106978,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 204.9,
+          "title": "GIGABYTE B850 AORUS ELITE WIFI7 AMD AM5 LGA 1718 carte mère ATX DDR5 3X M.2",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+B850+AORUS+ELITE+WIFI7&prds=localAnnotatedOfferId:1,catalogid:1146126487579073713,gpcid:9409298022651944493,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Fnac.com",
+          "price": 219.99,
+          "title": "Carte Mère Gigabyte B850 AORUS ELITE WIFI7 ICE",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+B850+AORUS+ELITE+WIFI7&prds=localAnnotatedOfferId:1,catalogid:9287505041272154452,gpcid:10624588795227175535,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-gigabytex870eaoruselitewifi7": {
+      "price": 283,
+      "min": 265,
+      "max": 310,
+      "offers": 4,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 264.99,
+          "title": "Carte mère Gigabyte X870E AORUS ELITE WIFI7",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+X870E+AORUS+ELITE+WIFI7&prds=localAnnotatedOfferId:1,catalogid:9259523789806816251,gpcid:16725709378977582381,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "DropReference",
+          "price": 275,
+          "title": "GIGABYTE X870E AORUS ELITE WiFi7 AM5 Socket 4x M.2 PCIe 5.0"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 291,
+          "title": "Gigabyte X870E AORUS Elite Wi-Fi 7",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+X870E+AORUS+ELITE+WIFI7&prds=localAnnotatedOfferId:1,catalogid:4431161158418730375,gpcid:5463529403526769334,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-asrockb850prors": {
+      "price": 165,
+      "min": 155,
+      "max": 175,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Materiel.net",
+          "price": 154.95,
+          "title": "Carte mère ASRock B850M Pro RS AMD B850 Emplacement AM5 Micro ATX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASRock+B850+Pro+RS&prds=localAnnotatedOfferId:1,catalogid:15975550427112542398,gpcid:13956342789565028574,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 175.42,
+          "title": "ASRock B850 Pro RS Carte mère",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASRock+B850+Pro+RS&prds=localAnnotatedOfferId:1,catalogid:18245546648701009726,gpcid:3081727081118897489,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-msiprob760pii": {
+      "price": 152,
+      "min": 130,
+      "max": 174,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 129.99,
+          "title": "Carte mère MSI PRO B760-P II",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+PRO+B760-P+II&prds=localAnnotatedOfferId:1,catalogid:11179616463896992786,gpcid:16980433012390831109,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "monsieurplus.com",
+          "price": 173.99,
+          "title": "Asrock Pro B760-P Ii"
+        }
+      ]
+    },
+    "db-msimagb760tomahawkwifi": {
+      "price": 184,
+      "min": 157,
+      "max": 246,
+      "offers": 3,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 157.22,
+          "title": "Carte mère MSI MAG B760 TOMAHAWK WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+MAG+B760+TOMAHAWK+WIFI&prds=localAnnotatedOfferId:1,catalogid:5364921580244807532,gpcid:2287738974349318944,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Osiriss SIA",
+          "price": 183.68,
+          "title": "Sale OUT. MSI MAG B760 Tomahawk Wifi , Processor Family Intel , Processor Socket LGA1700 , DDR5 , Supported Hard Disk Drive Interfaces Sata, M.2 ,"
+        },
+        {
+          "merchant": "monsieurplus.com",
+          "price": 245.99,
+          "title": "ASROCK MAG B760 Tomahawk WiFi"
+        }
+      ]
+    },
+    "db-msiproz790pwifi": {
+      "price": 226,
+      "min": 177,
+      "max": 275,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 177.4,
+          "title": "Carte mère MSI PRO Z790 P WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+PRO+Z790-P+WIFI&prds=localAnnotatedOfferId:1,catalogid:17679079864488850604,gpcid:172972333634018863,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "bc-games.com",
+          "price": 274.8,
+          "title": "Msi pro z790-p wifi"
+        }
+      ]
+    },
+    "db-asusprimeb760plus": {
+      "price": 139,
+      "min": 130,
+      "max": 192,
+      "offers": 4,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Fnac.com",
+          "price": 129.99,
+          "title": "ASUS PRIME B760-PLUS",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+PRIME+B760-PLUS&prds=localAnnotatedOfferId:1,catalogid:3955285439252718959,gpcid:11526189485397563946,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Fluesco",
+          "price": 133.32,
+          "title": "ASUS PRIME B760-PLUS Intel B760 LGA 1700 ATX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+PRIME+B760-PLUS&prds=localAnnotatedOfferId:1,catalogid:14896369445980561011,gpcid:15364094754398433986,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Darty",
+          "price": 143.77,
+          "title": "ASUS PRIME B760-PLUS Intel B760 LGA 1700 ATX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+PRIME+B760-PLUS&prds=localAnnotatedOfferId:1,catalogid:14896369445980561011,gpcid:15364094754398433986,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-asusprimeb760plusd4": {
+      "price": 144,
+      "min": 135,
+      "max": 154,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Fnac.com",
+          "price": 134.99,
+          "title": "ASUS PRIME B760 PLUS D4",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+PRIME+B760-PLUS+D4&prds=localAnnotatedOfferId:1,catalogid:8741798340118664197,gpcid:2304064626982789796,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 153.6,
+          "title": "ASUS PRIME B760-PLUS D4 Lga 1700",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+PRIME+B760-PLUS+D4&prds=localAnnotatedOfferId:1,catalogid:3039880661207759488,gpcid:18341345339290704455,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-asustufgamingb760pluswifi": {
+      "price": 158,
+      "min": 157,
+      "max": 159,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 157.27,
+          "title": "ASUS TUF Gaming B760 PLUS WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+TUF+GAMING+B760-PLUS+WIFI&prds=localAnnotatedOfferId:1,catalogid:4147187092922247606,gpcid:2770081211969100206,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 159.11,
+          "title": "Carte mère ASUS TUF GAMING B760-PLUS WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+TUF+GAMING+B760-PLUS+WIFI&prds=localAnnotatedOfferId:1,catalogid:13134782902302578485,gpcid:2425758301082793411,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-asustufgamingb760pluswifid4": {
+      "price": 227,
+      "min": 190,
+      "max": 282,
+      "offers": 3,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "PcComponentes FR",
+          "price": 189.88,
+          "title": "ASUS TUF GAMING B760 PLUS WIFI D4",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+TUF+GAMING+B760-PLUS+WIFI+D4&prds=localAnnotatedOfferId:1,catalogid:1424599944492691577,gpcid:3458181193802523484,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Electronica Barata",
+          "price": 226.79,
+          "title": "ASUS TUF GAMING B760-PLUS WIFI D4",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+ASUS+TUF+GAMING+B760-PLUS+WIFI+D4&prds=localAnnotatedOfferId:1,catalogid:2807360273096964172,gpcid:13798464017428349668,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Offtek Mémoire",
+          "price": 282.24,
+          "title": "B760-PLUS WIFI D4 TUF GAMING 288 Pin 1.2v DDR4 PC4-25600 Non-ECC Dimm 32Go Module"
+        }
+      ]
+    },
+    "db-gigabyteh610ms2hddr4": {
+      "price": 94,
+      "min": 73,
+      "max": 116,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr",
+          "price": 72.98,
+          "title": "Carte mère Gigabyte H610M S2H V3 DDR4",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+H610M+S2H+DDR4&prds=localAnnotatedOfferId:1,catalogid:7772866484120708371,gpcid:11760581293228399363,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "TopMarket.co.il",
+          "price": 115.54,
+          "title": "GIGABYTE H610M S2H V3 DDR4 - Motherboard, Intel H610 Express, LGA 1700, micro ATX"
+        }
+      ]
+    },
+    "db-gigabyteb760gamingx": {
+      "price": 112,
+      "min": 109,
+      "max": 125,
+      "offers": 3,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Osiriss SIA",
+          "price": 109.14,
+          "title": "Sale OUT. , Gigabyte B760 Gaming X 1.0 M/B , Processor Family Intel , Processor Socket LGA1700 , DDR5 Dimm , Memory Slots 4 , Supported Hard Disk"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 111.85,
+          "title": "Carte mère Gigabyte B760 gaming x gen5",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+B760+GAMING+X&prds=localAnnotatedOfferId:1,catalogid:17081314745321492360,gpcid:12686958316152339392,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "pc.infoservice91",
+          "price": 125,
+          "title": "B760 Gaming X GEN5"
+        }
+      ]
+    },
+    "db-gigabyteb760gamingxax": {
+      "price": 222,
+      "min": 209,
+      "max": 235,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Fnac",
+          "price": 209,
+          "title": "Carte mère Gigabyte B760 GAMING X AX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+B760+GAMING+X+AX&prds=localAnnotatedOfferId:1,catalogid:5084350444943304212,gpcid:4994197861540824912,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 235.46,
+          "title": "Gigabyte B760 GAMING X AX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+B760+GAMING+X+AX&prds=localAnnotatedOfferId:1,catalogid:8056960633062929963,gpcid:3267916345807131572,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-gigabyteb760mds3h": {
+      "price": 159,
+      "min": 101,
+      "max": 217,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr",
+          "price": 101.15,
+          "title": "Carte mère Gigabyte B760M DS3H GEN5",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+B760M+DS3H&prds=localAnnotatedOfferId:1,catalogid:347817250235242344,gpcid:16055461130785167214,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 217.25,
+          "title": "Gigabyte B760M DS3H",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Gigabyte+B760M+DS3H&prds=localAnnotatedOfferId:1,catalogid:8187561155619371565,gpcid:15724303754736351336,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "db-msiprob860p": {
+      "price": 182,
+      "min": 160,
+      "max": 205,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 159.99,
+          "title": "Carte mère MSI PRO B860-P",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+PRO+B860-P&prds=localAnnotatedOfferId:1,catalogid:7982297529312849605,gpcid:6963847260410394930,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Microconcept",
+          "price": 204.9,
+          "title": "Asrock Pro B860-P"
+        }
+      ]
+    },
+    "db-msimagz890tomahawkwifi": {
+      "price": 347,
+      "min": 330,
+      "max": 363,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:21:11.792Z",
+      "best": [
+        {
+          "merchant": "Fnac.com",
+          "price": 329.99,
+          "title": "Carte mère MSI MAG Z890 TOMAHAWK WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+MAG+Z890+TOMAHAWK+WIFI&prds=localAnnotatedOfferId:1,catalogid:15629052464858892933,gpcid:16654506754807721874,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 363.01,
+          "title": "Msi Mag Z890 Tomahawk Wifi",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+MSI+MAG+Z890+TOMAHAWK+WIFI&prds=localAnnotatedOfferId:1,catalogid:934397020771447726,gpcid:7087166917652831183,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b650e-atx": {
+      "price": 240,
+      "min": 143,
+      "max": 365,
+      "offers": 19,
+      "updatedAt": "2026-11-15T22:27:45.413Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 142.81,
+          "title": "Carte mère Gigabyte b650e eagle",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B650E+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:14545006927796310069,gpcid:8847388500058085288,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Darty",
+          "price": 153.5,
+          "title": "ASUS B650E MAX GAMING WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B650E+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:6604631262467118718,gpcid:7136656017656465629,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 153.99,
+          "title": "GIGABYTE B650E EAGLE WIFI6E",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B650E+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:8957469787863159427,gpcid:18234502817256438863,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-x670-atx": {
+      "price": 330,
+      "min": 305,
+      "max": 575,
+      "offers": 6,
+      "updatedAt": "2026-11-15T22:27:45.413Z",
+      "best": [
+        {
+          "merchant": "Tech-discount",
+          "price": 304.9,
+          "title": "ASUS PRIME X670-P-CSM AMD X670 Emplacement AM5 ATX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+X670+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:17981191340478489413,gpcid:16604896032326253275,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 306.45,
+          "title": "Carte mère Gigabyte X670 aorus elite AX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+X670+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:881307500032677202,gpcid:10507198706523895448,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Kaufland.fr - CMC Online Mall",
+          "price": 323.9,
+          "title": "Asus PRIME X670-P WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+X670+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:3136778157043107536,gpcid:14789469101721042013,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 336.84,
+          "title": "Carte mère Gigabyte X670 gaming x ax",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+X670+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:15783631406619677031,gpcid:17610036820710825740,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-x670e-atx": {
+      "price": 547,
+      "min": 256,
+      "max": 930,
+      "offers": 12,
+      "updatedAt": "2026-11-15T22:27:45.413Z",
+      "best": [
+        {
+          "merchant": "DropReference",
+          "price": 256,
+          "title": "Carte mère MSI MAG X670E TOMAHAWK WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+X670E+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:8750597852535405888,gpcid:12340850123956690437,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 296.53,
+          "title": "Carte mère Gigabyte X670E aorus master",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+X670E+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:3007274431003507846,gpcid:4400566485190903359,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Tech-discount",
+          "price": 346.9,
+          "title": "Asus TUF GAMING X670E-PLUS",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+X670E+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:16717991663470466310,gpcid:12212494085741350801,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 484.73,
+          "title": "Asus PRIME X670E-PRO WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+X670E+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:6998775393208844757,gpcid:17564437745431221443,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b840-atx": {
+      "price": 140,
+      "min": 129,
+      "max": 153,
+      "offers": 8,
+      "updatedAt": "2026-11-15T22:27:45.413Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 129.35,
+          "title": "Carte mère MSI PRO B840-P WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B840+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:1999699946531690555,gpcid:14884438260616607822,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "achatmoinscher",
+          "price": 133.9,
+          "title": "Carte mère GIGABYTE B840 EAGLE WIFI6E",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B840+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:13950334444286690553,gpcid:1679397639271981873,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 140.03,
+          "title": "Carte mère MSI B840 GAMING PLUS WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B840+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:10489631004571797077,gpcid:5576178912543940581,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b840-matx": {
+      "price": 139,
+      "min": 89,
+      "max": 183,
+      "offers": 23,
+      "updatedAt": "2026-11-15T22:27:45.413Z",
+      "best": [
+        {
+          "merchant": "Alternate.fr",
+          "price": 88.9,
+          "title": "Carte Mère GIGABYTE b840m h",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B840M+micro+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:13502208964356354717,gpcid:543435657244099996,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 89.99,
+          "title": "Carte mère MSI PRO B840M-B",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B840M+micro+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:78050703641007342,gpcid:10323520172009561343,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Alternate.fr",
+          "price": 105.9,
+          "title": "Carte mère Gigabyte b840m d3hp Micro ATX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B840M+micro+ATX+AM5&prds=localAnnotatedOfferId:1,catalogid:6865164712363174941,gpcid:10768087001351011251,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-h810-matx": {
+      "price": 108,
+      "min": 67,
+      "max": 172,
+      "offers": 24,
+      "updatedAt": "2026-11-15T22:27:45.413Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 67,
+          "title": "Carte mère ASRock H810M-X Micro ATX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+H810M+micro+ATX+LGA1851&prds=localAnnotatedOfferId:1,catalogid:12451138906769871156,gpcid:4783009501826580254,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 68.43,
+          "title": "Cartes mères Carte mere Maxsun MS-Challenger H810M-K WiFi Intel H810 LGA1851 DDR5 micro-ATX WiFi 6 BT 5.2 PCIe 5.0",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+H810M+micro+ATX+LGA1851&prds=localAnnotatedOfferId:1,catalogid:325101202471303838,gpcid:11380631183250408691,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Powerplanet",
+          "price": 71.35,
+          "title": "Carte mère ASRock H810M-H Micro ATX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+H810M+micro+ATX+LGA1851&prds=localAnnotatedOfferId:1,catalogid:14131598378831519088,gpcid:14164410047563071520,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b550-itx": {
+      "price": 160,
+      "min": 159,
+      "max": 160,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:27:45.413Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr",
+          "price": 159.28,
+          "title": "Gigabyte B550I AORUS PRO AX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B550+mini+ITX+AM4&prds=localAnnotatedOfferId:1,catalogid:4593932665421599581,gpcid:14964377978529040433,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Galaxus",
+          "price": 160.04,
+          "title": "Gigabyte b550i aorus pro ax",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B550+mini+ITX+AM4&prds=localAnnotatedOfferId:1,catalogid:10680991123113545315,gpcid:4378919707266313035,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b650-itx": {
+      "price": 209,
+      "min": 179,
+      "max": 291,
+      "offers": 6,
+      "updatedAt": "2026-11-15T22:27:45.413Z",
+      "best": [
+        {
+          "merchant": "DropReference",
+          "price": 179,
+          "title": "ASRock B650I Phantom Gaming Lightning Mini ITX AM5 Black"
+        },
+        {
+          "merchant": "Trippodo Shop",
+          "price": 186.49,
+          "title": "Carte mère Gigabyte b650i ax mini-ITX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B650+mini+ITX+AM5&prds=localAnnotatedOfferId:1,catalogid:1606776110108728317,gpcid:16045221489009847698,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "LDLC",
+          "price": 189.95,
+          "title": "ASRock B650I Lightning WiFi Carte mère",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B650+mini+ITX+AM5&prds=localAnnotatedOfferId:1,catalogid:13869520938934506790,gpcid:1288562938290917853,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 228.99,
+          "title": "Asrock Asrock Carte Mère B650i 1"
+        }
+      ]
+    },
+    "mb-b850-itx": {
+      "price": 247,
+      "min": 218,
+      "max": 303,
+      "offers": 6,
+      "updatedAt": "2026-11-15T22:27:45.413Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 218.06,
+          "title": "Carte mère Asrock Phantom Gaming B850I Lightning WiFi AMD B850 Emplacement AM5 Mini ITX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B850+mini+ITX+AM5&prds=localAnnotatedOfferId:1,catalogid:2154188301931764252,gpcid:13921734313781261857,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Carrefour",
+          "price": 243.06,
+          "title": "ASUS TUF Gaming B850I WIFI NEO",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B850+mini+ITX+AM5&prds=localAnnotatedOfferId:1,catalogid:6947744016065749374,gpcid:10847414090529319852,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 246.49,
+          "title": "ASUS ROG STRIX B850-I GAMING WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B850+mini+ITX+AM5&prds=localAnnotatedOfferId:1,catalogid:17428359194720321797,gpcid:14671528930263001753,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-x870-itx": {
+      "price": 489,
+      "min": 447,
+      "max": 531,
+      "offers": 2,
+      "updatedAt": "2026-11-15T22:27:45.413Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr",
+          "price": 446.9,
+          "title": "MSI MPG X870I EDGE TI EVO Wifi",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+X870+mini+ITX+AM5&prds=localAnnotatedOfferId:1,catalogid:7287821260437659320,gpcid:16922108853802327797,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "PcComponentes FR",
+          "price": 530.62,
+          "title": "ASUS ROG Strix X870I Gaming WiFi",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+X870+mini+ITX+AM5&prds=localAnnotatedOfferId:1,catalogid:11249684554017113668,gpcid:2570168983530135151,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b760-ddr5-itx": {
+      "price": 187,
+      "min": 170,
+      "max": 244,
+      "offers": 3,
+      "updatedAt": "2026-11-15T22:27:45.413Z",
+      "best": [
+        {
+          "merchant": "Amazon.fr",
+          "price": 169.96,
+          "title": "ASUS ROG STRIX B760-I GAMING WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B760+mini+ITX+DDR5&prds=localAnnotatedOfferId:1,catalogid:7379583518199798194,gpcid:5337037555272936045,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr - Seller",
+          "price": 186.81,
+          "title": "ASRock B760I Lightning WiFi",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B760+mini+ITX+DDR5&prds=localAnnotatedOfferId:1,catalogid:15746674051284299643,gpcid:7593531998135925450,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Trippodo Shop",
+          "price": 243.99,
+          "title": "Carte mère MSI MPG B760I EDGE WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B760+mini+ITX+DDR5&prds=localAnnotatedOfferId:1,catalogid:2888730937989821292,gpcid:17829451723860986468,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-z790-itx": {
+      "price": 503,
+      "min": 249,
+      "max": 780,
+      "offers": 4,
+      "updatedAt": "2026-11-15T22:27:45.413Z",
+      "best": [
+        {
+          "merchant": "achatmoinscher",
+          "price": 248.5,
+          "title": "ASRock Z790I Lightning WiFi Intel Z790 LGA 1700 Mini ITX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Z790+mini+ITX&prds=localAnnotatedOfferId:1,catalogid:9141083679444411723,gpcid:17569599508455501334,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "KultureGeek",
+          "price": 436.01,
+          "title": "ASUS ROG STRIX Z790-I GAMING WIFI",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Z790+mini+ITX&prds=localAnnotatedOfferId:1,catalogid:11724651598769124912,gpcid:2380080458856209803,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Cdiscount",
+          "price": 570,
+          "title": "arte mère Mini-ITX GIGABYTE Z790I AORUS ULTRA LGA 1700 Intel Z790 avec DDR5",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+Z790+mini+ITX&prds=localAnnotatedOfferId:1,catalogid:3376826766475743393,gpcid:17407877809231306977,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
+    },
+    "mb-b860-itx": {
+      "price": 251,
+      "min": 157,
+      "max": 272,
+      "offers": 4,
+      "updatedAt": "2026-11-15T22:27:45.413Z",
+      "best": [
+        {
+          "merchant": "Cdiscount",
+          "price": 156.91,
+          "title": "ASRock Carte mère B860I WiFi",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B860+mini+ITX&prds=localAnnotatedOfferId:1,catalogid:15810787162746980019,gpcid:16964580862107990318,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Amazon.fr",
+          "price": 238,
+          "title": "MSI MPG B860I EDGE TI WIFI carte mère Intel B860 LGA 1851",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B860+mini+ITX&prds=localAnnotatedOfferId:1,catalogid:15690788070292432560,gpcid:15579218763247264780,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        },
+        {
+          "merchant": "Darty",
+          "price": 264.89,
+          "title": "Carte mère ASRock B860I Lightning WiFi Intel B860 LGA 1851 Mini ITX",
+          "link": "https://www.google.com/search?ibp=oshop&q=carte+m%C3%A8re+B860+mini+ITX&prds=localAnnotatedOfferId:1,catalogid:10014624808974099199,gpcid:16639684897287688899,pvo:2,pvt:hg&gl=fr&udm=28&pvorigin=2"
+        }
+      ]
     }
   }
 }

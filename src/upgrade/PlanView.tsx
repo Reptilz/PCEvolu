@@ -275,13 +275,19 @@ export function SelectButton({ p }: { p: Proposal }) {
 
 /** Modèles réels conseillés pour une pièce générique, avec ce qui les distingue et leur fiche chez le fabricant. */
 export function ModelPicks({ models }: { models: ModelPick[] }) {
+  const priced = models.some((m) => m.price != null);
   return (
     <div className="picks">
       <span className="picks-title">
-        {tr(
-          "Modèles conseillés (prix de la catégorie, vérifie le prix du modèle) :",
-          "Recommended models (category price, check the price of the exact model):",
-        )}
+        {priced
+          ? tr(
+              `${models.length} modèle${models.length > 1 ? "s" : ""} compatible${models.length > 1 ? "s" : ""}, avec leur prix quand on a pu le relever (le total ci-dessus utilise le prix moyen de la catégorie) :`,
+              `${models.length} compatible model${models.length > 1 ? "s" : ""}, with their price when we could find it (the total above uses the category's average price):`,
+            )
+          : tr(
+              "Modèles conseillés (prix de la catégorie, vérifie le prix du modèle) :",
+              "Recommended models (category price, check the price of the exact model):",
+            )}
       </span>
       <ul>
         {models.map((m) => (
@@ -294,7 +300,10 @@ export function ModelPicks({ models }: { models: ModelPick[] }) {
             ) : (
               <span className="picks-name">{m.name}</span>
             )}
-            <span className="picks-why">{m.why.join(", ")}</span>
+            <span className="picks-why">
+              {m.price != null && <b className="picks-price">{euros(m.price)}</b>}
+              {m.why.join(", ")}
+            </span>
           </li>
         ))}
       </ul>

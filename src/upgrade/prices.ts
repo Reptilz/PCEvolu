@@ -8,7 +8,7 @@
 
 import bundled from "../../data/prices.json";
 import bundledHistory from "../../data/price-history.json";
-import { BOARDS, CASES, COOLERS, CPUS, FAN_KITS, GPUS, PSUS, RAM_KITS, SSDS } from "./catalog";
+import { BOARDS, BOARD_MODELS, CASES, COOLERS, CPUS, FAN_KITS, GPUS, PSUS, RAM_KITS, SSDS } from "./catalog";
 
 export interface PriceEntry {
   /** Médiane des marchands (€). */
@@ -42,7 +42,7 @@ export const PRICES_URL: string | null = import.meta.env?.VITE_PRICES_URL ?? `${
 
 const CACHE_KEY = "pcevolu.prices.v1";
 /** Tous les composants du catalogue, relus à chaque fois (le catalogue peut avoir été remplacé par un plus récent). */
-const all = () => [...GPUS, ...CPUS, ...BOARDS, ...RAM_KITS, ...SSDS, ...PSUS, ...COOLERS, ...FAN_KITS, ...CASES];
+const all = () => [...GPUS, ...CPUS, ...BOARDS, ...BOARD_MODELS, ...RAM_KITS, ...SSDS, ...PSUS, ...COOLERS, ...FAN_KITS, ...CASES];
 /** Prix du catalogue, conservés pour pouvoir y revenir. */
 const BASE = new Map<string, number | undefined>();
 

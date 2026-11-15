@@ -9,8 +9,9 @@ import type {
   Addition, BiosFamily, BoardSpec, Category, Check, ModelPick, CoolerSpec, CpuSpec, GpuSpec, Part, Proposal, PsuSpec, RamKit, Socket,
 } from "./types";
 import type { Profile } from "./profile";
-import { BOARDS, CASES, COOLERS, CPUS, FAN_KITS, GPUS, PSUS, RAM_KITS, SSDS, CHIPSETS, catalogText } from "./catalog";
+import { BOARDS, BOARD_MODELS, CASES, COOLERS, CPUS, FAN_KITS, GPUS, PSUS, RAM_KITS, SSDS, CHIPSETS, catalogText, ramSeries } from "./catalog";
 import { KNOWN_BOARDS, sharingText } from "./boards";
+import { priceInfo } from "./prices";
 import { currentLang, tr } from "../settings";
 
 // ---------------------------------------------------------------------------
@@ -493,14 +494,21 @@ function biosCheck(p: Profile, c: CpuSpec): Check | undefined {
 export function proposeCpus(p: Profile): Proposal[] {
   // Sur un portable, le processeur est soudé : rien à proposer.
   if (p.isLaptop) return [];
-  const cur = p.cpu;
   const out: Proposal[] = [];
-
   for (const c of CPUS) {
-    if (!c.availability || !c.price) continue;
+    const prop = cpuProposal(c, p);
+    if (prop) out.push(prop);
+  }
+  return highlight(out.sort((a, b) => a.total - b.total));
+}
+
+/** Proposition pour un processeur. `forced` impose la carte mère (et la RAM) en cas de changement de plateforme. */
+function cpuProposal(c: CpuSpec, p: Profile, forced?: { board: BoardSpec; ram?: RamKit }): Proposal | undefined {
+    const cur = p.cpu;
+    if (!c.availability || !c.price) return undefined;
     const dropIn = !!p.chipset && c.socket === p.socket && p.chipset.cpuGens.includes(c.gen);
     // Changer de plateforme (carte mère, souvent RAM et ventirad) ne vaut le coup que pour un vrai gain.
-    if (cur && c.gaming < cur.gaming * (dropIn ? 1.08 : 1.25)) continue;
+    if (cur && c.gaming < cur.gaming * (dropIn ? 1.08 : 1.25)) return undefined;
 
     const checks: Check[] = [];
     const additions: Addition[] = [];
@@ -516,8 +524,8 @@ export function proposeCpus(p: Profile): Proposal[] {
       }
     } else {
       // Changement de plateforme : carte mère, puis RAM, puis ventirad.
-      const plan = platformFor(c, p);
-      if (!plan) continue;
+      const plan = forced ?? platformFor(c, p);
+      if (!plan) return undefined;
       const { board, ram } = plan;
       // La nouvelle carte mère fait partie de la proposition : le point est « réglé », pas un problème restant.
       checks.push({
@@ -627,35 +635,38 @@ export function proposeCpus(p: Profile): Proposal[] {
       }
     }
 
-    out.push(finalize({
+    return finalize({
       id: `cpu-${c.id}`, category: "cpu",
       title: c.name + (c.availability === "used" ? tr(" (occasion)", " (used)") : ""),
       main: c, mainQuantity: 1, gainPercent, gainLabel, checks, additions, notes,
       highlight: dropIn ? tr("Sans changer de carte mère", "No motherboard change") : undefined,
-    }));
-  }
-  return highlight(out.sort((a, b) => a.total - b.total));
+    });
 }
 
 /** Carte mère la moins chère (RAM comprise) pour accueillir ce processeur. */
 function platformFor(c: CpuSpec, p: Profile): { board: BoardSpec; ram?: RamKit } | undefined {
+  return platformOptions(c, p).sort((a, b) => a.cost - b.cost)[0];
+}
+
+/** Toutes les cartes mères génériques qui accueillent ce processeur, avec la RAM à prévoir et le coût total. */
+function platformOptions(c: CpuSpec, p: Profile): { board: BoardSpec; ram?: RamKit; cost: number }[] {
   const caseOk = (b: BoardSpec) => !p.formFactor || p.formFactor === "ATX" || b.formFactor !== "ATX";
   const target = Math.max(16, p.ramTotalGb);
-  let best: { board: BoardSpec; ram?: RamKit; cost: number } | undefined;
+  const out: { board: BoardSpec; ram?: RamKit; cost: number }[] = [];
   for (const b of BOARDS) {
     if (!b.availability || !b.price || b.socket !== c.socket || !caseOk(b)) continue;
     const chip = CHIPSETS.find((x) => x.chipset === b.chipset);
     if (!chip?.cpuGens.includes(c.gen) || !c.ramMaxMts[b.ramType]) continue;
     // Les cartes d'entrée de gamme (A620, A520, H610) ont un étage d'alimentation léger : réservées aux processeurs sobres.
-    if (["A620", "A520", "H610"].includes(b.chipset) && c.powerW > 120) continue;
+    if (["A620", "A520", "H610", "H810"].includes(b.chipset) && c.powerW > 120) continue;
     const reuse = b.ramType === p.ramType && p.ramModules > 0;
     const ram = reuse ? undefined : RAM_KITS.filter((k) => k.type === b.ramType && k.sticks === 2 && k.sticks * k.gbPerStick >= target).sort((x, y) => x.price - y.price)[0];
     if (!reuse && !ram) continue;
     // À prix proche, on préfère le même format que la carte actuelle.
     const cost = b.price + (ram?.price ?? 0) + (p.formFactor && b.formFactor !== p.formFactor ? 15 : 0);
-    if (!best || cost < best.cost) best = { board: b, ram, cost };
+    out.push({ board: b, ram, cost });
   }
-  return best;
+  return out;
 }
 
 // ---------------------------------------------------------------------------
@@ -705,21 +716,22 @@ export function proposeRam(p: Profile): Proposal[] {
     // Remplacement
     if (kitGb > p.ramTotalGb && (!p.ramMaxGb || kitGb <= p.ramMaxGb)) {
       out.push(finalize({
-        id: `ram-replace-${k.id}`, category: "ram", title: tr(`Passer à ${kitGb} Go (${k.sticks} × ${k.gbPerStick} Go, ${k.type}-${k.mts})`, `Upgrade to ${kitGb} GB (${k.sticks} × ${k.gbPerStick} GB, ${k.type}-${k.mts})`), main: k, mainQuantity: 1,
+        id: `ram-replace-${k.id}`, category: "ram", title: k.series ? tr(`Passer à ${kitGb} Go : ${k.series} (${k.type}-${k.mts})`, `Upgrade to ${kitGb} GB: ${k.series} (${k.type}-${k.mts})`) : tr(`Passer à ${kitGb} Go (${k.sticks} × ${k.gbPerStick} Go, ${k.type}-${k.mts})`, `Upgrade to ${kitGb} GB (${k.sticks} × ${k.gbPerStick} GB, ${k.type}-${k.mts})`), main: k, mainQuantity: 1,
         gainLabel: tr(`${p.ramTotalGb} → ${kitGb} Go, en dual channel`, `${p.ramTotalGb} → ${kitGb} GB, in dual channel`),
         checks: [typeCheck, { label: tr("Capacité max", "Max capacity"), status: "ok", detail: tr(`Ta carte mère accepte jusqu'à ${p.ramMaxGb ?? "?"} Go.`, `Your motherboard takes up to ${p.ramMaxGb ?? "?"} GB.`) }, speedCheck(k, false)],
         additions: [],
+        mainModels: k.series ? undefined : ramSeries(k.type),
         notes: [tr(`Remplace ta barrette actuelle (tu peux la revendre). ${kitGb >= 64 ? "64 Go : utile pour le montage vidéo, la 3D ou les machines virtuelles, pas pour le jeu." : ""}`, `Replaces your current stick (you can sell it). ${kitGb >= 64 ? "64 GB: useful for video editing, 3D or virtual machines, not for gaming." : ""}`).trim()],
       }));
     }
     // Ajout d'un kit identique à une config déjà en dual channel
     if (p.ramModules === 2 && freeSlots >= 2 && p.ramStickGb === k.gbPerStick) {
       out.push(finalize({
-        id: `ram-add-${k.id}`, category: "ram", title: tr(`Ajouter ${kitGb} Go (total ${p.ramTotalGb + kitGb} Go, ${k.type}-${k.mts})`, `Add ${kitGb} GB (${p.ramTotalGb + kitGb} GB total, ${k.type}-${k.mts})`), main: k, mainQuantity: 1,
+        id: `ram-add-${k.id}`, category: "ram", title: k.series ? tr(`Ajouter ${kitGb} Go : ${k.series} (total ${p.ramTotalGb + kitGb} Go, ${k.type}-${k.mts})`, `Add ${kitGb} GB: ${k.series} (${p.ramTotalGb + kitGb} GB total, ${k.type}-${k.mts})`) : tr(`Ajouter ${kitGb} Go (total ${p.ramTotalGb + kitGb} Go, ${k.type}-${k.mts})`, `Add ${kitGb} GB (${p.ramTotalGb + kitGb} GB total, ${k.type}-${k.mts})`), main: k, mainQuantity: 1,
         gainLabel: tr(`${p.ramTotalGb} → ${p.ramTotalGb + kitGb} Go`, `${p.ramTotalGb} → ${p.ramTotalGb + kitGb} GB`),
         checks: [typeCheck, { label: tr("Emplacements libres", "Free slots"), status: "ok", detail: tr("2 emplacements libres.", "2 free slots.") }, speedCheck(k, true),
           { label: tr("4 barrettes", "4 sticks"), status: "warn", detail: tr("Avec 4 barrettes, la vitesse max baisse parfois légèrement.", "With 4 sticks, the max speed sometimes drops slightly.") }],
-        additions: [], notes: [],
+        additions: [], notes: [], mainModels: k.series ? undefined : ramSeries(k.type),
       }));
     }
   }
@@ -822,7 +834,7 @@ function highlight(list: Proposal[]): Proposal[] {
 
 export function proposeAll(p: Profile): Record<Category, Proposal[]> {
   const cpu = proposeCpus(p);
-  return { gpu: proposeGpus(p, cpu), cpu, board: proposeBoards(cpu), ram: proposeRam(p), storage: proposeStorage(p) };
+  return { gpu: proposeGpus(p, cpu), cpu, board: proposeBoards(p, cpu), ram: proposeRam(p), storage: proposeStorage(p) };
 }
 
 // ---------------------------------------------------------------------------
@@ -836,10 +848,10 @@ export function proposeAll(p: Profile): Record<Category, Proposal[]> {
  * - un BIOS documenté pour ce processeur ;
  * - assez d'emplacements M.2 pour les SSD actuels, puis le port graphique en PCIe 5.0.
  */
-export function recommendBoards(generic: BoardSpec, cpu: CpuSpec | undefined, p: Profile): ModelPick[] {
+export function recommendBoards(generic: BoardSpec, cpu: CpuSpec | undefined, p: Profile, all = false): ModelPick[] {
   const fams = cpu ? biosFamilies(cpu) : [];
   const candidates = KNOWN_BOARDS.filter(
-    (b) => (b.chipset === generic.chipset || b.chipset === `${generic.chipset}E`) && b.formFactor === generic.formFactor && b.ramType === generic.ramType,
+    (b) => b.chipset === generic.chipset && b.formFactor === generic.formFactor && b.ramType === generic.ramType,
   );
   const scored = candidates.map((b) => {
     const bios = fams.map((f) => b.biosMin?.[f]).find((v) => v !== undefined);
@@ -858,6 +870,14 @@ export function recommendBoards(generic: BoardSpec, cpu: CpuSpec | undefined, p:
     if (b.sata) why.push(tr(`${b.sata} ports SATA`, `${b.sata} SATA ports`));
     return { b, score, why };
   });
+  // Prix relevé seulement : le prix de référence d'un modèle introuvable en France ne serait qu'une estimation.
+  const priceOf = (id: string) => (BOARD_MODELS.some((m) => m.id === id) ? priceInfo(id)?.price : undefined);
+  if (all) {
+    // Onglet « Carte mère » : tous les modèles de la plateforme, du moins cher au plus cher, chacun avec son prix.
+    return scored
+      .map((s) => ({ name: s.b.name, why: s.why, url: s.b.source, price: priceOf(s.b.id) }))
+      .sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));
+  }
   const out: ModelPick[] = [];
   const vendors = new Set<string>();
   for (const s of scored.sort((x, y) => y.score - x.score)) {
@@ -874,21 +894,23 @@ export function recommendBoards(generic: BoardSpec, cpu: CpuSpec | undefined, p:
  * Onglet « Carte mère » : un changement de plateforme par carte possible, avec le processeur le moins cher
  * qui apporte un vrai gain, et les autres processeurs compatibles en note.
  */
-export function proposeBoards(cpuProposals: Proposal[]): Proposal[] {
-  const groups = new Map<string, Proposal[]>();
-  for (const prop of cpuProposals) {
-    const board = prop.additions.find((a) => a.role === "required" && a.part.kind === "board");
-    if (!board) continue;
-    const list = groups.get(board.part.id) ?? [];
-    list.push(prop);
-    groups.set(board.part.id, list);
-  }
+export function proposeBoards(p: Profile, cpuProposals: Proposal[]): Proposal[] {
+  // Processeurs qui valent un changement de plateforme, et toutes les cartes qui les accueillent.
+  const movers = cpuProposals
+    .filter((x) => x.additions.some((a) => a.role === "required" && a.part.kind === "board"))
+    .map((x) => x.main as CpuSpec);
+  const options = new Map(movers.map((c) => [c, platformOptions(c, p)] as const));
   const out: Proposal[] = [];
-  for (const props of groups.values()) {
-    const sorted = [...props].sort((a, b) => a.total - b.total);
+  for (const board of BOARDS) {
+    const props: Proposal[] = [];
+    for (const c of movers) {
+      const opt = options.get(c)!.find((o) => o.board === board);
+      const prop = opt && cpuProposal(c, p, opt);
+      if (prop) props.push(prop);
+    }
+    if (!props.length) continue;
+    const sorted = props.sort((a, b) => a.total - b.total);
     const first = sorted[0];
-    const boardAdd = first.additions.find((a) => a.part.kind === "board")!;
-    const board = boardAdd.part as BoardSpec;
     const cpu = first.main as CpuSpec;
     const others = sorted.slice(1, 4).map((x) => {
       const name = (x.main as CpuSpec).name.replace(/^(AMD|Intel) /, "");
@@ -911,7 +933,7 @@ export function proposeBoards(cpuProposals: Proposal[]): Proposal[] {
           { role: "required", part: cpu, quantity: 1, reason: tr(`Le processeur le moins cher qui apporte un vrai gain sur cette plateforme.`, `The cheapest processor that brings a real gain on this platform.`) },
           ...first.additions.filter((a) => a.part.kind !== "board"),
         ],
-        mainModels: boardAdd.models,
+        mainModels: recommendBoards(board, cpu, p, true),
         notes: [
           ...(others.length ? [tr(`Autres processeurs possibles sur cette carte : ${others.join(", ")}.`, `Other processors that work on this motherboard: ${others.join(", ")}.`)] : []),
           board.socket === "AM5" ? tr("Le socket AM5 est prévu pour les prochaines générations de Ryzen : tu pourras changer de processeur plus tard sans changer de carte.", "The AM5 socket is planned for future Ryzen generations: you'll be able to upgrade your processor later without changing the motherboard.") : "",
