@@ -79,7 +79,7 @@ pub fn collect() -> OptimizeReport {
 
 /// État lu dans StartupApproved : premier octet pair (02, 06) = activé, impair (01, 03) = désactivé ; absent = activé.
 fn approved(root: &RegKey, sub: &str, name: &str) -> bool {
-    root.open_subkey_with_flags(format!(r"{APPROVED}\{sub}"), KEY_READ)
+    root.open_subkey_with_flags(format!(r"{APPROVED}\{sub}"), KEY_READ | KEY_WOW64_64KEY)
         .ok()
         .and_then(|k| k.get_raw_value(name).ok())
         .and_then(|v| v.bytes.first().copied())
@@ -140,7 +140,7 @@ pub fn set_startup_enabled(name: String, location: String, enabled: bool) -> Res
         _ => return Err("Emplacement inconnu.".into()),
     };
     let (key, _) = root
-        .create_subkey_with_flags(format!(r"{APPROVED}\{sub}"), KEY_SET_VALUE)
+        .create_subkey_with_flags(format!(r"{APPROVED}\{sub}"), KEY_SET_VALUE | KEY_WOW64_64KEY)
         .map_err(|_| "Ce programme est installé pour tous les utilisateurs : il faut les droits administrateur. Passe par le Gestionnaire des tâches (onglet Démarrage).".to_string())?;
     // 12 octets : 02 = activé, 03 = désactivé ; les 8 derniers octets donnent la date de désactivation (FILETIME).
     let mut bytes = vec![if enabled { 2u8 } else { 3u8 }, 0, 0, 0];
