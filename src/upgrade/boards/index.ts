@@ -11,6 +11,7 @@ import type { BiosFamily, BoardSpec, FormFactor, RamType, Socket } from "../type
 import am4 from "./am4.json";
 import am5 from "./am5.json";
 import intel from "./intel.json";
+import { tr } from "../../settings";
 import { SHARING_FR } from "./sharing-fr";
 
 interface RawBios {
@@ -71,8 +72,15 @@ const SOCKET: Record<string, Socket> = {
 /** Nom comparable : majuscules, sans le code MSI « (MS-7C81) », sans espaces ni ponctuation. */
 export const boardKey = (s: string) => s.toUpperCase().replace(/\(MS-[0-9A-Z]+\)/, "").replace(/[^A-Z0-9]/g, "");
 
-/** Notes de partage en français (traduction écrite à la main, voir sharing-fr.ts). */
-const fr = (note: string) => SHARING_FR[note] ?? note;
+/**
+ * Notes de partage en français (traduction écrite à la main, voir sharing-fr.ts).
+ * Les fiches gardent le texte français : le moteur s'en sert pour trier les notes (regex) ;
+ * l'affichage passe par sharingText(), qui donne l'anglais quand l'utilisateur l'a choisi.
+ */
+const fr = (note: string) => SHARING_FR[note]?.fr ?? note;
+const EN_BY_FR = new Map(Object.values(SHARING_FR).map((t) => [t.fr, t.en] as const));
+/** Texte affiché d'une note de partage (board.sharing), dans la langue choisie. */
+export const sharingText = (note: string) => tr(note, EN_BY_FR.get(note));
 
 function convert(r: RawBoard): BoardSpec | undefined {
   const socket = SOCKET[r.chipset];

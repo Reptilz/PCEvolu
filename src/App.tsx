@@ -3,7 +3,7 @@ import { invoke, isTauri } from "@tauri-apps/api/core";
 import type { Metrics, Report } from "./types";
 import { recommend, type Recommendation } from "./recommendations";
 import { demoMetrics, demoReport } from "./demo";
-import { clean, date, diskSize, gb, ghz, speed, uptime } from "./format";
+import { clean, date, diskSize, gb, ghz, locale, speed, uptime } from "./format";
 import { BrandLogo, hasBrandLogo, Icon, type IconName } from "./icons";
 import { T } from "./glossary";
 import { UpgradesView } from "./upgrade/UpgradesView";
@@ -16,6 +16,7 @@ import { proposeAll } from "./upgrade/engine";
 import { optimize } from "./upgrade/optimizer";
 import { loadHistory, loadPrices } from "./upgrade/prices";
 import { loadCatalog } from "./upgrade/catalog-remote";
+import { catalogText } from "./upgrade/catalog";
 import { checkAlerts, isTriggered, loadAlerts, saveAlerts, type PriceAlert } from "./upgrade/alerts";
 import { PriceContext, PriceSheet, type SheetPart } from "./upgrade/PriceSheet";
 import { AlertsView } from "./upgrade/AlertsView";
@@ -143,22 +144,22 @@ export default function App() {
     };
   }, []);
 
-  const recos = useMemo(() => (report ? recommend(report, live) : []), [report, live]);
-  const profile = useMemo(() => (report ? buildProfile(report, answers) : undefined), [report, answers]);
-  const verdict = useMemo(() => (report && profile ? assess(goal, profile, report) : undefined), [report, profile, goal]);
+  const recos = useMemo(() => (report ? recommend(report, live) : []), [report, live, settings.lang]);
+  const profile = useMemo(() => (report ? buildProfile(report, answers) : undefined), [report, answers, settings.lang]);
+  const verdict = useMemo(() => (report && profile ? assess(goal, profile, report) : undefined), [report, profile, goal, settings.lang]);
   // Plan d'évolution : toutes les combinaisons d'upgrades, recalculées quand l'objectif, le budget ou les prix changent.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const proposals = useMemo(() => (profile ? proposeAll(profile) : undefined), [profile, pricesVersion]);
+  const proposals = useMemo(() => (profile ? proposeAll(profile) : undefined), [profile, pricesVersion, settings.lang]);
   // 3 options vérifiées par catégorie, dans le budget, pour l'onglet Améliorations.
   const options = useMemo(() => {
     if (!profile || !proposals || !verdict) return undefined;
     const o: Record<string, OptionList> = {};
     for (const cat of ["gpu", "cpu", "ram", "storage"] as const) o[cat] = topOptions(goal, profile, verdict, proposals[cat] as never, cat);
     return o;
-  }, [profile, proposals, verdict, goal]);
+  }, [profile, proposals, verdict, goal, settings.lang]);
   const plan = useMemo(
     () => (report && profile && proposals && goal.configured ? optimize(goal, profile, report, proposals) : undefined),
-    [report, profile, proposals, goal],
+    [report, profile, proposals, goal, settings.lang],
   );
   const setBudget = (budget: number | null) => {
     const g = { ...goal, budget };
@@ -247,7 +248,7 @@ export default function App() {
           </button>
           <div className="muted small">
             {scannedAt
-              ? tr("Dernière analyse à ", "Last scan at ") + scannedAt.toLocaleTimeString(settings.lang === "en" ? "en-GB" : "fr-FR", { hour: "2-digit", minute: "2-digit" })
+              ? tr("Dernière analyse à ", "Last scan at ") + scannedAt.toLocaleTimeString(locale(), { hour: "2-digit", minute: "2-digit" })
               : " "}
             {!inApp && <div className="demo-flag">{tr("Mode démo (navigateur)", "Demo mode (browser)")}</div>}
           </div>
@@ -255,9 +256,9 @@ export default function App() {
         <div className="side-foot">
           <NavItem icon="gear" label={tr("Paramètres", "Settings")} active={view === "settings" && !wizardOpen} onClick={() => go("settings")} />
           <ReportButton
-            topic={`page ${VIEW_LABEL[view]}`}
+            topic={tr(`page ${viewLabel()[view]}`, `${viewLabel()[view]} page`)}
             kind={view === "overview" ? "composant" : "autre"}
-            details={[`Page : ${VIEW_LABEL[view]}`]}
+            details={[tr(`Page : ${viewLabel()[view]}`, `Page: ${viewLabel()[view]}`)]}
             label={tr("Signaler une erreur", "Report an error")}
           />
         </div>
@@ -267,7 +268,7 @@ export default function App() {
         <UpdateBanner />
         {error && (
           <div className="error">
-            <b>L'analyse a échoué.</b> {error}
+            <b>{tr("L'analyse a échoué.", "The scan failed.")}</b> {error}
           </div>
         )}
         {!report && !error && <Loading />}
@@ -284,7 +285,7 @@ export default function App() {
             onEdit={() => setWizardOpen(true)}
             onUpgrades={openUpgrades}
             byPart={<BuyList recos={recos} openTab={openUpgrades} options={options} goal={goal} verdict={verdict} />}
-            next={<NextStep hint="Pas pressé ? PCEvolu peut te prévenir quand ces pièces baissent." label="Étape suivante : mes alertes prix" onClick={() => go("alerts")} />}
+            next={<NextStep hint={tr("Pas pressé ? PCEvolu peut te prévenir quand ces pièces baissent.", "No rush? PCEvolu can let you know when these parts drop in price.")} label={tr("Étape suivante : mes alertes prix", "Next step: my price alerts")} onClick={() => go("alerts")} />}
           />
         )}
         {report && !wizardOpen && view === "improve" && (
@@ -292,8 +293,8 @@ export default function App() {
             recos={recos}
             next={
               <NextStep
-                hint={goal.configured ? "Ensuite, ce qu'il vaut la peine d'acheter pour ton objectif." : "Ensuite, dis à PCEvolu ce que tu veux faire de ton PC : il te dira quoi acheter."}
-                label={goal.configured ? "Étape suivante : mon plan" : "Étape suivante : définir mon objectif"}
+                hint={goal.configured ? tr("Ensuite, ce qu'il vaut la peine d'acheter pour ton objectif.", "Next, what's worth buying for your goal.") : tr("Ensuite, dis à PCEvolu ce que tu veux faire de ton PC : il te dira quoi acheter.", "Next, tell PCEvolu what you want to do with your PC: it will tell you what to buy.")}
+                label={goal.configured ? tr("Étape suivante : mon plan", "Next step: my plan") : tr("Étape suivante : définir mon objectif", "Next step: set my goal")}
                 onClick={() => go("goal")}
               />
             }
@@ -323,7 +324,7 @@ export default function App() {
           />
         )}
         {report && !wizardOpen && view === "upgrades" && (
-          <NextStep hint="Une pièce te plaît mais tu préfères attendre ? Crée une alerte depuis son prix." label="Étape suivante : mes alertes prix" onClick={() => go("alerts")} />
+          <NextStep hint={tr("Une pièce te plaît mais tu préfères attendre ? Crée une alerte depuis son prix.", "Like a part but would rather wait? Create an alert from its price.")} label={tr("Étape suivante : mes alertes prix", "Next step: my price alerts")} onClick={() => go("alerts")} />
         )}
         {!wizardOpen && view === "alerts" && <AlertsView onPlan={() => go("goal")} />}
         {!wizardOpen && view === "optimize" && <OptimizeView gpuName={report?.gpus[0]?.name} />}
@@ -353,16 +354,16 @@ function NavItem(p: { icon: IconName; label: string; sub?: string; active: boole
 
 const WELCOME_KEY = "pcevolu.welcomed.v1";
 
-const VIEW_LABEL: Record<View, string> = {
-  overview: "Mon PC",
-  improve: "Réglages gratuits",
-  goal: "Mon plan",
-  upgrades: "Toutes les pièces",
-  selection: "Ma sélection",
-  alerts: "Alertes prix",
-  optimize: "Optimiser",
-  settings: "Paramètres",
-};
+const viewLabel = (): Record<View, string> => ({
+  overview: tr("Mon PC", "My PC"),
+  improve: tr("Réglages gratuits", "Free tweaks"),
+  goal: tr("Mon plan", "My plan"),
+  upgrades: tr("Toutes les pièces", "All parts"),
+  selection: tr("Ma sélection", "My selection"),
+  alerts: tr("Alertes prix", "Price alerts"),
+  optimize: tr("Optimiser", "Optimize"),
+  settings: tr("Paramètres", "Settings"),
+});
 
 /** Accueil du premier lancement : ce que fait PCEvolu, et un seul bouton. */
 function Welcome({ scanning, onStart }: { scanning: boolean; onStart: () => void }) {
@@ -421,8 +422,8 @@ function Loading() {
   return (
     <div className="loading">
       <div className="pulse" />
-      <div>Analyse de ton PC en cours…</div>
-      <div className="muted small">Lecture du processeur, de la mémoire, des disques et des écrans</div>
+      <div>{tr("Analyse de ton PC en cours…", "Scanning your PC…")}</div>
+      <div className="muted small">{tr("Lecture du processeur, de la mémoire, des disques et des écrans", "Reading the processor, memory, drives and displays")}</div>
     </div>
   );
 }
@@ -446,12 +447,12 @@ function Overview({
     <div className="ov-page">
       <header className="gp-head">
         <div>
-          <h1>{clean(r.board.product) || r.system.model || "Mon PC"}</h1>
+          <h1>{clean(r.board.product) || r.system.model || tr("Mon PC", "My PC")}</h1>
           <p className="gp-goal">
-            {r.os.name} (build {r.os.build}), allumé depuis {uptime(live?.uptimeSecs)}.
+            {tr(`${r.os.name} (build ${r.os.build}), allumé depuis ${uptime(live?.uptimeSecs)}.`, `${r.os.name} (build ${r.os.build}), on for ${uptime(live?.uptimeSecs)}.`)}
           </p>
         </div>
-        <div className={`ov-score s-${score.level}`} title="Note calculée à partir des améliorations restantes">
+        <div className={`ov-score s-${score.level}`} title={tr("Note calculée à partir des améliorations restantes", "Score based on the improvements left to make")}>
           <span className="num">{score.value}</span>
           <span>{score.label}</span>
         </div>
@@ -462,31 +463,31 @@ function Overview({
           <h2 className="answer-title">{verdict.title}</h2>
           <p className="ov-answer-sub">{verdict.summary}</p>
           <button className="btn primary" onClick={() => go("goal")}>
-            Voir mon plan
+            {tr("Voir mon plan", "See my plan")}
           </button>
         </section>
       ) : (
         <section className="answer ov-answer">
-          <h2 className="answer-title">Dis-nous ce que tu veux faire de ton PC</h2>
-          <p className="ov-answer-sub">Jeu, bureautique, création, et ton budget : PCEvolu te dit si ton PC suffit et quoi améliorer en priorité.</p>
+          <h2 className="answer-title">{tr("Dis-nous ce que tu veux faire de ton PC", "Tell us what you want to do with your PC")}</h2>
+          <p className="ov-answer-sub">{tr("Jeu, bureautique, création, et ton budget : PCEvolu te dit si ton PC suffit et quoi améliorer en priorité.", "Gaming, office work, creating, and your budget: PCEvolu tells you if your PC is enough and what to improve first.")}</p>
           <button className="btn primary" onClick={onSetGoal}>
-            Définir mon objectif
+            {tr("Définir mon objectif", "Set my goal")}
           </button>
         </section>
       )}
 
       <section className="kpis">
-        <Kpi label="Processeur" value={live?.cpuPercent} unit="%" sub={clean(cpu?.name)} />
-        <Kpi label="Mémoire" value={ramPct} unit="%" sub={`${gb(live?.ramUsedBytes, 1)} sur ${gb(r.memory.totalBytes)}`} warnAt={85} />
-        <Kpi label="Carte graphique" value={live?.gpu?.usagePercent} unit="%" sub={live?.gpu?.tempC != null ? `${clean(gpu?.name)}, ${Math.round(live.gpu.tempC)} °C` : clean(gpu?.name)} accent="var(--nv)" />
-        <Kpi label={`Disque ${sys?.letter ?? ""}`} value={diskPct} unit="%" sub={`${gb(sys?.freeBytes)} libres`} warnAt={85} />
+        <Kpi label={tr("Processeur", "Processor")} value={live?.cpuPercent} unit="%" sub={clean(cpu?.name)} />
+        <Kpi label={tr("Mémoire", "Memory")} value={ramPct} unit="%" sub={tr(`${gb(live?.ramUsedBytes, 1)} sur ${gb(r.memory.totalBytes)}`, `${gb(live?.ramUsedBytes, 1)} of ${gb(r.memory.totalBytes)}`)} warnAt={85} />
+        <Kpi label={tr("Carte graphique", "Graphics card")} value={live?.gpu?.usagePercent} unit="%" sub={live?.gpu?.tempC != null ? `${clean(gpu?.name)}, ${Math.round(live.gpu.tempC)} °C` : clean(gpu?.name)} accent="var(--nv)" />
+        <Kpi label={tr(`Disque ${sys?.letter ?? ""}`, `Drive ${sys?.letter ?? ""}`)} value={diskPct} unit="%" sub={tr(`${gb(sys?.freeBytes)} libres`, `${gb(sys?.freeBytes)} free`)} warnAt={85} />
       </section>
 
       <div className="ov-split">
         <section>
-          <h2 className="imp-h">À faire en priorité</h2>
+          <h2 className="imp-h">{tr("À faire en priorité", "Top priorities")}</h2>
           {recos.length === 0 ? (
-            <p className="muted">Rien à signaler : ton PC est bien configuré.</p>
+            <p className="muted">{tr("Rien à signaler : ton PC est bien configuré.", "Nothing to report: your PC is well set up.")}</p>
           ) : (
             <>
               <ul className="imp-list">
@@ -495,40 +496,40 @@ function Overview({
                 ))}
               </ul>
               <button className="link" onClick={() => go("improve")}>
-                {recos.length > 3 ? `Voir les ${recos.length} améliorations` : "Voir le détail et ce qu'il faut acheter"}
+                {recos.length > 3 ? tr(`Voir les ${recos.length} améliorations`, `See all ${recos.length} improvements`) : tr("Voir le détail et ce qu'il faut acheter", "See the details and what to buy")}
               </button>
             </>
           )}
         </section>
         <section>
-          <h2 className="imp-h">Ton PC</h2>
+          <h2 className="imp-h">{tr("Ton PC", "Your PC")}</h2>
           <ul className="facts">
-            <Fact icon="chip" k="Processeur" v={`${clean(cpu?.name)}, ${cpu?.cores ?? "?"} cœurs`} />
-            <Fact icon="gpu" k="Carte graphique" v={`${clean(gpu?.name)}, ${gb(gpu?.vramBytes)}`} />
-            <Fact icon="ram" k="Mémoire" v={`${gb(r.memory.totalBytes)} ${r.memory.modules[0]?.kind ?? ""}, ${r.memory.modules.length} barrette${r.memory.modules.length > 1 ? "s" : ""} sur ${r.memory.slotsTotal ?? "?"}`} />
-            <Fact icon="disk" k="Stockage" v={r.disks.map((d) => `${diskSize(d.sizeBytes)} ${d.media}`).join(" + ") || "—"} />
-            <Fact icon="screen" k="Écran" v={r.displays.map((d) => `${d.width}×${d.height} à ${d.currentHz} Hz`).join(", ") || "—"} />
-            <Fact icon="board" k="Carte mère" v={clean(r.board.product)} />
+            <Fact icon="chip" k={tr("Processeur", "Processor")} v={tr(`${clean(cpu?.name)}, ${cpu?.cores ?? "?"} cœurs`, `${clean(cpu?.name)}, ${cpu?.cores ?? "?"} cores`)} />
+            <Fact icon="gpu" k={tr("Carte graphique", "Graphics card")} v={`${clean(gpu?.name)}, ${gb(gpu?.vramBytes)}`} />
+            <Fact icon="ram" k={tr("Mémoire", "Memory")} v={tr(`${gb(r.memory.totalBytes)} ${r.memory.modules[0]?.kind ?? ""}, ${r.memory.modules.length} barrette${r.memory.modules.length > 1 ? "s" : ""} sur ${r.memory.slotsTotal ?? "?"}`, `${gb(r.memory.totalBytes)} ${r.memory.modules[0]?.kind ?? ""}, ${r.memory.modules.length} stick${r.memory.modules.length > 1 ? "s" : ""} in ${r.memory.slotsTotal ?? "?"} slots`)} />
+            <Fact icon="disk" k={tr("Stockage", "Storage")} v={r.disks.map((d) => `${diskSize(d.sizeBytes)} ${d.media}`).join(" + ") || "—"} />
+            <Fact icon="screen" k={tr("Écran", "Display")} v={r.displays.map((d) => tr(`${d.width}×${d.height} à ${d.currentHz} Hz`, `${d.width}×${d.height} at ${d.currentHz} Hz`)).join(", ") || "—"} />
+            <Fact icon="board" k={tr("Carte mère", "Motherboard")} v={clean(r.board.product)} />
           </ul>
           <button className="link" onClick={() => document.getElementById("fiche-technique")?.scrollIntoView({ behavior: "smooth" })}>
-            Voir la fiche technique complète
+            {tr("Voir la fiche technique complète", "See the full spec sheet")}
           </button>
         </section>
       </div>
 
       <section className="ov-tech" id="fiche-technique">
-        <h2 className="imp-h">Fiche technique</h2>
+        <h2 className="imp-h">{tr("Fiche technique", "Spec sheet")}</h2>
         <Components report={r} live={live} />
       </section>
 
       {verdict ? (
         <NextStep
-          hint={freeCount ? `Commence par les ${freeCount} réglage${freeCount > 1 ? "s" : ""} gratuit${freeCount > 1 ? "s" : ""}, puis regarde ce qu'il vaut la peine d'acheter.` : undefined}
-          label={freeCount ? "Étape suivante : réglages gratuits" : "Étape suivante : mon plan"}
+          hint={freeCount ? tr(`Commence par les ${freeCount} réglage${freeCount > 1 ? "s" : ""} gratuit${freeCount > 1 ? "s" : ""}, puis regarde ce qu'il vaut la peine d'acheter.`, `Start with the ${freeCount} free tweak${freeCount > 1 ? "s" : ""}, then look at what's worth buying.`) : undefined}
+          label={freeCount ? tr("Étape suivante : réglages gratuits", "Next step: free tweaks") : tr("Étape suivante : mon plan", "Next step: my plan")}
           onClick={() => go(freeCount ? "improve" : "goal")}
         />
       ) : (
-        <NextStep label="Étape suivante : définir mon objectif" onClick={onSetGoal} />
+        <NextStep label={tr("Étape suivante : définir mon objectif", "Next step: set my goal")} onClick={onSetGoal} />
       )}
     </div>
   );
@@ -537,9 +538,9 @@ function Overview({
 function healthScore(recos: Recommendation[]) {
   const penalty = recos.reduce((s, r) => s + (r.level === "high" ? 18 : r.level === "medium" ? 9 : 3), 0);
   const value = Math.max(0, 100 - penalty);
-  if (value >= 85) return { value, label: "Excellent", level: "ok" };
-  if (value >= 65) return { value, label: "Bon, à optimiser", level: "warn" };
-  return { value, label: "À améliorer", level: "bad" };
+  if (value >= 85) return { value, label: tr("Excellent", "Excellent"), level: "ok" };
+  if (value >= 65) return { value, label: tr("Bon, à optimiser", "Good, could be better"), level: "warn" };
+  return { value, label: tr("À améliorer", "Needs work"), level: "bad" };
 }
 
 function Kpi(p: { label: string; value?: number; unit: string; sub?: string; warnAt?: number; accent?: string }) {
@@ -577,7 +578,10 @@ function Fact({ icon, k, v }: { icon: IconName; k: string; v?: string }) {
 // ---------------------------------------------------------------------------
 
 /** Onglet de l'écran « Toutes les pièces » correspondant à une suggestion d'achat. */
-const UPGRADE_TAB: Record<string, string> = { "Mémoire vive": "ram", Stockage: "storage", "Carte graphique": "gpu", Processeur: "cpu" };
+const UPGRADE_TAB: Record<string, string> = {
+  "Mémoire vive": "ram", Stockage: "storage", "Carte graphique": "gpu", Processeur: "cpu",
+  "Memory (RAM)": "ram", Storage: "storage", "Graphics card": "gpu", Processor: "cpu",
+};
 
 /** Bouton « Étape suivante », en bas de chaque page : on sait toujours où aller ensuite. */
 function NextStep({ label, hint, onClick }: { label: string; hint?: string; onClick: () => void }) {
@@ -598,12 +602,12 @@ function FreeView({ recos, next }: { recos: Recommendation[]; next: ReactNode })
     <div className="imp-page">
       <header className="gp-head">
         <div>
-          <h1>Réglages gratuits</h1>
-          <p className="gp-goal">Ce que tu peux améliorer tout de suite, sans rien acheter.</p>
+          <h1>{tr("Réglages gratuits", "Free tweaks")}</h1>
+          <p className="gp-goal">{tr("Ce que tu peux améliorer tout de suite, sans rien acheter.", "What you can improve right now, without buying anything.")}</p>
         </div>
       </header>
       {free.length === 0 ? (
-        <p className="muted">Rien à régler : ton PC est déjà bien configuré.</p>
+        <p className="muted">{tr("Rien à régler : ton PC est déjà bien configuré.", "Nothing to tweak: your PC is already well set up.")}</p>
       ) : (
         <ul className="imp-list">
           {free.map((r) => (
@@ -628,7 +632,7 @@ function BuyList({ recos, openTab, options, goal, verdict }: {
     for (const n of verdict.needs) {
       if (!n.fix || n.status === "ok" || buys.some((b) => b.tab === n.fix)) continue;
       const kind = upgrades.find((u) => UPGRADE_TAB[u.upgrade!.component] === n.fix)?.upgrade!.component ?? n.label;
-      buys.push({ id: n.id, tab: n.fix, kind, title: `${n.current}, il faudrait ${n.target.charAt(0).toLowerCase()}${n.target.slice(1)}`, why: n.detail, goal: true });
+      buys.push({ id: n.id, tab: n.fix, kind, title: tr(`${n.current}, il faudrait ${n.target.charAt(0).toLowerCase()}${n.target.slice(1)}`, `${n.current}, you'd need ${n.target.charAt(0).toLowerCase()}${n.target.slice(1)}`), why: n.detail, goal: true });
     }
   }
   for (const r of upgrades) {
@@ -640,7 +644,7 @@ function BuyList({ recos, openTab, options, goal, verdict }: {
     }
     buys.push({ id: r.id, tab, kind: r.upgrade!.component, title: r.upgrade!.suggestion, why: r.detail, price: price(r.upgrade!.priceMin, r.upgrade!.priceMax), goal: false });
   }
-  if (buys.length === 0) return <p className="muted">Aucune pièce ne limite ton PC pour cet objectif.</p>;
+  if (buys.length === 0) return <p className="muted">{tr("Aucune pièce ne limite ton PC pour cet objectif.", "No part is holding your PC back for this goal.")}</p>;
 
   return (
     <div className="parts">
@@ -655,16 +659,16 @@ function BuyList({ recos, openTab, options, goal, verdict }: {
               <div className="part-main">
                 <div className="part-kind">
                   {b.kind}
-                  {b.goal && <span className="part-flag">Bloque ton objectif</span>}
+                  {b.goal && <span className="part-flag">{tr("Bloque ton objectif", "Blocks your goal")}</span>}
                 </div>
-                <div className="part-title">{b.title}</div>
+                <div className="part-title">{catalogText(b.title)}</div>
                 <p className="part-why">
                   <T>{b.why}</T>
                 </p>
               </div>
               {b.price && (
                 <span className="part-price">
-                  <span className="muted">Budget</span>
+                  <span className="muted">{tr("Budget", "Budget")}</span>
                   <b className="num">{b.price}</b>
                 </span>
               )}
@@ -682,7 +686,7 @@ function BuyList({ recos, openTab, options, goal, verdict }: {
                           {(o.proposal as unknown as { title: string }).title}
                         </span>
                         <span className={`part-opt-effect ${o.impact.reachesGoal ? "ok" : ""}`}>
-                          {o.impact.reachesGoal ? "Atteint ton objectif" : o.impact.label}
+                          {o.impact.reachesGoal ? tr("Atteint ton objectif", "Reaches your goal") : o.impact.label}
                         </span>
                         <span className="part-opt-price num">{o.proposal.total} €</span>
                       </button>
@@ -693,14 +697,14 @@ function BuyList({ recos, openTab, options, goal, verdict }: {
             ) : (
               b.goal && (
                 <p className="part-none">
-                  Aucune pièce seule ne suffit dans ton budget : le plan conseillé, en haut de la page, en combine plusieurs.
+                  {tr("Aucune pièce seule ne suffit dans ton budget : le plan conseillé, en haut de la page, en combine plusieurs.", "No single part is enough within your budget: the recommended plan, at the top of the page, combines several.")}
                 </p>
               )
             )}
 
             <footer className="part-foot">
               <button className="link" onClick={() => openTab(b.tab)}>
-                Voir toutes les options compatibles
+                {tr("Voir toutes les options compatibles", "See all compatible options")}
               </button>
             </footer>
           </section>
@@ -712,7 +716,7 @@ function BuyList({ recos, openTab, options, goal, verdict }: {
 
 const TAB_ICON: Record<string, IconName> = { gpu: "gpu", cpu: "chip", ram: "ram", storage: "disk" };
 
-const price = (a?: number, b?: number) => (a == null ? "—" : a === b || b == null ? `${a} €` : `${a} à ${b} €`);
+const price = (a?: number, b?: number) => (a == null ? "—" : a === b || b == null ? `${a} €` : tr(`${a} à ${b} €`, `${a} to ${b} €`));
 
 /** L'icône du composant concerné par une amélioration (écran, mémoire, BIOS…). */
 function recoIcon(id: string): IconName {
@@ -759,69 +763,69 @@ function Components({ report: r, live }: { report: Report; live?: Metrics }) {
   return (
     <>
       <p className="muted ov-tech-sub">
-        {r.system.isLaptop ? "PC portable" : "PC fixe"}
-        {r.system.manufacturer && !/to be filled|default/i.test(r.system.manufacturer) ? ` ${r.system.manufacturer.replace(/,? (Co\.,? )?(Ltd|Inc|Corp)\.?$/i, "")}` : ""}, tel que Windows le voit.
+        {r.system.isLaptop ? tr("PC portable", "Laptop") : tr("PC fixe", "Desktop PC")}
+        {r.system.manufacturer && !/to be filled|default/i.test(r.system.manufacturer) ? ` ${r.system.manufacturer.replace(/,? (Co\.,? )?(Ltd|Inc|Corp)\.?$/i, "")}` : ""}{tr(", tel que Windows le voit.", ", as Windows sees it.")}
       </p>
 
       <div className="grid">
         {r.cpus.map((c, i) => (
-          <Card key={i} icon="chip" cat="Processeur" name={clean(c.name)}>
-            <Row k="Cœurs / threads" v={`${c.cores ?? "?"} / ${c.threads ?? "?"}`} />
-            <Row k="Fréquence de base" v={ghz(c.baseMhz)} />
-            <Row k="Cache L2 / L3" v={`${kb(c.l2Kb)} / ${kb(c.l3Kb)}`} />
-            <Row k="Charge actuelle" v={live?.cpuPercent != null ? `${Math.round(live.cpuPercent)} %` : "—"} />
-            <Row k="Virtualisation" v={c.virtualization == null ? "—" : c.virtualization ? "Activée" : "Désactivée"} badge={c.virtualization ? "ok" : undefined} />
+          <Card key={i} icon="chip" cat={tr("Processeur", "Processor")} name={clean(c.name)}>
+            <Row k={tr("Cœurs / threads", "Cores / threads")} v={`${c.cores ?? "?"} / ${c.threads ?? "?"}`} />
+            <Row k={tr("Fréquence de base", "Base clock")} v={ghz(c.baseMhz)} />
+            <Row k={tr("Cache L2 / L3", "L2 / L3 cache")} v={`${kb(c.l2Kb)} / ${kb(c.l3Kb)}`} />
+            <Row k={tr("Charge actuelle", "Current load")} v={live?.cpuPercent != null ? tr(`${Math.round(live.cpuPercent)} %`, `${Math.round(live.cpuPercent)}%`) : "—"} />
+            <Row k={tr("Virtualisation", "Virtualization")} v={c.virtualization == null ? "—" : c.virtualization ? tr("Activée", "On") : tr("Désactivée", "Off")} badge={c.virtualization ? "ok" : undefined} />
           </Card>
         ))}
 
         {r.gpus.map((g, i) => (
-          <Card key={i} icon="gpu" cat="Carte graphique" name={clean(g.name)} accent="var(--nv)">
-            <Row k="Mémoire vidéo" v={gb(g.vramBytes)} />
+          <Card key={i} icon="gpu" cat={tr("Carte graphique", "Graphics card")} name={clean(g.name)} accent="var(--nv)">
+            <Row k={tr("Mémoire vidéo", "Video memory")} v={gb(g.vramBytes)} />
             {i === 0 && live?.gpu && (
               <>
-                <Row k="Température" v={live.gpu.tempC != null ? `${Math.round(live.gpu.tempC)} °C` : "—"} badge={live.gpu.tempC != null ? (live.gpu.tempC > 83 ? "bad" : "ok") : undefined} />
-                <Row k="Utilisation" v={live.gpu.usagePercent != null ? `${Math.round(live.gpu.usagePercent)} %` : "—"} />
-                <Row k="Consommation" v={live.gpu.powerW != null ? `${live.gpu.powerW.toFixed(1)} W` : "—"} />
+                <Row k={tr("Température", "Temperature")} v={live.gpu.tempC != null ? `${Math.round(live.gpu.tempC)} °C` : "—"} badge={live.gpu.tempC != null ? (live.gpu.tempC > 83 ? "bad" : "ok") : undefined} />
+                <Row k={tr("Utilisation", "Usage")} v={live.gpu.usagePercent != null ? tr(`${Math.round(live.gpu.usagePercent)} %`, `${Math.round(live.gpu.usagePercent)}%`) : "—"} />
+                <Row k={tr("Consommation", "Power draw")} v={live.gpu.powerW != null ? `${live.gpu.powerW.toFixed(1)} W` : "—"} />
               </>
             )}
-            <Row k="Pilote" v={g.driverVersion} />
-            <Row k="Date du pilote" v={date(g.driverDate)} />
+            <Row k={tr("Pilote", "Driver")} v={g.driverVersion} />
+            <Row k={tr("Date du pilote", "Driver date")} v={date(g.driverDate)} />
           </Card>
         ))}
 
-        <Card icon="ram" cat="Mémoire vive" name={`${gb(r.memory.totalBytes)} ${mods[0]?.kind ?? ""} ${mods[0]?.manufacturer ?? ""}`}>
-          <Row k="Vitesse" v={mods[0]?.configuredMts ? `${mods[0].configuredMts} MT/s` : "—"} />
-          <Row k="Mode" v={mods.length >= 2 ? "Dual channel" : "Single channel"} badge={mods.length >= 2 ? "ok" : "warn"} />
-          <Row k="Maximum supporté" v={gb(r.memory.maxCapacityBytes)} />
-          {mods[0]?.partNumber && <Row k="Référence" v={mods[0].partNumber} />}
+        <Card icon="ram" cat={tr("Mémoire vive", "Memory (RAM)")} name={`${gb(r.memory.totalBytes)} ${mods[0]?.kind ?? ""} ${mods[0]?.manufacturer ?? ""}`}>
+          <Row k={tr("Vitesse", "Speed")} v={mods[0]?.configuredMts ? `${mods[0].configuredMts} MT/s` : "—"} />
+          <Row k={tr("Mode", "Mode")} v={mods.length >= 2 ? "Dual channel" : "Single channel"} badge={mods.length >= 2 ? "ok" : "warn"} />
+          <Row k={tr("Maximum supporté", "Max supported")} v={gb(r.memory.maxCapacityBytes)} />
+          {mods[0]?.partNumber && <Row k={tr("Référence", "Part number")} v={mods[0].partNumber} />}
           <div className="slots">
             {Array.from({ length: slots }, (_, i) => {
               const m = mods[i];
               return (
                 <div key={i} className={`slot ${m ? "on" : ""}`} title={m?.slot}>
-                  {m ? gb(m.capacityBytes) : "Libre"}
+                  {m ? gb(m.capacityBytes) : tr("Libre", "Empty")}
                 </div>
               );
             })}
           </div>
         </Card>
 
-        <Card icon="board" cat="Carte mère" name={clean(r.board.product)} brand={r.board.manufacturer}>
-          <Row k="Fabricant" v={r.board.manufacturer?.replace(" Co., Ltd.", "")} logo />
-          <Row k="Révision" v={r.board.version} />
-          <Row k="BIOS" v={`${r.board.biosVersion ?? "?"}, du ${date(r.board.biosDate)}`} />
-          <Row k="Éditeur du BIOS" v={r.board.biosVendor} />
+        <Card icon="board" cat={tr("Carte mère", "Motherboard")} name={clean(r.board.product)} brand={r.board.manufacturer}>
+          <Row k={tr("Fabricant", "Manufacturer")} v={r.board.manufacturer?.replace(" Co., Ltd.", "")} logo />
+          <Row k={tr("Révision", "Revision")} v={r.board.version} />
+          <Row k="BIOS" v={tr(`${r.board.biosVersion ?? "?"}, du ${date(r.board.biosDate)}`, `${r.board.biosVersion ?? "?"}, from ${date(r.board.biosDate)}`)} />
+          <Row k={tr("Éditeur du BIOS", "BIOS vendor")} v={r.board.biosVendor} />
         </Card>
 
         {r.disks.map((d, i) => (
-          <Card key={i} icon="disk" cat="Stockage" name={d.name ?? "Disque"}>
-            <Row k="Type" v={`${d.media} ${d.bus}`} />
-            <Row k="Capacité" v={diskSize(d.sizeBytes)} />
-            <Row k="État" v={health(d.health)} badge={d.health === "healthy" ? "ok" : d.health === "unknown" ? undefined : "bad"} />
+          <Card key={i} icon="disk" cat={tr("Stockage", "Storage")} name={d.name ?? tr("Disque", "Drive")}>
+            <Row k={tr("Type", "Type")} v={`${d.media} ${d.bus}`} />
+            <Row k={tr("Capacité", "Capacity")} v={diskSize(d.sizeBytes)} />
+            <Row k={tr("État", "Health")} v={health(d.health)} badge={d.health === "healthy" ? "ok" : d.health === "unknown" ? undefined : "bad"} />
           </Card>
         ))}
 
-        <Card icon="folder" cat="Volumes" noBrand name={`${r.volumes.length} lecteur${r.volumes.length > 1 ? "s" : ""}`}>
+        <Card icon="folder" cat={tr("Volumes", "Volumes")} noBrand name={tr(`${r.volumes.length} lecteur${r.volumes.length > 1 ? "s" : ""}`, `${r.volumes.length} drive${r.volumes.length > 1 ? "s" : ""}`)}>
           {r.volumes.map((v) => {
             const pct = v.sizeBytes && v.freeBytes != null ? ((v.sizeBytes - v.freeBytes) / v.sizeBytes) * 100 : 0;
             return (
@@ -831,7 +835,7 @@ function Components({ report: r, live }: { report: Report; live?: Metrics }) {
                     <b>{v.letter}</b> {v.label}
                   </span>
                   <span className="mono">
-                    {gb(v.freeBytes)} libres / {gb(v.sizeBytes)}
+                    {tr(`${gb(v.freeBytes)} libres / ${gb(v.sizeBytes)}`, `${gb(v.freeBytes)} free / ${gb(v.sizeBytes)}`)}
                   </span>
                 </div>
                 <div className="bar">
@@ -845,24 +849,24 @@ function Components({ report: r, live }: { report: Report; live?: Metrics }) {
         {r.displays.map((d, i) => {
           const m = r.monitors[i];
           return (
-            <Card key={d.device} icon="screen" cat="Écran" name={m ? `${m.maker ?? ""} ${m.model ?? ""}`.trim() : d.adapter} brand={m?.maker ?? ""}>
-              <Row k="Résolution" v={`${d.width} × ${d.height}`} />
-              <Row k="Fréquence actuelle" v={`${d.currentHz} Hz`} badge={d.maxHz - d.currentHz >= 10 ? "bad" : "ok"} />
-              <Row k="Fréquence max" v={`${d.maxHz} Hz`} />
-              {m?.year && <Row k="Fabrication" v={String(m.year)} />}
-              <Row k="Branché sur" v={clean(d.adapter)} logo />
+            <Card key={d.device} icon="screen" cat={tr("Écran", "Display")} name={m ? `${m.maker ?? ""} ${m.model ?? ""}`.trim() : d.adapter} brand={m?.maker ?? ""}>
+              <Row k={tr("Résolution", "Resolution")} v={`${d.width} × ${d.height}`} />
+              <Row k={tr("Fréquence actuelle", "Current refresh rate")} v={`${d.currentHz} Hz`} badge={d.maxHz - d.currentHz >= 10 ? "bad" : "ok"} />
+              <Row k={tr("Fréquence max", "Max refresh rate")} v={`${d.maxHz} Hz`} />
+              {m?.year && <Row k={tr("Fabrication", "Made in")} v={String(m.year)} />}
+              <Row k={tr("Branché sur", "Plugged into")} v={clean(d.adapter)} logo />
             </Card>
           );
         })}
 
-        <Card icon="wifi" cat="Réseau" name={clean(r.network.find((n) => n.connected)?.description) || "Cartes réseau"}>
-          {r.network.length === 0 && <Row k="Cartes physiques" v="Aucune détectée" />}
+        <Card icon="wifi" cat={tr("Réseau", "Network")} name={clean(r.network.find((n) => n.connected)?.description) || tr("Cartes réseau", "Network adapters")}>
+          {r.network.length === 0 && <Row k={tr("Cartes physiques", "Physical adapters")} v={tr("Aucune détectée", "None detected")} />}
           {r.network.map((n) => (
-            <Row key={n.name} k={`${n.wireless ? "Wi-Fi" : "Ethernet"} (${n.name ?? ""})`} v={n.connected ? speed(n.speedBps) : "Déconnecté"} badge={n.connected ? "ok" : undefined} />
+            <Row key={n.name} k={`${n.wireless ? "Wi-Fi" : "Ethernet"} (${n.name ?? ""})`} v={n.connected ? speed(n.speedBps) : tr("Déconnecté", "Disconnected")} badge={n.connected ? "ok" : undefined} />
           ))}
         </Card>
 
-        <Card icon="audio" cat="Audio" name={r.audio[0]?.name ?? "Périphériques audio"}>
+        <Card icon="audio" cat={tr("Audio", "Audio")} name={r.audio[0]?.name ?? tr("Périphériques audio", "Audio devices")}>
           {r.audio.map((a, i) => (
             <Row key={i} k={a.name ?? "?"} v={a.manufacturer} logo />
           ))}
@@ -872,8 +876,15 @@ function Components({ report: r, live }: { report: Report; live?: Metrics }) {
   );
 }
 
-const kb = (v?: number) => (v == null ? "—" : v >= 1024 ? `${(v / 1024).toLocaleString("fr-FR")} Mo` : `${v} Ko`);
-const health = (h: string) => ({ healthy: "Sain", warning: "Avertissement", unhealthy: "Défaillant", unknown: "Inconnu" })[h] ?? h;
+const kb = (v?: number) =>
+  v == null ? "—" : v >= 1024 ? `${(v / 1024).toLocaleString(locale())} ${tr("Mo", "MB")}` : `${v} ${tr("Ko", "KB")}`;
+const health = (h: string) =>
+  ({
+    healthy: tr("Sain", "Healthy"),
+    warning: tr("Avertissement", "Warning"),
+    unhealthy: tr("Défaillant", "Failing"),
+    unknown: tr("Inconnu", "Unknown"),
+  })[h] ?? h;
 
 /** Carte de la fiche technique. L'icône devient le logo du fabricant quand on le reconnaît (dans `brand`, sinon dans le nom). */
 function Card(p: { icon: IconName; cat: string; name?: string; brand?: string; noBrand?: boolean; accent?: string; children: ReactNode }) {
@@ -896,7 +907,7 @@ function Card(p: { icon: IconName; cat: string; name?: string; brand?: string; n
 }
 
 function Row({ k, v, badge, logo }: { k: string; v?: string; badge?: "ok" | "warn" | "bad"; logo?: boolean }) {
-  const label = { ok: "OK", warn: "À améliorer", bad: "À corriger" };
+  const label = { ok: "OK", warn: tr("À améliorer", "Could be better"), bad: tr("À corriger", "Needs fixing") };
   return (
     <>
       <dt>{k}</dt>

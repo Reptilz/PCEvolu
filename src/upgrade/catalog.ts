@@ -12,8 +12,12 @@ import type {
 import { cpuFromName, purchasable } from "./cpudb";
 import { GPU_TABLE, findGpuSpec } from "./gpudb";
 import { findKnownBoard } from "./boards";
+import { tr } from "../settings";
 
+/** Date du catalogue en français (gardé pour compatibilité) ; à l'affichage, préférer catalogDate(). */
 export const CATALOG_DATE = "novembre 2026";
+/** Date du catalogue dans la langue choisie. */
+export const catalogDate = () => tr(CATALOG_DATE, "November 2026");
 /** Incrémenté à chaque mise à jour du catalogue (le catalogue téléchargé n'est pris que s'il est plus récent). */
 export const CATALOG_VERSION = 6;
 
@@ -338,17 +342,78 @@ export function findChipset(boardName?: string): ChipsetSpec | undefined {
  * Plateformes que PCEvolu ne prend pas en charge (stations de travail, AMD AM3/FM2, Intel avant la 4e génération) :
  * on le dit clairement au lieu de supposer.
  */
-const UNSUPPORTED_PLATFORMS: [RegExp, string][] = [
-  [/\b(X79|X99|X299|C6\d\d|C2\d\d|W680|W790)\b/i, "station de travail Intel (LGA2011 / LGA2066 / Xeon)"],
-  [/\b(X399|TRX40|TRX50|WRX80|WRX90)\b/i, "AMD Threadripper"],
-  [/\b(970|990FX|990X|A88X|A78|A68H|A58)\b/i, "AMD AM3 / FM2 (avant Ryzen)"],
-  [/\b(H61|H67|P67|Z68|B75|H77|Z75|Z77|Q77)\b/i, "Intel 2e / 3e génération (LGA1155)"],
+const UNSUPPORTED_PLATFORMS: [RegExp, string, string][] = [
+  [/\b(X79|X99|X299|C6\d\d|C2\d\d|W680|W790)\b/i, "station de travail Intel (LGA2011 / LGA2066 / Xeon)", "Intel workstation (LGA2011 / LGA2066 / Xeon)"],
+  [/\b(X399|TRX40|TRX50|WRX80|WRX90)\b/i, "AMD Threadripper", "AMD Threadripper"],
+  [/\b(970|990FX|990X|A88X|A78|A68H|A58)\b/i, "AMD AM3 / FM2 (avant Ryzen)", "AMD AM3 / FM2 (pre-Ryzen)"],
+  [/\b(H61|H67|P67|Z68|B75|H77|Z75|Z77|Q77)\b/i, "Intel 2e / 3e génération (LGA1155)", "Intel 2nd / 3rd gen (LGA1155)"],
 ];
 
 export function unsupportedPlatform(boardName?: string): string | undefined {
   if (!boardName || findChipset(boardName)) return undefined;
-  return UNSUPPORTED_PLATFORMS.find(([re]) => re.test(boardName))?.[1];
+  const hit = UNSUPPORTED_PLATFORMS.find(([re]) => re.test(boardName));
+  return hit ? tr(hit[1], hit[2]) : undefined;
 }
+
+// ---------------------------------------------------------------------------
+// Traduction des textes du catalogue (noms génériques, notes)
+// ---------------------------------------------------------------------------
+// Le catalogue (intégré ou téléchargé) reste en français : on traduit à l'affichage, pour que le
+// changement de langue s'applique tout de suite et que le catalogue en ligne reste valable.
+
+/** Notes connues (cartes mères, branchements des cartes graphiques) : texte français → anglais. */
+const NOTES_EN: Record<string, string> = {
+  "Garde ta RAM DDR4 actuelle.": "Keeps your current DDR4 RAM.",
+  "Entrée de gamme : 2 emplacements RAM, à réserver aux processeurs 65 W.": "Entry-level: 2 RAM slots, best kept for 65 W processors.",
+  "Choisis un modèle avec bouton de mise à jour du BIOS sans processeur.": "Pick a model with a BIOS update button that works without a processor.",
+  "La Founders Edition utilise un connecteur 16 broches (adaptateur fourni) ; la plupart des modèles partenaires, un câble 8 broches.":
+    "The Founders Edition uses a 16-pin connector (adapter included); most partner models use one 8-pin cable.",
+  "Beaucoup de modèles partenaires utilisent simplement un câble PCIe 8 broches au lieu du connecteur 16 broches.":
+    "Many partner models simply use one 8-pin PCIe cable instead of the 16-pin connector.",
+  "Selon le modèle : 1 ou 2 câbles PCIe 8 broches (parfois 8 + 6 broches).": "Depending on the model: 1 or 2 8-pin PCIe cables (sometimes 8 + 6 pins).",
+  "Quelques modèles (ASUS TUF) utilisent un connecteur 16 broches au lieu du câble 8 broches.": "A few models (ASUS TUF) use a 16-pin connector instead of the 8-pin cable.",
+  "Selon le modèle : 2 câbles 8 broches (Sapphire Pulse, PowerColor Reaper), 3 câbles 8 broches (Gigabyte Gaming OC, PowerColor Red Devil) ou un connecteur 12V-2x6 (Sapphire NITRO+). Les modèles overclockés conseillent 850 à 900 W.":
+    "Depending on the model: 2 8-pin cables (Sapphire Pulse, PowerColor Reaper), 3 8-pin cables (Gigabyte Gaming OC, PowerColor Red Devil) or a 12V-2x6 connector (Sapphire NITRO+). Overclocked models recommend 850 to 900 W.",
+  "Certains modèles haut de gamme (Sapphire NITRO+) demandent 3 câbles 8 broches.": "Some high-end models (Sapphire NITRO+) need 3 8-pin cables.",
+  "Graphiques intégrés Intel": "Intel integrated graphics",
+  "Graphiques intégrés AMD (Radeon / Vega)": "AMD integrated graphics (Radeon / Vega)",
+};
+
+/** Noms génériques (« Carte mère B650 ATX », « Kit 2 × 16 Go… », « Alimentation 750 W… ») : règles de traduction. */
+const NAME_RULES: [RegExp, string][] = [
+  [/^Carte mère (\S+(?: DDR[45])?(?: ATX)?)/, "$1 motherboard"],
+  [/\(micro-ATX, entrée de gamme\)/, "(micro-ATX, entry-level)"],
+  [/^Alimentation (\d+ W(?: 80\+ \w+)?)/, "$1 power supply"],
+  [/\(sans câble 12V-2x6\)/, "(no 12V-2x6 cable)"],
+  [/avec câble 12V-2x6/, "with 12V-2x6 cable"],
+  [/modèle (\d{4})/, "$1 model"],
+  [/^Barrette (\d+) Go (\S+)/, "$1 GB $2 stick"],
+  [/^Disque dur 3,5" /, '3.5" hard drive, '],
+  [/ 2,5" /, ' 2.5" '],
+  [/\(lot de (\d+)\)/, "($1-pack)"],
+  [/\(lot de (\d+), /, "($1-pack, "],
+  [/\(bas profil\)/, "(low profile)"],
+  [/\(intégrée\)/, "(integrated)"],
+  [/ \(portable\)$/, " (laptop)"],
+  [/\(ex\. /, "(e.g. "],
+  [/(\d) Go\b/g, "$1 GB"],
+  [/(\d) To\b/g, "$1 TB"],
+];
+
+/** Texte venant du catalogue (nom générique ou note), dans la langue choisie. */
+export function catalogText(fr: string): string;
+export function catalogText(fr: string | undefined): string | undefined;
+export function catalogText(fr: string | undefined): string | undefined {
+  if (fr == null) return fr;
+  const known = NOTES_EN[fr];
+  if (known) return tr(fr, known);
+  let en = fr;
+  for (const [re, to] of NAME_RULES) en = en.replace(re, to);
+  return tr(fr, en);
+}
+
+/** Nom d'une pièce à afficher (les noms de modèles restent tels quels, les noms génériques sont traduits). */
+export const partName = (p: { name: string }) => catalogText(p.name);
 
 /** PC de marque (Dell, HP, Lenovo…) : alimentation et carte mère souvent propriétaires. */
 export const OEM_BRANDS = /\b(dell|hewlett|hp\b|lenovo|acer|asus(?!tek computer inc\.?$)|medion|fujitsu|packard bell|apple|microsoft)/i;

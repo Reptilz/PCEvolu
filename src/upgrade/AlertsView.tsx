@@ -3,9 +3,14 @@ import { bestPriceOf, isTriggered, saveAlerts, type PriceAlert } from "./alerts"
 import { historyOf, pricesFile, priceInfo, trendOf } from "./prices";
 import { PriceNotice, usePrices } from "./PriceSheet";
 import { BrandLogo, hasBrandLogo, Icon, type IconName } from "../icons";
+import { currentLang, tr } from "../settings";
 
-const eur = (n: number) => `${n.toLocaleString("fr-FR", { maximumFractionDigits: n % 1 ? 2 : 0, minimumFractionDigits: n % 1 ? 2 : 0 })} €`;
-const shortDate = (d: string | Date) => new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+const locale = () => (currentLang() === "en" ? "en-GB" : "fr-FR");
+const eur = (n: number) => {
+  const v = n.toLocaleString(locale(), { maximumFractionDigits: n % 1 ? 2 : 0, minimumFractionDigits: n % 1 ? 2 : 0 });
+  return currentLang() === "en" ? `€${v}` : `${v} €`;
+};
+const shortDate = (d: string | Date) => new Date(d).toLocaleDateString(locale(), { day: "numeric", month: "short" });
 
 /** Type de pièce deviné à partir de son identifiant de catalogue, pour l'icône. */
 function partIcon(id: string): IconName {
@@ -49,8 +54,8 @@ export function AlertsView({ onPlan }: { onPlan?: () => void }) {
     <div className="al-page">
       <header className="gp-head">
         <div>
-          <h1>Alertes prix</h1>
-          <p className="gp-goal">PCEvolu surveille le prix des pièces qui t'intéressent et te prévient quand elles passent sous ton seuil.</p>
+          <h1>{tr("Alertes prix", "Price alerts")}</h1>
+          <p className="gp-goal">{tr("PCEvolu surveille le prix des pièces qui t'intéressent et te prévient quand elles passent sous ton seuil.", "PCEvolu keeps an eye on the prices of the parts you're interested in and lets you know when they drop below your target.")}</p>
         </div>
       </header>
 
@@ -58,19 +63,19 @@ export function AlertsView({ onPlan }: { onPlan?: () => void }) {
         <div className="al-summary">
           <div>
             <b className="num">{alerts.length}</b>
-            <span>pièce{alerts.length > 1 ? "s" : ""} surveillée{alerts.length > 1 ? "s" : ""}</span>
+            <span>{tr(`pièce${alerts.length > 1 ? "s" : ""} surveillée${alerts.length > 1 ? "s" : ""}`, `part${alerts.length > 1 ? "s" : ""} watched`)}</span>
           </div>
           <div className={hits ? "ok" : ""}>
             <b className="num">{hits}</b>
-            <span>seuil{hits > 1 ? "s" : ""} atteint{hits > 1 ? "s" : ""}</span>
+            <span>{tr(`seuil${hits > 1 ? "s" : ""} atteint${hits > 1 ? "s" : ""}`, `target${hits === 1 ? "" : "s"} reached`)}</span>
           </div>
           <div>
             <b className="num">{eur(Math.round(saving))}</b>
-            <span>d'économie si tous les seuils sont atteints</span>
+            <span>{tr("d'économie si tous les seuils sont atteints", "saved if every target is reached")}</span>
           </div>
           <div>
             <b>{shortDate(nextMonday())}</b>
-            <span>prochain relevé{updated ? ` (dernier le ${shortDate(updated)})` : ""}</span>
+            <span>{tr(`prochain relevé${updated ? ` (dernier le ${shortDate(updated)})` : ""}`, `next check${updated ? ` (last on ${shortDate(updated)})` : ""}`)}</span>
           </div>
         </div>
       )}
@@ -81,14 +86,16 @@ export function AlertsView({ onPlan }: { onPlan?: () => void }) {
             <Icon name="bell" />
           </span>
           <div>
-            <p className="al-empty-title">Aucune pièce surveillée pour l'instant</p>
+            <p className="al-empty-title">{tr("Aucune pièce surveillée pour l'instant", "You're not watching any parts yet")}</p>
             <p className="muted">
-              Clique sur un prix, dans Mon plan ou Toutes les pièces, pour voir son évolution et créer une alerte. Tu peux aussi surveiller tout un plan
-              d'un coup avec « Me prévenir si ces prix baissent ».
+              {tr(
+                "Clique sur un prix, dans Mon plan ou Toutes les pièces, pour voir son évolution et créer une alerte. Tu peux aussi surveiller tout un plan d'un coup avec « Me prévenir si ces prix baissent ».",
+                "Click a price, in My plan or All parts, to see how it has changed and create an alert. You can also watch a whole plan at once with “Let me know if these prices drop”.",
+              )}
             </p>
             {onPlan && (
               <button className="btn al-empty-btn" onClick={onPlan}>
-                Aller à mon plan
+                {tr("Aller à mon plan", "Go to my plan")}
               </button>
             )}
           </div>
@@ -123,7 +130,8 @@ function AlertCard({ a, onOpen, onRemove, onTarget }: { a: PriceAlert; onOpen: (
   // Progression vers le seuil : 0 % au prix de départ, 100 % au seuil.
   const start = Math.max(a.startPrice ?? now ?? a.target, now ?? 0);
   const progress = hit ? 100 : now != null && start > a.target ? Math.max(0, Math.min(100, ((start - now) / (start - a.target)) * 100)) : 0;
-  const status = hit ? "Seuil atteint" : t.change != null && t.change < 0 ? "En baisse" : t.change != null && t.change > 0 ? "En hausse" : "En attente";
+  const statusKey = hit ? "hit" : t.change != null && t.change < 0 ? "down" : t.change != null && t.change > 0 ? "up" : "wait";
+  const status = { hit: tr("Seuil atteint", "Target reached"), down: tr("En baisse", "Going down"), up: tr("En hausse", "Going up"), wait: tr("En attente", "Waiting") }[statusKey];
 
   return (
     <article className={`al-card ${hit ? "hit" : ""}`}>
@@ -133,9 +141,9 @@ function AlertCard({ a, onOpen, onRemove, onTarget }: { a: PriceAlert; onOpen: (
           <button className="al-name" onClick={onOpen}>
             {a.name}
           </button>
-          <span className={`al-status s-${hit ? "hit" : status === "En baisse" ? "down" : status === "En hausse" ? "up" : "wait"}`}>{status}</span>
+          <span className={`al-status s-${statusKey}`}>{status}</span>
         </div>
-        <button className="icon-btn" onClick={onRemove} aria-label={`Ne plus surveiller ${a.name}`} title="Ne plus surveiller">
+        <button className="icon-btn" onClick={onRemove} aria-label={tr(`Ne plus surveiller ${a.name}`, `Stop watching ${a.name}`)} title={tr("Ne plus surveiller", "Stop watching")}>
           <Icon name="cross" />
         </button>
       </header>
@@ -143,9 +151,9 @@ function AlertCard({ a, onOpen, onRemove, onTarget }: { a: PriceAlert; onOpen: (
       <div className="al-card-body">
         <div className="al-facts">
           <div className="al-now">
-            <span className="muted">Meilleur prix aujourd'hui</span>
+            <span className="muted">{tr("Meilleur prix aujourd'hui", "Best price today")}</span>
             <b className="num">{now != null ? eur(now) : "—"}</b>
-            {info && <span className="muted small">prix médian {eur(info.price)}</span>}
+            {info && <span className="muted small">{tr("prix médian", "median price")} {eur(info.price)}</span>}
           </div>
 
           <div className="al-goal">
@@ -159,17 +167,17 @@ function AlertCard({ a, onOpen, onRemove, onTarget }: { a: PriceAlert; onOpen: (
                     setEditing(false);
                   }}
                 >
-                  <label htmlFor={`seuil-${a.id}`}>Seuil</label>
+                  <label htmlFor={`seuil-${a.id}`}>{tr("Seuil", "Target")}</label>
                   <input id={`seuil-${a.id}`} type="number" min={1} step={5} value={draft} onChange={(e) => setDraft(Number(e.target.value))} autoFocus />
                   <span>€</span>
                   <button className="btn primary small-btn" type="submit">
-                    Enregistrer
+                    {tr("Enregistrer", "Save")}
                   </button>
                 </form>
               ) : (
                 <>
                   <span>
-                    Ton seuil : <b className="num">{eur(a.target)}</b>
+                    {tr("Ton seuil :", "Your target:")} <b className="num">{eur(a.target)}</b>
                   </span>
                   <button
                     className="link small"
@@ -178,42 +186,46 @@ function AlertCard({ a, onOpen, onRemove, onTarget }: { a: PriceAlert; onOpen: (
                       setEditing(true);
                     }}
                   >
-                    Modifier
+                    {tr("Modifier", "Edit")}
                   </button>
                 </>
               )}
             </div>
-            <div className="al-progress" role="progressbar" aria-valuenow={Math.round(progress)} aria-valuemin={0} aria-valuemax={100} aria-label="Progression vers le seuil">
+            <div className="al-progress" role="progressbar" aria-valuenow={Math.round(progress)} aria-valuemin={0} aria-valuemax={100} aria-label={tr("Progression vers le seuil", "Progress towards your target")}>
               <i style={{ width: `${progress}%` }} />
             </div>
             <p className="al-gap">
               {hit
-                ? `Le meilleur prix est passé sous ton seuil : c'est le moment d'acheter.`
+                ? tr(`Le meilleur prix est passé sous ton seuil : c'est le moment d'acheter.`, "The best price has dropped below your target: now's the time to buy.")
                 : gap != null
-                  ? `Il manque ${eur(Math.round(gap * 100) / 100)} (−${Math.round((gap / now!) * 100)} %) pour l'atteindre.`
-                  : "Pas encore de prix relevé pour cette pièce."}
+                  ? tr(
+                      `Il manque ${eur(Math.round(gap * 100) / 100)} (−${Math.round((gap / now!) * 100)} %) pour l'atteindre.`,
+                      `It needs to drop another ${eur(Math.round(gap * 100) / 100)} (−${Math.round((gap / now!) * 100)}%) to get there.`,
+                    )
+                  : tr("Pas encore de prix relevé pour cette pièce.", "No price recorded for this part yet.")}
             </p>
           </div>
 
           <ul className="al-stats">
             {a.startPrice != null && (
               <li>
-                <span>À la création ({shortDate(a.createdAt)})</span>
+                <span>{tr(`À la création (${shortDate(a.createdAt)})`, `When created (${shortDate(a.createdAt)})`)}</span>
                 <b className="num">{eur(a.startPrice)}</b>
               </li>
             )}
             {t.lowest != null && (
               <li>
-                <span>Plus bas relevé</span>
+                <span>{tr("Plus bas relevé", "Lowest recorded")}</span>
                 <b className="num">{eur(t.lowest)}</b>
               </li>
             )}
             {t.change != null && (
               <li>
-                <span>Depuis le relevé précédent</span>
+                <span>{tr("Depuis le relevé précédent", "Since the previous check")}</span>
                 <b className={`num ${t.change < 0 ? "ok-text" : t.change > 0 ? "bad-text" : ""}`}>
                   {t.change > 0 ? "+" : ""}
-                  {t.change} %
+                  {t.change}
+                  {tr(" %", "%")}
                 </b>
               </li>
             )}
@@ -225,7 +237,7 @@ function AlertCard({ a, onOpen, onRemove, onTarget }: { a: PriceAlert; onOpen: (
 
       <footer className="al-card-foot">
         <button className="link" onClick={onOpen}>
-          Voir les offres et l'historique
+          {tr("Voir les offres et l'historique", "See offers and price history")}
         </button>
       </footer>
     </article>
@@ -259,18 +271,18 @@ function PriceChart({ id, target, start, now }: { id: string; target: number; st
 
   return (
     <figure className="al-chart">
-      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Évolution du prix, seuil à ${eur(target)}`}>
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={tr(`Évolution du prix, seuil à ${eur(target)}`, `Price history, target at ${eur(target)}`)}>
         {ticks.map((v) => (
           <g key={v} className="al-grid">
             <line x1={pad.l} x2={W - pad.r} y1={y(v)} y2={y(v)} />
             <text x={pad.l - 8} y={y(v) + 4} textAnchor="end">
-              {v} €
+              {currentLang() === "en" ? `€${v}` : `${v} €`}
             </text>
           </g>
         ))}
         <line className="al-target" x1={pad.l} x2={W - pad.r} y1={y(target)} y2={y(target)} />
         <text className="al-target-label" x={W - pad.r} y={y(target) - 6} textAnchor="end">
-          Ton seuil {eur(target)}
+          {tr("Ton seuil", "Your target")} {eur(target)}
         </text>
         {median.length >= 2 && <path className="al-median" d={line(median)} />}
         {area && <path className="al-area" d={area} />}
@@ -291,10 +303,10 @@ function PriceChart({ id, target, start, now }: { id: string; target: number; st
         </text>
       </svg>
       <figcaption>
-        <span className="al-key best">Meilleur prix</span>
-        {median.length >= 2 && <span className="al-key median">Prix médian</span>}
-        <span className="al-key target">Ton seuil</span>
-        {best.length < 2 && <span className="muted">La courbe se dessine au fil des relevés du lundi.</span>}
+        <span className="al-key best">{tr("Meilleur prix", "Best price")}</span>
+        {median.length >= 2 && <span className="al-key median">{tr("Prix médian", "Median price")}</span>}
+        <span className="al-key target">{tr("Ton seuil", "Your target")}</span>
+        {best.length < 2 && <span className="muted">{tr("La courbe se dessine au fil des relevés du lundi.", "The chart fills in with each Monday check.")}</span>}
       </figcaption>
     </figure>
   );

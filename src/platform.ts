@@ -1,6 +1,7 @@
 // Fonctions qui dépendent de l'environnement : app de bureau (Tauri) ou simple navigateur (mode démo).
 
 import { isTauri } from "@tauri-apps/api/core";
+import { currentLang } from "./settings";
 
 /** Ouvre un lien dans le navigateur par défaut de l'utilisateur. */
 export async function openUrl(url: string) {
@@ -29,5 +30,6 @@ export async function notify(title: string, body: string) {
   }
 }
 
-/** Recherche Google Shopping (France) pour comparer les prix d'un composant. */
-export const shoppingSearchUrl = (query: string) => `https://www.google.com/search?tbm=shop&hl=fr&gl=fr&q=${encodeURIComponent(query)}`;
+/** Recherche Google Shopping (France) pour comparer les prix d'un composant ; interface de Google dans la langue de l'utilisateur. */
+export const shoppingSearchUrl = (query: string) =>
+  `https://www.google.com/search?tbm=shop&hl=${currentLang() === "en" ? "en" : "fr"}&gl=fr&q=${encodeURIComponent(query)}`;

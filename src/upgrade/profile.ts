@@ -5,6 +5,7 @@ import type { Report } from "../types";
 import type { BoardSpec, ChipsetSpec, CpuSpec, FormFactor, GpuSpec, RamType, Socket } from "./types";
 import { CASE_GPU_LENGTH, COOLER_CAPACITY, OEM_BRANDS, findBoard, findChipset, findCpu, findGpu, unsupportedPlatform } from "./catalog";
 import { clean } from "../format";
+import { tr } from "../settings";
 
 // ---------------------------------------------------------------------------
 // Réponses au questionnaire (ce que Windows ne peut pas lire)
@@ -164,7 +165,7 @@ export function buildProfile(r: Report, a: Answers): Profile {
 
   return {
     cpuName, cpu, gpuName, gpu,
-    cpuDisplay: clean(cpuName) || cpu?.name || "processeur", boardName, board, chipset, socket,
+    cpuDisplay: clean(cpuName) || cpu?.name || tr("processeur", "processor"), boardName, board, chipset, socket,
     formFactor: board?.formFactor ?? (a.caseSize === "small" ? "mATX" : undefined),
     isLaptop, isOem, manufacturer: r.system.manufacturer,
     ramType,

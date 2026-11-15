@@ -4,21 +4,27 @@ import type { Addition, Check, ModelPick, Part, Proposal, Role } from "./types";
 import { slotOf, useSelection, type SlotCategory } from "./selection";
 import { CheckRow, MarketLine } from "./UpgradesView";
 import { usePrices } from "./PriceSheet";
+import { partName } from "./catalog";
 import { bestPriceOf, saveAlerts, suggestedTarget } from "./alerts";
 import { isGaming, type Goal } from "./goal";
 import { planTitle, type OptimizeResult, type Plan } from "./optimizer";
 import { price } from "./engine";
 import { BrandLogo, hasBrandLogo, Icon, type IconName } from "../icons";
 import { openUrl } from "../platform";
+import { tr } from "../settings";
 
 /** Arrondit un coût au palier de budget supérieur (par 50 €). */
 const roundBudget = (c: number) => Math.ceil(c / 50) * 50;
 
-const KIND: Record<Part["kind"], string> = {
-  cpu: "Processeur", board: "Carte mère", gpu: "Carte graphique", ram: "Mémoire", ssd: "Stockage",
-  psu: "Alimentation", cooler: "Ventirad", fans: "Ventilateurs", case: "Boîtier",
-};
-export const kindLabel = (p: Part) => KIND[p.kind];
+/** Un montant en euros : « 1234 € » en français, « €1,234 » en anglais. */
+export const euros = (n: number) => tr(`${n} €`, `€${n.toLocaleString("en-GB")}`);
+
+const kindNames = (): Record<Part["kind"], string> => ({
+  cpu: tr("Processeur", "Processor"), board: tr("Carte mère", "Motherboard"), gpu: tr("Carte graphique", "Graphics card"),
+  ram: tr("Mémoire", "Memory"), ssd: tr("Stockage", "Storage"),
+  psu: tr("Alimentation", "Power supply"), cooler: tr("Ventirad", "CPU cooler"), fans: tr("Ventilateurs", "Fans"), case: tr("Boîtier", "Case"),
+});
+export const kindLabel = (p: Part) => kindNames()[p.kind];
 const KIND_ICON: Record<Part["kind"], IconName> = {
   cpu: "chip", board: "board", gpu: "gpu", ram: "ram", ssd: "disk", psu: "power", cooler: "fan", fans: "fan", case: "tower",
 };
@@ -56,32 +62,48 @@ export function RecommendedPlan({ goal, result, onBudget, onDetails }: {
   return (
     <section className="rec">
       <div className="rec-head">
-        <h2>{current.reached ? "Rien à acheter" : best?.evaluation.reached ? "Le plan conseillé" : "Le mieux dans ton budget"}</h2>
+        <h2>
+          {current.reached
+            ? tr("Rien à acheter", "Nothing to buy")
+            : best?.evaluation.reached
+              ? tr("Le plan conseillé", "The recommended plan")
+              : tr("Le mieux dans ton budget", "The best within your budget")}
+        </h2>
         <BudgetSlider value={goal.budget} onChange={onBudget} />
       </div>
 
       {current.reached ? (
         <p className="rec-empty">
-          Ton PC atteint déjà ton objectif. {tiers.length > 0 ? "Les onglets ci-dessous montrent ce qu'un budget apporterait en plus." : ""}
+          {tr("Ton PC atteint déjà ton objectif.", "Your PC already meets your goal.")}{" "}
+          {tiers.length > 0 ? tr("Les onglets ci-dessous montrent ce qu'un budget apporterait en plus.", "The tabs below show what extra a budget would get you.") : ""}
         </p>
       ) : best ? (
         <PlanDetail plan={best} goal={goal} currentFps={current.fps} onDetails={onDetails} />
       ) : (
         <p className="rec-empty">
-          Rien d'utile dans ce budget.{tiers[0] ? ` Le premier pas coûte ${tiers[0].cost} € (${planTitle(tiers[0])}).` : ""}
+          {tr("Rien d'utile dans ce budget.", "Nothing useful within this budget.")}
+          {tiers[0] ? tr(` Le premier pas coûte ${tiers[0].cost} € (${planTitle(tiers[0])}).`, ` The first step costs ${euros(tiers[0].cost)} (${planTitle(tiers[0])}).`) : ""}
         </p>
       )}
 
       {!current.reached && reachTooExpensive && (
         <p className="rec-reach">
-          Pour atteindre complètement ton objectif, il faut compter {cheapestReach.cost} € ({planTitle(cheapestReach)}).{" "}
+          {tr(
+            `Pour atteindre complètement ton objectif, il faut compter ${cheapestReach.cost} € (${planTitle(cheapestReach)}).`,
+            `To fully reach your goal, expect to spend ${euros(cheapestReach.cost)} (${planTitle(cheapestReach)}).`,
+          )}{" "}
           <button className="link" onClick={() => onBudget(roundBudget(cheapestReach.cost))}>
-            Passer le budget à {roundBudget(cheapestReach.cost)} €
+            {tr(`Passer le budget à ${roundBudget(cheapestReach.cost)} €`, `Raise the budget to ${euros(roundBudget(cheapestReach.cost))}`)}
           </button>
         </p>
       )}
       {!current.reached && !cheapestReach && (
-        <p className="rec-reach">Aucune combinaison du catalogue n'atteint complètement cet objectif : voici ce qui s'en approche le plus.</p>
+        <p className="rec-reach">
+          {tr(
+            "Aucune combinaison du catalogue n'atteint complètement cet objectif : voici ce qui s'en approche le plus.",
+            "No combination in the catalogue fully reaches this goal: here is what comes closest.",
+          )}
+        </p>
       )}
     </section>
   );
@@ -100,17 +122,30 @@ export function PlanDetail({ plan, goal, currentFps, onDetails, selectable = tru
     <div className="pd">
       <div className="pd-top">
         <div className="pd-title">{planTitle(plan)}</div>
-        <div className="pd-price">{plan.cost} €</div>
+        <div className="pd-price">{euros(plan.cost)}</div>
       </div>
       <p className="pd-sub">
         {isGaming(goal.usage) && ev.fps != null && currentFps != null
           ? ev.reached
-            ? `Environ ${ev.fps} i/s au lieu de ${currentFps} : ton objectif de ${goal.fps} i/s est atteint.`
-            : `Environ ${ev.fps} i/s au lieu de ${currentFps}, pour un objectif de ${goal.fps} i/s.`
+            ? tr(
+                `Environ ${ev.fps} i/s au lieu de ${currentFps} : ton objectif de ${goal.fps} i/s est atteint.`,
+                `About ${ev.fps} fps instead of ${currentFps}: your goal of ${goal.fps} fps is reached.`,
+              )
+            : tr(
+                `Environ ${ev.fps} i/s au lieu de ${currentFps}, pour un objectif de ${goal.fps} i/s.`,
+                `About ${ev.fps} fps instead of ${currentFps}, for a goal of ${goal.fps} fps.`,
+              )
           : ev.reached
-            ? "Ton objectif est atteint."
-            : `Ton PC atteindrait ${Math.round(Math.min(ev.score, 1) * 100)} % de l'objectif.`}
-        {plan.costIfVerify > plan.cost && ` Jusqu'à ${plan.costIfVerify} € si les pièces à vérifier sont nécessaires.`}
+            ? tr("Ton objectif est atteint.", "Your goal is reached.")
+            : tr(
+                `Ton PC atteindrait ${Math.round(Math.min(ev.score, 1) * 100)} % de l'objectif.`,
+                `Your PC would reach ${Math.round(Math.min(ev.score, 1) * 100)}% of the goal.`,
+              )}
+        {plan.costIfVerify > plan.cost &&
+          tr(
+            ` Jusqu'à ${plan.costIfVerify} € si les pièces à vérifier sont nécessaires.`,
+            ` Up to ${euros(plan.costIfVerify)} if the parts to check turn out to be needed.`,
+          )}
       </p>
 
       <ul className="pd-items">
@@ -126,7 +161,7 @@ export function PlanDetail({ plan, goal, currentFps, onDetails, selectable = tru
 
       {advised.length > 0 && (
         <details className="pd-advised">
-          <summary>Conseillé en plus ({advised.length})</summary>
+          <summary>{tr(`Conseillé en plus (${advised.length})`, `Also recommended (${advised.length})`)}</summary>
           <ul className="pd-items">
             {advised.map((a, i) => (
               <AdditionRow key={i} a={a} />
@@ -139,7 +174,7 @@ export function PlanDetail({ plan, goal, currentFps, onDetails, selectable = tru
         {selectable &&
           (chosen ? (
             <button className="btn sel-add" onClick={sel.open}>
-              <Icon name="check" /> Plan choisi : voir ma sélection
+              <Icon name="check" /> {tr("Plan choisi : voir ma sélection", "Plan chosen: see my selection")}
             </button>
           ) : (
             <button
@@ -149,13 +184,13 @@ export function PlanDetail({ plan, goal, currentFps, onDetails, selectable = tru
                 sel.open();
               }}
             >
-              <Icon name="cart" /> Choisir ce plan
+              <Icon name="cart" /> {tr("Choisir ce plan", "Choose this plan")}
             </button>
           ))}
         <WatchPlan plan={plan} />
         {plan.items[0] && (
           <button className="link small" onClick={() => onDetails(plan.items[0].category)}>
-            Explorer toutes les options compatibles
+            {tr("Explorer toutes les options compatibles", "Explore all compatible options")}
           </button>
         )}
       </div>
@@ -173,18 +208,19 @@ export function ItemRow({ kind, part, amount, children, note }: { kind: string; 
       <div className="pd-what">
         <span className="pd-name">
           <BrandLogo brand={brandOfPart(part)} className="pd-brand" />
-          {part.name}
+          {partName(part)}
         </span>
         {note}
         <MarketLine part={part} />
         {children}
       </div>
-      <span className="pd-amount num">{amount} €</span>
+      <span className="pd-amount num">{euros(amount)}</span>
     </li>
   );
 }
 
-const ROLE_NOTE: Record<Role, string> = { required: "Obligatoire", verify: "À vérifier", recommended: "Conseillé" };
+const roleNote = (r: Role): string =>
+  ({ required: tr("Obligatoire", "Required"), verify: tr("À vérifier", "To check"), recommended: tr("Conseillé", "Recommended") })[r];
 
 export function AdditionRow({ a }: { a: Addition }) {
   return (
@@ -194,7 +230,7 @@ export function AdditionRow({ a }: { a: Addition }) {
       amount={price(a.part) * a.quantity}
       note={
         <span className={`pd-why role-${a.role}`}>
-          {ROLE_NOTE[a.role]} : <T>{a.reason.charAt(0).toLowerCase() + a.reason.slice(1)}</T>
+          {roleNote(a.role)}{tr(" : ", ": ")}<T>{a.reason.charAt(0).toLowerCase() + a.reason.slice(1)}</T>
         </span>
       }
     >
@@ -212,22 +248,27 @@ export function SelectButton({ p }: { p: Proposal }) {
     return (
       <div className="sel-state">
         <span className="sel-in">
-          <Icon name="check" /> Dans ta sélection
+          <Icon name="check" /> {tr("Dans ta sélection", "In your selection")}
         </span>
         <button className="link small" onClick={open}>
-          Voir ma sélection
+          {tr("Voir ma sélection", "See my selection")}
         </button>
         <button className="link small sel-remove" onClick={() => remove(slot)}>
-          Retirer
+          {tr("Retirer", "Remove")}
         </button>
       </div>
     );
   }
-  const what = { gpu: "ta carte graphique", cpu: "ton processeur", ram: "ta mémoire", storage: "ton stockage" }[slot];
+  const what = {
+    gpu: tr("ta carte graphique", "your graphics card"),
+    cpu: tr("ton processeur", "your processor"),
+    ram: tr("ta mémoire", "your memory"),
+    storage: tr("ton stockage", "your storage"),
+  }[slot];
   return (
     <button className="btn sel-add" onClick={() => add(p)}>
       <Icon name="cart" />
-      {current ? `Remplacer ${what} dans ma sélection` : "Ajouter à ma sélection"}
+      {current ? tr(`Remplacer ${what} dans ma sélection`, `Replace ${what} in my selection`) : tr("Ajouter à ma sélection", "Add to my selection")}
     </button>
   );
 }
@@ -236,13 +277,18 @@ export function SelectButton({ p }: { p: Proposal }) {
 export function ModelPicks({ models }: { models: ModelPick[] }) {
   return (
     <div className="picks">
-      <span className="picks-title">Modèles conseillés (prix de la catégorie, vérifie le prix du modèle) :</span>
+      <span className="picks-title">
+        {tr(
+          "Modèles conseillés (prix de la catégorie, vérifie le prix du modèle) :",
+          "Recommended models (category price, check the price of the exact model):",
+        )}
+      </span>
       <ul>
         {models.map((m) => (
           <li key={m.name}>
             <BrandLogo brand={m.name} className="picks-logo" />
             {m.url ? (
-              <button className="picks-name" onClick={() => openUrl(m.url!)} title="Ouvrir la fiche du fabricant">
+              <button className="picks-name" onClick={() => openUrl(m.url!)} title={tr("Ouvrir la fiche du fabricant", "Open the manufacturer's page")}>
                 {m.name}
               </button>
             ) : (
@@ -264,8 +310,11 @@ export function CompatSummary({ checks }: { checks: Check[] }) {
   const fail = n("fail");
   const fixed = n("fixed");
   const sentence = fail
-    ? `${fail} problème${fail > 1 ? "s" : ""} de compatibilité`
-    : `Compatible avec ta config${warn ? `, ${warn} point${warn > 1 ? "s" : ""} à vérifier toi-même` : ""}`;
+    ? tr(`${fail} problème${fail > 1 ? "s" : ""} de compatibilité`, `${fail} compatibility ${fail > 1 ? "issues" : "issue"}`)
+    : tr(
+        `Compatible avec ta config${warn ? `, ${warn} point${warn > 1 ? "s" : ""} à vérifier toi-même` : ""}`,
+        `Compatible with your setup${warn ? `, ${warn} ${warn > 1 ? "points" : "point"} to check yourself` : ""}`,
+      );
   return (
     <div className={`compat ${fail ? "bad" : warn ? "warn" : "ok"}`}>
       <button className="compat-line" onClick={() => setOpen(!open)} aria-expanded={open}>
@@ -274,7 +323,10 @@ export function CompatSummary({ checks }: { checks: Check[] }) {
           {sentence}
           <span className="muted">
             {" "}
-            ({checks.length} points contrôlés{fixed ? `, dont ${fixed} réglé${fixed > 1 ? "s" : ""} par les pièces ajoutées` : ""})
+            {tr(
+              `(${checks.length} points contrôlés${fixed ? `, dont ${fixed} réglé${fixed > 1 ? "s" : ""} par les pièces ajoutées` : ""})`,
+              `(${checks.length} points checked${fixed ? `, ${fixed} of them solved by the added parts` : ""})`,
+            )}
           </span>
         </span>
         <Icon name="chevron" className={`chev ${open ? "open" : ""}`} />
@@ -295,7 +347,12 @@ function WatchPlan({ plan }: { plan: Plan }) {
   const { alerts, setAlerts } = usePrices();
   const parts = [...plan.items.map((it) => it.main), ...plan.additions.filter((a) => a.role === "required").map((a) => a.part)];
   const missing = parts.filter((p) => !alerts.some((a) => a.id === p.id));
-  if (missing.length === 0) return <p className="pd-watch muted small">Tu surveilles déjà les prix de ce plan (onglet Alertes prix).</p>;
+  if (missing.length === 0)
+    return (
+      <p className="pd-watch muted small">
+        {tr("Tu surveilles déjà les prix de ce plan (onglet Alertes prix).", "You're already watching the prices of this plan (Price alerts tab).")}
+      </p>
+    );
   const watch = () => {
     const now = new Date().toISOString();
     const next = [
@@ -308,9 +365,14 @@ function WatchPlan({ plan }: { plan: Plan }) {
   return (
     <div className="pd-watch">
       <button className="btn" onClick={watch}>
-        <Icon name="bell" /> Me prévenir si ces prix baissent
+        <Icon name="bell" /> {tr("Me prévenir si ces prix baissent", "Let me know if these prices drop")}
       </button>
-      <span className="muted small">Une alerte à −5 % sur {missing.length === 1 ? "la pièce" : `chacune des ${missing.length} pièces`}.</span>
+      <span className="muted small">
+        {tr(
+          `Une alerte à −5 % sur ${missing.length === 1 ? "la pièce" : `chacune des ${missing.length} pièces`}.`,
+          `An alert at −5% on ${missing.length === 1 ? "the part" : `each of the ${missing.length} parts`}.`,
+        )}
+      </span>
     </div>
   );
 }
@@ -321,7 +383,7 @@ function WatchPlan({ plan }: { plan: Plan }) {
 
 export function Alternatives({ result, goal, onDetails }: { result: OptimizeResult; goal: Goal; onDetails: (tab: string) => void }) {
   const { alternatives, current } = result;
-  if (alternatives.length === 0) return <p className="muted">Pas d'autre option pertinente dans ce budget.</p>;
+  if (alternatives.length === 0) return <p className="muted">{tr("Pas d'autre option pertinente dans ce budget.", "No other relevant option within this budget.")}</p>;
   return (
     <ul className="rows">
       {alternatives.map((a, i) => (
@@ -333,10 +395,12 @@ export function Alternatives({ result, goal, onDetails }: { result: OptimizeResu
 
 export function Tiers({ result, goal, onBudget, onDetails }: { result: OptimizeResult; goal: Goal; onBudget: (b: number | null) => void; onDetails: (tab: string) => void }) {
   const { tiers, current } = result;
-  if (tiers.length === 0) return <p className="muted">Aucune amélioration utile trouvée pour cet objectif.</p>;
+  if (tiers.length === 0) return <p className="muted">{tr("Aucune amélioration utile trouvée pour cet objectif.", "No useful upgrade found for this goal.")}</p>;
   return (
     <>
-      <p className="muted tab-intro">Chaque ligne fait nettement mieux que toutes celles qui coûtent moins cher.</p>
+      <p className="muted tab-intro">
+        {tr("Chaque ligne fait nettement mieux que toutes celles qui coûtent moins cher.", "Each row does clearly better than every cheaper one.")}
+      </p>
       <ul className="rows">
         {tiers.map((t, i) => (
           <PlanRow
@@ -348,7 +412,7 @@ export function Tiers({ result, goal, onBudget, onDetails }: { result: OptimizeR
             action={
               goal.budget != null && t.cost > goal.budget ? (
                 <button className="link small" onClick={() => onBudget(roundBudget(t.cost))}>
-                  Budget {roundBudget(t.cost)} €
+                  {tr(`Budget ${roundBudget(t.cost)} €`, `Budget ${euros(roundBudget(t.cost))}`)}
                 </button>
               ) : undefined
             }
@@ -366,9 +430,9 @@ function PlanRow({ plan, goal, currentFps, onDetails, action }: { plan: Plan; go
   const effect =
     ev.fps != null && currentFps != null
       ? ev.fps > currentFps
-        ? `${currentFps} → ${ev.fps} i/s`
-        : `${currentFps} i/s, un frein en moins`
-      : `${Math.round(Math.min(ev.score, 1) * 100)} % de l'objectif`;
+        ? tr(`${currentFps} → ${ev.fps} i/s`, `${currentFps} → ${ev.fps} fps`)
+        : tr(`${currentFps} i/s, un frein en moins`, `${currentFps} fps, one bottleneck less`)
+      : tr(`${Math.round(Math.min(ev.score, 1) * 100)} % de l'objectif`, `${Math.round(Math.min(ev.score, 1) * 100)}% of the goal`);
   return (
     <li className={`row ${open ? "open" : ""}`}>
       <button className="row-line" onClick={() => setOpen(!open)} aria-expanded={open}>
@@ -378,9 +442,9 @@ function PlanRow({ plan, goal, currentFps, onDetails, action }: { plan: Plan; go
         </span>
         <span className="row-effect">
           {effect}
-          {ev.reached && <span className="row-ok">, objectif atteint</span>}
+          {ev.reached && <span className="row-ok">{tr(", objectif atteint", ", goal reached")}</span>}
         </span>
-        <span className="row-price num">{plan.cost} €</span>
+        <span className="row-price num">{euros(plan.cost)}</span>
         <Icon name="chevron" className={`chev ${open ? "open" : ""}`} />
       </button>
       {action && !open && <div className="row-action">{action}</div>}
@@ -399,7 +463,7 @@ export function BudgetSlider({ value, onChange }: { value: number | null; onChan
   const [local, setLocal] = useState<number>(value ?? 3000);
   return (
     <div className="budget-inline">
-      <label htmlFor="budget-range">Budget</label>
+      <label htmlFor="budget-range">{tr("Budget", "Budget")}</label>
       <input
         id="budget-range"
         type="range"
@@ -412,9 +476,9 @@ export function BudgetSlider({ value, onChange }: { value: number | null; onChan
           onChange(Number(e.target.value));
         }}
       />
-      <b className="num">{value == null ? "libre" : `${value} €`}</b>
+      <b className="num">{value == null ? tr("libre", "no limit") : euros(value)}</b>
       <button className="link small" onClick={() => onChange(value == null ? local : null)}>
-        {value == null ? "Fixer" : "Sans limite"}
+        {value == null ? tr("Fixer", "Set") : tr("Sans limite", "No limit")}
       </button>
     </div>
   );

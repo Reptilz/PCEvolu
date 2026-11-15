@@ -3,6 +3,7 @@
 
 import { priceInfo } from "./prices";
 import { notify } from "../platform";
+import { currentLang, tr } from "../settings";
 
 export interface PriceAlert {
   id: string;
@@ -60,11 +61,24 @@ export async function checkAlerts(alerts: PriceAlert[]): Promise<PriceAlert[]> {
   if (hits.length === 0) return alerts;
   if (hits.length === 1) {
     const a = hits[0];
-    await notify("Baisse de prix 📉", `${a.name} est à ${eur(bestPriceOf(a.id)!)} (ton seuil : ${eur(a.target)}).`);
+    await notify(
+      tr("Baisse de prix 📉", "Price drop 📉"),
+      tr(`${a.name} est à ${eur(bestPriceOf(a.id)!)} (ton seuil : ${eur(a.target)}).`, `${a.name} is now ${eur(bestPriceOf(a.id)!)} (your target: ${eur(a.target)}).`),
+    );
   } else {
-    await notify("Baisses de prix 📉", `${hits.length} composants que tu surveilles sont passés sous ton seuil : ${hits.map((h) => h.name).join(", ")}.`);
+    await notify(
+      tr("Baisses de prix 📉", "Price drops 📉"),
+      tr(
+        `${hits.length} composants que tu surveilles sont passés sous ton seuil : ${hits.map((h) => h.name).join(", ")}.`,
+        `${hits.length} parts you're watching have dropped below your target: ${hits.map((h) => h.name).join(", ")}.`,
+      ),
+    );
   }
   return alerts.map((a) => (hits.includes(a) ? { ...a, notifiedAt: bestPriceOf(a.id) } : a));
 }
 
-const eur = (n: number) => `${n.toLocaleString("fr-FR", { maximumFractionDigits: n % 1 ? 2 : 0, minimumFractionDigits: n % 1 ? 2 : 0 })} €`;
+const locale = () => (currentLang() === "en" ? "en-GB" : "fr-FR");
+const eur = (n: number) => {
+  const v = n.toLocaleString(locale(), { maximumFractionDigits: n % 1 ? 2 : 0, minimumFractionDigits: n % 1 ? 2 : 0 });
+  return currentLang() === "en" ? `€${v}` : `${v} €`;
+};

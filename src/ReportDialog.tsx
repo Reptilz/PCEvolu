@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "./icons";
-import { mailReport, REPORT_KINDS, sendReport, type ReportContext, type ReportForm, type ReportKind } from "./report";
+import { mailReport, REPORT_KINDS, reportKindLabel, sendReport, type ReportContext, type ReportForm, type ReportKind } from "./report";
+import { tr } from "./settings";
 
 type Status = "editing" | "sending" | "sent" | "failed";
 
@@ -50,13 +51,13 @@ export function ReportDialog({ pc }: { pc?: string[] }) {
 
   return (
     <div className="sheet-backdrop" onClick={close}>
-      <div className="sheet report-sheet" onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Signaler une erreur">
+      <div className="sheet report-sheet" onClick={(e) => e.stopPropagation()} role="dialog" aria-label={tr("Signaler une erreur", "Report a mistake")}>
         <div className="sheet-head">
           <div>
-            <div className="cat">Signaler une erreur</div>
+            <div className="cat">{tr("Signaler une erreur", "Report a mistake")}</div>
             <h2 className="sheet-title">{ctx.topic.charAt(0).toUpperCase() + ctx.topic.slice(1)}</h2>
           </div>
-          <button className="icon-btn" onClick={close} aria-label="Fermer">
+          <button className="icon-btn" onClick={close} aria-label={tr("Fermer", "Close")}>
             <Icon name="cross" />
           </button>
         </div>
@@ -65,30 +66,33 @@ export function ReportDialog({ pc }: { pc?: string[] }) {
           <div className="report-done">
             <Icon name="check" />
             <div>
-              <b>Merci, c'est envoyé.</b>
+              <b>{tr("Merci, c'est envoyé.", "Thanks, it's been sent.")}</b>
               <p className="muted">
-                Chaque signalement est vérifié et la correction arrive avec une prochaine mise à jour des données.
-                {email.trim() ? " On te répondra à l'adresse indiquée." : ""}
+                {tr(
+                  "Chaque signalement est vérifié et la correction arrive avec une prochaine mise à jour des données.",
+                  "Every report is checked and the fix comes with an upcoming data update.",
+                )}
+                {email.trim() ? tr(" On te répondra à l'adresse indiquée.", " We'll reply to the address you gave.") : ""}
               </p>
             </div>
             <button className="btn primary" onClick={close}>
-              Fermer
+              {tr("Fermer", "Close")}
             </button>
           </div>
         ) : (
           <form className="report-form" onSubmit={submit}>
             <fieldset className="report-kinds">
-              <legend>Ça concerne</legend>
+              <legend>{tr("Ça concerne", "It's about")}</legend>
               {REPORT_KINDS.map((k) => (
                 <label key={k.id} className={kind === k.id ? "on" : ""}>
                   <input type="radio" name="kind" value={k.id} checked={kind === k.id} onChange={() => setKind(k.id)} />
-                  {k.label}
+                  {reportKindLabel(k)}
                 </label>
               ))}
             </fieldset>
 
             <label className="report-field">
-              <span>Qu'est-ce qui est faux ?</span>
+              <span>{tr("Qu'est-ce qui est faux ?", "What's wrong?")}</span>
               <textarea
                 ref={first}
                 rows={4}
@@ -96,41 +100,41 @@ export function ReportDialog({ pc }: { pc?: string[] }) {
                 maxLength={3000}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Exemple : la carte mère proposée n'a qu'un seul port M.2, pas deux."
+                placeholder={tr("Exemple : la carte mère proposée n'a qu'un seul port M.2, pas deux.", "Example: the suggested motherboard only has one M.2 slot, not two.")}
               />
             </label>
 
             <label className="report-field">
               <span>
-                La bonne information <em>(facultatif)</em>
+                {tr("La bonne information", "The correct information")} <em>{tr("(facultatif)", "(optional)")}</em>
               </span>
               <input
                 type="text"
                 maxLength={500}
                 value={correct}
                 onChange={(e) => setCorrect(e.target.value)}
-                placeholder="Lien vers la fiche du fabricant ou du marchand, bon prix…"
+                placeholder={tr("Lien vers la fiche du fabricant ou du marchand, bon prix…", "Link to the manufacturer's or merchant's page, correct price…")}
               />
             </label>
 
             <label className="report-field">
               <span>
-                Ton email, pour qu'on te réponde <em>(facultatif)</em>
+                {tr("Ton email, pour qu'on te réponde", "Your email, so we can reply")} <em>{tr("(facultatif)", "(optional)")}</em>
               </span>
-              <input type="email" maxLength={200} value={email} onChange={(e) => setEmail(e.target.value)} placeholder="nom@exemple.fr" />
+              <input type="email" maxLength={200} value={email} onChange={(e) => setEmail(e.target.value)} placeholder={tr("nom@exemple.fr", "name@example.com")} />
             </label>
 
             {!!(ctx.details?.length || pc?.length) && (
               <div className="report-context">
                 <label className="report-check">
                   <input type="checkbox" checked={withContext} onChange={(e) => setWithContext(e.target.checked)} />
-                  Joindre ces informations, pour retrouver l'erreur plus vite
+                  {tr("Joindre ces informations, pour retrouver l'erreur plus vite", "Attach this information, to track down the mistake faster")}
                 </label>
                 {withContext && (
                   <>
                     {!!ctx.details?.length && (
                       <>
-                        <div className="report-ctx-h">Ce que l'app affichait</div>
+                        <div className="report-ctx-h">{tr("Ce que l'app affichait", "What the app was showing")}</div>
                         <ul>
                           {ctx.details.map((d, i) => (
                             <li key={i}>{d}</li>
@@ -140,7 +144,7 @@ export function ReportDialog({ pc }: { pc?: string[] }) {
                     )}
                     {!!pc?.length && (
                       <>
-                        <div className="report-ctx-h">Ton PC</div>
+                        <div className="report-ctx-h">{tr("Ton PC", "Your PC")}</div>
                         <ul>
                           {pc.map((d, i) => (
                             <li key={i}>{d}</li>
@@ -155,9 +159,9 @@ export function ReportDialog({ pc }: { pc?: string[] }) {
 
             {status === "failed" && (
               <p className="opt-error">
-                L'envoi n'a pas abouti (connexion internet ?). Tu peux réessayer, ou{" "}
+                {tr("L'envoi n'a pas abouti (connexion internet ?). Tu peux réessayer, ou", "Sending didn't go through (internet connection?). You can try again, or")}{" "}
                 <button type="button" className="link" onClick={() => mailReport(form)}>
-                  l'envoyer depuis ta messagerie
+                  {tr("l'envoyer depuis ta messagerie", "send it from your email app")}
                 </button>
                 .
               </p>
@@ -165,14 +169,17 @@ export function ReportDialog({ pc }: { pc?: string[] }) {
 
             <div className="report-actions">
               <button type="button" className="btn ghost" onClick={close}>
-                Annuler
+                {tr("Annuler", "Cancel")}
               </button>
               <button type="submit" className="btn primary" disabled={!message.trim() || status === "sending"}>
-                {status === "sending" ? "Envoi…" : "Envoyer"}
+                {status === "sending" ? tr("Envoi…", "Sending…") : tr("Envoyer", "Send")}
               </button>
             </div>
             <p className="muted small">
-              Seul ce qui est affiché ici est envoyé. Ton email, si tu le donnes, sert uniquement à te répondre.
+              {tr(
+                "Seul ce qui est affiché ici est envoyé. Ton email, si tu le donnes, sert uniquement à te répondre.",
+                "Only what's shown here is sent. Your email, if you give it, is only used to reply to you.",
+              )}
             </p>
           </form>
         )}

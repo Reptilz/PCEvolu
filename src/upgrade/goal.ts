@@ -10,6 +10,8 @@
 import type { Report } from "../types";
 import type { CpuSpec, GpuSpec } from "./types";
 import type { Profile } from "./profile";
+import { tr } from "../settings";
+import { partName } from "./catalog";
 
 export type Usage = "office" | "gaming" | "creation" | "streaming";
 export type Resolution = "1080p" | "1440p" | "4k";
@@ -44,21 +46,32 @@ export function saveGoal(g: Goal) {
   }
 }
 
+// Libellés traduits à la lecture (accesseurs) : USAGE_LABEL[u] suit la langue choisie au moment de l'affichage.
 export const USAGE_LABEL: Record<Usage, string> = {
-  office: "Bureautique & internet",
-  gaming: "Jeu",
-  creation: "Création (montage, photo, 3D)",
-  streaming: "Jeu + streaming",
+  get office() { return tr("Bureautique & internet", "Office & web browsing"); },
+  get gaming() { return tr("Jeu", "Gaming"); },
+  get creation() { return tr("Création (montage, photo, 3D)", "Creative work (video editing, photo, 3D)"); },
+  get streaming() { return tr("Jeu + streaming", "Gaming + streaming"); },
 };
-export const RES_LABEL: Record<Resolution, string> = { "1080p": "Full HD (1080p)", "1440p": "2K (1440p)", "4k": "4K (2160p)" };
-export const FPS_LABEL: Record<FpsTarget, string> = { 60: "60 i/s", 100: "100 i/s", 144: "144 i/s" };
+export const RES_LABEL: Record<Resolution, string> = {
+  get "1080p"() { return "Full HD (1080p)"; },
+  get "1440p"() { return tr("2K (1440p)", "QHD (1440p)"); },
+  get "4k"() { return "4K (2160p)"; },
+};
+export const FPS_LABEL: Record<FpsTarget, string> = {
+  get 60() { return tr("60 i/s", "60 FPS"); },
+  get 100() { return tr("100 i/s", "100 FPS"); },
+  get 144() { return tr("144 i/s", "144 FPS"); },
+};
 export const isGaming = (u: Usage) => u === "gaming" || u === "streaming";
+/** Nom court de la résolution : « 2K », « Full HD »… */
+const resShort = (r: Resolution) => RES_LABEL[r].split(" (")[0];
 
 /** Résumé court : « Jeu · 2K · 100 i/s · 800 € ». */
 export function goalSummary(g: Goal): string {
   const parts = [USAGE_LABEL[g.usage]];
-  if (isGaming(g.usage)) parts.push(RES_LABEL[g.resolution].split(" (")[0], FPS_LABEL[g.fps]);
-  parts.push(g.budget == null ? "budget libre" : `${g.budget} €`);
+  if (isGaming(g.usage)) parts.push(resShort(g.resolution), FPS_LABEL[g.fps]);
+  parts.push(g.budget == null ? tr("budget libre", "no budget limit") : tr(`${g.budget} €`, `€${g.budget}`));
   return parts.join(" · ");
 }
 
@@ -131,115 +144,128 @@ export function assess(goal: Goal, p: Profile, r: Report): Verdict {
   const ram = p.ramTotalGb;
   const dual = isDualChannel(p);
   let fps: FpsEstimate | undefined;
+  const gb = (n: number) => tr(`${n} Go`, `${n} GB`);
+  const L = {
+    disk: tr("Disque", "Drive"),
+    ram: tr("Mémoire vive", "RAM"),
+    cpu: tr("Processeur", "Processor"),
+    gpu: tr("Carte graphique", "Graphics card"),
+    vram: tr("Mémoire vidéo", "Video memory"),
+  };
+  const gpuName = p.gpu ? partName(p.gpu) : undefined;
 
   // Stockage : un SSD change tout, quel que soit l'usage.
   needs.push(
     hasSsd
-      ? { id: "ssd", label: "Disque", status: "ok", current: hasNvme ? "SSD NVMe" : "SSD", target: "SSD", detail: "Démarrage et ouverture des logiciels rapides." }
-      : { id: "ssd", label: "Disque", status: "missing", current: "Disque dur mécanique", target: "SSD", detail: "Le disque dur est le premier frein d'un PC : démarrage lent, logiciels qui rament. Un SSD est l'upgrade le plus rentable.", fix: "storage" },
+      ? { id: "ssd", label: L.disk, status: "ok", current: hasNvme ? "SSD NVMe" : "SSD", target: "SSD", detail: tr("Démarrage et ouverture des logiciels rapides.", "Fast startup, and apps open quickly.") }
+      : { id: "ssd", label: L.disk, status: "missing", current: tr("Disque dur mécanique", "Mechanical hard drive"), target: "SSD", detail: tr("Le disque dur est le premier frein d'un PC : démarrage lent, logiciels qui rament. Un SSD est l'upgrade le plus rentable.", "A hard drive is the biggest thing holding a PC back: slow startup, sluggish apps. An SSD is the best-value upgrade there is."), fix: "storage" },
   );
 
   if (goal.usage === "office") {
     needs.push(
       ram >= 16
-        ? { id: "ram", label: "Mémoire vive", status: "ok", current: `${ram} Go`, target: "8 à 16 Go", detail: "Confortable, même avec beaucoup d'onglets." }
+        ? { id: "ram", label: L.ram, status: "ok", current: gb(ram), target: tr("8 à 16 Go", "8 to 16 GB"), detail: tr("Confortable, même avec beaucoup d'onglets.", "Comfortable, even with lots of tabs open.") }
         : ram >= 8
-          ? { id: "ram", label: "Mémoire vive", status: "limited", current: `${ram} Go`, target: "16 Go", detail: "Suffisant, mais juste avec un navigateur chargé et Teams/Zoom.", fix: "ram" }
-          : { id: "ram", label: "Mémoire vive", status: "missing", current: `${ram} Go`, target: "8 Go minimum", detail: "Trop peu : Windows 11 et un navigateur saturent 4 à 6 Go.", fix: "ram" },
+          ? { id: "ram", label: L.ram, status: "limited", current: gb(ram), target: gb(16), detail: tr("Suffisant, mais juste avec un navigateur chargé et Teams/Zoom.", "Enough, but tight with a busy browser and Teams/Zoom."), fix: "ram" }
+          : { id: "ram", label: L.ram, status: "missing", current: gb(ram), target: tr("8 Go minimum", "8 GB minimum"), detail: tr("Trop peu : Windows 11 et un navigateur saturent 4 à 6 Go.", "Too little: Windows 11 and a browser fill up 4 to 6 GB."), fix: "ram" },
     );
     const g = p.cpu?.gaming ?? 0;
     needs.push(
       g >= 55
-        ? { id: "cpu", label: "Processeur", status: "ok", current: p.cpuDisplay, target: "4 cœurs récents", detail: "Largement suffisant pour la bureautique et la vidéo." }
-        : { id: "cpu", label: "Processeur", status: "limited", current: p.cpuDisplay, target: "4 cœurs récents", detail: "Un peu juste : le PC peut ralentir avec plusieurs logiciels ouverts.", fix: "cpu" },
+        ? { id: "cpu", label: L.cpu, status: "ok", current: p.cpuDisplay, target: tr("4 cœurs récents", "4 recent cores"), detail: tr("Largement suffisant pour la bureautique et la vidéo.", "More than enough for office work and video.") }
+        : { id: "cpu", label: L.cpu, status: "limited", current: p.cpuDisplay, target: tr("4 cœurs récents", "4 recent cores"), detail: tr("Un peu juste : le PC peut ralentir avec plusieurs logiciels ouverts.", "A bit tight: your PC may slow down with several apps open."), fix: "cpu" },
     );
-    needs.push({ id: "gpu", label: "Carte graphique", status: "ok", current: p.gpu?.name ?? "—", target: "Pas nécessaire", detail: "La puce graphique intégrée suffit pour la bureautique, la vidéo et même la 4K en lecture." });
+    needs.push({ id: "gpu", label: L.gpu, status: "ok", current: gpuName ?? "—", target: tr("Pas nécessaire", "Not needed"), detail: tr("La puce graphique intégrée suffit pour la bureautique, la vidéo et même la 4K en lecture.", "Integrated graphics are enough for office work, video and even 4K playback.") });
   }
 
   if (isGaming(goal.usage)) {
     fps = estimateFps(p.cpu, p.gpu, goal.resolution, dual);
     const target = goal.fps;
-    const res = RES_LABEL[goal.resolution].split(" (")[0];
+    const res = resShort(goal.resolution);
     if (fps) {
       const st = (v: number): NeedStatus => (v >= target ? "ok" : v >= target * 0.8 ? "limited" : "missing");
       needs.push({
-        id: "gpu", label: "Carte graphique", status: st(fps.gpuFps), current: `≈ ${fps.gpuFps} i/s en ${res}`, target: `${target} i/s`,
+        id: "gpu", label: L.gpu, status: st(fps.gpuFps), current: tr(`≈ ${fps.gpuFps} i/s en ${res}`, `≈ ${fps.gpuFps} FPS at ${res}`), target: tr(`${target} i/s`, `${target} FPS`),
         detail: p.gpu?.integrated
-          ? "Les graphiques intégrés ne suffisent pas pour les jeux récents : une carte graphique dédiée est nécessaire."
-          : fps.gpuFps >= target ? `Ta ${p.gpu?.name} tient l'objectif en ${res}.` : `Ta ${p.gpu?.name} plafonne à ≈ ${fps.gpuFps} i/s en ${res}.`,
+          ? tr("Les graphiques intégrés ne suffisent pas pour les jeux récents : une carte graphique dédiée est nécessaire.", "Integrated graphics aren't enough for recent games: you need a dedicated graphics card.")
+          : fps.gpuFps >= target ? tr(`Ta ${p.gpu?.name} tient l'objectif en ${res}.`, `Your ${gpuName} hits the goal at ${res}.`) : tr(`Ta ${p.gpu?.name} plafonne à ≈ ${fps.gpuFps} i/s en ${res}.`, `Your ${gpuName} tops out at ≈ ${fps.gpuFps} FPS at ${res}.`),
         fix: fps.gpuFps < target ? "gpu" : undefined,
       });
       needs.push({
-        id: "cpu", label: "Processeur", status: st(fps.cpuFps), current: `≈ ${fps.cpuFps} i/s max`, target: `${target} i/s`,
-        detail: fps.cpuFps >= target ? `Ton ${p.cpuDisplay} peut alimenter ${target} i/s.` : `Ton ${p.cpuDisplay} ne peut pas dépasser ≈ ${fps.cpuFps} i/s, quelle que soit la carte graphique.`,
+        id: "cpu", label: L.cpu, status: st(fps.cpuFps), current: tr(`≈ ${fps.cpuFps} i/s max`, `≈ ${fps.cpuFps} FPS max`), target: tr(`${target} i/s`, `${target} FPS`),
+        detail: fps.cpuFps >= target ? tr(`Ton ${p.cpuDisplay} peut alimenter ${target} i/s.`, `Your ${p.cpuDisplay} can keep up with ${target} FPS.`) : tr(`Ton ${p.cpuDisplay} ne peut pas dépasser ≈ ${fps.cpuFps} i/s, quelle que soit la carte graphique.`, `Your ${p.cpuDisplay} can't go above ≈ ${fps.cpuFps} FPS, whatever the graphics card.`),
         fix: fps.cpuFps < target ? "cpu" : undefined,
       });
       if (p.gpu && !p.gpu.integrated) {
         const need = VRAM_NEED[goal.resolution];
         needs.push({
-          id: "vram", label: "Mémoire vidéo", status: fps.vramShort ? "limited" : "ok", current: `${p.gpu.vramGb} Go`, target: `${need} Go en ${res}`,
-          detail: fps.vramShort ? "Juste pour les jeux récents en qualité élevée : il faudra baisser les textures." : "Suffisante pour les textures en qualité élevée.",
+          id: "vram", label: L.vram, status: fps.vramShort ? "limited" : "ok", current: gb(p.gpu.vramGb), target: tr(`${need} Go en ${res}`, `${need} GB at ${res}`),
+          detail: fps.vramShort ? tr("Juste pour les jeux récents en qualité élevée : il faudra baisser les textures.", "Tight for recent games on high settings: you'll need to lower texture quality.") : tr("Suffisante pour les textures en qualité élevée.", "Enough for high-quality textures."),
           fix: fps.vramShort ? "gpu" : undefined,
         });
       }
     }
     needs.push(
       ram >= 16 && dual
-        ? { id: "ram", label: "Mémoire vive", status: "ok", current: `${ram} Go${dual ? ", dual channel" : ""}`, target: "16 Go en dual channel", detail: "Bon pour le jeu." }
+        ? { id: "ram", label: L.ram, status: "ok", current: tr(`${ram} Go${dual ? ", dual channel" : ""}`, `${ram} GB${dual ? ", dual channel" : ""}`), target: tr("16 Go en dual channel", "16 GB in dual channel"), detail: tr("Bon pour le jeu.", "Good for gaming.") }
         : ram >= 16
-          ? { id: "ram", label: "Mémoire vive", status: "limited", current: `${ram} Go en single channel`, target: "Dual channel", detail: "Une seule barrette : le processeur perd ≈ 10 à 15 % d'images/s.", fix: "ram" }
-          : { id: "ram", label: "Mémoire vive", status: "missing", current: `${ram} Go`, target: "16 Go", detail: "Les jeux récents demandent 16 Go : en dessous, saccades et chargements.", fix: "ram" },
+          ? { id: "ram", label: L.ram, status: "limited", current: tr(`${ram} Go en single channel`, `${ram} GB in single channel`), target: "Dual channel", detail: tr("Une seule barrette : le processeur perd ≈ 10 à 15 % d'images/s.", "Only one RAM stick: your processor loses ≈ 10 to 15% of its frame rate."), fix: "ram" }
+          : { id: "ram", label: L.ram, status: "missing", current: gb(ram), target: gb(16), detail: tr("Les jeux récents demandent 16 Go : en dessous, saccades et chargements.", "Recent games need 16 GB: with less, expect stutter and loading pauses."), fix: "ram" },
     );
     if (goal.usage === "streaming") {
       const m = p.cpu?.multi ?? 0;
+      const label = tr("Processeur (streaming)", "Processor (streaming)");
+      const target8 = tr("8 cœurs ou plus", "8 cores or more");
       needs.push(
         m >= 120
-          ? { id: "multi", label: "Processeur (streaming)", status: "ok", current: p.cpuDisplay, target: "8 cœurs ou plus", detail: "Assez de cœurs pour jouer, diffuser et gérer le chat en même temps." }
-          : { id: "multi", label: "Processeur (streaming)", status: "limited", current: p.cpuDisplay, target: "8 cœurs ou plus", detail: "Encode avec la carte graphique (NVENC / AMF) dans OBS pour soulager le processeur.", fix: "cpu" },
+          ? { id: "multi", label, status: "ok", current: p.cpuDisplay, target: target8, detail: tr("Assez de cœurs pour jouer, diffuser et gérer le chat en même temps.", "Enough cores to play, stream and handle chat at the same time.") }
+          : { id: "multi", label, status: "limited", current: p.cpuDisplay, target: target8, detail: tr("Encode avec la carte graphique (NVENC / AMF) dans OBS pour soulager le processeur.", "Encode with your graphics card (NVENC / AMF) in OBS to take the load off your processor."), fix: "cpu" },
       );
     }
   }
 
   if (goal.usage === "creation") {
     const m = p.cpu?.multi ?? 0;
+    const target8 = tr("8 cœurs ou plus", "8 cores or more");
     needs.push(
       m >= 180
-        ? { id: "multi", label: "Processeur", status: "ok", current: p.cpuDisplay, target: "8 cœurs ou plus", detail: "Rendus et exports rapides." }
+        ? { id: "multi", label: L.cpu, status: "ok", current: p.cpuDisplay, target: target8, detail: tr("Rendus et exports rapides.", "Fast renders and exports.") }
         : m >= 100
-          ? { id: "multi", label: "Processeur", status: "limited", current: p.cpuDisplay, target: "8 cœurs ou plus", detail: "Correct, mais les exports vidéo et rendus 3D seront longs.", fix: "cpu" }
-          : { id: "multi", label: "Processeur", status: "missing", current: p.cpuDisplay, target: "8 cœurs ou plus", detail: "Trop peu de cœurs pour le montage vidéo et la 3D.", fix: "cpu" },
+          ? { id: "multi", label: L.cpu, status: "limited", current: p.cpuDisplay, target: target8, detail: tr("Correct, mais les exports vidéo et rendus 3D seront longs.", "Decent, but video exports and 3D renders will take a while."), fix: "cpu" }
+          : { id: "multi", label: L.cpu, status: "missing", current: p.cpuDisplay, target: target8, detail: tr("Trop peu de cœurs pour le montage vidéo et la 3D.", "Too few cores for video editing and 3D."), fix: "cpu" },
     );
     needs.push(
       ram >= 32
-        ? { id: "ram", label: "Mémoire vive", status: "ok", current: `${ram} Go`, target: "32 Go", detail: "Confortable pour la 4K et les gros projets." }
+        ? { id: "ram", label: L.ram, status: "ok", current: gb(ram), target: gb(32), detail: tr("Confortable pour la 4K et les gros projets.", "Comfortable for 4K and big projects.") }
         : ram >= 16
-          ? { id: "ram", label: "Mémoire vive", status: "limited", current: `${ram} Go`, target: "32 Go", detail: "Suffisant en 1080p, juste en 4K et en 3D.", fix: "ram" }
-          : { id: "ram", label: "Mémoire vive", status: "missing", current: `${ram} Go`, target: "32 Go", detail: "Trop peu pour la création : 16 Go minimum, 32 Go conseillés.", fix: "ram" },
+          ? { id: "ram", label: L.ram, status: "limited", current: gb(ram), target: gb(32), detail: tr("Suffisant en 1080p, juste en 4K et en 3D.", "Enough for 1080p, tight for 4K and 3D."), fix: "ram" }
+          : { id: "ram", label: L.ram, status: "missing", current: gb(ram), target: gb(32), detail: tr("Trop peu pour la création : 16 Go minimum, 32 Go conseillés.", "Too little for creative work: 16 GB minimum, 32 GB recommended."), fix: "ram" },
     );
     const gpu = p.gpu;
+    const vram8 = tr("8 Go de VRAM", "8 GB of VRAM");
     needs.push(
       gpu && !gpu.integrated && gpu.vramGb >= 8 && gpu.perf >= 70
-        ? { id: "gpu", label: "Carte graphique", status: "ok", current: gpu.name, target: "8 Go de VRAM", detail: "Accélère les exports (NVENC / AMF), les effets et le rendu 3D." }
-        : { id: "gpu", label: "Carte graphique", status: gpu?.integrated ? "missing" : "limited", current: gpu?.name ?? "—", target: "8 Go de VRAM", detail: "Une carte récente accélère fortement les exports vidéo et la 3D.", fix: "gpu" },
+        ? { id: "gpu", label: L.gpu, status: "ok", current: partName(gpu), target: vram8, detail: tr("Accélère les exports (NVENC / AMF), les effets et le rendu 3D.", "Speeds up exports (NVENC / AMF), effects and 3D rendering.") }
+        : { id: "gpu", label: L.gpu, status: gpu?.integrated ? "missing" : "limited", current: gpuName ?? "—", target: vram8, detail: tr("Une carte récente accélère fortement les exports vidéo et la 3D.", "A recent card makes video exports and 3D much faster."), fix: "gpu" },
     );
     if (!hasNvme && hasSsd) {
-      needs.push({ id: "nvme", label: "Stockage de travail", status: "limited", current: "SSD SATA", target: "SSD NVMe", detail: "Un NVMe accélère la lecture des rushs 4K.", fix: "storage" });
+      needs.push({ id: "nvme", label: tr("Stockage de travail", "Working storage"), status: "limited", current: "SSD SATA", target: "SSD NVMe", detail: tr("Un NVMe accélère la lecture des rushs 4K.", "An NVMe drive speeds up reading 4K footage."), fix: "storage" });
     }
   }
 
   const level = needs.reduce<NeedStatus>((acc, n) => worst(acc, n.status), "ok");
-  const res = RES_LABEL[goal.resolution].split(" (")[0];
+  const res = resShort(goal.resolution);
   let title: string;
   let summary: string;
   if (level === "ok") {
-    title = "Ton PC suffit pour ton objectif";
+    title = tr("Ton PC suffit pour ton objectif", "Your PC is good enough for your goal");
     summary = isGaming(goal.usage) && fps
-      ? `≈ ${fps.fps} i/s en ${res} dans les jeux récents : l'objectif de ${goal.fps} i/s est atteint. Inutile de dépenser, sauf envie d'aller plus loin.`
-      : "Aucune dépense nécessaire pour l'usage que tu as choisi.";
+      ? tr(`≈ ${fps.fps} i/s en ${res} dans les jeux récents : l'objectif de ${goal.fps} i/s est atteint. Inutile de dépenser, sauf envie d'aller plus loin.`, `≈ ${fps.fps} FPS at ${res} in recent games: your ${goal.fps} FPS goal is reached. No need to spend anything, unless you want to go further.`)
+      : tr("Aucune dépense nécessaire pour l'usage que tu as choisi.", "No spending needed for what you've chosen to do.");
   } else {
-    const blockers = needs.filter((n) => n.status !== "ok").map((n) => n.label.toLowerCase());
-    title = level === "missing" ? "Ton PC n'atteint pas ton objectif" : "Ton PC y est presque";
-    summary = (isGaming(goal.usage) && fps ? `≈ ${fps.fps} i/s en ${res} pour un objectif de ${goal.fps} i/s. ` : "") + `À améliorer : ${blockers.join(", ")}.`;
+    const blockers = needs.filter((n) => n.status !== "ok").map((n) => tr(n.label.toLowerCase(), n.label.replace(/^[A-Z](?=[a-z])/, (c) => c.toLowerCase())));
+    title = level === "missing" ? tr("Ton PC n'atteint pas ton objectif", "Your PC doesn't reach your goal") : tr("Ton PC y est presque", "Your PC is almost there");
+    summary = (isGaming(goal.usage) && fps ? tr(`≈ ${fps.fps} i/s en ${res} pour un objectif de ${goal.fps} i/s. `, `≈ ${fps.fps} FPS at ${res} for a goal of ${goal.fps} FPS. `) : "") + tr(`À améliorer : ${blockers.join(", ")}.`, `To improve: ${blockers.join(", ")}.`);
   }
   return { level, title, summary, needs, fps };
 }
@@ -287,7 +313,7 @@ export function topOptions(
 
 export function impactOf(goal: Goal, p: Profile, verdict: Verdict, main: { kind: string }, category: "gpu" | "cpu" | "ram" | "storage", ramAfterGb?: number): Impact {
   const fixes = new Set(verdict.needs.filter((n) => n.status !== "ok").map((n) => n.fix));
-  const res = RES_LABEL[goal.resolution].split(" (")[0];
+  const res = resShort(goal.resolution);
 
   if (isGaming(goal.usage) && verdict.fps && (category === "gpu" || category === "cpu" || category === "ram")) {
     const cpu = category === "cpu" ? (main as CpuSpec) : p.cpu;
@@ -301,7 +327,7 @@ export function impactOf(goal: Goal, p: Profile, verdict: Verdict, main: { kind:
     const vramShort = category === "gpu" && after.vramShort;
     const reaches = after.fps >= goal.fps && !vramShort;
     const capacityOnly = category === "ram" && !better;
-    const limitBy = after.limit === "cpu" ? "le processeur" : "la carte graphique";
+    const limitBy = after.limit === "cpu" ? tr("le processeur", "the processor") : tr("la carte graphique", "the graphics card");
     return {
       relevant: better || (category === "ram" && fixes.has("ram")),
       reachesGoal: reaches && !capacityOnly,
@@ -309,35 +335,35 @@ export function impactOf(goal: Goal, p: Profile, verdict: Verdict, main: { kind:
       label: capacityOnly
         ? undefined
         : better
-          ? `≈ ${before} → ${after.fps} i/s en ${res}` +
-            (after.fps < goal.fps ? `, limité par ${limitBy}` : vramShort ? `, mais mémoire vidéo juste en ${res}` : "")
-          : `Pas de gain en ${res} : ${limitBy} reste le facteur limitant`,
+          ? tr(`≈ ${before} → ${after.fps} i/s en ${res}`, `≈ ${before} → ${after.fps} FPS at ${res}`) +
+            (after.fps < goal.fps ? tr(`, limité par ${limitBy}`, `, held back by ${limitBy}`) : vramShort ? tr(`, mais mémoire vidéo juste en ${res}`, `, but video memory is tight at ${res}`) : "")
+          : tr(`Pas de gain en ${res} : ${limitBy} reste le facteur limitant`, `No gain at ${res}: ${limitBy} is still the bottleneck`),
     };
   }
 
   if (goal.usage === "creation" && category === "cpu") {
     const multi = (main as CpuSpec).multi ?? 0;
     const gain = p.cpu ? Math.round((multi / p.cpu.multi - 1) * 100) : 0;
-    return { relevant: gain > 10, reachesGoal: multi >= 180, label: gain > 0 ? `≈ +${gain} % en rendu et export` : undefined };
+    return { relevant: gain > 10, reachesGoal: multi >= 180, label: gain > 0 ? tr(`≈ +${gain} % en rendu et export`, `≈ +${gain}% faster rendering and exports`) : undefined };
   }
   if (goal.usage === "creation" && category === "ram") {
     return { relevant: fixes.has("ram"), reachesGoal: (ramAfterGb ?? 0) >= 32 };
   }
   // Un disque dur mécanique ajoute de la place, mais ne remplace jamais un SSD pour Windows et les jeux.
   if (category === "storage" && main.kind === "ssd" && (main as { iface?: string }).iface === "HDD") {
-    return { relevant: false, reachesGoal: false, label: "Pour stocker beaucoup de fichiers, pas pour accélérer le PC" };
+    return { relevant: false, reachesGoal: false, label: tr("Pour stocker beaucoup de fichiers, pas pour accélérer le PC", "For storing lots of files, not for speeding up your PC") };
   }
   if (goal.usage === "office" && category === "gpu") {
-    return { relevant: false, reachesGoal: false, label: "Inutile pour la bureautique" };
+    return { relevant: false, reachesGoal: false, label: tr("Inutile pour la bureautique", "Not needed for office work") };
   }
   return { relevant: fixes.has(category), reachesGoal: fixes.has(category) };
 }
 
 /** La fluidité en un mot, pour lire un nombre d'images par seconde sans connaître le jargon. */
 export function fluidity(fps: number): string {
-  if (fps < 30) return "Saccadé";
-  if (fps < 55) return "Jouable";
-  if (fps < 90) return "Fluide";
-  if (fps < 140) return "Très fluide";
-  return "Ultra fluide";
+  if (fps < 30) return tr("Saccadé", "Choppy");
+  if (fps < 55) return tr("Jouable", "Playable");
+  if (fps < 90) return tr("Fluide", "Smooth");
+  if (fps < 140) return tr("Très fluide", "Very smooth");
+  return tr("Ultra fluide", "Ultra smooth");
 }

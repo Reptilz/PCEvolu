@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { invoke, isTauri } from "@tauri-apps/api/core";
 import { BrandLogo, Icon } from "../icons";
+import { currentLang, tr } from "../settings";
 
 interface StartupItem {
   name: string;
@@ -84,12 +85,52 @@ const KNOWN: Known[] = [
   { match: /cortana|xbox|gamebar/i, label: "Application Windows", verdict: "safe", why: "Inutile au démarrage." },
 ];
 
-const VERDICT_TEXT: Record<Verdict, string> = {
-  safe: "Désactivable sans risque",
-  depends: "Selon ton usage",
-  keep: "À garder",
-  unknown: "Inconnu",
+/** Traductions anglaises de KNOWN, indexées par le libellé français : [libellé, explication]. Lues à l'affichage. */
+const KNOWN_EN: Record<string, [string, string]> = {
+  "Sécurité Windows": ["Windows Security", "The Windows Security (antivirus) icon: keep it."],
+  Antivirus: ["Antivirus", "Your antivirus needs to start with Windows to protect you."],
+  "Riot Vanguard": ["Riot Vanguard", "Anti-cheat for Valorant and League of Legends: only keep it if you play those games (they restart it when needed)."],
+  "Pilote audio": ["Audio driver", "Part of the sound driver (effects, headphone jack): keep it."],
+  "Pilote de pavé tactile / tablette": ["Touchpad / tablet driver", "Handles the touchpad or graphics tablet: keep it."],
+  "Pilote graphique Intel": ["Intel graphics driver", "Part of the graphics driver: keep it."],
+  NVIDIA: ["NVIDIA", "NVIDIA services (overlay, driver updates): you can disable them if you don't use the overlay or recording."],
+  "AMD Software": ["AMD Software", "AMD software (overlay, settings): you can disable it, the driver works without it."],
+  "Logitech G HUB": ["Logitech G HUB", "Keep it if you use mouse, keyboard or lighting profiles; otherwise you can disable it."],
+  "Corsair iCUE": ["Corsair iCUE", "Keep it if you use Corsair lighting or macros; otherwise you can disable it."],
+  "Razer Synapse": ["Razer Synapse", "Keep it if you use Razer profiles; otherwise you can disable it."],
+  Steam: ["Steam", "Opens when you launch a game: no need for it at startup."],
+  "Epic Games Launcher": ["Epic Games Launcher", "Opens when you launch a game: no need for it at startup."],
+  "EA app": ["EA app", "Opens when you launch an EA game: no need for it at startup."],
+  "Ubisoft Connect": ["Ubisoft Connect", "Opens when you launch a Ubisoft game: no need for it at startup."],
+  "Battle.net": ["Battle.net", "Opens when you launch a Blizzard game: no need for it at startup."],
+  "Riot Client": ["Riot Client", "Opens when you launch a Riot game: no need for it at startup."],
+  "GOG Galaxy": ["GOG Galaxy", "No need for it at startup."],
+  Discord: ["Discord", "You can open it when you need it: it starts in a few seconds."],
+  Spotify: ["Spotify", "No need for it at startup."],
+  "Messagerie / visio": ["Messaging / video calls", "You can open it when you need it."],
+  "Microsoft Edge (préchargement)": ["Microsoft Edge (preloading)", "Preloads Edge in the background: not needed if it isn't your main browser."],
+  "Google Chrome (préchargement)": ["Google Chrome (preloading)", "Preloads Chrome in the background: it starts just fine without it."],
+  Navigateur: ["Browser", "No need for it at startup."],
+  OneDrive: ["OneDrive", "Keep it if you sync your files (Desktop, Documents) with OneDrive; otherwise you can disable it."],
+  "Synchronisation de fichiers": ["File sync", "Keep it if you sync files all the time; otherwise you can disable it."],
+  "iTunes Helper": ["iTunes Helper", "Only used to connect an iPhone / iPod: you can disable it."],
+  "Mise à jour Java": ["Java Update", "Checks for Java updates: you can disable it."],
+  Adobe: ["Adobe", "Adobe updates and services: you can disable them."],
+  Utilitaire: ["Utility", "No need for it at startup."],
+  VPN: ["VPN", "Keep it if you want the VPN on as soon as the PC starts; otherwise you can disable it."],
+  "Utilitaire d'écran": ["Display utility", "Monitor settings software: you can disable it, the monitor works without it."],
+  "Application Windows": ["Windows app", "No need for it at startup."],
 };
+const knownLabel = (k: Known) => tr(k.label, KNOWN_EN[k.label]?.[0]);
+const knownWhy = (k: Known) => tr(k.why, KNOWN_EN[k.label]?.[1]);
+
+const verdictText = (v: Verdict): string =>
+  ({
+    safe: tr("Désactivable sans risque", "Safe to disable"),
+    depends: tr("Selon ton usage", "Depends on your use"),
+    keep: tr("À garder", "Keep"),
+    unknown: tr("Inconnu", "Unknown"),
+  })[v];
 
 function identify(item: StartupItem): Known | undefined {
   return KNOWN.find((k) => k.match.test(item.name) || k.match.test(item.command));
@@ -97,32 +138,36 @@ function identify(item: StartupItem): Known | undefined {
 
 /** Nom lisible : « MicrosoftEdgeAutoLaunch_FC40… » → « Microsoft Edge (préchargement) ». */
 const GENERIC_LABELS = new Set(["Antivirus", "Pilote audio", "Navigateur", "Utilitaire", "Messagerie / visio", "Synchronisation de fichiers", "Application Windows", "VPN", "Utilitaire d'écran", "Pilote de pavé tactile / tablette"]);
-const displayName = (item: StartupItem, k?: Known) => (k && !GENERIC_LABELS.has(k.label) ? k.label : item.name.replace(/\.lnk$/i, "").replace(/_[0-9A-F]{16,}$/i, ""));
+const displayName = (item: StartupItem, k?: Known) => (k && !GENERIC_LABELS.has(k.label) ? knownLabel(k) : item.name.replace(/\.lnk$/i, "").replace(/_[0-9A-F]{16,}$/i, ""));
 
 /** Processus courants : ce qu'ils sont, pour ne pas fermer n'importe quoi. */
-const PROCESS_HINT: [RegExp, string][] = [
-  [/^(chrome|msedge|firefox|opera|brave)$/i, "Navigateur : chaque onglet et extension est un processus séparé."],
-  [/^msedgewebview2$/i, "Composant Windows utilisé par certaines applications pour afficher leur interface."],
-  [/^svchost$/i, "Services de Windows : à laisser."],
-  [/^(explorer|dwm|csrss|winlogon|lsass|services|smss|wininit|system|registry|memory compression)$/i, "Fait partie de Windows : à laisser."],
-  [/^(msmpeng|securityhealthservice|nissrv)$/i, "Antivirus Windows Defender : à laisser."],
-  [/^discord$/i, "Discord : ferme-le si tu ne l'utilises pas pendant tes parties."],
-  [/^(steam|steamwebhelper|epicgameslauncher|eadesktop|riotclientservices)$/i, "Lanceur de jeux : peut être fermé hors des parties."],
-  [/nvidia|nvcontainer/i, "Services NVIDIA (overlay, enregistrement)."],
-  [/^(searchhost|searchindexer)$/i, "Recherche Windows : à laisser."],
+const PROCESS_HINT: [RegExp, string, string][] = [
+  [/^(chrome|msedge|firefox|opera|brave)$/i, "Navigateur : chaque onglet et extension est un processus séparé.", "Browser: each tab and extension is a separate process."],
+  [/^msedgewebview2$/i, "Composant Windows utilisé par certaines applications pour afficher leur interface.", "Windows component some apps use to display their interface."],
+  [/^svchost$/i, "Services de Windows : à laisser.", "Windows services: leave them."],
+  [/^(explorer|dwm|csrss|winlogon|lsass|services|smss|wininit|system|registry|memory compression)$/i, "Fait partie de Windows : à laisser.", "Part of Windows: leave it."],
+  [/^(msmpeng|securityhealthservice|nissrv)$/i, "Antivirus Windows Defender : à laisser.", "Windows Defender antivirus: leave it."],
+  [/^discord$/i, "Discord : ferme-le si tu ne l'utilises pas pendant tes parties.", "Discord: close it if you don't use it while gaming."],
+  [/^(steam|steamwebhelper|epicgameslauncher|eadesktop|riotclientservices)$/i, "Lanceur de jeux : peut être fermé hors des parties.", "Game launcher: can be closed when you're not playing."],
+  [/nvidia|nvcontainer/i, "Services NVIDIA (overlay, enregistrement).", "NVIDIA services (overlay, recording)."],
+  [/^(searchhost|searchindexer)$/i, "Recherche Windows : à laisser.", "Windows Search: leave it."],
 ];
-const hint = (name: string) => PROCESS_HINT.find(([re]) => re.test(name))?.[1];
-
-/** Plans d'alimentation par défaut de Windows. */
-const POWER: Record<string, { name: string; ok: boolean; note: string }> = {
-  "381b4222-f694-41f0-9685-ff5bb260df2e": { name: "Équilibré", ok: true, note: "Le bon choix pour la plupart des PC : le processeur monte en fréquence dès qu'il en a besoin." },
-  "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c": { name: "Performances élevées", ok: true, note: "Le processeur reste à pleine vitesse : un peu plus réactif, consomme davantage." },
-  "e9a42b02-d5df-448d-aa00-03f14749eb61": { name: "Performances optimales", ok: true, note: "Le plus réactif, consomme davantage au repos." },
-  "a1841308-3541-4fab-bc81-f71556f20b4a": { name: "Économie d'énergie", ok: false, note: "Bride le processeur : à éviter sur un PC de jeu fixe." },
+const hint = (name: string) => {
+  const h = PROCESS_HINT.find(([re]) => re.test(name));
+  return h && tr(h[1], h[2]);
 };
 
-const gb = (b: number) => `${(b / 1024 ** 3).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} Go`;
-const mb = (b: number) => (b >= 1024 ** 3 ? gb(b) : `${Math.round(b / 1024 ** 2).toLocaleString("fr-FR")} Mo`);
+/** Plans d'alimentation par défaut de Windows. */
+const POWER: Record<string, { name: string; nameEn: string; ok: boolean; note: string; noteEn: string }> = {
+  "381b4222-f694-41f0-9685-ff5bb260df2e": { name: "Équilibré", nameEn: "Balanced", ok: true, note: "Le bon choix pour la plupart des PC : le processeur monte en fréquence dès qu'il en a besoin.", noteEn: "The right choice for most PCs: the processor speeds up as soon as it needs to." },
+  "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c": { name: "Performances élevées", nameEn: "High performance", ok: true, note: "Le processeur reste à pleine vitesse : un peu plus réactif, consomme davantage.", noteEn: "The processor stays at full speed: a bit more responsive, uses more power." },
+  "e9a42b02-d5df-448d-aa00-03f14749eb61": { name: "Performances optimales", nameEn: "Ultimate performance", ok: true, note: "Le plus réactif, consomme davantage au repos.", noteEn: "The most responsive, uses more power when idle." },
+  "a1841308-3541-4fab-bc81-f71556f20b4a": { name: "Économie d'énergie", nameEn: "Power saver", ok: false, note: "Bride le processeur : à éviter sur un PC de jeu fixe.", noteEn: "Holds back the processor: avoid it on a gaming desktop." },
+};
+
+const locale = () => (currentLang() === "en" ? "en-GB" : "fr-FR");
+const gb = (b: number) => `${(b / 1024 ** 3).toLocaleString(locale(), { maximumFractionDigits: 1 })} ${tr("Go", "GB")}`;
+const mb = (b: number) => (b >= 1024 ** 3 ? gb(b) : `${Math.round(b / 1024 ** 2).toLocaleString(locale())} ${tr("Mo", "MB")}`);
 
 // Données d'exemple pour l'aperçu dans un navigateur (hors application).
 const DEMO: OptimizeReport = {
@@ -195,13 +240,13 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
     setKillMsg(undefined);
     if (!app) {
       setData((d) => d && { ...d, processes: d.processes.filter((x) => x.name !== p.name) });
-      setKillMsg({ ok: true, text: `${p.name} fermé (aperçu : rien n'a été fermé pour de vrai).` });
+      setKillMsg({ ok: true, text: tr(`${p.name} fermé (aperçu : rien n'a été fermé pour de vrai).`, `${p.name} closed (preview: nothing was actually closed).`) });
       return;
     }
     setKilling(p.name);
     try {
       const n = await invoke<number>("end_process", { name: p.name });
-      setKillMsg({ ok: true, text: `${p.name} fermé${n > 1 ? ` (${n} processus)` : ""}.` });
+      setKillMsg({ ok: true, text: tr(`${p.name} fermé${n > 1 ? ` (${n} processus)` : ""}.`, `${p.name} closed${n > 1 ? ` (${n} processes)` : ""}.`) });
       setData((d) => d && { ...d, processes: d.processes.filter((x) => x.name !== p.name) });
       // Relecture complète un peu plus tard : mémoire libérée et éventuels processus relancés.
       setTimeout(() => {
@@ -232,7 +277,7 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
 
   const t = data?.tweaks;
   const plan = t?.powerPlanGuid ? POWER[t.powerPlanGuid] : undefined;
-  const planName = plan?.name ?? t?.powerPlanName ?? "inconnu";
+  const planName = (plan && tr(plan.name, plan.nameEn)) ?? t?.powerPlanName ?? tr("inconnu", "unknown");
   const planOk = plan ? plan.ok : !/économie|saver/i.test(t?.powerPlanName ?? "");
   const ramPct = data ? Math.round((data.ramUsedBytes / data.ramTotalBytes) * 100) : 0;
   const recentGpu = /rtx|rx ?[6-9]\d{3}|arc/i.test(gpuName ?? "");
@@ -241,41 +286,52 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
     <div className="opt-page">
       <header className="gp-head">
         <div>
-          <h1>Optimiser</h1>
-          <p className="gp-goal">Ce qui se lance au démarrage, ce qui tourne en ce moment et les réglages de Windows qui comptent pour le jeu.</p>
+          <h1>{tr("Optimiser", "Optimize")}</h1>
+          <p className="gp-goal">{tr("Ce qui se lance au démarrage, ce qui tourne en ce moment et les réglages de Windows qui comptent pour le jeu.", "What launches at startup, what's running right now and the Windows settings that matter for gaming.")}</p>
         </div>
         <button className="btn ghost" onClick={load} disabled={loading}>
-          <Icon name="refresh" className={loading ? "spin" : ""} /> Actualiser
+          <Icon name="refresh" className={loading ? "spin" : ""} /> {tr("Actualiser", "Refresh")}
         </button>
       </header>
 
-      {!app && <p className="muted small">Aperçu avec des données d'exemple : dans l'application, PCEvolu lit ton PC.</p>}
-      {error && <p className="error">Lecture impossible : {error}</p>}
+      {!app && <p className="muted small">{tr("Aperçu avec des données d'exemple : dans l'application, PCEvolu lit ton PC.", "Preview with sample data: in the app, PCEvolu reads your PC.")}</p>}
+      {error && <p className="error">{tr("Lecture impossible :", "Couldn't read your PC:")} {error}</p>}
 
       {data && (
         <>
           <section className="answer opt-answer">
             <h2 className="answer-title">
-              {enabled.length} programme{enabled.length > 1 ? "s" : ""} au démarrage
-              {removable.length ? `, dont ${removable.length} désactivable${removable.length > 1 ? "s" : ""} sans risque` : ""}
+              {tr(
+                `${enabled.length} programme${enabled.length > 1 ? "s" : ""} au démarrage`,
+                `${enabled.length} program${enabled.length > 1 ? "s" : ""} at startup`,
+              )}
+              {removable.length
+                ? tr(
+                    `, dont ${removable.length} désactivable${removable.length > 1 ? "s" : ""} sans risque`,
+                    `, ${removable.length} of which ${removable.length > 1 ? "are" : "is"} safe to disable`,
+                  )
+                : ""}
             </h2>
             <p className="answer-sub">
-              Mémoire utilisée : {gb(data.ramUsedBytes)} sur {gb(data.ramTotalBytes)} ({ramPct} %).{" "}
+              {tr(
+                `Mémoire utilisée : ${gb(data.ramUsedBytes)} sur ${gb(data.ramTotalBytes)} (${ramPct} %).`,
+                `Memory in use: ${gb(data.ramUsedBytes)} of ${gb(data.ramTotalBytes)} (${ramPct}%).`,
+              )}{" "}
               {ramPct >= 85
-                ? "C'est beaucoup : ferme les applications inutiles avant de jouer, ou ajoute de la RAM."
-                : "Il reste de la marge."}
+                ? tr("C'est beaucoup : ferme les applications inutiles avant de jouer, ou ajoute de la RAM.", "That's a lot: close apps you don't need before playing, or add more RAM.")
+                : tr("Il reste de la marge.", "There's still room to spare.")}
             </p>
           </section>
 
           <div className="seg opt-tabs" role="tablist" aria-label="Sections">
             <button role="tab" aria-selected={tab === "startup"} className={tab === "startup" ? "on" : ""} onClick={() => setTab("startup")}>
-              Au démarrage de Windows <span className="opt-count">{enabled.length}</span>
+              {tr("Au démarrage de Windows", "At Windows startup")} <span className="opt-count">{enabled.length}</span>
             </button>
             <button role="tab" aria-selected={tab === "running"} className={tab === "running" ? "on" : ""} onClick={() => setTab("running")}>
-              En cours d'exécution <span className="opt-count">{data.processes.length}</span>
+              {tr("En cours d'exécution", "Running now")} <span className="opt-count">{data.processes.length}</span>
             </button>
             <button role="tab" aria-selected={tab === "tweaks"} className={tab === "tweaks" ? "on" : ""} onClick={() => setTab("tweaks")}>
-              Réglages Windows
+              {tr("Réglages Windows", "Windows settings")}
             </button>
           </div>
           {toggleError && <p className="opt-error opt-tab-error">{toggleError}</p>}
@@ -283,14 +339,16 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
           {tab === "startup" && (
           <section className="opt-sec">
             <div className="opt-sec-head">
-              <h3 className="imp-h">Au démarrage de Windows</h3>
+              <h3 className="imp-h">{tr("Au démarrage de Windows", "At Windows startup")}</h3>
               <button className="link small" onClick={() => open("startup")}>
-                Ouvrir le réglage Windows
+                {tr("Ouvrir le réglage Windows", "Open Windows setting")}
               </button>
             </div>
             <p className="opt-intro">
-              Désactiver un programme l'empêche seulement de se lancer tout seul : il reste installé et tu peux toujours l'ouvrir. Tu peux le réactiver
-              ici à tout moment.
+              {tr(
+                "Désactiver un programme l'empêche seulement de se lancer tout seul : il reste installé et tu peux toujours l'ouvrir. Tu peux le réactiver ici à tout moment.",
+                "Disabling a program only stops it from launching on its own: it stays installed and you can still open it. You can turn it back on here at any time.",
+              )}
             </p>
             <ul className="opt-list">
               {startup.map(({ s, k }) => (
@@ -301,9 +359,9 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
                   <div className="opt-main">
                     <div className="opt-name">
                       {displayName(s, k)}
-                      <span className={`opt-tag v-${k?.verdict ?? "unknown"}`}>{VERDICT_TEXT[k?.verdict ?? "unknown"]}</span>
+                      <span className={`opt-tag v-${k?.verdict ?? "unknown"}`}>{verdictText(k?.verdict ?? "unknown")}</span>
                     </div>
-                    <div className="opt-why">{k?.why ?? "Programme non répertorié : ne le désactive que si tu sais à quoi il sert."}</div>
+                    <div className="opt-why">{k ? knownWhy(k) : tr("Programme non répertorié : ne le désactive que si tu sais à quoi il sert.", "Unlisted program: only disable it if you know what it's for.")}</div>
                     <div className="opt-cmd" title={s.command}>
                       {s.command}
                     </div>
@@ -312,10 +370,10 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
                     className={`switch ${s.enabled ? "on" : ""}`}
                     role="switch"
                     aria-checked={s.enabled}
-                    aria-label={`${s.enabled ? "Désactiver" : "Activer"} ${displayName(s, k)} au démarrage`}
+                    aria-label={tr(`${s.enabled ? "Désactiver" : "Activer"} ${displayName(s, k)} au démarrage`, `${s.enabled ? "Disable" : "Enable"} ${displayName(s, k)} at startup`)}
                     onClick={() => toggle(s)}
                     disabled={!app}
-                    title={s.userScope ? undefined : "Installé pour tous les utilisateurs : peut demander les droits administrateur"}
+                    title={s.userScope ? undefined : tr("Installé pour tous les utilisateurs : peut demander les droits administrateur", "Installed for all users: may ask for administrator rights")}
                   >
                     <i />
                   </button>
@@ -328,30 +386,32 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
           {tab === "running" && (
           <section className="opt-sec">
             <div className="opt-sec-head">
-              <h3 className="imp-h">En cours d'exécution</h3>
+              <h3 className="imp-h">{tr("En cours d'exécution", "Running now")}</h3>
               <div className="seg opt-sort" role="tablist">
                 <button className={sort === "memory" ? "on" : ""} onClick={() => setSort("memory")}>
-                  Mémoire
+                  {tr("Mémoire", "Memory")}
                 </button>
                 <button className={sort === "cpu" ? "on" : ""} onClick={() => setSort("cpu")}>
-                  Processeur
+                  {tr("Processeur", "Processor")}
                 </button>
               </div>
             </div>
             <p className="opt-intro">
-              Les programmes ouverts, regroupés par nom. « Fermer » arrête toutes ses fenêtres d'un coup, comme « Fin de tâche » : le travail non
-              enregistré est perdu. Les éléments de Windows ne peuvent pas être fermés d'ici.{" "}
+              {tr(
+                "Les programmes ouverts, regroupés par nom. « Fermer » arrête toutes ses fenêtres d'un coup, comme « Fin de tâche » : le travail non enregistré est perdu. Les éléments de Windows ne peuvent pas être fermés d'ici.",
+                "Open programs, grouped by name. “Close” stops all of its windows at once, like “End task”: unsaved work is lost. Windows components can't be closed from here.",
+              )}{" "}
               <button className="link" onClick={() => open("taskmgr")}>
-                Ouvrir le Gestionnaire des tâches
+                {tr("Ouvrir le Gestionnaire des tâches", "Open Task Manager")}
               </button>
             </p>
             {killMsg && <p className={killMsg.ok ? "opt-ok" : "opt-error"}>{killMsg.text}</p>}
             <table className="opt-table">
               <thead>
                 <tr>
-                  <th>Programme</th>
-                  <th className="num">Processeur</th>
-                  <th className="num">Mémoire</th>
+                  <th>{tr("Programme", "Program")}</th>
+                  <th className="num">{tr("Processeur", "Processor")}</th>
+                  <th className="num">{tr("Mémoire", "Memory")}</th>
                   <th aria-label="Action" />
                 </tr>
               </thead>
@@ -366,28 +426,28 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
                       </span>
                       {hint(p.name) && <span className="opt-phint">{hint(p.name)}</span>}
                     </td>
-                    <td className="num">{p.cpuPercent < 0.1 ? "< 0,1 %" : `${p.cpuPercent.toLocaleString("fr-FR", { maximumFractionDigits: 1 })} %`}</td>
+                    <td className="num">{p.cpuPercent < 0.1 ? tr("< 0,1 %", "< 0.1%") : `${p.cpuPercent.toLocaleString(locale(), { maximumFractionDigits: 1 })}${tr(" %", "%")}`}</td>
                     <td className="num">{mb(p.memoryBytes)}</td>
                     <td className="opt-act">
                       {p.protected ? (
-                        <span className="muted small" title="Élément de Windows (ou de PCEvolu) : le fermer pourrait bloquer le PC.">
-                          Protégé
+                        <span className="muted small" title={tr("Élément de Windows (ou de PCEvolu) : le fermer pourrait bloquer le PC.", "Part of Windows (or PCEvolu): closing it could freeze the PC.")}>
+                          {tr("Protégé", "Protected")}
                         </span>
                       ) : confirmKill === p.name ? (
                         <span className="opt-confirm">
                           <span className="small">
-                            Fermer{p.count > 1 ? ` (${p.count} processus)` : ""} ?
+                            {tr(`Fermer${p.count > 1 ? ` (${p.count} processus)` : ""} ?`, `Close${p.count > 1 ? ` (${p.count} processes)` : ""}?`)}
                           </span>
                           <button className="btn danger sm" onClick={() => endProcess(p)}>
-                            Oui, fermer
+                            {tr("Oui, fermer", "Yes, close")}
                           </button>
                           <button className="link small" onClick={() => setConfirmKill(undefined)}>
-                            Annuler
+                            {tr("Annuler", "Cancel")}
                           </button>
                         </span>
                       ) : (
                         <button className="btn ghost sm" onClick={() => setConfirmKill(p.name)} disabled={killing === p.name}>
-                          {killing === p.name ? "Fermeture…" : "Fermer"}
+                          {killing === p.name ? tr("Fermeture…", "Closing…") : tr("Fermer", "Close")}
                         </button>
                       )}
                     </td>
@@ -397,7 +457,7 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
             </table>
             {(data.processes.length ?? 0) > 12 && (
               <button className="link small" onClick={() => setShowAllProc(!showAllProc)}>
-                {showAllProc ? "Afficher moins" : `Afficher les ${data.processes.length} programmes`}
+                {showAllProc ? tr("Afficher moins", "Show less") : tr(`Afficher les ${data.processes.length} programmes`, `Show all ${data.processes.length} programs`)}
               </button>
             )}
           </section>
@@ -405,39 +465,45 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
 
           {tab === "tweaks" && (
           <section className="opt-sec">
-            <h3 className="imp-h">Réglages de Windows pour le jeu</h3>
+            <h3 className="imp-h">{tr("Réglages de Windows pour le jeu", "Windows settings for gaming")}</h3>
             <ul className="opt-tweaks">
               <Tweak
                 ok={planOk}
-                title={`Mode d'alimentation : ${planName}`}
-                text={plan?.note ?? (planOk ? "Plan personnalisé ou du fabricant : rien à changer s'il ne bride pas le processeur." : "Bride le processeur : à éviter sur un PC de jeu fixe.")}
-                action="Ouvrir le réglage"
+                title={tr(`Mode d'alimentation : ${planName}`, `Power mode: ${planName}`)}
+                text={(plan && tr(plan.note, plan.noteEn)) ?? (planOk ? tr("Plan personnalisé ou du fabricant : rien à changer s'il ne bride pas le processeur.", "Custom or manufacturer plan: nothing to change as long as it doesn't hold back the processor.") : tr("Bride le processeur : à éviter sur un PC de jeu fixe.", "Holds back the processor: avoid it on a gaming desktop."))}
+                action={tr("Ouvrir le réglage", "Open setting")}
                 onAction={() => open("power")}
               />
               <Tweak
                 ok={t?.gameMode !== false}
-                title={`Mode Jeu : ${t?.gameMode === false ? "désactivé" : "activé"}`}
-                text={t?.gameMode === false ? "Active-le : Windows donne la priorité au jeu en cours et suspend certaines tâches de fond." : "Windows donne la priorité au jeu en cours."}
-                action="Ouvrir le réglage"
+                title={tr(`Mode Jeu : ${t?.gameMode === false ? "désactivé" : "activé"}`, `Game Mode: ${t?.gameMode === false ? "off" : "on"}`)}
+                text={t?.gameMode === false ? tr("Active-le : Windows donne la priorité au jeu en cours et suspend certaines tâches de fond.", "Turn it on: Windows prioritizes the game you're playing and pauses some background tasks.") : tr("Windows donne la priorité au jeu en cours.", "Windows prioritizes the game you're playing.")}
+                action={tr("Ouvrir le réglage", "Open setting")}
                 onAction={() => open("gamemode")}
               />
               <Tweak
                 ok={t?.hags !== false || !recentGpu}
                 neutral={t?.hags == null}
-                title={`Planification GPU à accélération matérielle : ${t?.hags == null ? "réglage par défaut" : t.hags ? "activée" : "désactivée"}`}
+                title={tr(
+                  `Planification GPU à accélération matérielle : ${t?.hags == null ? "réglage par défaut" : t.hags ? "activée" : "désactivée"}`,
+                  `Hardware-accelerated GPU scheduling: ${t?.hags == null ? "default setting" : t.hags ? "on" : "off"}`,
+                )}
                 text={
                   recentGpu
-                    ? "Avec une carte graphique récente, l'activer réduit un peu la latence et est nécessaire à la génération d'images (DLSS 3 / FSR 3). Redémarrage requis après changement."
-                    : "Utile surtout avec une carte graphique récente (RTX, Radeon RX 6000 ou plus)."
+                    ? tr(
+                        "Avec une carte graphique récente, l'activer réduit un peu la latence et est nécessaire à la génération d'images (DLSS 3 / FSR 3). Redémarrage requis après changement.",
+                        "With a recent graphics card, turning it on slightly reduces latency and is required for frame generation (DLSS 3 / FSR 3). Restart required after changing it.",
+                      )
+                    : tr("Utile surtout avec une carte graphique récente (RTX, Radeon RX 6000 ou plus).", "Mostly useful with a recent graphics card (RTX, Radeon RX 6000 or newer).")
                 }
-                action="Ouvrir le réglage"
+                action={tr("Ouvrir le réglage", "Open setting")}
                 onAction={() => open("graphics")}
               />
               <Tweak
                 ok={(t?.tempBytes ?? 0) < 2 * 1024 ** 3}
-                title={`Fichiers temporaires : ${mb(t?.tempBytes ?? 0)}`}
-                text={(t?.tempBytes ?? 0) >= 2 * 1024 ** 3 ? "Ça fait beaucoup : l'Assistant de stockage de Windows peut les supprimer sans risque." : "Rien d'inquiétant."}
-                action="Nettoyer avec Windows"
+                title={tr(`Fichiers temporaires : ${mb(t?.tempBytes ?? 0)}`, `Temporary files: ${mb(t?.tempBytes ?? 0)}`)}
+                text={(t?.tempBytes ?? 0) >= 2 * 1024 ** 3 ? tr("Ça fait beaucoup : l'Assistant de stockage de Windows peut les supprimer sans risque.", "That's a lot: Windows Storage Sense can safely delete them.") : tr("Rien d'inquiétant.", "Nothing to worry about.")}
+                action={tr("Nettoyer avec Windows", "Clean up with Windows")}
                 onAction={() => open("storage")}
               />
             </ul>
@@ -445,7 +511,7 @@ export function OptimizeView({ gpuName }: { gpuName?: string }) {
           )}
         </>
       )}
-      {loading && !data && <p className="muted">Lecture en cours…</p>}
+      {loading && !data && <p className="muted">{tr("Lecture en cours…", "Reading your PC…")}</p>}
     </div>
   );
 }

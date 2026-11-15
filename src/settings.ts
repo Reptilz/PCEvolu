@@ -14,7 +14,9 @@ export interface Settings {
 }
 
 const KEY = "pcevolu.settings.v1";
-const DEFAULTS: Settings = { lang: navigator.language?.toLowerCase().startsWith("fr") ? "fr" : "en", theme: "system", autoUpdate: true };
+// typeof : ce module est aussi chargé par les scripts de test (Node, sans navigateur).
+const systemLang: Lang = typeof navigator === "undefined" || navigator.language?.toLowerCase().startsWith("fr") ? "fr" : "en";
+const DEFAULTS: Settings = { lang: systemLang, theme: "system", autoUpdate: true };
 
 export function loadSettings(): Settings {
   try {

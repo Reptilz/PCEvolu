@@ -13,6 +13,8 @@ import type { Report } from "../types";
 import type { Profile } from "./profile";
 import { estimateFps, isGaming, type Goal } from "./goal";
 import { checkPower, epsCable, gpuThickness, price, storageMigration } from "./engine";
+import { catalogText, partName } from "./catalog";
+import { tr } from "../settings";
 
 // ---------------------------------------------------------------------------
 // Évaluation d'une config (réelle ou hypothétique)
@@ -172,7 +174,7 @@ function buildPlan(goal: Goal, p: Profile, base: ConfigState, choice: Partial<Re
     if (choice.gpu || choice.cpu) additions.push(...psuAdds);
     // Plan sans nouvelle carte graphique ni nouveau processeur : la consommation ne change pas. Si l'alimentation
     // actuelle est déjà trop juste, on la conseille (sans l'imposer : ce n'est pas ce plan qui crée le problème).
-    else additions.push(...psuAdds.filter((a) => a.role === "required").map((a) => ({ ...a, role: "recommended" as const, reason: `Ton alimentation actuelle est déjà trop juste pour ta config : à remplacer, avec ou sans ce plan. ${a.reason}` })));
+    else additions.push(...psuAdds.filter((a) => a.role === "required").map((a) => ({ ...a, role: "recommended" as const, reason: tr(`Ton alimentation actuelle est déjà trop juste pour ta config : à remplacer, avec ou sans ce plan. ${a.reason}`, `Your current power supply is already too weak for your setup: replace it, with or without this plan. ${a.reason}`) })));
   }
 
   const mains = items.reduce((s, it) => s + price(it.main) * it.mainQuantity, 0);
@@ -191,12 +193,19 @@ function buildPlan(goal: Goal, p: Profile, base: ConfigState, choice: Partial<Re
 // Vérification d'un plan comme une config complète
 // ---------------------------------------------------------------------------
 
-/** Contrôles propres à chaque pièce, qui ne dépendent pas des autres pièces du plan. */
-const LOCAL_CHECKS = new Set([
-  "Carte mère", "Mémoire vive", "Format", "BIOS", "Ventirad", "Hauteur du ventirad", "Encombrement du ventirad",
-  "Place dans le boîtier", "Ventilation du boîtier", "Épaisseur", "PC de marque", "Type de mémoire", "Emplacement libre",
-  "Emplacements libres", "Vitesse", "Barrettes assorties", "Capacité max", "4 barrettes", "Emplacement M.2", "Branchement", "PC portable",
-]);
+/**
+ * Contrôles propres à chaque pièce, qui ne dépendent pas des autres pièces du plan : [libellé français, libellé anglais].
+ * Les libellés doivent être identiques à ceux produits par engine.ts dans chaque langue.
+ */
+export const LOCAL_CHECK_LABELS: [string, string][] = [
+  ["Carte mère", "Motherboard"], ["Mémoire vive", "RAM"], ["Format", "Form factor"], ["BIOS", "BIOS"], ["Ventirad", "CPU cooler"],
+  ["Hauteur du ventirad", "Cooler height"], ["Encombrement du ventirad", "Cooler clearance"], ["Place dans le boîtier", "Room in the case"],
+  ["Ventilation du boîtier", "Case airflow"], ["Épaisseur", "Thickness"], ["PC de marque", "Prebuilt PC"], ["Type de mémoire", "Memory type"],
+  ["Emplacement libre", "Free slot"], ["Emplacements libres", "Free slots"], ["Vitesse", "Speed"], ["Barrettes assorties", "Matching sticks"],
+  ["Capacité max", "Max capacity"], ["4 barrettes", "4 sticks"], ["Emplacement M.2", "M.2 slot"], ["Branchement", "Connection"], ["PC portable", "Laptop"],
+];
+/** Les deux langues sont acceptées : un contrôle reste reconnu même si la langue change entre deux calculs. */
+const LOCAL_CHECKS = new Set(LOCAL_CHECK_LABELS.flat());
 const RANK: Record<string, number> = { fail: 0, warn: 1, fixed: 2, ok: 3 };
 
 /**
@@ -220,17 +229,19 @@ export function validatePlan(goal: Goal, p: Profile, plan: Plan): Check[] {
   for (const it of plan.items) {
     for (const c of it.checks) {
       if (!LOCAL_CHECKS.has(c.label)) continue;
-      put(c.status === "fail" ? { ...c, status: "fixed", detail: `${c.detail} → réglé dans ce plan.` } : c);
+      put(c.status === "fail" ? { ...c, status: "fixed", detail: tr(`${c.detail} → réglé dans ce plan.`, `${c.detail} → fixed in this plan.`) } : c);
     }
   }
 
   // 2. Sortie vidéo
+  const videoOut = tr("Sortie vidéo", "Video output");
+  const gpuName = gpu ? partName(gpu) : "";
   if (gpu && !gpu.integrated) {
-    put({ label: "Sortie vidéo", status: cpuGpu && !choice.gpu ? "fixed" : "ok", detail: `L'image passe par la ${gpu.name}.` });
+    put({ label: videoOut, status: cpuGpu && !choice.gpu ? "fixed" : "ok", detail: tr(`L'image passe par la ${gpu.name}.`, `The picture comes from the ${gpuName}.`) });
   } else if (cpu?.igpu) {
-    put({ label: "Sortie vidéo", status: "ok", detail: "L'image passe par la puce graphique du processeur." });
+    put({ label: videoOut, status: "ok", detail: tr("L'image passe par la puce graphique du processeur.", "The picture comes from the processor's integrated graphics.") });
   } else {
-    put({ label: "Sortie vidéo", status: "fail", detail: "Ni carte graphique, ni puce graphique dans le processeur : pas d'image." });
+    put({ label: videoOut, status: "fail", detail: tr("Ni carte graphique, ni puce graphique dans le processeur : pas d'image.", "No graphics card and no integrated graphics in the processor: no picture.") });
   }
 
   // 3. Port PCIe de la carte graphique, sur la carte mère FINALE
@@ -238,9 +249,9 @@ export function validatePlan(goal: Goal, p: Profile, plan: Plan): Check[] {
     let gen = newBoard?.kind === "board" ? newBoard.pcieGpu : p.pcieGen;
     if (gen && (cpu?.gen === "intel-10" || cpu?.gen === "amd-zen1" || cpu?.gen === "amd-zen1plus" || /ryzen \d (5500|5700|[45]\d{2}0gt?)\b/i.test(cpu?.name ?? ""))) gen = 3;
     if (gen === 3 && gpu.pcieLanes < 16) {
-      put({ label: "Port PCIe", status: "warn", detail: `La ${gpu.name} n'utilise que ${gpu.pcieLanes} lignes PCIe : sur un port PCIe 3.0, elle perd ${gpu.pcieLanes === 4 ? "10 à 25 %" : "5 à 10 %"}.` });
+      put({ label: tr("Port PCIe", "PCIe slot"), status: "warn", detail: tr(`La ${gpu.name} n'utilise que ${gpu.pcieLanes} lignes PCIe : sur un port PCIe 3.0, elle perd ${gpu.pcieLanes === 4 ? "10 à 25 %" : "5 à 10 %"}.`, `The ${gpuName} only uses ${gpu.pcieLanes} PCIe lanes: in a PCIe 3.0 slot, it loses ${gpu.pcieLanes === 4 ? "10 to 25%" : "5 to 10%"}.`) });
     } else if (gen) {
-      put({ label: "Port PCIe", status: "ok", detail: `La ${gpu.name} fonctionne sur un port PCIe ${gen}.0${newBoard ? " (nouvelle carte mère)" : ""}.` });
+      put({ label: tr("Port PCIe", "PCIe slot"), status: "ok", detail: tr(`La ${gpu.name} fonctionne sur un port PCIe ${gen}.0${newBoard ? " (nouvelle carte mère)" : ""}.`, `The ${gpuName} works in a PCIe ${gen}.0 slot${newBoard ? " (new motherboard)" : ""}.`) });
     }
   }
 
@@ -253,20 +264,21 @@ export function validatePlan(goal: Goal, p: Profile, plan: Plan): Check[] {
   // 4. Alimentation et câbles pour le couple processeur + carte graphique FINAL
   const psuAdd = plan.additions.find((a) => a.part.kind === "psu");
   const psuChecks: Check[] = [];
-  checkPower(p, cpu?.powerW, gpu, psuChecks, [], "pour cette config");
+  checkPower(p, cpu?.powerW, gpu, psuChecks, [], tr("pour cette config", "for this setup"));
   const powerUnchanged = !choice.gpu && !choice.cpu;
   for (const c of psuChecks) {
-    if (psuAdd?.role === "required" && c.status === "fail") put({ ...c, status: "fixed", detail: `${c.detail} → nouvelle alimentation incluse dans ce plan.` });
+    if (psuAdd?.role === "required" && c.status === "fail") put({ ...c, status: "fixed", detail: tr(`${c.detail} → nouvelle alimentation incluse dans ce plan.`, `${c.detail} → new power supply included in this plan.`) });
     // Problème déjà présent avant le plan, que le plan n'aggrave pas : on le signale sans bloquer.
-    else if (powerUnchanged && c.status === "fail") put({ ...c, status: "warn", detail: `${c.detail} C'est déjà le cas aujourd'hui (ce plan ne change pas la consommation) : remplacer l'alimentation est conseillé.` });
+    else if (powerUnchanged && c.status === "fail") put({ ...c, status: "warn", detail: tr(`${c.detail} C'est déjà le cas aujourd'hui (ce plan ne change pas la consommation) : remplacer l'alimentation est conseillé.`, `${c.detail} That's already the case today (this plan doesn't change power draw): replacing the power supply is recommended.`) });
     else put(c);
   }
   if (gpu && !gpu.integrated && (choice.gpu || cpuGpu)) {
     if (gpu.power === "12V-2x6") {
       const native = psuAdd?.role === "required" || p.psu12v2x6;
-      put({ label: "Connecteur carte graphique", status: native ? "ok" : "warn", detail: native ? "Câble 12V-2x6 (16 broches) natif sur l'alimentation." : "Connecteur 12V-2x6 : utilise l'adaptateur fourni, branché sur des câbles PCIe 8 broches séparés." });
+      put({ label: tr("Connecteur carte graphique", "Graphics card connector"), status: native ? "ok" : "warn", detail: native ? tr("Câble 12V-2x6 (16 broches) natif sur l'alimentation.", "Native 12V-2x6 (16-pin) cable on the power supply.") : tr("Connecteur 12V-2x6 : utilise l'adaptateur fourni, branché sur des câbles PCIe 8 broches séparés.", "12V-2x6 connector: use the included adapter, plugged into separate 8-pin PCIe cables.") });
     } else if (gpu.power !== "none" && gpu.power !== "1x6" && gpu.power !== "1x8") {
-      put({ label: "Connecteur carte graphique", status: psuAdd?.role === "required" ? "ok" : "warn", detail: gpu.power === "8+6" ? "Il faut un câble PCIe 8 broches et un câble 6 broches (un « 6+2 » convient) sur l'alimentation." : `Il faut ${gpu.power === "3x8" ? 3 : 2} câbles PCIe 8 broches séparés sur l'alimentation.${gpu.powerNote ? ` ${gpu.powerNote}` : ""}` });
+      const note = gpu.powerNote ? ` ${catalogText(gpu.powerNote)}` : "";
+      put({ label: tr("Connecteur carte graphique", "Graphics card connector"), status: psuAdd?.role === "required" ? "ok" : "warn", detail: gpu.power === "8+6" ? tr("Il faut un câble PCIe 8 broches et un câble 6 broches (un « 6+2 » convient) sur l'alimentation.", 'The power supply needs one 8-pin PCIe cable and one 6-pin cable (a "6+2" works).') : tr(`Il faut ${gpu.power === "3x8" ? 3 : 2} câbles PCIe 8 broches séparés sur l'alimentation.${gpu.powerNote ? ` ${gpu.powerNote}` : ""}`, `The power supply needs ${gpu.power === "3x8" ? 3 : 2} separate 8-pin PCIe cables.${note}`) });
     }
   }
   if (cpu && choice.cpu) put(epsCable(p, cpu, psuAdd?.role === "required"));
@@ -281,10 +293,14 @@ export function validatePlan(goal: Goal, p: Profile, plan: Plan): Check[] {
   const ev = plan.evaluation;
   if (isGaming(goal.usage) && ev.fps != null) {
     const who = ev.limit === "cpu" ? "le processeur" : "la carte graphique";
+    const whoEn = ev.limit === "cpu" ? "the processor" : "the graphics card";
     put({
-      label: "Équilibre de la config",
+      label: tr("Équilibre de la config", "Setup balance"),
       status: ev.fps >= goal.fps ? "ok" : "warn",
-      detail: `≈ ${ev.fps} i/s dans les jeux récents ; c'est ${who} qui fixe la limite${ev.fps >= goal.fps ? ", au-dessus de ton objectif" : `, sous ton objectif de ${goal.fps} i/s`}.`,
+      detail: tr(
+        `≈ ${ev.fps} i/s dans les jeux récents ; c'est ${who} qui fixe la limite${ev.fps >= goal.fps ? ", au-dessus de ton objectif" : `, sous ton objectif de ${goal.fps} i/s`}.`,
+        `≈ ${ev.fps} FPS in recent games; ${whoEn} sets the limit${ev.fps >= goal.fps ? ", above your goal" : `, below your ${goal.fps} FPS goal`}.`,
+      ),
     });
   }
 
@@ -437,12 +453,12 @@ export function planTitle(pl: Plan): string {
 
 function shortName(it: Proposal): string {
   const m: Part = it.main;
-  if (m.kind === "gpu") return m.name.replace(/^GeForce |^Radeon /, "");
-  if (m.kind === "cpu") return m.name.replace(/^Intel Core |^AMD /, "") + (it.additions.some((a) => a.part.kind === "board") ? " (nouvelle plateforme)" : "");
+  if (m.kind === "gpu") return partName(m).replace(/^GeForce |^Radeon /, "");
+  if (m.kind === "cpu") return m.name.replace(/^Intel Core |^AMD /, "") + (it.additions.some((a) => a.part.kind === "board") ? tr(" (nouvelle plateforme)", " (new platform)") : "");
   if (m.kind === "ram") {
     const gb = m.sticks * m.gbPerStick;
-    return it.id === "ram-add-same" ? "2e barrette de RAM (dual channel)" : it.id.startsWith("ram-add") ? `${gb} Go de RAM en plus` : `RAM ${gb} Go`;
+    return it.id === "ram-add-same" ? tr("2e barrette de RAM (dual channel)", "2nd RAM stick (dual channel)") : it.id.startsWith("ram-add") ? tr(`${gb} Go de RAM en plus`, `${gb} GB more RAM`) : tr(`RAM ${gb} Go`, `${gb} GB RAM`);
   }
-  if (m.kind === "ssd") return m.name.replace(/ \(ex\..*\)/, "");
+  if (m.kind === "ssd") return partName(m).replace(/ \((ex|e\.g)\..*\)/, "");
   return it.title;
 }

@@ -4,6 +4,7 @@
 import { isTauri } from "@tauri-apps/api/core";
 import { openUrl } from "./platform";
 import type { Report } from "./types";
+import { currentLang, tr } from "./settings";
 
 /** Clé d'accès Web3Forms : publique par conception (elle permet seulement d'envoyer vers l'adresse liée). */
 export const WEB3FORMS_KEY = "f8ee8f5b-ff4d-4e69-a0d3-e096c4f70e9f";
@@ -11,12 +12,15 @@ export const WEB3FORMS_KEY = "f8ee8f5b-ff4d-4e69-a0d3-e096c4f70e9f";
 export const REPORT_EMAIL = "jmorlet94@gmail.com";
 
 export type ReportKind = "prix" | "compatibilite" | "composant" | "autre";
-export const REPORT_KINDS: { id: ReportKind; label: string }[] = [
-  { id: "prix", label: "Un prix ou une offre" },
-  { id: "compatibilite", label: "Une compatibilité ou un conseil" },
-  { id: "composant", label: "Un composant mal détecté" },
-  { id: "autre", label: "Autre chose" },
+/** label : français (repris tel quel dans l'email envoyé au développeur) ; labelEn : affiché dans le formulaire en anglais. */
+export const REPORT_KINDS: { id: ReportKind; label: string; labelEn: string }[] = [
+  { id: "prix", label: "Un prix ou une offre", labelEn: "A price or an offer" },
+  { id: "compatibilite", label: "Une compatibilité ou un conseil", labelEn: "Compatibility or advice" },
+  { id: "composant", label: "Un composant mal détecté", labelEn: "A part detected wrongly" },
+  { id: "autre", label: "Autre chose", labelEn: "Something else" },
 ];
+/** Libellé d'un type de signalement dans la langue de l'utilisateur (à appeler à l'affichage). */
+export const reportKindLabel = (k: { label: string; labelEn: string }) => tr(k.label, k.labelEn);
 
 export interface ReportContext {
   /** Sujet court : « prix de Radeon RX 7800 XT », « page Mon plan »… */
@@ -90,6 +94,7 @@ async function compose(f: ReportForm) {
     ...(pc.length ? { "Le PC de l'utilisateur": pc.join("\n") } : {}),
     "Email pour répondre": f.email?.trim() || "Non renseigné (pas de réponse souhaitée)",
     "Version de PCEvolu": version,
+    "Langue de l'utilisateur": currentLang() === "en" ? "English" : "Français",
   };
   const body = Object.entries(fields)
     .map(([k, v]) => `${k} :\n${v}`)

@@ -7,9 +7,13 @@
 //    est presque toujours la fiche produit.
 // Les marchands inconnus gardent le lien Google Shopping, annoncé comme tel.
 
+import { tr } from "../settings";
+
 interface Merchant {
   match: RegExp;
   name: string;
+  /** Nom affiché en anglais, s'il diffère. */
+  nameEn?: string;
   domain: string;
   /** Recherche interne vérifiée. */
   search?: (q: string) => string;
@@ -24,7 +28,7 @@ const MERCHANTS: Merchant[] = [
   { match: /materiel\.?net/i, name: "Materiel.net", domain: "materiel.net", search: (q) => `https://www.materiel.net/recherche/${enc(q)}/`, trusted: true },
   { match: /cdiscount/i, name: "Cdiscount", domain: "cdiscount.com", search: (q) => `https://www.cdiscount.com/search/10/${enc(q.toLowerCase()).replace(/%20/g, "+")}.html`, trusted: true },
   // « Amazon.fr - Seller » = vendeur tiers sur Amazon : même site, mais pas Amazon lui-même.
-  { match: /amazon\.fr\s*-\s*seller/i, name: "Amazon (vendeur tiers)", domain: "amazon.fr", search: (q) => `https://www.amazon.fr/s?k=${enc(q)}`, trusted: false },
+  { match: /amazon\.fr\s*-\s*seller/i, name: "Amazon (vendeur tiers)", nameEn: "Amazon (third-party seller)", domain: "amazon.fr", search: (q) => `https://www.amazon.fr/s?k=${enc(q)}`, trusted: false },
   { match: /^amazon/i, name: "Amazon", domain: "amazon.fr", search: (q) => `https://www.amazon.fr/s?k=${enc(q)}`, trusted: true },
   { match: /top ?achat/i, name: "Top Achat", domain: "topachat.com", trusted: true },
   { match: /^fnac/i, name: "Fnac", domain: "fnac.com", trusted: true },
@@ -67,10 +71,10 @@ export interface OfferLink {
  */
 export function offerLink(merchantName: string, query: string, title?: string, googleLink?: string): OfferLink | undefined {
   const m = findMerchant(merchantName);
-  if (m?.search) return { url: m.search(query), label: `Voir chez ${m.name}`, direct: true };
+  if (m?.search) return { url: m.search(query), label: tr(`Voir chez ${m.name}`, `View at ${m.nameEn ?? m.name}`), direct: true };
   if (m) {
-    return { url: `https://www.google.com/search?q=${enc(`${title ?? query} site:${m.domain}`)}`, label: `Chercher chez ${m.name}`, direct: true };
+    return { url: `https://www.google.com/search?q=${enc(`${title ?? query} site:${m.domain}`)}`, label: tr(`Chercher chez ${m.name}`, `Search at ${m.nameEn ?? m.name}`), direct: true };
   }
-  if (googleLink) return { url: googleLink, label: "Voir sur Google Shopping", direct: false };
+  if (googleLink) return { url: googleLink, label: tr("Voir sur Google Shopping", "View on Google Shopping"), direct: false };
   return undefined;
 }

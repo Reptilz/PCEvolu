@@ -5,6 +5,7 @@
 // lengthMm : longueur typique des modèles partenaires, lanes : lignes PCIe utilisées.
 
 import type { Availability, GpuPower, GpuSpec } from "./types";
+import { tr } from "../settings";
 
 type Row = [id: string, name: string, vram: number, tbp: number, psuRec: number, power: GpuPower, lengthMm: number, lanes: 4 | 8 | 16, perf: number, match: RegExp];
 
@@ -190,6 +191,13 @@ export const INTEGRATED_GPUS: GpuSpec[] = INTEGRATED.map((r) =>
   toSpec(r, r[0].includes("amd") ? "AMD" : "Intel", { integrated: true }),
 );
 
+/** Noms anglais des puces intégrées (traduits à la reconnaissance, pas au chargement du module). */
+const INTEGRATED_EN: Record<string, string> = {
+  "igpu-intel": "Intel integrated graphics",
+  "igpu-amd-780m": "Radeon 780M / 890M (integrated)",
+  "igpu-amd": "AMD integrated graphics (Radeon / Vega)",
+};
+
 const norm = (s: string) => s.toLowerCase().replace(/\((r|tm)\)/g, " ").replace(/\s+/g, " ");
 
 /** Clé numérique pour rapprocher deux modèles : génération × 100 + gamme (+5 pour Ti / Super / XT). */
@@ -215,7 +223,10 @@ export function findGpuSpec(raw?: string): GpuSpec | undefined {
   const mobile = /laptop|mobile|max-?q|\bm\b/.test(n);
 
   const integrated = INTEGRATED_GPUS.find((g) => g.match.test(n));
-  if (integrated && !/(rtx|gtx|rx \d{3,4}|arc [ab]\d)/.test(n)) return integrated;
+  if (integrated && !/(rtx|gtx|rx \d{3,4}|arc [ab]\d)/.test(n)) {
+    const name = tr(integrated.name, INTEGRATED_EN[integrated.id]);
+    return name === integrated.name ? integrated : { ...integrated, name };
+  }
 
   let spec = GPU_TABLE.find((g) => g.match.test(n));
   let estimated = false;
@@ -232,7 +243,7 @@ export function findGpuSpec(raw?: string): GpuSpec | undefined {
     return {
       ...spec,
       id: `${spec.id}-laptop`,
-      name: `${spec.name} (portable)`,
+      name: tr(`${spec.name} (portable)`, `${spec.name} (laptop)`),
       perf: Math.round(spec.perf * 0.7),
       tbp: Math.round(spec.tbp * 0.55),
       mobile: true,

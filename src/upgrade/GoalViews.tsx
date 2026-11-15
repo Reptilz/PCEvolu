@@ -7,30 +7,31 @@ import {
 } from "./goal";
 import { Icon, type IconName } from "../icons";
 import type { OptimizeResult } from "./optimizer";
-import { Alternatives, RecommendedPlan, Tiers } from "./PlanView";
+import { Alternatives, RecommendedPlan, Tiers, euros } from "./PlanView";
 import { PriceNotice } from "./PriceSheet";
+import { tr } from "../settings";
 
 // ---------------------------------------------------------------------------
 // Assistant « Mon objectif »
 // ---------------------------------------------------------------------------
 
-const USAGES: { id: Usage; icon: IconName; hint: string }[] = [
-  { id: "office", icon: "folder", hint: "Internet, mails, Office, vidéos, visio" },
-  { id: "gaming", icon: "gpu", hint: "Jeux récents, en solo ou en ligne" },
-  { id: "creation", icon: "spark", hint: "Montage vidéo, retouche photo, 3D" },
-  { id: "streaming", icon: "screen", hint: "Jouer et diffuser en direct (Twitch, YouTube)" },
+const usages = (): { id: Usage; icon: IconName; hint: string }[] => [
+  { id: "office", icon: "folder", hint: tr("Internet, mails, Office, vidéos, visio", "Web, email, Office, videos, video calls") },
+  { id: "gaming", icon: "gpu", hint: tr("Jeux récents, en solo ou en ligne", "Recent games, solo or online") },
+  { id: "creation", icon: "spark", hint: tr("Montage vidéo, retouche photo, 3D", "Video editing, photo editing, 3D") },
+  { id: "streaming", icon: "screen", hint: tr("Jouer et diffuser en direct (Twitch, YouTube)", "Play and stream live (Twitch, YouTube)") },
 ];
 
-const RESOLUTIONS: { id: Resolution; hint: string }[] = [
-  { id: "1080p", hint: "Écrans 22 à 24 pouces, le plus courant" },
-  { id: "1440p", hint: "Écrans 27 pouces : le bon compromis" },
-  { id: "4k", hint: "Grands écrans et TV : très exigeant" },
+const resolutions = (): { id: Resolution; hint: string }[] => [
+  { id: "1080p", hint: tr("Écrans 22 à 24 pouces, le plus courant", "22 to 24-inch screens, the most common") },
+  { id: "1440p", hint: tr("Écrans 27 pouces : le bon compromis", "27-inch screens: the sweet spot") },
+  { id: "4k", hint: tr("Grands écrans et TV : très exigeant", "Large screens and TVs: very demanding") },
 ];
 
-const FPS_CHOICES: { id: FpsTarget; title: string; hint: string }[] = [
-  { id: 60, title: "Confort", hint: "Fluide pour les jeux solo et l'aventure" },
-  { id: 100, title: "Très fluide", hint: "Pour profiter d'un écran 120-144 Hz" },
-  { id: 144, title: "Compétitif", hint: "FPS en ligne, esport : réactivité maximale" },
+const fpsChoices = (): { id: FpsTarget; title: string; hint: string }[] => [
+  { id: 60, title: tr("Confort", "Comfortable"), hint: tr("Fluide pour les jeux solo et l'aventure", "Smooth for solo and adventure games") },
+  { id: 100, title: tr("Très fluide", "Very smooth"), hint: tr("Pour profiter d'un écran 120-144 Hz", "To make the most of a 120-144 Hz screen") },
+  { id: 144, title: tr("Compétitif", "Competitive"), hint: tr("FPS en ligne, esport : réactivité maximale", "Online shooters, esports: maximum responsiveness") },
 ];
 
 /** Résolution et fréquence de l'écran principal, pour préremplir l'assistant. */
@@ -39,7 +40,7 @@ function detectedScreen(r: Report): { res?: Resolution; fps?: FpsTarget; label?:
   if (!d) return {};
   const res: Resolution = d.height >= 2000 ? "4k" : d.height >= 1400 ? "1440p" : "1080p";
   const fps: FpsTarget = d.maxHz >= 140 ? 144 : d.maxHz >= 100 ? 100 : 60;
-  return { res, fps, label: `${d.width}×${d.height}, jusqu'à ${d.maxHz} Hz` };
+  return { res, fps, label: tr(`${d.width}×${d.height}, jusqu'à ${d.maxHz} Hz`, `${d.width}×${d.height}, up to ${d.maxHz} Hz`) };
 }
 
 export function GoalWizard({ report, goal, onDone, onSkip }: { report: Report; goal: Goal; onDone: (g: Goal) => void; onSkip?: () => void }) {
@@ -65,10 +66,10 @@ export function GoalWizard({ report, goal, onDone, onSkip }: { report: Report; g
 
       {step === "usage" && (
         <>
-          <h1>Que veux-tu faire avec ton PC ?</h1>
-          <p className="muted">PCEvolu adapte son diagnostic et ses conseils à ton usage.</p>
+          <h1>{tr("Que veux-tu faire avec ton PC ?", "What do you want to do with your PC?")}</h1>
+          <p className="muted">{tr("PCEvolu adapte son diagnostic et ses conseils à ton usage.", "PCEvolu tailors its diagnosis and advice to how you use your PC.")}</p>
           <div className="choices four">
-            {USAGES.map((u) => (
+            {usages().map((u) => (
               <button key={u.id} className={`choice ${g.usage === u.id ? "on" : ""}`} onClick={() => pick({ usage: u.id })}>
                 <Icon name={u.icon} />
                 <b>{USAGE_LABEL[u.id]}</b>
@@ -81,14 +82,18 @@ export function GoalWizard({ report, goal, onDone, onSkip }: { report: Report; g
 
       {step === "res" && (
         <>
-          <h1>En quelle résolution joues-tu ?</h1>
-          <p className="muted">{screen.label ? `Ton écran : ${screen.label}.` : "Choisis la définition de ton écran."}</p>
+          <h1>{tr("En quelle résolution joues-tu ?", "What resolution do you play at?")}</h1>
+          <p className="muted">
+            {screen.label
+              ? tr(`Ton écran : ${screen.label}.`, `Your screen: ${screen.label}.`)
+              : tr("Choisis la définition de ton écran.", "Choose your screen's resolution.")}
+          </p>
           <div className="choices">
-            {RESOLUTIONS.map((r) => (
+            {resolutions().map((r) => (
               <button key={r.id} className={`choice ${g.resolution === r.id ? "on" : ""}`} onClick={() => pick({ resolution: r.id })}>
                 <b>{RES_LABEL[r.id]}</b>
                 <span>{r.hint}</span>
-                {screen.res === r.id && <em className="tag">Ton écran</em>}
+                {screen.res === r.id && <em className="tag">{tr("Ton écran", "Your screen")}</em>}
               </button>
             ))}
           </div>
@@ -97,16 +102,21 @@ export function GoalWizard({ report, goal, onDone, onSkip }: { report: Report; g
 
       {step === "fps" && (
         <>
-          <h1>Quelle fluidité vises-tu ?</h1>
-          <p className="muted">En images par seconde (i/s), dans les jeux récents en qualité élevée.</p>
+          <h1>{tr("Quelle fluidité vises-tu ?", "How smooth do you want it?")}</h1>
+          <p className="muted">
+            {tr(
+              "En images par seconde (i/s), dans les jeux récents en qualité élevée.",
+              "In frames per second (fps), in recent games at high quality.",
+            )}
+          </p>
           <div className="choices">
-            {FPS_CHOICES.map((f) => (
+            {fpsChoices().map((f) => (
               <button key={f.id} className={`choice ${g.fps === f.id ? "on" : ""}`} onClick={() => pick({ fps: f.id })}>
                 <b>
                   {f.title} · {FPS_LABEL[f.id]}
                 </b>
                 <span>{f.hint}</span>
-                {screen.fps != null && f.id === 144 && screen.fps === 144 && <em className="tag">Ton écran monte à 144 Hz</em>}
+                {screen.fps != null && f.id === 144 && screen.fps === 144 && <em className="tag">{tr("Ton écran monte à 144 Hz", "Your screen goes up to 144 Hz")}</em>}
               </button>
             ))}
           </div>
@@ -115,10 +125,15 @@ export function GoalWizard({ report, goal, onDone, onSkip }: { report: Report; g
 
       {step === "budget" && (
         <>
-          <h1>Quel budget maximum ?</h1>
-          <p className="muted">PCEvolu te montrera d'abord ce qui rentre dans ce budget, pièces obligatoires comprises.</p>
+          <h1>{tr("Quel budget maximum ?", "What's your maximum budget?")}</h1>
+          <p className="muted">
+            {tr(
+              "PCEvolu te montrera d'abord ce qui rentre dans ce budget, pièces obligatoires comprises.",
+              "PCEvolu will first show you what fits this budget, required parts included.",
+            )}
+          </p>
           <div className="budget">
-            <div className="budget-value">{g.budget == null ? "Pas de limite" : `${g.budget} €`}</div>
+            <div className="budget-value">{g.budget == null ? tr("Pas de limite", "No limit") : euros(g.budget)}</div>
             <input
               type="range"
               min={0}
@@ -131,11 +146,11 @@ export function GoalWizard({ report, goal, onDone, onSkip }: { report: Report; g
             <div className="budget-presets">
               {[200, 500, 800, 1200, 2000].map((b) => (
                 <button key={b} className={`chip-btn ${g.budget === b ? "on" : ""}`} onClick={() => pick({ budget: b })}>
-                  {b} €
+                  {euros(b)}
                 </button>
               ))}
               <button className={`chip-btn ${g.budget == null ? "on" : ""}`} onClick={() => pick({ budget: g.budget == null ? 800 : null })}>
-                Pas de limite
+                {tr("Pas de limite", "No limit")}
               </button>
             </div>
           </div>
@@ -145,17 +160,17 @@ export function GoalWizard({ report, goal, onDone, onSkip }: { report: Report; g
       <div className="wiz-actions">
         {i > 0 ? (
           <button className="btn ghost" onClick={() => setI(i - 1)}>
-            Retour
+            {tr("Retour", "Back")}
           </button>
         ) : onSkip ? (
           <button className="btn ghost" onClick={onSkip}>
-            Plus tard
+            {tr("Plus tard", "Later")}
           </button>
         ) : (
           <span />
         )}
         <button className="btn primary" onClick={next}>
-          {i + 1 < steps.length ? "Continuer" : "Voir mon diagnostic"}
+          {i + 1 < steps.length ? tr("Continuer", "Continue") : tr("Voir mon diagnostic", "See my diagnosis")}
         </button>
       </div>
     </div>
@@ -167,14 +182,21 @@ export function GoalWizard({ report, goal, onDone, onSkip }: { report: Report; g
 // ---------------------------------------------------------------------------
 
 const STATUS_ICON: Record<NeedStatus, IconName> = { ok: "check", limited: "alert", missing: "cross" };
-const FIX_LABEL: Record<string, string> = { gpu: "Cartes graphiques", cpu: "Processeurs", ram: "Mémoire", storage: "Stockage" };
+const fixLabel = (fix: string): string =>
+  ({
+    gpu: tr("Cartes graphiques", "Graphics cards"),
+    cpu: tr("Processeurs", "Processors"),
+    ram: tr("Mémoire", "Memory"),
+    storage: tr("Stockage", "Storage"),
+  } as Record<string, string>)[fix];
 
 /** Phrase d'objectif : « Jeu en 2K à 100 i/s, budget 900 € ». */
 export function goalSentence(g: Goal): string {
-  const budget = g.budget == null ? "sans limite de budget" : `budget ${g.budget} €`;
+  const budget = g.budget == null ? tr("sans limite de budget", "no budget limit") : tr(`budget ${g.budget} €`, `budget ${euros(g.budget)}`);
   if (isGaming(g.usage)) {
-    const what = g.usage === "streaming" ? "Jeu et streaming" : "Jeu";
-    return `${what} en ${RES_LABEL[g.resolution].split(" (")[0]} à ${g.fps} i/s, ${budget}`;
+    const what = g.usage === "streaming" ? tr("Jeu et streaming", "Gaming and streaming") : tr("Jeu", "Gaming");
+    const res = RES_LABEL[g.resolution].split(" (")[0];
+    return tr(`${what} en ${res} à ${g.fps} i/s, ${budget}`, `${what} at ${res} and ${g.fps} fps, ${budget}`);
   }
   return `${USAGE_LABEL[g.usage]}, ${budget}`;
 }
@@ -191,20 +213,20 @@ export function GoalDiagnostic({ goal, verdict, plan, onBudget, onEdit, onUpgrad
   const [tab, setTab] = useState<GoalTab>("alternatives");
   const after = plan?.best && !plan.current.reached ? plan.best.evaluation.fps : undefined;
   const tabs: { id: GoalTab; label: string; count?: number }[] = [
-    { id: "alternatives", label: "Autres options", count: plan?.alternatives.length },
-    { id: "tiers", label: "Selon le budget", count: plan?.tiers.length },
-    { id: "diagnostic", label: "Pièce par pièce" },
+    { id: "alternatives", label: tr("Autres options", "Other options"), count: plan?.alternatives.length },
+    { id: "tiers", label: tr("Selon le budget", "By budget"), count: plan?.tiers.length },
+    { id: "diagnostic", label: tr("Pièce par pièce", "Part by part") },
   ];
 
   return (
     <div className="goal-page">
       <header className="gp-head">
         <div>
-          <h1>Mon plan</h1>
+          <h1>{tr("Mon plan", "My plan")}</h1>
           <p className="gp-goal">{goalSentence(goal)}</p>
         </div>
         <button className="btn ghost" onClick={onEdit}>
-          Modifier
+          {tr("Modifier", "Edit")}
         </button>
       </header>
 
@@ -252,16 +274,20 @@ function FpsGauge({ today, after, goal, limit }: { today: number; after?: number
       </div>
       <div className="gauge-legend">
         <span>
-          Aujourd'hui : <b>{fluidity(today).toLowerCase()}</b> <span className="num">(≈ {today} i/s)</span>, limité par{" "}
-          {limit === "gpu" ? "la carte graphique" : "le processeur"}
+          {tr("Aujourd'hui : ", "Today: ")}<b>{fluidity(today).toLowerCase()}</b>{" "}
+          <span className="num">{tr(`(≈ ${today} i/s)`, `(≈ ${today} fps)`)}</span>
+          {tr(", limité par ", ", limited by ")}
+          {limit === "gpu" ? tr("la carte graphique", "the graphics card") : tr("le processeur", "the processor")}
         </span>
         {after != null && after > today && (
           <span className="gauge-legend-after">
-            Avec le plan : <b>{fluidity(after).toLowerCase()}</b> <span className="num">(≈ {after} i/s)</span>
+            {tr("Avec le plan : ", "With the plan: ")}<b>{fluidity(after).toLowerCase()}</b>{" "}
+            <span className="num">{tr(`(≈ ${after} i/s)`, `(≈ ${after} fps)`)}</span>
           </span>
         )}
         <span className="gauge-legend-goal">
-          Objectif : <b>{fluidity(goal).toLowerCase()}</b> <span className="num">({goal} i/s)</span>
+          {tr("Objectif : ", "Goal: ")}<b>{fluidity(goal).toLowerCase()}</b>{" "}
+          <span className="num">{tr(`(${goal} i/s)`, `(${goal} fps)`)}</span>
         </span>
       </div>
     </div>
@@ -273,19 +299,21 @@ function Diagnostic({ goal, verdict, onUpgrades, byPart }: { goal: Goal; verdict
     <>
       {verdict.fps && (
         <section className="limiter">
-          <h3 className="limiter-title">Qui limite ton PC ?</h3>
+          <h3 className="limiter-title">{tr("Qui limite ton PC ?", "What's holding your PC back?")}</h3>
           <p className="limiter-sub">
-            Le PC va à la vitesse du plus lent des deux, dans un jeu récent en qualité élevée. Les jeux compétitifs (Valorant, CS2, Fortnite en
-            réglages bas) tournent bien plus vite.
+            {tr(
+              "Le PC va à la vitesse du plus lent des deux, dans un jeu récent en qualité élevée. Les jeux compétitifs (Valorant, CS2, Fortnite en réglages bas) tournent bien plus vite.",
+              "Your PC runs at the speed of the slower of the two, in a recent game at high quality. Competitive games (Valorant, CS2, Fortnite on low settings) run much faster.",
+            )}
           </p>
           {(() => {
             const max = Math.max(goal.fps * 1.35, verdict.fps.gpuFps * 1.08, verdict.fps.cpuFps * 1.08);
             return (
               <div className="limiter-bars">
-                <FpsBar icon="gpu" label="Carte graphique" value={verdict.fps.gpuFps} target={goal.fps} max={max} limit={verdict.fps.limit === "gpu"} />
-                <FpsBar icon="chip" label="Processeur" value={verdict.fps.cpuFps} target={goal.fps} max={max} limit={verdict.fps.limit === "cpu"} />
+                <FpsBar icon="gpu" label={tr("Carte graphique", "Graphics card")} value={verdict.fps.gpuFps} target={goal.fps} max={max} limit={verdict.fps.limit === "gpu"} />
+                <FpsBar icon="chip" label={tr("Processeur", "Processor")} value={verdict.fps.cpuFps} target={goal.fps} max={max} limit={verdict.fps.limit === "cpu"} />
                 <div className="limiter-goal" style={{ left: `calc(var(--lim-label) + (100% - var(--lim-label) - var(--lim-value)) * ${goal.fps / max})` }}>
-                  <span>Objectif {goal.fps} i/s</span>
+                  <span>{tr(`Objectif ${goal.fps} i/s`, `Goal ${goal.fps} fps`)}</span>
                 </div>
               </div>
             );
@@ -301,14 +329,17 @@ function Diagnostic({ goal, verdict, onUpgrades, byPart }: { goal: Goal; verdict
               <div className="need-head">
                 <b>{n.label}</b>
                 <span className="muted">
-                  {n.current}, objectif {n.target.charAt(0).toLowerCase() + n.target.slice(1)}
+                  {tr(
+                    `${n.current}, objectif ${n.target.charAt(0).toLowerCase() + n.target.slice(1)}`,
+                    `${n.current}, goal ${n.target.charAt(0).toLowerCase() + n.target.slice(1)}`,
+                  )}
                 </span>
               </div>
               <p className="muted small"><T>{n.detail}</T></p>
             </div>
             {n.fix && n.status !== "ok" && (
               <button className="link small" onClick={() => onUpgrades(n.fix)}>
-                Voir les {FIX_LABEL[n.fix].toLowerCase()}
+                {tr(`Voir les ${fixLabel(n.fix).toLowerCase()}`, `See ${fixLabel(n.fix).toLowerCase()}`)}
               </button>
             )}
           </li>
@@ -329,7 +360,7 @@ export function VerdictBanner({ verdict, onUpgrades, compact }: { verdict: Verdi
       </div>
       {onUpgrades && verdict.level !== "ok" && (
         <button className="btn primary" onClick={onUpgrades}>
-          Voir les solutions
+          {tr("Voir les solutions", "See the solutions")}
         </button>
       )}
     </div>
@@ -345,7 +376,7 @@ function FpsBar({ icon, label, value, target, max, limit }: { icon: IconName; la
         <Icon name={icon} />
         <span>
           {label}
-          {limit && <span className="lim-flag">Le plus lent</span>}
+          {limit && <span className="lim-flag">{tr("Le plus lent", "The slowest")}</span>}
         </span>
       </span>
       <span className="lim-track">
@@ -353,7 +384,7 @@ function FpsBar({ icon, label, value, target, max, limit }: { icon: IconName; la
       </span>
       <span className="lim-value">
         <b>{fluidity(value)}</b>
-        <span className="num">≈ {value} i/s</span>
+        <span className="num">{tr(`≈ ${value} i/s`, `≈ ${value} fps`)}</span>
       </span>
     </div>
   );

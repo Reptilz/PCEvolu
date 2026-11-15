@@ -4,20 +4,21 @@ import type { Report } from "../types";
 import type { Category, Check, Part, Proposal } from "./types";
 import { buildProfile, missingAnswers, saveAnswers, type Answers, type Profile } from "./profile";
 import { proposeAll } from "./engine";
-import { CATALOG_DATE } from "./catalog";
+import { catalogDate, catalogText, CATALOG_DATE } from "./catalog";
 import { priceInfo, pricesFile, trendOf } from "./prices";
 import { PriceNotice, usePrices } from "./PriceSheet";
 import { BrandLogo, Icon, type IconName } from "../icons";
 import { impactOf, type Goal, type Impact, type Verdict } from "./goal";
-import { AdditionRow, CompatSummary, ItemRow, KindIcons, ModelPicks, SelectButton, kindLabel } from "./PlanView";
+import { AdditionRow, CompatSummary, ItemRow, KindIcons, ModelPicks, SelectButton, euros, kindLabel } from "./PlanView";
 import { goalSentence } from "./GoalViews";
+import { currentLang, tr } from "../settings";
 
-const TABS: { id: Category; label: string; icon: IconName }[] = [
-  { id: "gpu", label: "Carte graphique", icon: "gpu" },
-  { id: "cpu", label: "Processeur", icon: "chip" },
-  { id: "board", label: "Carte mère", icon: "board" },
-  { id: "ram", label: "Mémoire vive", icon: "ram" },
-  { id: "storage", label: "Stockage", icon: "disk" },
+const tabs = (): { id: Category; label: string; icon: IconName }[] => [
+  { id: "gpu", label: tr("Carte graphique", "Graphics card"), icon: "gpu" },
+  { id: "cpu", label: tr("Processeur", "Processor"), icon: "chip" },
+  { id: "board", label: tr("Carte mère", "Motherboard"), icon: "board" },
+  { id: "ram", label: tr("Mémoire vive", "RAM"), icon: "ram" },
+  { id: "storage", label: tr("Stockage", "Storage"), icon: "disk" },
 ];
 
 interface Scored {
@@ -84,18 +85,29 @@ export function UpgradesView({
     ? undefined
     : tabNeed
       ? cheapestGoal
-        ? `${tabNeed.detail} La solution la moins chère pour atteindre ton objectif coûte ${cheapestGoal.p.total} €${goal.budget != null && cheapestGoal.p.total > goal.budget ? `, au-delà de ton budget de ${goal.budget} €` : ""}.`
-        : `${tabNeed.detail} Aucune pièce de cet onglet ne suffit seule : le plan combiné de « Mon objectif » associe plusieurs pièces.`
+        ? tr(
+            `${tabNeed.detail} La solution la moins chère pour atteindre ton objectif coûte ${cheapestGoal.p.total} €${goal.budget != null && cheapestGoal.p.total > goal.budget ? `, au-delà de ton budget de ${goal.budget} €` : ""}.`,
+            `${tabNeed.detail} The cheapest way to reach your goal costs ${euros(cheapestGoal.p.total)}${goal.budget != null && cheapestGoal.p.total > goal.budget ? `, over your budget of ${euros(goal.budget)}` : ""}.`,
+          )
+        : tr(
+            `${tabNeed.detail} Aucune pièce de cet onglet ne suffit seule : le plan combiné de « Mon objectif » associe plusieurs pièces.`,
+            `${tabNeed.detail} No single part in this tab is enough on its own: the combined plan in "My goal" puts several parts together.`,
+          )
       : verdict.level === "ok"
-        ? "Ton PC atteint déjà ton objectif : tout ce qui suit est du bonus."
-        : "Cette pièce ne limite pas ton objectif. Les onglets marqués d'un point sont prioritaires.";
+        ? tr("Ton PC atteint déjà ton objectif : tout ce qui suit est du bonus.", "Your PC already meets your goal: everything below is a bonus.")
+        : tr("Cette pièce ne limite pas ton objectif. Les onglets marqués d'un point sont prioritaires.", "This part isn't limiting your goal. Tabs marked with a dot come first.");
 
   return (
     <div className="up-page">
       <header className="gp-head">
         <div>
-          <h1>Toutes les pièces</h1>
-          <p className="gp-goal">Le catalogue complet des pièces compatibles avec ton PC, vérifiées une par une. Pour un conseil tout prêt, va dans Mon plan.</p>
+          <h1>{tr("Toutes les pièces", "All parts")}</h1>
+          <p className="gp-goal">
+            {tr(
+              "Le catalogue complet des pièces compatibles avec ton PC, vérifiées une par une. Pour un conseil tout prêt, va dans Mon plan.",
+              "The full catalogue of parts compatible with your PC, checked one by one. For ready-made advice, go to My plan.",
+            )}
+          </p>
         </div>
       </header>
 
@@ -103,26 +115,28 @@ export function UpgradesView({
         <p>
           {goal.configured ? (
             <>
-              Objectif : {goalSentence(goal).charAt(0).toLowerCase() + goalSentence(goal).slice(1)}
-              {verdict.fps ? `, avec environ ${verdict.fps.fps} i/s aujourd'hui` : ""}.{" "}
+              {tr("Objectif : ", "Goal: ")}{goalSentence(goal).charAt(0).toLowerCase() + goalSentence(goal).slice(1)}
+              {verdict.fps ? tr(`, avec environ ${verdict.fps.fps} i/s aujourd'hui`, `, with about ${verdict.fps.fps} fps today`) : ""}.{" "}
             </>
           ) : (
-            "Aucun objectif défini : les propositions ne sont pas classées selon ton usage. "
+            tr("Aucun objectif défini : les propositions ne sont pas classées selon ton usage. ", "No goal set: the suggestions aren't ranked for how you use your PC. ")
           )}
           <button className="link" onClick={onEditGoal}>
-            {goal.configured ? "Modifier l'objectif" : "Définir mon objectif"}
+            {goal.configured ? tr("Modifier l'objectif", "Edit the goal") : tr("Définir mon objectif", "Set my goal")}
           </button>
         </p>
         <p>
           <ProfileSentence p={profile} answers={answers} missing={missing} />{" "}
           <button className="link" onClick={() => setShowForm(!showForm)}>
-            {showForm ? "Fermer" : missing > 0 ? "Renseigner ces infos" : "Modifier"}
+            {showForm ? tr("Fermer", "Close") : missing > 0 ? tr("Renseigner ces infos", "Fill in these details") : tr("Modifier", "Edit")}
           </button>
         </p>
         {profile.unsupportedPlatform && (
           <p className="up-unsupported">
-            Ta carte mère est une plateforme {profile.unsupportedPlatform} : PCEvolu ne connaît pas ses règles de compatibilité. Les processeurs
-            proposés passent tous par un changement de carte mère, et les autres pièces restent à vérifier sur la fiche de ta carte.
+            {tr(
+              `Ta carte mère est une plateforme ${profile.unsupportedPlatform} : PCEvolu ne connaît pas ses règles de compatibilité. Les processeurs proposés passent tous par un changement de carte mère, et les autres pièces restent à vérifier sur la fiche de ta carte.`,
+              `Your motherboard is a ${profile.unsupportedPlatform} platform: PCEvolu doesn't know its compatibility rules. All suggested processors require a new motherboard, and the other parts still need checking against your board's spec sheet.`,
+            )}
           </p>
         )}
         {showForm && (
@@ -133,7 +147,7 @@ export function UpgradesView({
       </div>
 
       <div className="seg up-seg" role="tablist">
-        {TABS.map((t) => (
+        {tabs().map((t) => (
           <button
             key={t.id}
             role="tab"
@@ -144,7 +158,7 @@ export function UpgradesView({
               setBrand("all");
             }}
           >
-            {blocking(t.id) && <span className="tab-dot" title="Limite ton objectif" />}
+            {blocking(t.id) && <span className="tab-dot" title={tr("Limite ton objectif", "Limits your goal")} />}
             <Icon name={t.icon} className="seg-ico" />
             {t.label}
             <span className="seg-count">{tabCount(t.id)}</span>
@@ -156,11 +170,11 @@ export function UpgradesView({
 
       {brands.length > 1 && (
         <div className="brand-filter">
-          <span className="muted small">Marque</span>
+          <span className="muted small">{tr("Marque", "Brand")}</span>
           {["all", ...brands.sort()].map((b) => (
             <button key={b} className={`chip-btn ${brand === b ? "on" : ""}`} onClick={() => setBrand(b)}>
               {b !== "all" && <BrandLogo brand={b} className="chip-logo" />}
-              {b === "all" ? "Toutes" : b}
+              {b === "all" ? tr("Toutes", "All") : b}
             </button>
           ))}
         </div>
@@ -170,7 +184,7 @@ export function UpgradesView({
         <p className="up-empty">{emptyMessage(tab, profile)}</p>
       ) : (
         <>
-          {inBudget.length === 0 && goal.budget != null && <p className="up-empty">Rien dans cet onglet ne rentre dans ton budget de {goal.budget} €.</p>}
+          {inBudget.length === 0 && goal.budget != null && <p className="up-empty">{tr(`Rien dans cet onglet ne rentre dans ton budget de ${goal.budget} €.`, `Nothing in this tab fits your budget of ${euros(goal.budget)}.`)}</p>}
           <ul className="rows">
             {inBudget.map((s) => (
               <ProposalRow key={s.p.id} p={s.p} impact={goal.configured ? s.impact : undefined} />
@@ -179,7 +193,10 @@ export function UpgradesView({
           {over.length > 0 && (
             <div className="over-budget">
               <button className="link" onClick={() => setShowOver(!showOver)}>
-                {showOver ? "Masquer" : "Afficher"} {over.length === 1 ? "la proposition" : `les ${over.length} propositions`} au-delà de ton budget
+                {tr(
+                  `${showOver ? "Masquer" : "Afficher"} ${over.length === 1 ? "la proposition" : `les ${over.length} propositions`} au-delà de ton budget`,
+                  `${showOver ? "Hide" : "Show"} ${over.length === 1 ? "the suggestion" : `the ${over.length} suggestions`} over your budget`,
+                )}
               </button>
               {showOver && (
                 <ul className="rows dim">
@@ -193,7 +210,10 @@ export function UpgradesView({
         </>
       )}
       <PriceNotice
-        extra={`${marketCount > 0 ? `${marketCount} composants ont un prix relevé ; les autres prix sont indicatifs (${CATALOG_DATE}).` : ""} Les performances sont des ordres de grandeur : vérifie toujours la fiche du modèle exact avant d'acheter.`}
+        extra={tr(
+          `${marketCount > 0 ? `${marketCount} composants ont un prix relevé ; les autres prix sont indicatifs (${CATALOG_DATE}).` : ""} Les performances sont des ordres de grandeur : vérifie toujours la fiche du modèle exact avant d'acheter.`,
+          `${marketCount > 0 ? `${marketCount} components have a tracked price; other prices are indicative (${catalogDate()}).` : ""} Performance figures are rough estimates: always check the exact model's spec sheet before buying.`,
+        )}
       />
     </div>
   );
@@ -203,17 +223,29 @@ export function UpgradesView({
 
 function emptyMessage(tab: Category, p: Profile) {
   if (p.isLaptop && (tab === "gpu" || tab === "cpu"))
-    return "Sur un PC portable, le processeur et la carte graphique sont soudés à la carte mère : impossible de les changer. Les gains possibles passent par la RAM et le stockage.";
+    return tr(
+      "Sur un PC portable, le processeur et la carte graphique sont soudés à la carte mère : impossible de les changer. Les gains possibles passent par la RAM et le stockage.",
+      "On a laptop, the processor and graphics card are soldered to the motherboard: they can't be replaced. Any gains will come from RAM and storage.",
+    );
   if (p.isLaptop && tab === "ram")
-    return "PC portable : la RAM est au format SO-DIMM, et souvent soudée sur les modèles récents. Vérifie dans la fiche de ton modèle s'il reste un emplacement libre.";
+    return tr(
+      "PC portable : la RAM est au format SO-DIMM, et souvent soudée sur les modèles récents. Vérifie dans la fiche de ton modèle s'il reste un emplacement libre.",
+      "Laptop: the RAM uses the SO-DIMM format and is often soldered on recent models. Check your model's spec sheet to see if there's a free slot.",
+    );
   if (tab === "ram" && p.ramType === "DDR3")
-    return "Ton PC utilise de la DDR3, qui n'est plus vendue neuve. Plutôt que d'en racheter, mieux vaut investir dans une nouvelle plateforme (onglet Processeur).";
-  if (tab === "gpu" && !p.gpu) return "Ta carte graphique n'a pas été reconnue : impossible de calculer un gain fiable.";
-  if (tab === "cpu" && !p.cpu) return "Ton processeur n'a pas été reconnu.";
-  if (tab === "board" && p.isLaptop) return "Sur un PC portable, la carte mère ne se change pas.";
-  if (tab === "board") return "Aucun changement de plateforme n'apporte de vrai gain pour l'instant : ta carte mère actuelle suffit pour les processeurs proposés.";
-  if (tab === "ram" && !p.ramType) return "Type de mémoire non détecté.";
-  return "Aucun upgrade pertinent dans le catalogue pour l'instant : ce composant est déjà au niveau.";
+    return tr(
+      "Ton PC utilise de la DDR3, qui n'est plus vendue neuve. Plutôt que d'en racheter, mieux vaut investir dans une nouvelle plateforme (onglet Processeur).",
+      "Your PC uses DDR3, which is no longer sold new. Rather than buying more, it's better to invest in a new platform (Processor tab).",
+    );
+  if (tab === "gpu" && !p.gpu) return tr("Ta carte graphique n'a pas été reconnue : impossible de calculer un gain fiable.", "Your graphics card wasn't recognised: a reliable gain can't be calculated.");
+  if (tab === "cpu" && !p.cpu) return tr("Ton processeur n'a pas été reconnu.", "Your processor wasn't recognised.");
+  if (tab === "board" && p.isLaptop) return tr("Sur un PC portable, la carte mère ne se change pas.", "On a laptop, the motherboard can't be replaced.");
+  if (tab === "board") return tr(
+      "Aucun changement de plateforme n'apporte de vrai gain pour l'instant : ta carte mère actuelle suffit pour les processeurs proposés.",
+      "No platform change brings a real gain for now: your current motherboard is enough for the suggested processors.",
+    );
+  if (tab === "ram" && !p.ramType) return tr("Type de mémoire non détecté.", "Memory type not detected.");
+  return tr("Aucun upgrade pertinent dans le catalogue pour l'instant : ce composant est déjà au niveau.", "No relevant upgrade in the catalogue for now: this component is already up to the task.");
 }
 
 // ---------------------------------------------------------------------------
@@ -235,12 +267,24 @@ const CHECK_SOURCE: Record<string, "scan" | "answers" | "estimate"> = {
   "Place dans le boîtier": "answers", "Ventilation du boîtier": "answers", "Hauteur du ventirad": "answers", "Encombrement du ventirad": "answers",
   Ventirad: "answers", "Câble processeur": "answers", Format: "answers", "Épaisseur": "answers",
   "Équilibre avec le processeur": "estimate", "Équilibre avec la carte graphique": "estimate", "Équilibre de la config": "estimate",
+  // Mêmes vérifications en anglais (libellés produits par engine.ts / optimizer.ts quand l'app est en anglais).
+  Motherboard: "scan", RAM: "scan", "Memory type": "scan", "Free slot": "scan", "Free slots": "scan", "Max capacity": "scan", "M.2 slot": "scan",
+  "PCIe slot": "scan", "Video output": "scan", "Matching sticks": "scan", "Storage (migration)": "scan", "Prebuilt PC": "scan", Laptop: "scan",
+  Speed: "scan", "4 sticks": "scan", Connection: "scan",
+  "Power supply": "answers", "16-pin connector": "answers", "Graphics card connector": "answers", "PCIe cables": "answers", "Room in the case": "answers",
+  "Case airflow": "answers", "Cooler height": "answers", "Cooler clearance": "answers", "CPU cooler": "answers", "Processor cable": "answers",
+  "Form factor": "answers", Thickness: "answers",
+  "Balance with the processor": "estimate", "Balance with the graphics card": "estimate", "Setup balance": "estimate",
 };
-const SOURCE_TEXT = {
-  scan: "Source : analyse de ton PC et fiches des fabricants",
-  answers: "Source : tes réponses (sinon une hypothèse prudente) et fiches des fabricants",
-  estimate: "Estimation PCEvolu : un ordre de grandeur, pas une règle de compatibilité",
-};
+const sourceText = (s: "scan" | "answers" | "estimate"): string =>
+  ({
+    scan: tr("Source : analyse de ton PC et fiches des fabricants", "Source: scan of your PC and manufacturers' spec sheets"),
+    answers: tr(
+      "Source : tes réponses (sinon une hypothèse prudente) et fiches des fabricants",
+      "Source: your answers (or a cautious assumption) and manufacturers' spec sheets",
+    ),
+    estimate: tr("Estimation PCEvolu : un ordre de grandeur, pas une règle de compatibilité", "PCEvolu estimate: a rough figure, not a compatibility rule"),
+  })[s];
 
 export function CheckRow({ c }: { c: Check }) {
   const icon = c.status === "ok" ? "check" : c.status === "warn" ? "alert" : c.status === "fixed" ? "refresh" : "cross";
@@ -251,7 +295,7 @@ export function CheckRow({ c }: { c: Check }) {
       <div>
         <div className="chk-label">{c.label}</div>
         <div className="chk-detail"><T>{c.detail}</T></div>
-        {source && <div className="chk-source">{SOURCE_TEXT[source]}</div>}
+        {source && <div className="chk-source">{sourceText(source)}</div>}
       </div>
     </li>
   );
@@ -273,14 +317,21 @@ function ProposalRow({ p, impact }: { p: Proposal; impact?: Impact }) {
   const warns = p.checks.filter((c) => c.status === "warn").length;
   const fails = p.checks.filter((c) => c.status === "fail").length;
   const compat = required.length
-    ? `avec ${required.map((a) => kindLabel(a.part).toLowerCase()).join(" et ")} en plus`
+    ? tr(
+        `avec ${required.map((a) => kindLabel(a.part).toLowerCase()).join(" et ")} en plus`,
+        `plus ${required.map((a) => `a ${kindLabel(a.part).toLowerCase()}`).join(" and ")}`,
+      )
     : fails
-      ? "incompatible"
+      ? tr("incompatible", "not compatible")
       : warns
-        ? `compatible, ${warns} point${warns > 1 ? "s" : ""} à vérifier`
-        : "compatible tel quel";
+        ? tr(`compatible, ${warns} point${warns > 1 ? "s" : ""} à vérifier`, `compatible, ${warns} ${warns > 1 ? "points" : "point"} to check`)
+        : tr("compatible tel quel", "compatible as is");
   const effect = impact?.label ?? p.gainLabel;
-  const flag = impact?.reachesGoal ? "Atteint ton objectif" : impact && !impact.relevant ? "Peu utile pour ton objectif" : p.highlight;
+  const flag = impact?.reachesGoal
+    ? tr("Atteint ton objectif", "Reaches your goal")
+    : impact && !impact.relevant
+      ? tr("Peu utile pour ton objectif", "Not very useful for your goal")
+      : p.highlight;
 
   return (
     <li className={`row prop-row ${open ? "open" : ""}`}>
@@ -288,7 +339,7 @@ function ProposalRow({ p, impact }: { p: Proposal; impact?: Impact }) {
         <span className="row-main">
           <span className="row-title">
             <KindIcons parts={[p.main, ...required.map((a) => a.part)]} />
-            {p.title}
+            {catalogText(p.title)}
             {flag && <span className={`row-flag ${impact?.reachesGoal ? "ok" : impact && !impact.relevant ? "dim" : ""}`}>{flag}</span>}
           </span>
           <span className="row-sub">
@@ -297,7 +348,8 @@ function ProposalRow({ p, impact }: { p: Proposal; impact?: Impact }) {
           </span>
         </span>
         <span className="row-price num">
-          {p.total} €{p.totalIfVerify > p.total && <span className="row-price-max">jusqu'à {p.totalIfVerify} €</span>}
+          {euros(p.total)}
+          {p.totalIfVerify > p.total && <span className="row-price-max">{tr(`jusqu'à ${p.totalIfVerify} €`, `up to ${euros(p.totalIfVerify)}`)}</span>}
         </span>
         <Icon name="chevron" className={`chev ${open ? "open" : ""}`} />
       </button>
@@ -317,33 +369,45 @@ function ProposalRow({ p, impact }: { p: Proposal; impact?: Impact }) {
           <CompatSummary checks={p.checks} />
           {p.pairing && (
             <section className="pairing">
-              <h4 className="pairing-title">Pour en profiter pleinement</h4>
+              <h4 className="pairing-title">{tr("Pour en profiter pleinement", "To get the most out of it")}</h4>
               <p className="pairing-text">
-                Ton processeur limite cette carte à ≈ {p.pairing.usedBefore} % de sa puissance. Avec un{" "}
+                {tr(
+                  `Ton processeur limite cette carte à ≈ ${p.pairing.usedBefore} % de sa puissance. Avec un`,
+                  `Your processor limits this card to ≈ ${p.pairing.usedBefore}% of its power. With a`,
+                )}{" "}
                 <b>{p.pairing.cpu.name.replace(/^(AMD|Intel) /, "")}</b>
                 {p.pairing.parts.length
-                  ? ` (avec ${p.pairing.parts.map((x) => ({ board: "la carte mère", ram: "la mémoire", cooler: "le ventirad", psu: "l'alimentation" } as Record<string, string>)[x.kind] ?? kindLabel(x).toLowerCase()).join(", ").replace(/, ([^,]*)$/, " et $1")} qu'il demande)`
+                  ? tr(
+                      ` (avec ${p.pairing.parts.map((x) => ({ board: "la carte mère", ram: "la mémoire", cooler: "le ventirad", psu: "l'alimentation" } as Record<string, string>)[x.kind] ?? kindLabel(x).toLowerCase()).join(", ").replace(/, ([^,]*)$/, " et $1")} qu'il demande)`,
+                      ` (with the ${p.pairing.parts.map((x) => ({ board: "motherboard", ram: "memory", cooler: "CPU cooler", psu: "power supply" } as Record<string, string>)[x.kind] ?? kindLabel(x).toLowerCase()).join(", ").replace(/, ([^,]*)$/, " and $1")} it needs)`,
+                    )
                   : ""}
-                , elle serait exploitée à ≈ {p.pairing.usedAfter} %.
+                {tr(`, elle serait exploitée à ≈ ${p.pairing.usedAfter} %.`, `, it would run at ≈ ${p.pairing.usedAfter}%.`)}
               </p>
               <ul className="pairing-parts">
                 {[p.pairing.cpu, ...p.pairing.parts].map((x) => (
                   <li key={x.id}>
                     <KindIcons parts={[x]} />
                     <span>{x.name}</span>
-                    <span className="num">{price(x)} €</span>
+                    <span className="num">{euros(price(x))}</span>
                   </li>
                 ))}
               </ul>
               <p className="pairing-total">
-                Surcoût : <b className="num">{p.pairing.extra} €</b>, soit <b className="num">{p.total + p.pairing.extra} €</b> pour l'ensemble.
-                <span className="muted"> Mon plan recalcule l'alimentation et le budget pour la combinaison complète.</span>
+                {tr("Surcoût : ", "Extra cost: ")}<b className="num">{euros(p.pairing.extra)}</b>{tr(", soit ", ", so ")}
+                <b className="num">{euros(p.total + p.pairing.extra)}</b>{tr(" pour l'ensemble.", " in total.")}
+                <span className="muted">
+                  {tr(
+                    " Mon plan recalcule l'alimentation et le budget pour la combinaison complète.",
+                    " My plan recalculates the power supply and budget for the full combination.",
+                  )}
+                </span>
               </p>
             </section>
           )}
           {advised.length > 0 && (
             <details className="pd-advised">
-              <summary>Conseillé en plus ({advised.length})</summary>
+              <summary>{tr(`Conseillé en plus (${advised.length})`, `Also recommended (${advised.length})`)}</summary>
               <ul className="pd-items">
                 {advised.map((a, i) => (
                   <AdditionRow key={i} a={a} />
@@ -374,20 +438,30 @@ export function MarketLine({ part }: { part: Part }) {
   if (!info) {
     return (
       <button className="market muted small market-btn" onClick={sheet}>
-        Prix indicatif, pas encore relevé. Comparer les prix
+        {tr("Prix indicatif, pas encore relevé. Comparer les prix", "Indicative price, not tracked yet. Compare prices")}
       </button>
     );
   }
   const best = info.best?.[0];
   const t = trendOf(part.id);
-  const eur = (n: number) => n.toLocaleString("fr-FR", { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
-  const trend = t.change != null && t.change !== 0 ? `, ${t.change < 0 ? "en baisse" : "en hausse"} de ${Math.abs(t.change)} % depuis le relevé précédent` : "";
+  const en = currentLang() === "en";
+  const num = (n: number) => n.toLocaleString(en ? "en-GB" : "fr-FR", { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
+  const eur = (n: number) => (en ? `€${num(n)}` : `${num(n)} €`);
+  const trend =
+    t.change != null && t.change !== 0
+      ? tr(
+          `, ${t.change < 0 ? "en baisse" : "en hausse"} de ${Math.abs(t.change)} % depuis le relevé précédent`,
+          `, ${t.change < 0 ? "down" : "up"} ${Math.abs(t.change)}% since the previous check`,
+        )
+      : "";
   return (
-    <button className={`market small market-btn ${info.stale ? "stale" : ""}`} onClick={sheet} title="Voir les offres, l'évolution du prix et créer une alerte">
-      {best ? `Dès ${eur(best.price)} € chez ${best.merchant}` : `Prix médian de ${info.offers} marchands`}
+    <button className={`market small market-btn ${info.stale ? "stale" : ""}`} onClick={sheet} title={tr("Voir les offres, l'évolution du prix et créer une alerte", "See offers, price history and create an alert")}>
+      {best
+        ? tr(`Dès ${eur(best.price)} chez ${best.merchant}`, `From ${eur(best.price)} at ${best.merchant}`)
+        : tr(`Prix médian de ${info.offers} marchands`, `Median price from ${info.offers} retailers`)}
       {trend}
-      {info.stale ? " (relevé ancien)" : ""}
-      {watched ? ", prix surveillé" : ""}. <u>Voir les offres</u>
+      {info.stale ? tr(" (relevé ancien)", " (old check)") : ""}
+      {watched ? tr(", prix surveillé", ", price watched") : ""}. <u>{tr("Voir les offres", "See offers")}</u>
     </button>
   );
 }
@@ -403,36 +477,49 @@ function ProfileSentence({ p, answers, missing }: { p: Profile; answers: Answers
   if (missing >= 3) {
     return (
       <span>
-        PCEvolu ne peut pas lire ton alimentation, ton boîtier ni ton refroidissement : les pièces qui en dépendent sont marquées « à vérifier ».
+        {tr(
+          "PCEvolu ne peut pas lire ton alimentation, ton boîtier ni ton refroidissement : les pièces qui en dépendent sont marquées « à vérifier ».",
+          "PCEvolu can't read your power supply, case or cooling: parts that depend on them are marked \"to check\".",
+        )}
       </span>
     );
   }
   const parts = [
-    p.psuKnown ? `alimentation ${p.psuWatts} W` : "alimentation inconnue",
-    p.gpuMaxMm ? `cartes graphiques jusqu'à ${p.gpuMaxMm} mm` : "taille du boîtier inconnue",
-    answers.caseFans != null ? `${answers.caseFans >= 3 ? "3 ventilateurs ou plus" : `${answers.caseFans} ventilateur${answers.caseFans > 1 ? "s" : ""}`}` : "ventilateurs inconnus",
-    answers.cooler !== "unknown" ? COOLER_LABEL[answers.cooler].toLowerCase() : "ventirad inconnu",
+    p.psuKnown ? tr(`alimentation ${p.psuWatts} W`, `${p.psuWatts} W power supply`) : tr("alimentation inconnue", "unknown power supply"),
+    p.gpuMaxMm ? tr(`cartes graphiques jusqu'à ${p.gpuMaxMm} mm`, `graphics cards up to ${p.gpuMaxMm} mm`) : tr("taille du boîtier inconnue", "unknown case size"),
+    answers.caseFans != null
+      ? tr(
+          `${answers.caseFans >= 3 ? "3 ventilateurs ou plus" : `${answers.caseFans} ventilateur${answers.caseFans > 1 ? "s" : ""}`}`,
+          answers.caseFans >= 3 ? "3 or more fans" : `${answers.caseFans} ${answers.caseFans === 1 ? "fan" : "fans"}`,
+        )
+      : tr("ventilateurs inconnus", "unknown fans"),
+    answers.cooler !== "unknown" ? coolerLabel(answers.cooler).toLowerCase() : tr("ventirad inconnu", "unknown CPU cooler"),
   ];
-  return <span>Ta config : {parts.join(", ")}.</span>;
+  return <span>{tr("Ta config : ", "Your setup: ")}{parts.join(", ")}.</span>;
 }
 
 
 
-const COOLER_LABEL: Record<Answers["cooler"], string> = {
-  stock: "Ventirad d'origine (livré avec le CPU)",
-  "tower-single": "Ventirad tour simple",
-  "tower-dual": "Gros ventirad double tour",
-  "aio-240": "Watercooling AIO 240 mm",
-  "aio-360": "Watercooling AIO 280/360 mm",
-  unknown: "Je ne sais pas",
-};
+const COOLER_KEYS: Answers["cooler"][] = ["stock", "tower-single", "tower-dual", "aio-240", "aio-360", "unknown"];
+const coolerLabel = (k: Answers["cooler"]): string =>
+  ({
+    stock: tr("Ventirad d'origine (livré avec le CPU)", "Stock cooler (came with the CPU)"),
+    "tower-single": tr("Ventirad tour simple", "Single tower cooler"),
+    "tower-dual": tr("Gros ventirad double tour", "Large dual tower cooler"),
+    "aio-240": tr("Watercooling AIO 240 mm", "240 mm AIO liquid cooler"),
+    "aio-360": tr("Watercooling AIO 280/360 mm", "280/360 mm AIO liquid cooler"),
+    unknown: tr("Je ne sais pas", "I don't know"),
+  })[k];
 
 function Questionnaire({ a, update }: { a: Answers; update: (p: Partial<Answers>) => void }) {
   return (
     <div className="qform">
-      <Field label="Puissance de l'alimentation" hint="Inscrite sur l'étiquette, sur le flanc de l'alim (ex. « 650W »).">
+      <Field
+        label={tr("Puissance de l'alimentation", "Power supply wattage")}
+        hint={tr("Inscrite sur l'étiquette, sur le flanc de l'alim (ex. « 650W »).", "Printed on the label on the side of the power supply (e.g. \"650W\").")}
+      >
         <select value={a.psuWatts ?? ""} onChange={(e) => update({ psuWatts: e.target.value ? Number(e.target.value) : null })}>
-          <option value="">Je ne sais pas</option>
+          <option value="">{tr("Je ne sais pas", "I don't know")}</option>
           {[400, 450, 500, 550, 600, 650, 700, 750, 850, 1000, 1200].map((w) => (
             <option key={w} value={w}>
               {w} W
@@ -440,45 +527,54 @@ function Questionnaire({ a, update }: { a: Answers; update: (p: Partial<Answers>
           ))}
         </select>
       </Field>
-      <Field label="Câble 16 broches (12V-2x6 / 12VHPWR)" hint="Présent sur les alims ATX 3.0 et plus récentes.">
+      <Field
+        label={tr("Câble 16 broches (12V-2x6 / 12VHPWR)", "16-pin cable (12V-2x6 / 12VHPWR)")}
+        hint={tr("Présent sur les alims ATX 3.0 et plus récentes.", "Found on ATX 3.0 and newer power supplies.")}
+      >
         <select value={a.psu12v2x6} onChange={(e) => update({ psu12v2x6: e.target.value as Answers["psu12v2x6"] })}>
-          <option value="unknown">Je ne sais pas</option>
-          <option value="yes">Oui</option>
-          <option value="no">Non</option>
+          <option value="unknown">{tr("Je ne sais pas", "I don't know")}</option>
+          <option value="yes">{tr("Oui", "Yes")}</option>
+          <option value="no">{tr("Non", "No")}</option>
         </select>
       </Field>
-      <Field label="Taille du boîtier" hint="Sert à estimer la place pour la carte graphique.">
+      <Field label={tr("Taille du boîtier", "Case size")} hint={tr("Sert à estimer la place pour la carte graphique.", "Used to estimate the room for the graphics card.")}>
         <select value={a.caseSize} onChange={(e) => update({ caseSize: e.target.value as Answers["caseSize"] })}>
-          <option value="unknown">Je ne sais pas</option>
-          <option value="small">Petit (mini-tour, Micro-ATX)</option>
-          <option value="mid">Moyen tour (le plus courant)</option>
-          <option value="full">Grand tour</option>
+          <option value="unknown">{tr("Je ne sais pas", "I don't know")}</option>
+          <option value="small">{tr("Petit (mini-tour, Micro-ATX)", "Small (mini tower, Micro-ATX)")}</option>
+          <option value="mid">{tr("Moyen tour (le plus courant)", "Mid tower (the most common)")}</option>
+          <option value="full">{tr("Grand tour", "Full tower")}</option>
         </select>
       </Field>
-      <Field label="Longueur max de carte graphique (mm)" hint="Facultatif, plus précis : voir la fiche de ton boîtier.">
+      <Field
+        label={tr("Longueur max de carte graphique (mm)", "Max graphics card length (mm)")}
+        hint={tr("Facultatif, plus précis : voir la fiche de ton boîtier.", "Optional, more accurate: see your case's spec sheet.")}
+      >
         <input
           type="number"
           min={150}
           max={500}
-          placeholder="ex. 330"
+          placeholder={tr("ex. 330", "e.g. 330")}
           value={a.gpuMaxMm ?? ""}
           onChange={(e) => update({ gpuMaxMm: e.target.value ? Number(e.target.value) : null })}
         />
       </Field>
-      <Field label="Ventilateurs de boîtier" hint="Hors ventirad du processeur et ventilateurs de la carte graphique.">
+      <Field
+        label={tr("Ventilateurs de boîtier", "Case fans")}
+        hint={tr("Hors ventirad du processeur et ventilateurs de la carte graphique.", "Not counting the CPU cooler and the graphics card fans.")}
+      >
         <select value={a.caseFans ?? ""} onChange={(e) => update({ caseFans: e.target.value === "" ? null : Number(e.target.value) })}>
-          <option value="">Je ne sais pas</option>
-          <option value="0">Aucun</option>
+          <option value="">{tr("Je ne sais pas", "I don't know")}</option>
+          <option value="0">{tr("Aucun", "None")}</option>
           <option value="1">1</option>
           <option value="2">2</option>
-          <option value="3">3 ou plus</option>
+          <option value="3">{tr("3 ou plus", "3 or more")}</option>
         </select>
       </Field>
-      <Field label="Refroidissement du processeur">
+      <Field label={tr("Refroidissement du processeur", "CPU cooling")}>
         <select value={a.cooler} onChange={(e) => update({ cooler: e.target.value as Answers["cooler"] })}>
-          {(Object.keys(COOLER_LABEL) as Answers["cooler"][]).map((k) => (
+          {COOLER_KEYS.map((k) => (
             <option key={k} value={k}>
-              {COOLER_LABEL[k]}
+              {coolerLabel(k)}
             </option>
           ))}
         </select>
