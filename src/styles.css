@@ -1157,3 +1157,5 @@ span.picks-name { color: var(--text); cursor: default; }
 .tp-card { margin-top: auto; height: 24px; border-radius: 5px; background: var(--c); border: 1px solid var(--b); }
 .theme-radio { display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
 .theme-radio input { accent-color: var(--accent); }
+.about-author { font-size: 15px; margin-top: -12px; }
+.about-author .link { font-size: inherit; font-weight: 600; }

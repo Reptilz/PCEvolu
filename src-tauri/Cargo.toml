@@ -1,6 +1,6 @@
 [package]
 name = "pcevolu"
-version = "0.3.0"
+version = "0.3.1"
 description = "PCEvolu : analyse et améliore ton PC"
 edition = "2021"
 

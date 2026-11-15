@@ -10,7 +10,7 @@ import { openUrl } from "./platform";
 
 type Tab = "general" | "updates" | "privacy" | "about";
 
-const REPO = "https://github.com/Reptilz/PCEvolu";
+const LINKEDIN = "https://www.linkedin.com/in/jordan-morlet-18481619a/";
 
 export function SettingsView() {
   const [tab, setTab] = useState<Tab>("general");
@@ -174,11 +174,6 @@ function Updates() {
           </span>
         </label>
       </section>
-      <section className="set-sec">
-        <button className="link" onClick={() => openUrl(`${REPO}/releases`)}>
-          {tr("Voir les nouveautés de chaque version ↗", "See what's new in each version ↗")}
-        </button>
-      </section>
     </>
   );
 }
@@ -252,12 +247,15 @@ function About() {
           </p>
         </div>
       </section>
+      <section className="set-sec about-author">
+        <span className="muted">{tr("Développé par", "Developed by")}</span>{" "}
+        <button className="link" onClick={() => openUrl(LINKEDIN)} title="LinkedIn">
+          Jordan Morlet ↗
+        </button>
+      </section>
       <section className="set-sec set-row">
         <button className="btn" onClick={() => openReport({ topic: tr("page Paramètres", "Settings page"), kind: "autre", details: [] })}>
           <Icon name="alert" /> {tr("Signaler une erreur", "Report an error")}
-        </button>
-        <button className="btn ghost" onClick={() => openUrl(REPO)}>
-          {tr("Code source sur GitHub ↗", "Source code on GitHub ↗")}
         </button>
       </section>
       <p className="muted small">
