@@ -166,10 +166,13 @@ function buildPlan(goal: Goal, p: Profile, base: ConfigState, choice: Partial<Re
     }
   }
   additions.push(...seen.values());
-  if (choice.gpu || choice.cpu) {
+  {
     const psuAdds: Addition[] = [];
     checkPower(p, cpu?.powerW, gpu, [], psuAdds, "");
-    additions.push(...psuAdds);
+    if (choice.gpu || choice.cpu) additions.push(...psuAdds);
+    // Plan sans nouvelle carte graphique ni nouveau processeur : la consommation ne change pas. Si l'alimentation
+    // actuelle est déjà trop juste, on la conseille (sans l'imposer : ce n'est pas ce plan qui crée le problème).
+    else additions.push(...psuAdds.filter((a) => a.role === "required").map((a) => ({ ...a, role: "recommended" as const, reason: `Ton alimentation actuelle est déjà trop juste pour ta config : à remplacer, avec ou sans ce plan. ${a.reason}` })));
   }
 
   const mains = items.reduce((s, it) => s + price(it.main) * it.mainQuantity, 0);
@@ -251,7 +254,13 @@ export function validatePlan(goal: Goal, p: Profile, plan: Plan): Check[] {
   const psuAdd = plan.additions.find((a) => a.part.kind === "psu");
   const psuChecks: Check[] = [];
   checkPower(p, cpu?.powerW, gpu, psuChecks, [], "pour cette config");
-  for (const c of psuChecks) put(psuAdd?.role === "required" && c.status === "fail" ? { ...c, status: "fixed", detail: `${c.detail} → nouvelle alimentation incluse dans ce plan.` } : c);
+  const powerUnchanged = !choice.gpu && !choice.cpu;
+  for (const c of psuChecks) {
+    if (psuAdd?.role === "required" && c.status === "fail") put({ ...c, status: "fixed", detail: `${c.detail} → nouvelle alimentation incluse dans ce plan.` });
+    // Problème déjà présent avant le plan, que le plan n'aggrave pas : on le signale sans bloquer.
+    else if (powerUnchanged && c.status === "fail") put({ ...c, status: "warn", detail: `${c.detail} C'est déjà le cas aujourd'hui (ce plan ne change pas la consommation) : remplacer l'alimentation est conseillé.` });
+    else put(c);
+  }
   if (gpu && !gpu.integrated && (choice.gpu || cpuGpu)) {
     if (gpu.power === "12V-2x6") {
       const native = psuAdd?.role === "required" || p.psu12v2x6;

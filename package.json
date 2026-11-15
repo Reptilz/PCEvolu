@@ -12,7 +12,8 @@
     "prices": "tsx scripts/update-prices.ts",
     "logos": "node scripts/build-brand-logos.mjs",
     "catalog": "tsx scripts/build-catalog.ts",
-    "test": "tsx scripts/test-recognition.ts"
+    "test": "tsx scripts/test-recognition.ts",
+    "audit": "tsx scripts/test-audit.ts"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.1.0",
