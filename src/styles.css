@@ -1159,3 +1159,7 @@ span.picks-name { color: var(--text); cursor: default; }
 .theme-radio input { accent-color: var(--accent); }
 .about-author { font-size: 15px; margin-top: -12px; }
 .about-author .link { font-size: inherit; font-weight: 600; }
+.set-update { display: flex; align-items: center; gap: 18px; padding: 14px 16px; border-radius: 12px; max-width: 640px;
+  background: color-mix(in srgb, var(--accent) 10%, var(--panel)); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); }
+.set-update > div { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.set-update .btn { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }

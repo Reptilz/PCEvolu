@@ -5,7 +5,8 @@ import { isTauri } from "@tauri-apps/api/core";
 import { Icon, type IconName } from "./icons";
 import { appVersion, openReport } from "./report";
 import { tr, useSettings, type Lang, type Theme } from "./settings";
-import { checkUpdate } from "./UpdateBanner";
+import { checkUpdate, installUpdate } from "./UpdateBanner";
+import type { Update } from "@tauri-apps/plugin-updater";
 import { openUrl } from "./platform";
 
 type Tab = "general" | "updates" | "privacy" | "about";
@@ -117,41 +118,85 @@ function ThemePreview({ kind }: { kind: Theme }) {
 function Updates() {
   const { settings, update } = useSettings();
   const [version, setVersion] = useState("");
-  const [status, setStatus] = useState<"idle" | "checking" | "uptodate" | "found" | "error">("idle");
-  const [found, setFound] = useState("");
+  const [status, setStatus] = useState<"idle" | "checking" | "uptodate" | "found" | "installing" | "error" | "installError">("idle");
+  const [found, setFound] = useState<Update>();
+  const [percent, setPercent] = useState<number>();
   useEffect(() => {
     appVersion().then(setVersion);
+    // Vérification discrète à l'ouverture de l'onglet : le bouton « Mettre à jour » apparaît tout de suite si besoin.
+    if (isTauri())
+      checkUpdate()
+        .then((u) => {
+          if (u) {
+            setFound(u);
+            setStatus("found");
+          }
+        })
+        .catch(() => {});
   }, []);
   const check = async () => {
     setStatus("checking");
     try {
       const u = await checkUpdate();
       if (u) {
-        setFound(u.version);
+        setFound(u);
         setStatus("found");
-        window.dispatchEvent(new CustomEvent("pcevolu:update", { detail: u }));
       } else setStatus("uptodate");
     } catch {
       setStatus("error");
     }
   };
+  const install = async () => {
+    if (!found) return;
+    setStatus("installing");
+    setPercent(undefined);
+    try {
+      await installUpdate(found, setPercent);
+    } catch {
+      setStatus("installError");
+    }
+  };
+  const busy = status === "checking" || status === "installing";
   return (
     <>
       <section className="set-sec">
         <h2 className="set-h">{tr("Version installée", "Installed version")}</h2>
         <p className="set-big">PCEvolu {version}</p>
-        <div className="set-row">
-          <button className="btn" onClick={check} disabled={!isTauri() || status === "checking"}>
-            <Icon name="refresh" className={status === "checking" ? "spin" : ""} />
-            {status === "checking" ? tr("Recherche…", "Checking…") : tr("Rechercher une mise à jour", "Check for updates")}
-          </button>
-          <span className="muted">
-            {status === "uptodate" && tr("PCEvolu est à jour.", "PCEvolu is up to date.")}
-            {status === "found" && tr(`La version ${found} est disponible : utilise la bannière en haut de la page.`, `Version ${found} is available: use the banner at the top of the page.`)}
-            {status === "error" && tr("Impossible de vérifier : es-tu connecté à internet ?", "Couldn't check: are you online?")}
-            {!isTauri() && tr("Disponible dans l'application.", "Available in the desktop app.")}
-          </span>
-        </div>
+        {found && (status === "found" || status === "installing" || status === "installError") ? (
+          <div className="set-update">
+            <div>
+              <b>{tr(`La version ${found.version} est disponible.`, `Version ${found.version} is available.`)}</b>
+              <span className="muted">
+                {status === "installing"
+                  ? tr(`Téléchargement${percent != null ? ` : ${percent} %` : "…"}`, `Downloading${percent != null ? `: ${percent}%` : "…"}`)
+                  : status === "installError"
+                    ? tr("La mise à jour n'a pas abouti : vérifie ta connexion et réessaie.", "The update failed: check your connection and try again.")
+                    : tr("L'installation prend quelques secondes, puis PCEvolu redémarre.", "Installing takes a few seconds, then PCEvolu restarts.")}
+              </span>
+              {status === "installing" && (
+                <span className="update-bar">
+                  <i style={{ width: `${percent ?? 5}%` }} />
+                </span>
+              )}
+            </div>
+            <button className="btn primary" onClick={install} disabled={status === "installing"}>
+              <Icon name="up" />
+              {status === "installing" ? tr("Mise à jour…", "Updating…") : status === "installError" ? tr("Réessayer", "Try again") : tr("Mettre à jour", "Update now")}
+            </button>
+          </div>
+        ) : (
+          <div className="set-row">
+            <button className="btn" onClick={check} disabled={!isTauri() || busy}>
+              <Icon name="refresh" className={status === "checking" ? "spin" : ""} />
+              {status === "checking" ? tr("Recherche…", "Checking…") : tr("Rechercher une mise à jour", "Check for updates")}
+            </button>
+            <span className="muted">
+              {status === "uptodate" && tr("PCEvolu est à jour.", "PCEvolu is up to date.")}
+              {status === "error" && tr("Impossible de vérifier : es-tu connecté à internet ?", "Couldn't check: are you online?")}
+              {!isTauri() && tr("Disponible dans l'application.", "Available in the desktop app.")}
+            </span>
+          </div>
+        )}
       </section>
       <section className="set-sec">
         <label className="set-toggle">

@@ -14,6 +14,21 @@ export async function checkUpdate(): Promise<Update | null> {
   return check();
 }
 
+/** Télécharge et installe la mise à jour signée, puis relance PCEvolu. onProgress reçoit un pourcentage. */
+export async function installUpdate(update: Update, onProgress: (percent: number) => void) {
+  let total = 0;
+  let done = 0;
+  await update.downloadAndInstall((e) => {
+    if (e.event === "Started") total = e.data.contentLength ?? 0;
+    if (e.event === "Progress") {
+      done += e.data.chunkLength;
+      if (total) onProgress(Math.min(100, Math.round((done / total) * 100)));
+    }
+  });
+  const { relaunch } = await import("@tauri-apps/plugin-process");
+  await relaunch();
+}
+
 type State =
   | { kind: "idle" }
   | { kind: "available"; update: Update }
@@ -49,19 +64,9 @@ export function UpdateBanner() {
   const { update } = state;
 
   const install = async () => {
-    let total = 0;
-    let done = 0;
     setState({ kind: "downloading", update });
     try {
-      await update.downloadAndInstall((e) => {
-        if (e.event === "Started") total = e.data.contentLength ?? 0;
-        if (e.event === "Progress") {
-          done += e.data.chunkLength;
-          if (total) setState({ kind: "downloading", update, percent: Math.min(100, Math.round((done / total) * 100)) });
-        }
-      });
-      const { relaunch } = await import("@tauri-apps/plugin-process");
-      await relaunch();
+      await installUpdate(update, (percent) => setState({ kind: "downloading", update, percent }));
     } catch (e) {
       setState({ kind: "error", update, message: String(e) });
     }
