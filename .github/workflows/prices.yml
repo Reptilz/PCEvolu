@@ -1,5 +1,6 @@
-# Relevé hebdomadaire des prix des composants.
-# Lance scripts/update-prices.ts chaque lundi et publie data/prices.json dans le dépôt.
+# Relevé des prix des composants, toutes les 3 semaines.
+# Le déclenchement a lieu chaque lundi, mais le relevé n'est lancé que si le précédent date d'au moins 20 jours :
+# cron ne sait pas exprimer « toutes les 3 semaines ». Le bouton « Run workflow » force un relevé immédiat.
 #
 # Prérequis (une seule fois) : Settings > Secrets and variables > Actions > New repository secret
 #   Nom : SERPER_API_KEY   Valeur : ta clé d'API Serper.dev
@@ -8,7 +9,7 @@ name: Relevé des prix
 
 on:
   schedule:
-    - cron: "30 3 * * 1" # chaque lundi à 3 h 30 UTC (≈ 65 recherches Serper par semaine)
+    - cron: "30 3 * * 1" # chaque lundi à 3 h 30 UTC ; relevé effectif une semaine sur trois (voir « Relevé dû ? »)
   workflow_dispatch: # bouton « Run workflow » pour lancer un relevé à la main
 
 permissions:
@@ -21,24 +22,38 @@ concurrency:
 jobs:
   prices:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
+      - name: Relevé dû ?
+        id: due
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then echo "run=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          last=$(node -p "require('./data/prices.json').updatedAt || ''" 2>/dev/null || echo "")
+          if [ -z "$last" ]; then echo "run=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          age=$(( ( $(date -u +%s) - $(date -u -d "$last" +%s) ) / 86400 ))
+          echo "Dernier relevé il y a $age jours."
+          if [ "$age" -ge 20 ]; then echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; fi
+
       - uses: actions/setup-node@v4
+        if: steps.due.outputs.run == 'true'
         with:
           node-version: 20
           cache: npm
 
       - name: Installer les dépendances
+        if: steps.due.outputs.run == 'true'
         run: npm ci --no-audit --no-fund
 
       - name: Relever les prix
+        if: steps.due.outputs.run == 'true'
         run: npm run prices
         env:
           SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
 
       - name: Publier data/prices.json et l'historique
+        if: steps.due.outputs.run == 'true'
         run: |
           git config user.name "pcevolu-prices[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

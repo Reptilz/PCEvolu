@@ -1,4 +1,4 @@
-// Prix du marché : relevés chaque semaine par scripts/update-prices.ts et publiés dans data/prices.json.
+// Prix du marché : relevés toutes les 3 semaines par scripts/update-prices.ts et publiés dans data/prices.json.
 //
 // Ordre de priorité dans l'app :
 //   1. le fichier téléchargé au démarrage (PRICES_URL) ;
@@ -36,7 +36,7 @@ export interface PricesFile {
  * À renseigner une fois le dépôt GitHub créé, par exemple :
  * https://raw.githubusercontent.com/<compte>/<depot>/main/data/prices.json
  */
-/** Données publiées par le relevé hebdomadaire dans le dépôt public. */
+/** Données publiées par le relevé (toutes les 3 semaines) dans le dépôt public. */
 export const DATA_BASE_URL = "https://raw.githubusercontent.com/Reptilz/PCEvolu/main/data";
 export const PRICES_URL: string | null = import.meta.env?.VITE_PRICES_URL ?? `${DATA_BASE_URL}/prices.json`;
 
@@ -120,7 +120,7 @@ export async function loadPrices(): Promise<PricesFile | undefined> {
 }
 
 // ---------------------------------------------------------------------------
-// Historique des prix (un point par relevé hebdomadaire)
+// Historique des prix (un point par relevé)
 // ---------------------------------------------------------------------------
 
 /** [date AAAA-MM-JJ, médiane, meilleur prix] */

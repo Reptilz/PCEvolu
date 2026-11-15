@@ -192,8 +192,8 @@ export function PriceSheet({ part, onClose }: { part: SheetPart; onClose: () => 
         )}
         <p className="muted small">
           {tr(
-            `Les prix sont relevés chaque lundi${pricesFile() ? ` (dernier relevé : ${day(pricesFile()!.updatedAt)})` : ""}. PCEvolu vérifie tes alertes à chaque ouverture et t'envoie une notification Windows quand un seuil est atteint.`,
-            `Prices are checked every Monday${pricesFile() ? ` (last check: ${day(pricesFile()!.updatedAt)})` : ""}. PCEvolu checks your alerts each time it opens and sends you a Windows notification when a target is reached.`,
+            `Les prix sont relevés toutes les 3 semaines${pricesFile() ? ` (dernier relevé : ${day(pricesFile()!.updatedAt)})` : ""}. PCEvolu vérifie tes alertes à chaque ouverture et t'envoie une notification Windows quand un seuil est atteint.`,
+            `Prices are checked every 3 weeks${pricesFile() ? ` (last check: ${day(pricesFile()!.updatedAt)})` : ""}. PCEvolu checks your alerts each time it opens and sends you a Windows notification when a target is reached.`,
           )}
         </p>
       </div>
@@ -256,8 +256,8 @@ export function PriceDisclosure() {
         <li>
           <b>{tr("Source.", "Source.")}</b>{" "}
           {tr(
-            "Offres de produits neufs trouvées sur Google Shopping France lors du relevé du lundi. La liste n'est pas exhaustive : d'autres marchands peuvent proposer ce produit, parfois moins cher.",
-            "Offers for new products found on Google Shopping France during the Monday check. The list isn't exhaustive: other merchants may sell this product, sometimes for less.",
+            "Offres de produits neufs trouvées sur Google Shopping France lors du dernier relevé. La liste n'est pas exhaustive : d'autres marchands peuvent proposer ce produit, parfois moins cher.",
+            "Offers for new products found on Google Shopping France during the latest check. The list isn't exhaustive: other merchants may sell this product, sometimes for less.",
           )}
         </li>
         <li>
@@ -306,8 +306,8 @@ function Sparkline({ points }: { points: HistoryPoint[] }) {
     return (
       <div className="spark-empty muted small">
         {tr(
-          `L'historique se construit : un point par relevé hebdomadaire${points[0] ? ` (premier relevé le ${day(points[0][0])})` : ""}. La courbe apparaîtra dès le prochain lundi.`,
-          `The history is building up: one point per weekly check${points[0] ? ` (first check on ${day(points[0][0])})` : ""}. The chart will appear next Monday.`,
+          `L'historique se construit : un point par relevé, toutes les 3 semaines${points[0] ? ` (premier relevé le ${day(points[0][0])})` : ""}. La courbe apparaîtra dès le prochain relevé.`,
+          `The history is building up: one point per check, every 3 weeks${points[0] ? ` (first check on ${day(points[0][0])})` : ""}. The chart will appear after the next check.`,
         )}
       </div>
     );

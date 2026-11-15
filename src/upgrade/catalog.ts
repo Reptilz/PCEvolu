@@ -3,7 +3,7 @@
 // - Processeurs : décodés depuis leur nom (cpudb.ts), seuls ceux proposés à l'achat sont listés ici.
 // - Cartes graphiques : table de référence 2016 → 2026 (gpudb.ts).
 // - Les indices de performance sont des ordres de grandeur, pas des benchmarks précis.
-// - Les prix sont indicatifs : ils sont remplacés chaque semaine par le relevé du marché (data/prices.json).
+// - Les prix sont indicatifs : ils sont remplacés toutes les 3 semaines par le relevé du marché (data/prices.json).
 
 import type {
   BoardSpec, CaseSpec, ChipsetSpec, CoolerSpec, CpuGen, CpuSpec, FanKit, GpuSpec,
@@ -19,7 +19,7 @@ export const CATALOG_DATE = "novembre 2026";
 /** Date du catalogue dans la langue choisie. */
 export const catalogDate = () => tr(CATALOG_DATE, "November 2026");
 /** Incrémenté à chaque mise à jour du catalogue (le catalogue téléchargé n'est pris que s'il est plus récent). */
-export const CATALOG_VERSION = 6;
+export const CATALOG_VERSION = 7;
 
 // ---------------------------------------------------------------------------
 // Chipsets : ce qui définit la compatibilité CPU / RAM / PCIe d'une carte mère
@@ -156,6 +156,30 @@ export const CPUS: CpuSpec[] = [
   purchasable("AMD Ryzen 9 7900", "new", 360),
   purchasable("AMD Ryzen 9 7900X", "new", 380),
   purchasable("AMD Ryzen 9 9900X3D", "new", 600),
+  // Catalogue étendu (novembre 2026, 2) : retirés ensuite si le relevé ne trouve plus assez d'offres neuves.
+  purchasable("Intel Core i3-13100F", "new", 145),
+  purchasable("Intel Core i3-13100", "new", 140),
+  purchasable("Intel Core i5-13400", "new", 178),
+  purchasable("Intel Core i5-14500", "new", 280),
+  purchasable("Intel Core i5-12600K", "new", 226),
+  purchasable("Intel Core i5-13600K", "new", 327),
+  purchasable("Intel Core i5-14600K", "new", 261),
+  purchasable("Intel Core i7-12700F", "new", 259),
+  purchasable("Intel Core i7-12700K", "new", 319),
+  purchasable("Intel Core i7-13700K", "new", 319),
+  purchasable("Intel Core i7-14700F", "new", 340),
+  purchasable("Intel Core i9-13900K", "new", 562),
+  purchasable("Intel Core i9-14900F", "new", 492),
+  purchasable("Intel Core Ultra 5 225", "new", 210),
+  purchasable("Intel Core Ultra 7 265", "new", 417),
+  purchasable("Intel Core Ultra 7 265F", "new", 375),
+  purchasable("Intel Core Ultra 9 285", "new", 634),
+  purchasable("AMD Ryzen 5 5500GT", "new", 174),
+  purchasable("AMD Ryzen 5 5600XT", "new", 178),
+  purchasable("AMD Ryzen 7 5700G", "new", 220),
+  purchasable("AMD Ryzen 7 5800XT", "new", 200),
+  purchasable("AMD Ryzen 9 7900X3D", "new", 554),
+  purchasable("AMD Ryzen 9 7950X3D", "new", 725),
 ];
 
 // ---------------------------------------------------------------------------
@@ -199,6 +223,13 @@ export const BOARDS: BoardSpec[] = [
   board("mb-x870-atx", "Carte mère X870 ATX", "AM5", "X870", "ATX", "DDR5", { maxGb: 256, m2: 3, pcie: 5, avail: "new", price: 260 }),
   board("mb-z790-atx", "Carte mère Z790 ATX (DDR5)", "LGA1700", "Z790", "ATX", "DDR5", { maxGb: 192, m2: 4, pcie: 5, avail: "new", price: 220 }),
   board("mb-z890-atx", "Carte mère Z890 ATX", "LGA1851", "Z890", "ATX", "DDR5", { maxGb: 256, m2: 4, pcie: 5, avail: "new", price: 280 }),
+  // Catalogue étendu (novembre 2026, 2). H610 et A520 : entrée de gamme, réservées aux processeurs sobres (voir platformFor).
+  board("mb-h610-ddr4-matx", "Carte mère H610M DDR4 (micro-ATX, entrée de gamme)", "LGA1700", "H610", "mATX", "DDR4", { slots: 2, maxGb: 64, m2: 1, pcie: 4, avail: "new", price: 85, note: "Entrée de gamme : 2 emplacements RAM, à réserver aux processeurs 65 W." }),
+  board("mb-h610-ddr5-matx", "Carte mère H610M DDR5 (micro-ATX, entrée de gamme)", "LGA1700", "H610", "mATX", "DDR5", { slots: 2, maxGb: 96, m2: 1, pcie: 4, avail: "new", price: 66, note: "Entrée de gamme : 2 emplacements RAM, à réserver aux processeurs 65 W." }),
+  board("mb-z790-ddr4-atx", "Carte mère Z790 DDR4 ATX", "LGA1700", "Z790", "ATX", "DDR4", { maxGb: 128, m2: 4, pcie: 5, avail: "new", price: 314, note: "Garde ta RAM DDR4 actuelle." }),
+  board("mb-a520-matx", "Carte mère A520M (micro-ATX, entrée de gamme)", "AM4", "A520", "mATX", "DDR4", { slots: 2, maxGb: 64, m2: 1, pcie: 3, avail: "new", price: 76, note: "Entrée de gamme : 2 emplacements RAM, à réserver aux processeurs 65 W." }),
+  board("mb-x570-atx", "Carte mère X570 ATX", "AM4", "X570", "ATX", "DDR4", { maxGb: 128, m2: 2, pcie: 4, avail: "new", price: 180 }),
+  board("mb-x870e-atx", "Carte mère X870E ATX", "AM5", "X870E", "ATX", "DDR5", { maxGb: 256, m2: 4, pcie: 5, avail: "new", price: 443 }),
 ];
 
 
@@ -225,6 +256,12 @@ export const RAM_KITS: RamKit[] = [
   ram("d5-2x32-5600", "Kit 2 × 32 Go DDR5-5600", "DDR5", 2, 32, 5600, 240),
   ram("d5-2x32-6000", "Kit 2 × 32 Go DDR5-6000 CL30", "DDR5", 2, 32, 6000, 260),
   ram("d5-2x48-6000", "Kit 2 × 48 Go DDR5-6000", "DDR5", 2, 48, 6000, 420),
+  // Catalogue étendu (novembre 2026, 2)
+  ram("d4-2x8-3600", "Kit 2 × 8 Go DDR4-3600 CL18", "DDR4", 2, 8, 3600, 204),
+  ram("d4-2x32-3600", "Kit 2 × 32 Go DDR4-3600 CL18", "DDR4", 2, 32, 3600, 747),
+  ram("d5-1x8-5600", "Barrette 8 Go DDR5-5600", "DDR5", 1, 8, 5600, 174),
+  ram("d5-2x16-6400", "Kit 2 × 16 Go DDR5-6400 CL32", "DDR5", 2, 16, 6400, 610),
+  ram("d5-2x64-5600", "Kit 2 × 64 Go DDR5-5600", "DDR5", 2, 64, 5600, 2869),
 ];
 
 const ssd = (id: string, name: string, iface: SsdSpec["iface"], tb: number, price: number): SsdSpec => ({ kind: "ssd", id, name, iface, tb, price });
@@ -247,6 +284,11 @@ export const SSDS: SsdSpec[] = [
   ssd("hdd-2tb", "Disque dur 3,5\" 2 To (ex. Seagate BarraCuda, WD Blue)", "HDD", 2, 200),
   ssd("hdd-4tb", "Disque dur 3,5\" 4 To (ex. Seagate BarraCuda, WD Blue)", "HDD", 4, 250),
   ssd("hdd-8tb", "Disque dur 3,5\" 8 To (ex. Seagate BarraCuda, WD Red Plus)", "HDD", 8, 330),
+  // Catalogue étendu (novembre 2026, 2)
+  ssd("sata-4tb", "SSD SATA 2,5\" 4 To (ex. Samsung 870 EVO, Crucial MX500)", "SATA", 4, 370),
+  ssd("hdd-1tb", "Disque dur 3,5\" 1 To (ex. Seagate BarraCuda, WD Blue)", "HDD", 1, 52),
+  ssd("hdd-6tb", "Disque dur 3,5\" 6 To (ex. Seagate IronWolf, WD Red Plus)", "HDD", 6, 341),
+  ssd("hdd-16tb", "Disque dur 3,5\" 16 To (ex. Seagate IronWolf Pro, Toshiba MG08)", "HDD", 16, 973),
 ];
 
 const psu = (id: string, name: string, watts: number, atx3: boolean, native12v2x6: boolean, pcie8pin: number, price: number): PsuSpec =>
@@ -383,6 +425,7 @@ const NOTES_EN: Record<string, string> = {
 const NAME_RULES: [RegExp, string][] = [
   [/^Carte mère (\S+(?: DDR[45])?(?: ATX)?)/, "$1 motherboard"],
   [/\(micro-ATX, entrée de gamme\)/, "(micro-ATX, entry-level)"],
+  [/\(Intel, profil XMP\)/, "(Intel, XMP profile)"],
   [/^Alimentation (\d+ W(?: 80\+ \w+)?)/, "$1 power supply"],
   [/\(sans câble 12V-2x6\)/, "(no 12V-2x6 cable)"],
   [/avec câble 12V-2x6/, "with 12V-2x6 cable"],

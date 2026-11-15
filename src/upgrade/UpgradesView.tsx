@@ -82,7 +82,10 @@ export function UpgradesView({
   };
 
   // Compteurs : pièces compatibles avec ce PC ; une fois le budget choisi, seulement celles qui y rentrent.
-  const tabCount = (id: Category) => (budget == null ? all[id].length : all[id].filter((p) => p.total <= budget).length);
+  // Onglet « Carte mère » : chaque proposition (une plateforme) présente plusieurs modèles réels, on compte les modèles.
+  const models = (p: Proposal) => (p.category === "board" ? p.mainModels?.length || 1 : 1);
+  const tabCount = (id: Category) =>
+    all[id].filter((p) => budget == null || p.total <= budget).reduce((n, p) => n + models(p), 0);
   const blocking = (id: Category) => verdict.needs.some((n) => n.fix === id && n.status !== "ok");
   const advice = !goal.configured
     ? undefined

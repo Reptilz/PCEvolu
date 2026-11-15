@@ -25,11 +25,21 @@ function partIcon(id: string): IconName {
   return "bell";
 }
 
-/** Prochain lundi (jour du relevé hebdomadaire). */
-function nextMonday(): Date {
-  const d = new Date();
-  d.setDate(d.getDate() + ((8 - d.getDay()) % 7 || 7));
-  return d;
+/** Date du prochain relevé : un lundi, 3 semaines après le dernier (ou le prochain lundi si la date est passée). */
+function nextCheck(updatedAt?: string): Date {
+  const monday = (d: Date) => {
+    d.setDate(d.getDate() + ((8 - d.getDay()) % 7));
+    return d;
+  };
+  const now = new Date();
+  if (updatedAt) {
+    const due = new Date(updatedAt);
+    due.setDate(due.getDate() + 20);
+    const d = monday(due);
+    if (d > now) return d;
+  }
+  now.setDate(now.getDate() + ((8 - now.getDay()) % 7 || 7));
+  return now;
 }
 
 export function AlertsView({ onPlan }: { onPlan?: () => void }) {
@@ -74,7 +84,7 @@ export function AlertsView({ onPlan }: { onPlan?: () => void }) {
             <span>{tr("d'économie si tous les seuils sont atteints", "saved if every target is reached")}</span>
           </div>
           <div>
-            <b>{shortDate(nextMonday())}</b>
+            <b>{shortDate(nextCheck(updated))}</b>
             <span>{tr(`prochain relevé${updated ? ` (dernier le ${shortDate(updated)})` : ""}`, `next check${updated ? ` (last on ${shortDate(updated)})` : ""}`)}</span>
           </div>
         </div>
@@ -306,7 +316,7 @@ function PriceChart({ id, target, start, now }: { id: string; target: number; st
         <span className="al-key best">{tr("Meilleur prix", "Best price")}</span>
         {median.length >= 2 && <span className="al-key median">{tr("Prix médian", "Median price")}</span>}
         <span className="al-key target">{tr("Ton seuil", "Your target")}</span>
-        {best.length < 2 && <span className="muted">{tr("La courbe se dessine au fil des relevés du lundi.", "The chart fills in with each Monday check.")}</span>}
+        {best.length < 2 && <span className="muted">{tr("La courbe se dessine au fil des relevés, toutes les 3 semaines.", "The chart fills in with each check, every 3 weeks.")}</span>}
       </figcaption>
     </figure>
   );

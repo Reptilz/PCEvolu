@@ -235,4 +235,50 @@ export const QUERIES: Record<string, PriceQuery> = {
   "fractal-north": { q: "boîtier Fractal Design North", must: [/fractal.*north|north.*fractal/], not: [/\bxl\b/] },
   "lancool-216": { q: "boîtier Lian Li Lancool 216", must: [/lancool 216/], not: [/216 ?x\b/] },
   "pop-air": { q: "boîtier Fractal Design Pop Air", must: [/pop air/], not: [/\bmini\b|\bsilent\b|\bxl\b/] },
+
+  // Catalogue étendu (novembre 2026, 2)
+  // Processeurs
+  "i3-13100f": { q: "processeur Intel Core i3-13100F", must: [/13100f/] },
+  "i3-13100": { q: "processeur Intel Core i3-13100", must: [/13100\b/], not: [/13100 ?f/] },
+  "i5-13400": { q: "processeur Intel Core i5-13400", must: [/13400\b/], not: [/13400 ?f/] },
+  "i5-14500": { q: "processeur Intel Core i5-14500", must: [/14500\b/], not: [/14500 ?t\b/] },
+  "i5-12600k": { q: "processeur Intel Core i5-12600K", must: [/12600k\b/] },
+  "i5-13600k": { q: "processeur Intel Core i5-13600K", must: [/13600k\b/] },
+  "i5-14600k": { q: "processeur Intel Core i5-14600K", must: [/14600k\b/] },
+  "i7-12700f": { q: "processeur Intel Core i7-12700F", must: [/12700f\b/] },
+  "i7-12700k": { q: "processeur Intel Core i7-12700K", must: [/12700k\b/] },
+  "i7-13700k": { q: "processeur Intel Core i7-13700K", must: [/13700k\b/] },
+  "i7-14700f": { q: "processeur Intel Core i7-14700F", must: [/14700f\b/] },
+  "i9-13900k": { q: "processeur Intel Core i9-13900K", must: [/13900k\b/], not: [/13900ks/] },
+  "i9-14900f": { q: "processeur Intel Core i9-14900F", must: [/14900f\b/] },
+  "u5-225": { q: "processeur Intel Core Ultra 5 225", must: [/ultra/, /\b225\b/], not: [/225 ?(f|h|u|v)\b/] },
+  "u7-265": { q: "processeur Intel Core Ultra 7 265", must: [/ultra/, /\b265\b/], not: [/265 ?(k|kf|f|h|t)\b/] },
+  "u7-265f": { q: "processeur Intel Core Ultra 7 265F", must: [/265f\b/] },
+  "u9-285": { q: "processeur Intel Core Ultra 9 285", must: [/ultra/, /\b285\b/], not: [/285 ?(k|h|t)\b/] },
+  "r5-5500gt": { q: "processeur AMD Ryzen 5 5500GT", must: [/5500 ?gt\b/] },
+  "r5-5600xt": { q: "processeur AMD Ryzen 5 5600XT", must: [/5600 ?xt\b/] },
+  "r7-5700g": { q: "processeur AMD Ryzen 7 5700G", must: [/5700g\b/] },
+  "r7-5800xt": { q: "processeur AMD Ryzen 7 5800XT", must: [/5800 ?xt\b/] },
+  "r9-7900x3d": { q: "processeur AMD Ryzen 9 7900X3D", must: [/7900x3d/] },
+  "r9-7950x3d": { q: "processeur AMD Ryzen 9 7950X3D", must: [/7950x3d/] },
+
+  // Cartes mères
+  "mb-h610-ddr4-matx": { q: "carte mère H610M DDR4 micro ATX", must: [/\bh610m?\b/, /ddr4|\bd4\b/], not: [/itx/], generic: true },
+  "mb-h610-ddr5-matx": { q: "carte mère H610M DDR5 micro ATX", must: [/\bh610m?\b/], not: [/ddr4|\bd4\b|itx/], generic: true },
+  "mb-z790-ddr4-atx": { q: "carte mère Z790 DDR4 ATX", must: [/\bz790\b/, /ddr4|\bd4\b/], not: [/itx|mini|micro|m-?atx|\bz790m/], generic: true },
+  "mb-a520-matx": { q: "carte mère A520M micro ATX AM4", must: [/\ba520m?\b/], not: [/itx/], generic: true },
+  "mb-x570-atx": { q: "carte mère X570 ATX AM4", must: [/\bx570s?\b/], not: [/itx|mini|micro|m-?atx/], generic: true },
+  "mb-x870e-atx": { q: "carte mère X870E ATX AM5", must: [/\bx870e\b/], not: [/itx|mini|micro|m-?atx/], generic: true },
+
+  // Mémoire vive
+  "d4-2x8-3600": { q: "kit mémoire 16 Go 2x8 Go DDR4 3600", must: [/2 ?x ?8|\b16 ?g[ob]\b/, /ddr4/, /3600/], not: [/32 ?g[ob]|1 ?x ?16/] },
+  "d4-2x32-3600": { q: "kit mémoire 64 Go 2x32 Go DDR4 3600", must: [/2 ?x ?32|\b64 ?g[ob]\b/, /ddr4/, /3600/], not: [/128 ?g[ob]|\b4 ?x|\b1 ?x ?32/] },
+  "d5-1x8-5600": { q: "barrette mémoire 8 Go DDR5 5600 MHz", must: [/\b8 ?g[ob]\b/, /ddr5/], not: [/\d ?x ?\d|\bkit\b|16 ?g[ob]|32 ?g[ob]|\becc\b|rdimm|dell|lenovo|\bhp\b/] },
+  "d5-2x16-6400": { q: "kit mémoire 32 Go 2x16 Go DDR5 6400", must: [/2 ?x ?16|\b32 ?g[ob]\b/, /ddr5/, /6400/], not: [/64 ?g[ob]|1 ?x ?32/] },
+  "d5-2x64-5600": { q: "kit mémoire 128 Go 2x64 Go DDR5 5600", must: [/2 ?x ?64|\b128 ?g[ob]\b/, /ddr5/], not: [/\b4 ?x|256 ?g[ob]/] },
+
+  // Stockage
+  "hdd-1tb": { q: "disque dur interne 3,5 pouces 1 To SATA 7200", must: [/disque dur|\bhdd\b|barracuda|wd blue|seagate|toshiba/, /\b1 ?t[ob]\b|1000 ?g[ob]?\b/, /3[.,]5/], not: [/ssd|externe|portable|2[.,]5/], generic: true },
+  "hdd-6tb": { q: "disque dur interne 3,5 pouces 6 To SATA", must: [/disque dur|\bhdd\b|barracuda|ironwolf|wd red|seagate|toshiba/, /\b6 ?t[ob]\b|6000 ?g[ob]?\b/, /3[.,]5/], not: [/ssd|externe|portable|2[.,]5/], generic: true },
+  "hdd-16tb": { q: "disque dur interne 3,5 pouces 16 To SATA", must: [/disque dur|\bhdd\b|ironwolf|wd red|exos|seagate|toshiba|ultrastar/, /\b16 ?t[ob]\b|16000 ?g[ob]?\b/, /3[.,]5/], not: [/ssd|externe|portable|2[.,]5/], generic: true },
 };

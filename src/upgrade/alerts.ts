@@ -1,5 +1,5 @@
 // Alertes de prix : « préviens-moi quand ce composant passe sous X € ».
-// Vérifiées à chaque ouverture de l'app, quand les nouveaux prix sont chargés (relevé hebdomadaire).
+// Vérifiées à chaque ouverture de l'app, quand les nouveaux prix sont chargés (relevé toutes les 3 semaines).
 
 import { priceInfo } from "./prices";
 import { notify } from "../platform";

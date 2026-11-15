@@ -229,8 +229,8 @@ function Privacy() {
     [
       tr("Les prix sont téléchargés, pas envoyés.", "Prices are downloaded, not uploaded."),
       tr(
-        "PCEvolu télécharge chaque semaine le relevé des prix et le catalogue depuis GitHub. Ces requêtes ne contiennent aucune information sur toi ou ton PC.",
-        "Each week PCEvolu downloads the price list and catalogue from GitHub. These requests contain no information about you or your PC.",
+        "PCEvolu télécharge le relevé des prix (mis à jour toutes les 3 semaines) et le catalogue depuis GitHub. Ces requêtes ne contiennent aucune information sur toi ou ton PC.",
+        "PCEvolu downloads the price list (updated every 3 weeks) and catalogue from GitHub. These requests contain no information about you or your PC.",
       ),
     ],
     [

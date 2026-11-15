@@ -1,6 +1,6 @@
 {
- "version": 6,
- "generatedAt": "2026-11-14T23:55:15.304Z",
+ "version": 7,
+ "generatedAt": "2026-11-15T18:39:19.382Z",
  "chipsets": [
   {
    "chipset": "H81",
@@ -2259,6 +2259,594 @@
     "flags": "i"
    },
    "price": 600
+  },
+  {
+   "kind": "cpu",
+   "id": "i3-13100f",
+   "name": "Intel Core i3-13100F",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-13",
+   "cores": 4,
+   "threads": 8,
+   "powerW": 110,
+   "gaming": 121,
+   "multi": 87,
+   "gpuCeiling": 188,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 4800
+   },
+   "igpu": false,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "13100f",
+    "flags": "i"
+   },
+   "price": 145
+  },
+  {
+   "kind": "cpu",
+   "id": "i3-13100",
+   "name": "Intel Core i3-13100",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-13",
+   "cores": 4,
+   "threads": 8,
+   "powerW": 110,
+   "gaming": 121,
+   "multi": 87,
+   "gpuCeiling": 188,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 4800
+   },
+   "igpu": true,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "13100",
+    "flags": "i"
+   },
+   "price": 140
+  },
+  {
+   "kind": "cpu",
+   "id": "i5-13400",
+   "name": "Intel Core i5-13400",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-13",
+   "cores": 10,
+   "threads": 16,
+   "powerW": 148,
+   "gaming": 137,
+   "multi": 172,
+   "gpuCeiling": 212,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 4800
+   },
+   "igpu": true,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "13400",
+    "flags": "i"
+   },
+   "price": 178
+  },
+  {
+   "kind": "cpu",
+   "id": "i5-14500",
+   "name": "Intel Core i5-14500",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-14",
+   "cores": 14,
+   "threads": 20,
+   "powerW": 148,
+   "gaming": 140,
+   "multi": 211,
+   "gpuCeiling": 217,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 4800
+   },
+   "igpu": true,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "14500",
+    "flags": "i"
+   },
+   "price": 280
+  },
+  {
+   "kind": "cpu",
+   "id": "i5-12600k",
+   "name": "Intel Core i5-12600K",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-12",
+   "cores": 10,
+   "threads": 16,
+   "powerW": 150,
+   "gaming": 140,
+   "multi": 176,
+   "gpuCeiling": 217,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 4800
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "12600k",
+    "flags": "i"
+   },
+   "price": 226
+  },
+  {
+   "kind": "cpu",
+   "id": "i5-13600k",
+   "name": "Intel Core i5-13600K",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-13",
+   "cores": 14,
+   "threads": 20,
+   "powerW": 181,
+   "gaming": 152,
+   "multi": 229,
+   "gpuCeiling": 236,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 5600
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "13600k",
+    "flags": "i"
+   },
+   "price": 327
+  },
+  {
+   "kind": "cpu",
+   "id": "i5-14600k",
+   "name": "Intel Core i5-14600K",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-14",
+   "cores": 14,
+   "threads": 20,
+   "powerW": 181,
+   "gaming": 156,
+   "multi": 235,
+   "gpuCeiling": 242,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 5600
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "14600k",
+    "flags": "i"
+   },
+   "price": 261
+  },
+  {
+   "kind": "cpu",
+   "id": "i7-12700f",
+   "name": "Intel Core i7-12700F",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-12",
+   "cores": 12,
+   "threads": 20,
+   "powerW": 180,
+   "gaming": 145,
+   "multi": 218,
+   "gpuCeiling": 225,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 4800
+   },
+   "igpu": false,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "12700f",
+    "flags": "i"
+   },
+   "price": 259
+  },
+  {
+   "kind": "cpu",
+   "id": "i7-12700k",
+   "name": "Intel Core i7-12700K",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-12",
+   "cores": 12,
+   "threads": 20,
+   "powerW": 190,
+   "gaming": 151,
+   "multi": 227,
+   "gpuCeiling": 234,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 4800
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "12700k",
+    "flags": "i"
+   },
+   "price": 319
+  },
+  {
+   "kind": "cpu",
+   "id": "i7-13700k",
+   "name": "Intel Core i7-13700K",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-13",
+   "cores": 16,
+   "threads": 24,
+   "powerW": 253,
+   "gaming": 164,
+   "multi": 286,
+   "gpuCeiling": 254,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 5600
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "13700k",
+    "flags": "i"
+   },
+   "price": 319
+  },
+  {
+   "kind": "cpu",
+   "id": "i7-14700f",
+   "name": "Intel Core i7-14700F",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-14",
+   "cores": 20,
+   "threads": 28,
+   "powerW": 219,
+   "gaming": 162,
+   "multi": 319,
+   "gpuCeiling": 251,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 5600
+   },
+   "igpu": false,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "14700f",
+    "flags": "i"
+   },
+   "price": 340
+  },
+  {
+   "kind": "cpu",
+   "id": "i9-13900k",
+   "name": "Intel Core i9-13900K",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-13",
+   "cores": 24,
+   "threads": 32,
+   "powerW": 253,
+   "gaming": 170,
+   "multi": 373,
+   "gpuCeiling": 264,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 5600
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "13900k",
+    "flags": "i"
+   },
+   "price": 562
+  },
+  {
+   "kind": "cpu",
+   "id": "i9-14900f",
+   "name": "Intel Core i9-14900F",
+   "brand": "Intel",
+   "socket": "LGA1700",
+   "gen": "intel-14",
+   "cores": 24,
+   "threads": 32,
+   "powerW": 219,
+   "gaming": 168,
+   "multi": 368,
+   "gpuCeiling": 260,
+   "ramMaxMts": {
+    "DDR4": 3200,
+    "DDR5": 5600
+   },
+   "igpu": false,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "14900f",
+    "flags": "i"
+   },
+   "price": 492
+  },
+  {
+   "kind": "cpu",
+   "id": "u5-225",
+   "name": "Intel Core Ultra 5 225",
+   "brand": "Intel",
+   "socket": "LGA1851",
+   "gen": "intel-ultra2",
+   "cores": 10,
+   "threads": 10,
+   "powerW": 121,
+   "gaming": 128,
+   "multi": 111,
+   "gpuCeiling": 198,
+   "ramMaxMts": {
+    "DDR5": 6400
+   },
+   "igpu": true,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "225",
+    "flags": "i"
+   },
+   "price": 210
+  },
+  {
+   "kind": "cpu",
+   "id": "u7-265",
+   "name": "Intel Core Ultra 7 265",
+   "brand": "Intel",
+   "socket": "LGA1851",
+   "gen": "intel-ultra2",
+   "cores": 20,
+   "threads": 20,
+   "powerW": 182,
+   "gaming": 139,
+   "multi": 209,
+   "gpuCeiling": 215,
+   "ramMaxMts": {
+    "DDR5": 6400
+   },
+   "igpu": true,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "265",
+    "flags": "i"
+   },
+   "price": 417
+  },
+  {
+   "kind": "cpu",
+   "id": "u7-265f",
+   "name": "Intel Core Ultra 7 265F",
+   "brand": "Intel",
+   "socket": "LGA1851",
+   "gen": "intel-ultra2",
+   "cores": 20,
+   "threads": 20,
+   "powerW": 182,
+   "gaming": 139,
+   "multi": 209,
+   "gpuCeiling": 215,
+   "ramMaxMts": {
+    "DDR5": 6400
+   },
+   "igpu": false,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "265f",
+    "flags": "i"
+   },
+   "price": 375
+  },
+  {
+   "kind": "cpu",
+   "id": "u9-285",
+   "name": "Intel Core Ultra 9 285",
+   "brand": "Intel",
+   "socket": "LGA1851",
+   "gen": "intel-ultra2",
+   "cores": 24,
+   "threads": 24,
+   "powerW": 182,
+   "gaming": 144,
+   "multi": 251,
+   "gpuCeiling": 223,
+   "ramMaxMts": {
+    "DDR5": 6400
+   },
+   "igpu": true,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "285",
+    "flags": "i"
+   },
+   "price": 634
+  },
+  {
+   "kind": "cpu",
+   "id": "r5-5500gt",
+   "name": "AMD Ryzen 5 5500GT",
+   "brand": "AMD",
+   "socket": "AM4",
+   "gen": "amd-zen3",
+   "cores": 6,
+   "threads": 12,
+   "powerW": 88,
+   "gaming": 91,
+   "multi": 91,
+   "gpuCeiling": 141,
+   "ramMaxMts": {
+    "DDR4": 3200
+   },
+   "igpu": true,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "5500gt",
+    "flags": "i"
+   },
+   "price": 174
+  },
+  {
+   "kind": "cpu",
+   "id": "r5-5600xt",
+   "name": "AMD Ryzen 5 5600XT",
+   "brand": "AMD",
+   "socket": "AM4",
+   "gen": "amd-zen3",
+   "cores": 6,
+   "threads": 12,
+   "powerW": 88,
+   "gaming": 110,
+   "multi": 110,
+   "gpuCeiling": 171,
+   "ramMaxMts": {
+    "DDR4": 3200
+   },
+   "igpu": false,
+   "boxCooler": true,
+   "availability": "new",
+   "match": {
+    "re": "5600xt",
+    "flags": "i"
+   },
+   "price": 178
+  },
+  {
+   "kind": "cpu",
+   "id": "r7-5700g",
+   "name": "AMD Ryzen 7 5700G",
+   "brand": "AMD",
+   "socket": "AM4",
+   "gen": "amd-zen3",
+   "cores": 8,
+   "threads": 16,
+   "powerW": 88,
+   "gaming": 94,
+   "multi": 118,
+   "gpuCeiling": 146,
+   "ramMaxMts": {
+    "DDR4": 3200
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "5700g",
+    "flags": "i"
+   },
+   "price": 220
+  },
+  {
+   "kind": "cpu",
+   "id": "r7-5800xt",
+   "name": "AMD Ryzen 7 5800XT",
+   "brand": "AMD",
+   "socket": "AM4",
+   "gen": "amd-zen3",
+   "cores": 8,
+   "threads": 16,
+   "powerW": 142,
+   "gaming": 114,
+   "multi": 144,
+   "gpuCeiling": 177,
+   "ramMaxMts": {
+    "DDR4": 3200
+   },
+   "igpu": false,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "5800xt",
+    "flags": "i"
+   },
+   "price": 200
+  },
+  {
+   "kind": "cpu",
+   "id": "r9-7900x3d",
+   "name": "AMD Ryzen 9 7900X3D",
+   "brand": "AMD",
+   "socket": "AM5",
+   "gen": "amd-zen4",
+   "cores": 12,
+   "threads": 24,
+   "powerW": 162,
+   "gaming": 170,
+   "multi": 231,
+   "gpuCeiling": 264,
+   "ramMaxMts": {
+    "DDR5": 5200
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "7900x3d",
+    "flags": "i"
+   },
+   "price": 554
+  },
+  {
+   "kind": "cpu",
+   "id": "r9-7950x3d",
+   "name": "AMD Ryzen 9 7950X3D",
+   "brand": "AMD",
+   "socket": "AM5",
+   "gen": "amd-zen4",
+   "cores": 16,
+   "threads": 32,
+   "powerW": 162,
+   "gaming": 186,
+   "multi": 318,
+   "gpuCeiling": 288,
+   "ramMaxMts": {
+    "DDR5": 5200
+   },
+   "igpu": true,
+   "boxCooler": false,
+   "availability": "new",
+   "match": {
+    "re": "7950x3d",
+    "flags": "i"
+   },
+   "price": 725
   }
  ],
  "gpus": [
@@ -4018,6 +4606,100 @@
    "pcieGpu": 5,
    "availability": "new",
    "price": 280
+  },
+  {
+   "kind": "board",
+   "id": "mb-h610-ddr4-matx",
+   "name": "Carte mère H610M DDR4 (micro-ATX, entrée de gamme)",
+   "socket": "LGA1700",
+   "chipset": "H610",
+   "formFactor": "mATX",
+   "ramType": "DDR4",
+   "ramSlots": 2,
+   "maxRamGb": 64,
+   "m2Slots": 1,
+   "pcieGpu": 4,
+   "availability": "new",
+   "price": 85,
+   "note": "Entrée de gamme : 2 emplacements RAM, à réserver aux processeurs 65 W."
+  },
+  {
+   "kind": "board",
+   "id": "mb-h610-ddr5-matx",
+   "name": "Carte mère H610M DDR5 (micro-ATX, entrée de gamme)",
+   "socket": "LGA1700",
+   "chipset": "H610",
+   "formFactor": "mATX",
+   "ramType": "DDR5",
+   "ramSlots": 2,
+   "maxRamGb": 96,
+   "m2Slots": 1,
+   "pcieGpu": 4,
+   "availability": "new",
+   "price": 66,
+   "note": "Entrée de gamme : 2 emplacements RAM, à réserver aux processeurs 65 W."
+  },
+  {
+   "kind": "board",
+   "id": "mb-z790-ddr4-atx",
+   "name": "Carte mère Z790 DDR4 ATX",
+   "socket": "LGA1700",
+   "chipset": "Z790",
+   "formFactor": "ATX",
+   "ramType": "DDR4",
+   "ramSlots": 4,
+   "maxRamGb": 128,
+   "m2Slots": 4,
+   "pcieGpu": 5,
+   "availability": "new",
+   "price": 314,
+   "note": "Garde ta RAM DDR4 actuelle."
+  },
+  {
+   "kind": "board",
+   "id": "mb-a520-matx",
+   "name": "Carte mère A520M (micro-ATX, entrée de gamme)",
+   "socket": "AM4",
+   "chipset": "A520",
+   "formFactor": "mATX",
+   "ramType": "DDR4",
+   "ramSlots": 2,
+   "maxRamGb": 64,
+   "m2Slots": 1,
+   "pcieGpu": 3,
+   "availability": "new",
+   "price": 76,
+   "note": "Entrée de gamme : 2 emplacements RAM, à réserver aux processeurs 65 W."
+  },
+  {
+   "kind": "board",
+   "id": "mb-x570-atx",
+   "name": "Carte mère X570 ATX",
+   "socket": "AM4",
+   "chipset": "X570",
+   "formFactor": "ATX",
+   "ramType": "DDR4",
+   "ramSlots": 4,
+   "maxRamGb": 128,
+   "m2Slots": 2,
+   "pcieGpu": 4,
+   "availability": "new",
+   "price": 180
+  },
+  {
+   "kind": "board",
+   "id": "mb-x870e-atx",
+   "name": "Carte mère X870E ATX",
+   "socket": "AM5",
+   "chipset": "X870E",
+   "formFactor": "ATX",
+   "ramType": "DDR5",
+   "ramSlots": 4,
+   "maxRamGb": 256,
+   "m2Slots": 4,
+   "pcieGpu": 5,
+   "availability": "new",
+   "price": 443
   }
  ],
  "ram": [
@@ -4170,6 +4852,56 @@
    "gbPerStick": 48,
    "mts": 6000,
    "price": 420
+  },
+  {
+   "kind": "ram",
+   "id": "d4-2x8-3600",
+   "name": "Kit 2 × 8 Go DDR4-3600 CL18",
+   "type": "DDR4",
+   "sticks": 2,
+   "gbPerStick": 8,
+   "mts": 3600,
+   "price": 204
+  },
+  {
+   "kind": "ram",
+   "id": "d4-2x32-3600",
+   "name": "Kit 2 × 32 Go DDR4-3600 CL18",
+   "type": "DDR4",
+   "sticks": 2,
+   "gbPerStick": 32,
+   "mts": 3600,
+   "price": 747
+  },
+  {
+   "kind": "ram",
+   "id": "d5-1x8-5600",
+   "name": "Barrette 8 Go DDR5-5600",
+   "type": "DDR5",
+   "sticks": 1,
+   "gbPerStick": 8,
+   "mts": 5600,
+   "price": 174
+  },
+  {
+   "kind": "ram",
+   "id": "d5-2x16-6400",
+   "name": "Kit 2 × 16 Go DDR5-6400 CL32",
+   "type": "DDR5",
+   "sticks": 2,
+   "gbPerStick": 16,
+   "mts": 6400,
+   "price": 610
+  },
+  {
+   "kind": "ram",
+   "id": "d5-2x64-5600",
+   "name": "Kit 2 × 64 Go DDR5-5600",
+   "type": "DDR5",
+   "sticks": 2,
+   "gbPerStick": 64,
+   "mts": 5600,
+   "price": 2869
   }
  ],
  "ssds": [
@@ -4276,6 +5008,38 @@
    "iface": "HDD",
    "tb": 8,
    "price": 330
+  },
+  {
+   "kind": "ssd",
+   "id": "sata-4tb",
+   "name": "SSD SATA 2,5\" 4 To (ex. Samsung 870 EVO, Crucial MX500)",
+   "iface": "SATA",
+   "tb": 4,
+   "price": 370
+  },
+  {
+   "kind": "ssd",
+   "id": "hdd-1tb",
+   "name": "Disque dur 3,5\" 1 To (ex. Seagate BarraCuda, WD Blue)",
+   "iface": "HDD",
+   "tb": 1,
+   "price": 52
+  },
+  {
+   "kind": "ssd",
+   "id": "hdd-6tb",
+   "name": "Disque dur 3,5\" 6 To (ex. Seagate IronWolf, WD Red Plus)",
+   "iface": "HDD",
+   "tb": 6,
+   "price": 341
+  },
+  {
+   "kind": "ssd",
+   "id": "hdd-16tb",
+   "name": "Disque dur 3,5\" 16 To (ex. Seagate IronWolf Pro, Toshiba MG08)",
+   "iface": "HDD",
+   "tb": 16,
+   "price": 973
   }
  ],
  "psus": [

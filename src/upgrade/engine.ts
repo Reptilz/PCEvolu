@@ -646,8 +646,8 @@ function platformFor(c: CpuSpec, p: Profile): { board: BoardSpec; ram?: RamKit }
     if (!b.availability || !b.price || b.socket !== c.socket || !caseOk(b)) continue;
     const chip = CHIPSETS.find((x) => x.chipset === b.chipset);
     if (!chip?.cpuGens.includes(c.gen) || !c.ramMaxMts[b.ramType]) continue;
-    // Les cartes A620 ont un étage d'alimentation léger : réservées aux processeurs sobres.
-    if (b.chipset === "A620" && c.powerW > 120) continue;
+    // Les cartes d'entrée de gamme (A620, A520, H610) ont un étage d'alimentation léger : réservées aux processeurs sobres.
+    if (["A620", "A520", "H610"].includes(b.chipset) && c.powerW > 120) continue;
     const reuse = b.ramType === p.ramType && p.ramModules > 0;
     const ram = reuse ? undefined : RAM_KITS.filter((k) => k.type === b.ramType && k.sticks === 2 && k.sticks * k.gbPerStick >= target).sort((x, y) => x.price - y.price)[0];
     if (!reuse && !ram) continue;
@@ -705,7 +705,7 @@ export function proposeRam(p: Profile): Proposal[] {
     // Remplacement
     if (kitGb > p.ramTotalGb && (!p.ramMaxGb || kitGb <= p.ramMaxGb)) {
       out.push(finalize({
-        id: `ram-replace-${k.id}`, category: "ram", title: tr(`Passer à ${kitGb} Go (${k.sticks} × ${k.gbPerStick} Go)`, `Upgrade to ${kitGb} GB (${k.sticks} × ${k.gbPerStick} GB)`), main: k, mainQuantity: 1,
+        id: `ram-replace-${k.id}`, category: "ram", title: tr(`Passer à ${kitGb} Go (${k.sticks} × ${k.gbPerStick} Go, ${k.type}-${k.mts})`, `Upgrade to ${kitGb} GB (${k.sticks} × ${k.gbPerStick} GB, ${k.type}-${k.mts})`), main: k, mainQuantity: 1,
         gainLabel: tr(`${p.ramTotalGb} → ${kitGb} Go, en dual channel`, `${p.ramTotalGb} → ${kitGb} GB, in dual channel`),
         checks: [typeCheck, { label: tr("Capacité max", "Max capacity"), status: "ok", detail: tr(`Ta carte mère accepte jusqu'à ${p.ramMaxGb ?? "?"} Go.`, `Your motherboard takes up to ${p.ramMaxGb ?? "?"} GB.`) }, speedCheck(k, false)],
         additions: [],
@@ -715,7 +715,7 @@ export function proposeRam(p: Profile): Proposal[] {
     // Ajout d'un kit identique à une config déjà en dual channel
     if (p.ramModules === 2 && freeSlots >= 2 && p.ramStickGb === k.gbPerStick) {
       out.push(finalize({
-        id: `ram-add-${k.id}`, category: "ram", title: tr(`Ajouter ${kitGb} Go (total ${p.ramTotalGb + kitGb} Go)`, `Add ${kitGb} GB (${p.ramTotalGb + kitGb} GB total)`), main: k, mainQuantity: 1,
+        id: `ram-add-${k.id}`, category: "ram", title: tr(`Ajouter ${kitGb} Go (total ${p.ramTotalGb + kitGb} Go, ${k.type}-${k.mts})`, `Add ${kitGb} GB (${p.ramTotalGb + kitGb} GB total, ${k.type}-${k.mts})`), main: k, mainQuantity: 1,
         gainLabel: tr(`${p.ramTotalGb} → ${p.ramTotalGb + kitGb} Go`, `${p.ramTotalGb} → ${p.ramTotalGb + kitGb} GB`),
         checks: [typeCheck, { label: tr("Emplacements libres", "Free slots"), status: "ok", detail: tr("2 emplacements libres.", "2 free slots.") }, speedCheck(k, true),
           { label: tr("4 barrettes", "4 sticks"), status: "warn", detail: tr("Avec 4 barrettes, la vitesse max baisse parfois légèrement.", "With 4 sticks, the max speed sometimes drops slightly.") }],
