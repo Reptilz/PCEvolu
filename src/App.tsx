@@ -20,10 +20,11 @@ import { checkAlerts, isTriggered, loadAlerts, saveAlerts, type PriceAlert } fro
 import { PriceContext, PriceSheet, type SheetPart } from "./upgrade/PriceSheet";
 import { AlertsView } from "./upgrade/AlertsView";
 import { SelectionView } from "./upgrade/SelectionView";
+import { OptimizeView } from "./upgrade/OptimizeView";
 import { AdviceNotice } from "./upgrade/PriceSheet";
 import { SelectionContext, loadSelection, saveSelection, slotOf, type Selection } from "./upgrade/selection";
 
-type View = "overview" | "goal" | "improve" | "upgrades" | "selection" | "alerts";
+type View = "overview" | "goal" | "improve" | "upgrades" | "selection" | "alerts" | "optimize";
 
 const inApp = isTauri();
 
@@ -187,6 +188,8 @@ export default function App() {
           <NavItem icon="check" label="Ma sélection" sub="Tes choix, vérifiés ensemble" active={view === "selection" && !wizardOpen} onClick={() => go("selection")} count={Object.keys(selection).length} />
           <div className="nav-group">3. Suivre</div>
           <NavItem icon="bell" label="Alertes prix" sub="Le bon moment pour acheter" active={view === "alerts" && !wizardOpen} onClick={() => go("alerts")} count={triggeredCount} />
+          <div className="nav-group">Entretien</div>
+          <NavItem icon="speed" label="Optimiser" sub="Démarrage, processus, réglages" active={view === "optimize" && !wizardOpen} onClick={() => go("optimize")} />
         </nav>
         <div className="side-foot">
           <button className="btn" onClick={scan} disabled={scanning}>
@@ -262,6 +265,7 @@ export default function App() {
           <NextStep hint="Une pièce te plaît mais tu préfères attendre ? Crée une alerte depuis son prix." label="Étape suivante : mes alertes prix" onClick={() => go("alerts")} />
         )}
         {!wizardOpen && view === "alerts" && <AlertsView onPlan={() => go("goal")} />}
+        {!wizardOpen && view === "optimize" && <OptimizeView gpuName={report?.gpus[0]?.name} />}
       </main>
     </div>
       {sheet && <PriceSheet part={sheet} onClose={() => setSheet(undefined)} />}

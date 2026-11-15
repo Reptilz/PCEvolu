@@ -88,6 +88,13 @@ const paths = {
       <path d="M9 6h6M9 9h6" />
     </>
   ),
+  speed: (
+    <>
+      <path d="M4 16a8 8 0 1116 0" />
+      <path d="M12 16l4.5-5" />
+      <circle cx="12" cy="16" r="1.4" />
+    </>
+  ),
   refresh: <path d="M20 11a8 8 0 10-2.3 5.7M20 4v7h-7" />,
   check: <path d="M5 12.5l4.5 4.5L19 7.5" />,
   cross: <path d="M6 6l12 12M18 6L6 18" />,

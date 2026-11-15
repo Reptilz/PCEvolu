@@ -2,10 +2,15 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod live;
+mod optimize;
 mod scan;
 
 fn main() {
     // Diagnostic : `pcevolu.exe --scan-json` affiche le rapport complet sans ouvrir de fenêtre.
+    if std::env::args().any(|a| a == "--optimize-json") {
+        println!("{}", serde_json::to_string_pretty(&optimize::collect()).unwrap_or_default());
+        return;
+    }
     if std::env::args().any(|a| a == "--scan-json") {
         match scan::collect() {
             Ok(r) => println!("{}", serde_json::to_string_pretty(&r).unwrap_or_default()),
@@ -19,7 +24,7 @@ fn main() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_notification::init())
         .manage(live::LiveState::default())
-        .invoke_handler(tauri::generate_handler![scan::scan, live::metrics])
+        .invoke_handler(tauri::generate_handler![scan::scan, live::metrics, optimize::optimize_scan, optimize::set_startup_enabled, optimize::open_system])
         .run(tauri::generate_context!())
         .expect("erreur au lancement de PCEvolu");
 }

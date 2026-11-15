@@ -945,3 +945,52 @@ span.picks-name { color: var(--text); cursor: default; }
 
 .advice-notice { margin: 10px 0 6px; padding: 10px 12px; border-radius: 10px; background: var(--panel); color: var(--muted); }
 .advice-notice b { color: var(--text); }
+
+/* ---- Optimiser ---- */
+.opt-page { max-width: 1000px; }
+.opt-page .gp-head .btn { display: inline-flex; align-items: center; gap: 8px; }
+.opt-answer { padding: 22px 26px; border-radius: 18px; background: var(--panel); }
+.opt-answer .answer-title { margin-bottom: 6px; font-size: 21px; }
+.opt-sec { margin-top: 36px; }
+.opt-sec-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.opt-sec-head .imp-h { margin: 0; }
+.opt-sort { margin: 0; }
+.opt-intro { color: var(--muted); margin: 8px 0 14px; max-width: 78ch; line-height: 1.55; font-size: 14px; }
+.opt-error { padding: 10px 12px; border-radius: 10px; background: color-mix(in srgb, var(--warn) 12%, transparent); font-size: 14px; }
+.opt-list { list-style: none; margin: 0; padding: 0; }
+.opt-item { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 14px 0; border-top: 1px solid var(--line-soft); }
+.opt-item:first-child { border-top: 0; }
+.opt-item.off .opt-name, .opt-item.off .opt-ico { opacity: 0.55; }
+.opt-ico { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--panel-2); color: var(--muted); }
+.opt-ico .brand-logo { width: 18px; height: 18px; }
+.opt-ico:empty::before { content: ""; width: 14px; height: 14px; border-radius: 4px; border: 2px solid var(--muted); opacity: 0.5; }
+.opt-main { min-width: 0; }
+.opt-name { font-weight: 600; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.opt-tag { font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 99px; background: var(--panel-2); color: var(--muted); }
+.opt-tag.v-safe { background: color-mix(in srgb, var(--ok) 14%, transparent); color: var(--ok); }
+.opt-tag.v-keep { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
+.opt-tag.v-depends { background: color-mix(in srgb, var(--warn) 14%, transparent); color: var(--warn); }
+.opt-why { color: var(--muted); font-size: 13.5px; margin-top: 2px; line-height: 1.5; }
+.opt-cmd { color: color-mix(in srgb, var(--muted) 75%, transparent); font-size: 12px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.switch { width: 44px; height: 24px; border-radius: 99px; border: 0; padding: 0; background: var(--panel-2); position: relative; cursor: pointer; flex-shrink: 0; transition: background 0.15s; }
+.switch i { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--muted); transition: transform 0.15s, background 0.15s; }
+.switch.on { background: color-mix(in srgb, var(--accent) 70%, var(--panel)); }
+.switch.on i { transform: translateX(20px); background: #fff; }
+.switch:disabled { cursor: default; opacity: 0.6; }
+.switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.opt-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+.opt-table th { text-align: left; font-weight: 500; color: var(--muted); font-size: 13px; padding: 6px 0; }
+.opt-table th.num, .opt-table td.num { text-align: right; white-space: nowrap; padding-left: 16px; }
+.opt-table td { padding: 9px 0; border-top: 1px solid var(--line-soft); vertical-align: top; }
+.opt-pname { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
+.opt-pname .brand-logo { width: 15px; height: 15px; }
+.opt-phint { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+.opt-tweaks { list-style: none; margin: 0; padding: 0; }
+.opt-tweak { display: grid; grid-template-columns: 22px 1fr auto; gap: 12px; align-items: start; padding: 14px 0; border-top: 1px solid var(--line-soft); }
+.opt-tweak:first-child { border-top: 0; }
+.opt-tweak > .icon { width: 19px; height: 19px; margin-top: 2px; }
+.opt-tweak.ok > .icon { color: var(--ok); }
+.opt-tweak.warn > .icon { color: var(--warn); }
+.opt-tweak.neutral > .icon { color: var(--accent); }
+.opt-tweak-title { font-weight: 600; }
+@media (prefers-reduced-motion: reduce) { .switch, .switch i { transition: none; } }
