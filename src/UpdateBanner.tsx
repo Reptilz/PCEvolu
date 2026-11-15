@@ -5,6 +5,14 @@ import { useEffect, useState } from "react";
 import { isTauri } from "@tauri-apps/api/core";
 import type { Update } from "@tauri-apps/plugin-updater";
 import { Icon } from "./icons";
+import { loadSettings, tr } from "./settings";
+
+/** Cherche une nouvelle version publiée. null : à jour. Lève une erreur si hors ligne. */
+export async function checkUpdate(): Promise<Update | null> {
+  if (!isTauri()) return null;
+  const { check } = await import("@tauri-apps/plugin-updater");
+  return check();
+}
 
 type State =
   | { kind: "idle" }
@@ -17,21 +25,23 @@ export function UpdateBanner() {
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    if (!isTauri()) return;
+    // Mise à jour trouvée depuis Paramètres > Mises à jour.
+    const onFound = (e: Event) => {
+      setHidden(false);
+      setState({ kind: "available", update: (e as CustomEvent<Update>).detail });
+    };
+    window.addEventListener("pcevolu:update", onFound);
+    if (!isTauri() || !loadSettings().autoUpdate) return () => window.removeEventListener("pcevolu:update", onFound);
     let alive = true;
     // Petite attente : l'analyse du PC passe d'abord.
     const t = setTimeout(async () => {
-      try {
-        const { check } = await import("@tauri-apps/plugin-updater");
-        const update = await check();
-        if (alive && update) setState({ kind: "available", update });
-      } catch {
-        /* hors ligne ou aucune version publiée : on réessaiera au prochain lancement */
-      }
+      const update = await checkUpdate().catch(() => null);
+      if (alive && update) setState({ kind: "available", update });
     }, 4000);
     return () => {
       alive = false;
       clearTimeout(t);
+      window.removeEventListener("pcevolu:update", onFound);
     };
   }, []);
 
@@ -63,12 +73,13 @@ export function UpdateBanner() {
       <div className="update-text">
         {state.kind === "available" && (
           <>
-            <b>PCEvolu {update.version} est disponible.</b> La mise à jour prend quelques secondes, puis l'app redémarre.
+            <b>{tr(`PCEvolu ${update.version} est disponible.`, `PCEvolu ${update.version} is available.`)}</b>{" "}
+            {tr("La mise à jour prend quelques secondes, puis l'app redémarre.", "Updating takes a few seconds, then the app restarts.")}
           </>
         )}
         {state.kind === "downloading" && (
           <>
-            <b>Mise à jour vers {update.version}…</b> {state.percent != null ? `${state.percent} %` : "Téléchargement"}
+            <b>{tr(`Mise à jour vers ${update.version}…`, `Updating to ${update.version}…`)}</b> {state.percent != null ? `${state.percent} %` : tr("Téléchargement", "Downloading")}
             <span className="update-bar">
               <i style={{ width: `${state.percent ?? 5}%` }} />
             </span>
@@ -76,16 +87,16 @@ export function UpdateBanner() {
         )}
         {state.kind === "error" && (
           <>
-            <b>La mise à jour n'a pas abouti.</b> Vérifie ta connexion et réessaie.
+            <b>{tr("La mise à jour n'a pas abouti.", "The update failed.")}</b> {tr("Vérifie ta connexion et réessaie.", "Check your connection and try again.")}
           </>
         )}
       </div>
       {state.kind !== "downloading" && (
         <>
           <button className="btn primary sm" onClick={install}>
-            {state.kind === "error" ? "Réessayer" : "Mettre à jour"}
+            {state.kind === "error" ? tr("Réessayer", "Try again") : tr("Mettre à jour", "Update")}
           </button>
-          <button className="icon-btn" onClick={() => setHidden(true)} aria-label="Plus tard">
+          <button className="icon-btn" onClick={() => setHidden(true)} aria-label={tr("Plus tard", "Later")}>
             <Icon name="cross" />
           </button>
         </>

@@ -25,9 +25,11 @@ import { AdviceNotice, ReportButton } from "./upgrade/PriceSheet";
 import { ReportDialog } from "./ReportDialog";
 import { UpdateBanner } from "./UpdateBanner";
 import { pcSummary } from "./report";
+import { SettingsView } from "./SettingsView";
+import { applyTheme, loadSettings, saveSettings, setCurrentLang, SettingsContext, tr, type Settings } from "./settings";
 import { SelectionContext, loadSelection, saveSelection, slotOf, type Selection } from "./upgrade/selection";
 
-type View = "overview" | "goal" | "improve" | "upgrades" | "selection" | "alerts" | "optimize";
+type View = "overview" | "goal" | "improve" | "upgrades" | "selection" | "alerts" | "optimize" | "settings";
 
 const inApp = isTauri();
 
@@ -41,6 +43,21 @@ async function loadMetrics(): Promise<Metrics> {
 }
 
 export default function App() {
+  const [settings, setSettings] = useState<Settings>(loadSettings);
+  const updateSettings = (patch: Partial<Settings>) => {
+    const next = { ...settings, ...patch };
+    saveSettings(next);
+    setCurrentLang(next.lang);
+    setSettings(next);
+  };
+  useEffect(() => {
+    applyTheme(settings.theme);
+  }, [settings.theme]);
+  useEffect(() => {
+    setCurrentLang(settings.lang);
+  }, [settings.lang]);
+  const settingsCtx = { settings, update: updateSettings };
+
   const [view, setView] = useState<View>("overview");
   const [report, setReport] = useState<Report>();
   const [error, setError] = useState<string>();
@@ -168,9 +185,15 @@ export default function App() {
   };
   const freeCount = recos.filter((r) => !r.upgrade).length;
 
-  if (welcome !== "done") return <Welcome scanning={welcome === "scanning"} onStart={startFirstScan} />;
+  if (welcome !== "done")
+    return (
+      <SettingsContext.Provider value={settingsCtx}>
+        <Welcome scanning={welcome === "scanning"} onStart={startFirstScan} />
+      </SettingsContext.Provider>
+    );
 
   return (
+    <SettingsContext.Provider value={settingsCtx}>
     <PriceContext.Provider value={{ open: setSheet, alerts, setAlerts }}>
     <SelectionContext.Provider
       value={{
@@ -201,35 +224,41 @@ export default function App() {
           </div>
           <div>
             <div className="brand-name">PCEvolu</div>
-            <div className="brand-sub">Analyse & upgrades</div>
+            <div className="brand-sub">{tr("Analyse & upgrades", "Scan & upgrades")}</div>
           </div>
         </div>
         <nav>
-          <div className="nav-group">1. Mon PC</div>
-          <NavItem icon="grid" label="Mon PC" sub="État et composants" active={view === "overview" && !wizardOpen} onClick={() => go("overview")} />
-          <div className="nav-group">2. L'améliorer</div>
-          <NavItem icon="spark" label="Réglages gratuits" sub="Sans rien acheter" active={view === "improve" && !wizardOpen} onClick={() => go("improve")} count={freeCount} />
-          <NavItem icon="target" label="Mon plan" sub="Quoi acheter, et pourquoi" active={view === "goal" || wizardOpen} onClick={() => go("goal")} />
-          <NavItem icon="cart" label="Toutes les pièces" sub="Catalogue compatible" active={view === "upgrades" && !wizardOpen} onClick={() => go("upgrades")} />
-          <NavItem icon="check" label="Ma sélection" sub="Tes choix, vérifiés ensemble" active={view === "selection" && !wizardOpen} onClick={() => go("selection")} count={Object.keys(selection).length} />
-          <div className="nav-group">3. Suivre</div>
-          <NavItem icon="bell" label="Alertes prix" sub="Le bon moment pour acheter" active={view === "alerts" && !wizardOpen} onClick={() => go("alerts")} count={triggeredCount} />
-          <div className="nav-group">Entretien</div>
-          <NavItem icon="speed" label="Optimiser" sub="Démarrage, processus, réglages" active={view === "optimize" && !wizardOpen} onClick={() => go("optimize")} />
+          <div className="nav-group">{tr("1. Mon PC", "1. My PC")}</div>
+          <NavItem icon="grid" label={tr("Mon PC", "My PC")} sub={tr("État et composants", "Health and components")} active={view === "overview" && !wizardOpen} onClick={() => go("overview")} />
+          <div className="nav-group">{tr("2. L'améliorer", "2. Improve it")}</div>
+          <NavItem icon="spark" label={tr("Réglages gratuits", "Free tweaks")} sub={tr("Sans rien acheter", "Without buying anything")} active={view === "improve" && !wizardOpen} onClick={() => go("improve")} count={freeCount} />
+          <NavItem icon="target" label={tr("Mon plan", "My plan")} sub={tr("Quoi acheter, et pourquoi", "What to buy, and why")} active={view === "goal" || wizardOpen} onClick={() => go("goal")} />
+          <NavItem icon="cart" label={tr("Toutes les pièces", "All parts")} sub={tr("Catalogue compatible", "Compatible catalogue")} active={view === "upgrades" && !wizardOpen} onClick={() => go("upgrades")} />
+          <NavItem icon="check" label={tr("Ma sélection", "My selection")} sub={tr("Tes choix, vérifiés ensemble", "Your picks, checked together")} active={view === "selection" && !wizardOpen} onClick={() => go("selection")} count={Object.keys(selection).length} />
+          <div className="nav-group">{tr("3. Suivre", "3. Track")}</div>
+          <NavItem icon="bell" label={tr("Alertes prix", "Price alerts")} sub={tr("Le bon moment pour acheter", "The right time to buy")} active={view === "alerts" && !wizardOpen} onClick={() => go("alerts")} count={triggeredCount} />
+          <div className="nav-group">{tr("Entretien", "Maintenance")}</div>
+          <NavItem icon="speed" label={tr("Optimiser", "Optimize")} sub={tr("Démarrage, processus, réglages", "Startup, processes, settings")} active={view === "optimize" && !wizardOpen} onClick={() => go("optimize")} />
         </nav>
-        <div className="side-foot">
+        <div className="side-scan">
           <button className="btn" onClick={scan} disabled={scanning}>
             <Icon name="refresh" className={scanning ? "spin" : ""} />
-            {scanning ? "Analyse…" : "Réanalyser"}
+            {scanning ? tr("Analyse…", "Scanning…") : tr("Réanalyser", "Rescan")}
           </button>
           <div className="muted small">
-            {scannedAt ? `Dernière analyse à ${scannedAt.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}` : " "}
-            {!inApp && <div className="demo-flag">Mode démo (navigateur)</div>}
+            {scannedAt
+              ? tr("Dernière analyse à ", "Last scan at ") + scannedAt.toLocaleTimeString(settings.lang === "en" ? "en-GB" : "fr-FR", { hour: "2-digit", minute: "2-digit" })
+              : " "}
+            {!inApp && <div className="demo-flag">{tr("Mode démo (navigateur)", "Demo mode (browser)")}</div>}
           </div>
+        </div>
+        <div className="side-foot">
+          <NavItem icon="gear" label={tr("Paramètres", "Settings")} active={view === "settings" && !wizardOpen} onClick={() => go("settings")} />
           <ReportButton
             topic={`page ${VIEW_LABEL[view]}`}
             kind={view === "overview" ? "composant" : "autre"}
             details={[`Page : ${VIEW_LABEL[view]}`]}
+            label={tr("Signaler une erreur", "Report an error")}
           />
         </div>
       </aside>
@@ -298,12 +327,14 @@ export default function App() {
         )}
         {!wizardOpen && view === "alerts" && <AlertsView onPlan={() => go("goal")} />}
         {!wizardOpen && view === "optimize" && <OptimizeView gpuName={report?.gpus[0]?.name} />}
+        {!wizardOpen && view === "settings" && <SettingsView />}
       </main>
     </div>
       {sheet && <PriceSheet part={sheet} onClose={() => setSheet(undefined)} />}
       <ReportDialog pc={pcSummary(report)} />
     </SelectionContext.Provider>
     </PriceContext.Provider>
+    </SettingsContext.Provider>
   );
 }
 
@@ -330,6 +361,7 @@ const VIEW_LABEL: Record<View, string> = {
   selection: "Ma sélection",
   alerts: "Alertes prix",
   optimize: "Optimiser",
+  settings: "Paramètres",
 };
 
 /** Accueil du premier lancement : ce que fait PCEvolu, et un seul bouton. */
@@ -340,38 +372,45 @@ function Welcome({ scanning, onStart }: { scanning: boolean; onStart: () => void
         <div className="logo welcome-logo">
           <Icon name="up" />
         </div>
-        <h1>Bienvenue dans PCEvolu</h1>
+        <h1>{tr("Bienvenue dans PCEvolu", "Welcome to PCEvolu")}</h1>
         <p className="welcome-lead">
-          PCEvolu regarde ce qu'il y a dans ton PC, te dit ce qu'il vaut pour ce que tu veux en faire, et ce qu'il vaut la peine de changer, au bon
-          prix.
+          {tr(
+            "PCEvolu regarde ce qu'il y a dans ton PC, te dit ce qu'il vaut pour ce que tu veux en faire, et ce qu'il vaut la peine de changer, au bon prix.",
+            "PCEvolu looks at what's inside your PC, tells you what it's worth for what you want to do, and what's worth upgrading, at the right price.",
+          )}
         </p>
         <ul className="welcome-steps">
           <li>
             <Icon name="grid" />
             <span>
-              <b>L'analyse</b> lit tes composants : processeur, carte graphique, mémoire, disques, écrans.
+              <b>{tr("L'analyse", "The scan")}</b>{" "}
+              {tr("lit tes composants : processeur, carte graphique, mémoire, disques, écrans.", "reads your components: processor, graphics card, memory, drives, displays.")}
             </span>
           </li>
           <li>
             <Icon name="target" />
             <span>
-              <b>Ton objectif</b> : jouer, créer, travailler. Trois questions, et PCEvolu te fait un plan.
+              <b>{tr("Ton objectif", "Your goal")}</b>{" "}
+              {tr(": jouer, créer, travailler. Trois questions, et PCEvolu te fait un plan.", ": gaming, creating, working. Three questions, and PCEvolu builds you a plan.")}
             </span>
           </li>
           <li>
             <Icon name="check" />
             <span>
-              <b>Rien ne quitte ton PC</b> : l'analyse se fait sur place et ne modifie rien.
+              <b>{tr("Rien ne quitte ton PC", "Nothing leaves your PC")}</b>{" "}
+              {tr(": l'analyse se fait sur place et ne modifie rien.", ": the scan runs locally and changes nothing.")}
             </span>
           </li>
         </ul>
         <button className={`welcome-orb ${scanning ? "busy" : ""}`} onClick={onStart} disabled={scanning} autoFocus>
           <span className="welcome-orb-ring" aria-hidden />
           <Icon name={scanning ? "refresh" : "speed"} className={scanning ? "spin" : ""} />
-          <span className="welcome-orb-label">{scanning ? "Analyse…" : "Lancer l'analyse"}</span>
+          <span className="welcome-orb-label">{scanning ? tr("Analyse…", "Scanning…") : tr("Lancer l'analyse", "Start the scan")}</span>
         </button>
         <p className="muted small welcome-hint">
-          {scanning ? "Lecture du processeur, de la mémoire, des disques et des écrans." : "Quelques secondes suffisent."}
+          {scanning
+            ? tr("Lecture du processeur, de la mémoire, des disques et des écrans.", "Reading the processor, memory, drives and displays.")
+            : tr("Quelques secondes suffisent.", "It only takes a few seconds.")}
         </p>
       </div>
     </div>
